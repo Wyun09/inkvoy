@@ -1,11 +1,11 @@
 {
-  "version": "2.3.0",
-  "versionCode": 14,
+  "version": "2.3.1",
+  "versionCode": 15,
   "buildDate": "2026-10-20",
   "package": "io.github.deepseekbridge",
-  "apk": "deepseek-android-bridge-v2.3.0.apk",
-  "bytes": 615823279,
-  "sha256": "52f1608fe747a667a7517e4e6ab416b1c8fa89d399db5220b39818c4d44d724d",
+  "apk": "deepseek-android-bridge-v2.3.1.apk",
+  "bytes": 615831471,
+  "sha256": "4f67703fe6044d6dcaa7ec5e4079ebf3488d81ce2a3594332a2e37eba3dc7fa5",
   "signerSha256": "cc8f15b569d5e813c68d49f4fa17d19afbe6f7526ef5dbdade88e317116c2b59",
   "minSdk": 26,
   "targetSdk": 35,
@@ -89,7 +89,7 @@
     }
   },
   "verification": {
-    "javascript": 280,
+    "javascript": 284,
     "transportHost": 35,
     "storageHost": 11,
     "workspaceHost": 23,
@@ -103,7 +103,7 @@
     "lockScreenBackground": false,
     "androidFrameworkNativeSqlite": 12,
     "physicalAndroidDevice": false,
-    "androidFrameworkRegression": 91,
+    "androidFrameworkRegression": 105,
     "androidRuntimeAssets": 10,
     "androidPermissions": 5,
     "rawZipPathsPortable": true,
@@ -114,20 +114,21 @@
     "androidResponsiveness": 6,
     "androidProviderHttp": 8,
     "androidComputerUse": 16,
-    "androidChatMedia": 6
+    "androidChatMedia": 6,
+    "androidManagedProcesses": 14
   },
   "debianSources": {
     "packages": 465,
     "files": 2145,
     "bytes": 1134408545
   },
-  "fix": "Explicit webpage search, computer-use browser, submitted user questions, discoverable custom providers and actual image messages with chat attachment previews.",
+  "fix": "App-owned persistent PRoot tasks with process start/status/list/stop, terminal task controls and a tool-batch image-message ordering correction; includes 2.3.0 browser/search/questions/attachments.",
   "ui": {
     "reference": "https://github.com/assistant-ui/assistant-ui",
     "commit": "e97f7c61365ef0f73686c7b596751802f1a1ddd2",
     "license": "MIT",
     "adaptation": "Compact chronological execution chain, lazy output, revisable streaming drafts, private API settings, bounded user questions and attachment previews.",
-    "desktopRenderedPreviews": 27,
+    "desktopRenderedPreviews": 29,
     "physicalAndroidDevice": false,
     "originalGeneratedCompanion": true,
     "companionPoses": 8,
@@ -139,7 +140,8 @@
       "model-settings.js",
       "attachments.js",
       "questions.js",
-      "computer.js"
+      "computer.js",
+      "processes.js"
     ],
     "companionFrames": 32,
     "companionGrid": [
@@ -147,8 +149,8 @@
       8
     ],
     "companionBackground": "transparent",
-    "currentVersionNewDesktopPreviews": 5,
-    "historicalDesktopPreviews": 22
+    "currentVersionNewDesktopPreviews": 2,
+    "historicalDesktopPreviews": 27
   },
   "hardLinks": {
     "deniedErrnos": [
@@ -337,9 +339,33 @@
     "persistentStateStoresBase64": false,
     "chatExportBundlesPixels": false,
     "filesAreCards": true,
-    "physicalDeviceVerified": false
+    "physicalDeviceVerified": false,
+    "toolBatchImageOrdering": "Every tool result precedes internal user image parts; old saved image anchors are reordered only for transport."
   },
   "knownIssues": [
-    "Background servers started with nohup/setsid/& inside the one-shot terminal tool can be killed when its PRoot session ends. Managed persistent tasks are not included in this build."
-  ]
+    "The one-shot terminal tool still cleans up its background children. Use the process tool to retain a foreground server.",
+    "Managed tasks and log buffers are in-memory; Android process death or service stop requires an explicit restart."
+  ],
+  "managedProcesses": {
+    "tool": "process",
+    "actions": [
+      "start",
+      "status",
+      "list",
+      "stop"
+    ],
+    "lifetime": "App service; survives model turns and UI switching",
+    "maxActive": 4,
+    "maxRetainedRecords": 24,
+    "tailBytesPerStream": 131072,
+    "statusCharsPerStream": 16384,
+    "projectOwnershipChecked": true,
+    "journaledStarts": true,
+    "autoRestartAfterProcessDeath": false,
+    "foregroundCommandsRequired": true,
+    "httpReadinessMustBeVerified": true,
+    "ui": "Terminal > managed tasks",
+    "actualHostHttpRegression": true,
+    "physicalAndroidDeviceVerified": false
+  }
 }

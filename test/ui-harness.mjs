@@ -17,6 +17,7 @@ export async function uiHarness(browser, viewport = { width: 390, height: 844 },
     window.nativeActions = []; window.nativeLayouts = []; window.nativeStartupErrors = [];
     const files = { 'hello.py': 'print("fixture")\n' };for(const change of Object.values(fileChanges))files[change.path]=change.current??change.after;let term=0;
     window.workspaceCalls=[];window.clientSaved=[];window.providerSaved=[];window.providerCalls=[];window.providerCancels=[];
+    const managedJobs=[];
     let computerState={url:'',title:'AI 浏览器',enabled:true,canBack:false,canForward:false,loading:false,phase:'就绪'};
     window.NativeBridge = {
       ready() { window.nativeReady = true; },
@@ -41,6 +42,9 @@ export async function uiHarness(browser, viewport = { width: 390, height: 844 },
           else value={...change,id:a.id,previewable:true,canRevert};
           set(()=>AndroidEngine.workspaceRpc(id,{ok:true,value}),20);return;
         }
+        if(operation==='process.list'){value={jobs:managedJobs.filter(j=>j.project===a.project).map(j=>({...j}))};set(()=>AndroidEngine.workspaceRpc(id,{ok:true,value}),20);return;}
+        if(operation==='process.stop'){const j=managedJobs.find(j=>j.id===a.id&&j.project===a.project);if(j){j.state='exited';j.exitCode=0;}value=j||{};set(()=>AndroidEngine.workspaceRpc(id,{ok:true,value}),20);return;}
+        if(operation==='tool.execute'&&a.name==='process'&&a.args.action==='start'){value={id:a.id,project:a.project,title:a.args.title||'开发服务',command:a.args.command,cwd:a.args.cwd,previewUrl:a.args.preview_url,state:'running',stdout:'Serving HTTP on 127.0.0.1 port 8899',stderr:''};managedJobs.push(value);set(()=>AndroidEngine.workspaceRpc(id,{ok:true,value}),20);return;}
         if(operation==='tool.execute'&&holdTools)return;
         if(operation==='runtime.status'||operation==='runtime.ensure')value={ready:true,verified:false,tools:runtimeTools};
         else if(operation==='file.list')value={entries:Object.entries(files).map(([name,content])=>({name,bytes:content.length,directory:false}))};

@@ -1,0 +1,30 @@
+✔ built-in agent uses local transport without exposing API keys and saves complete history (3.2446ms)
+✔ built-in agent executes real filesystem result and automatically continues using the same tool ID (75.0749ms)
+✔ restored pending tool does not run on startup; explicit continue retrieves its original identity (0.7321ms)
+✔ already persisted tool results are never executed again when continuing (0.512ms)
+✔ step budget stops a continuously tool-calling model and can be explicitly extended (1.4973ms)
+✔ plain chat avoids initializing Debian or sending local tool definitions (0.3974ms)
+✔ native errors are real tool results and are sent back instead of claiming success (0.6301ms)
+✔ state save failure prevents any new model or tool execution (0.6951ms)
+✔ slow durable saves publish immediately and hold effects until the acknowledgment (2.8445ms)
+✔ asynchronous storage failure cannot release a tool call (0.8849ms)
+✔ revisable streaming drafts update before completion and stay outside saved/model history (201.3932ms)
+✔ cancellation signals the active model and keeps earlier user history (0.9781ms)
+✔ tool cancellation addresses its actual execution ID and avoids another model request (0.9645ms)
+✔ session rename pin archive delete preserve project identity and do not touch webpage history (0.347ms)
+✔ needs_input remains visible as a user decision instead of an automatic loop (0.3173ms)
+✔ schemas expose explicit terminal limits and reject additional properties (0.6669ms)
+✔ a progress-only promise does not stop the built-in task after two seconds (0.5225ms)
+✔ repeated empty progress is bounded and never reported as completed (0.4082ms)
+✔ 30 built-in tool rounds and explicit continuation keep one conversation identity (383.7747ms)
+✔ managed process tool returns a persistent job, continues the model and never stops it on chat completion (0.99ms)
+✔ managed server remains listed across pages; logs, preview and explicit stop are available (10336.8104ms)
+✔ managed task panel is collapsed and leaves the terminal usable on a narrow phone (8459.4073ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 19202.6507

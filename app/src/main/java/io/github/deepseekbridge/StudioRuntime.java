@@ -30,11 +30,12 @@ public final class StudioRuntime {
     private final RuntimeInstaller installer;
     public final ProjectFiles files;
     public final ChatMedia media;
+    private final ManagedTasks managed;
     private final FileRevisions revisions;
     private volatile ToolJournal journal;
     private volatile boolean closed,bootVerified;
     private final java.util.concurrent.atomic.AtomicInteger work=new java.util.concurrent.atomic.AtomicInteger();
-    public StudioRuntime(Context context,Events events){this.context=context;this.events=events;media=new ChatMedia(context);files=new ProjectFiles(new File(context.getFilesDir(),"projects"));revisions=new FileRevisions(files,new File(context.getFilesDir(),"file-revisions"));installer=new RuntimeInstaller(context,s->emit("runtime",s));}
+    public StudioRuntime(Context context,Events events){this.context=context;this.events=events;media=new ChatMedia(context);files=new ProjectFiles(new File(context.getFilesDir(),"projects"));revisions=new FileRevisions(files,new File(context.getFilesDir(),"file-revisions"));installer=new RuntimeInstaller(context,s->emit("runtime",s));managed=new ManagedTasks(this::launchManaged,this::managedChanged);}
     private synchronized ToolJournal journal()throws IOException{if(closed)throw new IOException("运行时已关闭");if(journal==null)journal=new ToolJournal(context);return journal;}
     private void emit(String type,Object value){try{events.event(new JSONObject().put("type",type).put("value",value));}catch(JSONException ignored){}}
     private void event(JSONObject value){events.event(value);}
@@ -44,7 +45,7 @@ public final class StudioRuntime {
             try{reply.done(true,handle(operation,args));}catch(Exception e){reply.done(false,error(e.getMessage()));}return;
         }
         boolean tracked=operation.equals("runtime.ensure")||operation.equals("runtime.test")||operation.equals("tool.execute")||operation.equals("terminal.open");
-        workers.submit(()->{if(tracked)emit("work",work.incrementAndGet());try{if(closed)throw new IOException("运行时已停止，排队操作未执行");reply.done(true,handle(operation,args));}catch(Throwable e){reply.done(false,error(e.getMessage()==null?e.getClass().getSimpleName():e.getMessage()));}finally{if(tracked)emit("work",work.decrementAndGet());}});
+        workers.submit(()->{if(tracked){work.incrementAndGet();emit("work",work.get()+managed.activeCount());}try{if(closed)throw new IOException("运行时已停止，排队操作未执行");reply.done(true,handle(operation,args));}catch(Throwable e){reply.done(false,error(e.getMessage()==null?e.getClass().getSimpleName():e.getMessage()));}finally{if(tracked){work.decrementAndGet();emit("work",work.get()+managed.activeCount());}}});
     }
     private static JSONObject error(String message){JSONObject j=new JSONObject();try{j.put("message",message);}catch(JSONException ignored){}return j;}
     private Object handle(String operation,JSONObject a)throws Exception{
@@ -62,7 +63,10 @@ public final class StudioRuntime {
             case "file.change":return revisions.get(project,a.getString("id"));
             case "file.revert":return revisions.revert(project,a.getString("id"));
             case "file.search":return files.search(project,a.optString("path"),a.getString("query"));
-            case "command.cancel":{String id=a.getString("id");journal().cancel(id);Command c=commands.get(id);if(c!=null)c.cancel();if(browserTool!=null)browserTool.cancel();return new JSONObject().put("cancelled",true);}
+            case "command.cancel":{String id=a.getString("id");journal().cancel(id);Command c=commands.get(id);if(c!=null)c.cancel();managed.cancelStart(id);if(browserTool!=null)browserTool.cancel();return new JSONObject().put("cancelled",true);}
+            case "process.list":return managed.list(project,a.optBoolean("logs"));
+            case "process.status":return managed.status(project,a.getString("id"));
+            case "process.stop":return managed.stop(project,a.getString("id"));
             case "terminal.open":return openTerminal(project,a.optInt("rows",24),a.optInt("cols",80));
             case "terminal.list":{JSONArray list=new JSONArray();for(Pty t:terminals.values())if(t.project.equals(project))list.put(new JSONObject().put("id",t.id).put("exited",t.exited));return new JSONObject().put("sessions",list);}
             case "terminal.attach":{Pty t=terminal(a);synchronized(t){String buffer=Base64.encodeToString(t.pending.toByteArray(),Base64.NO_WRAP);boolean truncated=t.pendingTruncated;t.pending.reset();t.pendingTruncated=false;t.attached=true;return new JSONObject().put("buffer",buffer).put("truncated",truncated).put("exited",t.exited).put("exitCode",t.exitCode);}}
@@ -91,6 +95,7 @@ public final class StudioRuntime {
         JSONObject cached=journal().claim(id,canonical(fingerprint));if(cached!=null)return cached;
         JSONObject result;
         try{journal().running(id);if(journal().cancelled(id))throw new IOException("工具在执行前已取消");switch(name){
+            case "process":result=managedTool(id,project,args);break;
             case "terminal":ensure(project);result=command(id,project,args.getString("command"),args.optString("cwd"),args.optInt("timeout_seconds",120));break;
             case "read_file":result=files.read(project,args.getString("path"),args.optInt("offset"),args.optInt("limit",65536));break;
             case "write_file":result=revisions.write(project,args.getString("path"),args.getString("content"));break;
@@ -102,6 +107,23 @@ public final class StudioRuntime {
         }if(!result.has("ok"))result.put("ok",true);}catch(Exception e){result=new JSONObject().put("ok",false).put("error",e.getMessage()==null?"工具执行已中断":e.getMessage());}
         if(result.toString().getBytes(StandardCharsets.UTF_8).length>524288){for(String key:new String[]{"stdout","stderr"})if(result.has(key)){String value=result.optString(key);result.put(key,value.substring(0,Math.min(16384,value.length())));}result.put("truncated",true);}
         journal().finish(id,result);return result;
+    }
+    private void managedChanged(){emit("work",work.get()+managed.activeCount());emit("process",true);}
+    private JSONObject managedTool(String id,String project,JSONObject args)throws Exception{
+        switch(args.getString("action")){
+            case "start":ensure(project);if(journal().cancelled(id))throw new IOException("常驻任务在启动前已取消");return managed.start(id,project,args);
+            case "list":return managed.list(project);
+            case "status":return managed.status(project,args.getString("id"));
+            case "stop":return managed.stop(project,args.getString("id"));
+            default:throw new IOException("Unknown process action");
+        }
+    }
+    private ManagedTasks.Child launchManaged(String project,String command,String cwd)throws Exception{
+        List<String> args=argv(project,cwd,false,command);String[] env=environment().entrySet().stream().map(e->e.getKey()+"="+e.getValue()).toArray(String[]::new);
+        int[] spawned=NativePty.spawnPiped(args.get(0),files.project(project).getPath(),args.toArray(new String[0]),env);final int pid=spawned[0];
+        final ParcelFileDescriptor outFd=ParcelFileDescriptor.adoptFd(spawned[1]),errFd=ParcelFileDescriptor.adoptFd(spawned[2]);
+        final InputStream out=new ParcelFileDescriptor.AutoCloseInputStream(outFd),err=new ParcelFileDescriptor.AutoCloseInputStream(errFd);
+        return new ManagedTasks.Child(){volatile boolean reaped;public InputStream stdout(){return out;}public InputStream stderr(){return err;}public int pid(){return pid;}public int await(){int code=JNI.waitFor(pid);reaped=true;return code;}public void stop(boolean force){if(reaped)return;int signal=force?OsConstants.SIGKILL:OsConstants.SIGQUIT;try{Os.kill(force?-pid:pid,signal);}catch(Exception ignored){}if(force)try{Os.kill(pid,signal);}catch(Exception ignored){}}};
     }
     private static String canonical(Object value)throws JSONException{if(value instanceof JSONObject){JSONObject object=(JSONObject)value;List<String> keys=new ArrayList<>();object.keys().forEachRemaining(keys::add);Collections.sort(keys);StringBuilder out=new StringBuilder("{");for(String key:keys){if(out.length()>1)out.append(',');out.append(JSONObject.quote(key)).append(':').append(canonical(object.get(key)));}return out.append('}').toString();}if(value instanceof JSONArray){JSONArray array=(JSONArray)value;StringBuilder out=new StringBuilder("[");for(int i=0;i<array.length();i++){if(i>0)out.append(',');out.append(canonical(array.get(i)));}return out.append(']').toString();}return value instanceof String?JSONObject.quote((String)value):String.valueOf(value);}
     private List<String> argv(String project,String cwd,boolean interactive,String command)throws Exception{
@@ -150,7 +172,7 @@ public final class StudioRuntime {
     }
     public void importFile(Uri uri,String project){workers.submit(()->{JSONObject event=new JSONObject();try{String name="imported-file";try(Cursor c=context.getContentResolver().query(uri,new String[]{OpenableColumns.DISPLAY_NAME},null,null,null)){if(c!=null&&c.moveToFirst())name=c.getString(0);}name=name.replaceAll("[\\\\/\\x00-\\x1f]","_");if(name.isEmpty()||name.equals(".")||name.equals(".."))name="imported-file";File target=files.resolve(project,name);if(target.exists()){String base=name;for(int i=1;target.exists();i++){name="import-"+i+"-"+base;target=files.resolve(project,name);}}File temp=File.createTempFile(".studio-import-",".tmp",files.project(project));boolean saved=false;try{try(InputStream in=context.getContentResolver().openInputStream(uri);FileOutputStream out=new FileOutputStream(temp)){if(in==null)throw new IOException("无法读取所选文件");byte[] b=new byte[65536];long total=0;int n;while((n=in.read(b))!=-1){total+=n;if(total>536870912L)throw new IOException("导入文件超过 512 MiB");out.write(b,0,n);}out.getFD().sync();}if(!temp.renameTo(target))throw new IOException("文件导入提交失败");saved=true;}finally{if(!saved)temp.delete();}event.put("path",name).put("project",project);}catch(Exception e){try{event.put("error",e.getMessage());}catch(JSONException ignored){}}try{event.put("type","import");}catch(JSONException ignored){}event(event);});}
     public void exportFile(Uri uri,String project,String path){workers.submit(()->{try{File source=files.resolve(project,path);if(!source.isFile())throw new IOException("请先保存要导出的文件");try(InputStream in=new FileInputStream(source);OutputStream out=context.getContentResolver().openOutputStream(uri,"wt")){if(out==null)throw new IOException("无法写入目标");byte[] b=new byte[65536];int n;while((n=in.read(b))!=-1)out.write(b,0,n);}event(new JSONObject().put("type","import").put("path","导出完成"));}catch(Exception e){try{event(new JSONObject().put("type","import").put("error",e.getMessage()));}catch(JSONException ignored){}}});}
-    public void cancelAll(){for(Command c:commands.values())c.cancel();for(Pty t:terminals.values())t.close();terminals.clear();}
+    public void cancelAll(){managed.close();for(Command c:commands.values())c.cancel();for(Pty t:terminals.values())t.close();terminals.clear();}
     public void detachTerminals(){for(Pty t:terminals.values())synchronized(t){t.attached=false;}}
     public void close(){closed=true;cancelAll();workers.shutdownNow();Thread cleanup=new Thread(()->{try{while(!workers.awaitTermination(30,TimeUnit.SECONDS)){}if(journal!=null)journal.close();}catch(InterruptedException e){Thread.currentThread().interrupt();}},"studio-close-journal");cleanup.setDaemon(true);cleanup.start();}
 }

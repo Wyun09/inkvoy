@@ -1,5 +1,5 @@
 {
-  "version": "2.3.0",
+  "version": "2.3.1",
   "source": "deepseek-web-bridge v0.2.2",
   "method": "Supplied Android sources include mobile page hooks, validated tool protocol, current-turn DOM boundaries and stable output buffering. No desktop bridge or Harness was modified.",
   "modules": {
@@ -33,7 +33,8 @@
     "reasoning-control.js": "6ac924148d674b08e44238053fc49d2841b18cd640a61c68dee598b93bb21e79"
   },
   "platformExtensions": {
-    "js/media.js": "3ea7757dbb6a1c9f574ba78a3ac5eebb63d20b92b0b3086a630a6ac38e1dd747",
+    "js/ui/processes.js": "f6f34248e0eddd8900c2b2c67e5490fac71d22e2accb1fb3103d8848a9076071",
+    "js/media.js": "094f64c3126cdf9d0bf983d35a9cf883116787b9902bf3c16f76a95c6685c27d",
     "js/ui/attachments.js": "222d19993ff56d12fa11234cf989bb59e4d6cc7a4e896e0713b1b0bb31f97b16",
     "js/agent-tools.js": "b47ec91fc17c5da6e433565d67ce93b9a3b6ee9bdb3058113729ed1fafa8ad80",
     "js/ui/questions.js": "4942858d92c2f04c6a520cf2cc079e5f2289585c5fd02f12c229e1497e73dfa3",
@@ -49,11 +50,11 @@
     "js/conversation-dom.js": "a898404f1372a7e39b02e14698c45e24219b5928dafc7eaa80808b2cf63c5ab8",
     "js/tasks.js": "1567d992f13df107d3a260fd65e6fdc23af33fb72c6b10a3a74960647fa53892",
     "js/engine.js": "5b2772972d7801148d7991f4da1cd4917acce5d66fd671895968ed49f4d4c5e7",
-    "js/client.js": "1580180d349a2642f808916e1c21ec822613beaae0df47b598534665a990daa7",
-    "js/ui/studio.js": "a0876e8d4cc7f29121390d2cdcd8db725a18d84e23cd48d056c550d0680766d7",
-    "js/ui/companion.js": "d635eb567599266d26c0304fbb9e8487799d96be993e9fe6472059d9d75e70f9",
-    "js/ui/reply-model.js": "a4edd40b4ec16ebc4532fce5b654005727590ca9959458ca85deefbd95ff2e38",
-    "js/ui/replies.js": "943e06d21b19440499bc30eccb0e73b8b4c68e1615458a933e1a6bacd6ccad4d",
+    "js/client.js": "3c1e4990b216896b7e2c439ec90ae02a6e8501d2cb7b625fdd410e794c657350",
+    "js/ui/studio.js": "a04c86b97e03ac7b80048d31412af667367537ec9c324a302328b54eeb2a39f9",
+    "js/ui/companion.js": "31fd623a6b423a3e76e80c6ee38869bd55286a489fa3ea4e115d664cf7a1f7bd",
+    "js/ui/reply-model.js": "59c85b9ac02cb6e454af355df9d4816df081f51af6323048077bf65467316e4a",
+    "js/ui/replies.js": "c4fdd7c1edd8994add71224154d8fff266e2a79464a23e71809cdbf039091295",
     "js/ui/changes.js": "ad0fbb6f98e582ce81daf8eb83ec2eec59b7a9dbd2804357a40dac3bfae334a6"
   },
   "domTextPatch": [

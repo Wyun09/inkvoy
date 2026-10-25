@@ -4,6 +4,7 @@ const tools = {
   list_files: ['reading', '查看目录'],
   search_files: ['reading', '搜索文件'],
   terminal: ['terminal', '运行命令'],
+  process: ['terminal','管理常驻任务'],
   write_file: ['writing', '写入文件'],
   browser:['reading','操作浏览器'],
   web_search:['reading','网页搜索'],

@@ -1,0 +1,96 @@
+{
+  "tests": 105,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "androidSdk": [
+    26,
+    33
+  ],
+  "physicalAndroidDevice": false,
+  "signedApk": "deepseek-android-bridge-v2.3.1.apk",
+  "apkSha256": "4f67703fe6044d6dcaa7ec5e4079ebf3488d81ce2a3594332a2e37eba3dc7fa5",
+  "suites": [
+    {
+      "name": "io.github.deepseekbridge.AccessSettingsTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "9.076"
+    },
+    {
+      "name": "io.github.deepseekbridge.ChatMediaTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "2.748"
+    },
+    {
+      "name": "io.github.deepseekbridge.ComputerBrowserTest",
+      "tests": "16",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "2.927"
+    },
+    {
+      "name": "io.github.deepseekbridge.FileRevisionsTest",
+      "tests": "20",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "8.781"
+    },
+    {
+      "name": "io.github.deepseekbridge.ManagedTasksTest",
+      "tests": "14",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "4.756"
+    },
+    {
+      "name": "io.github.deepseekbridge.ProviderGatewayTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.158"
+    },
+    {
+      "name": "io.github.deepseekbridge.ResponsivenessTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "2.248"
+    },
+    {
+      "name": "io.github.deepseekbridge.RuntimeAssetsTest",
+      "tests": "10",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "3.437"
+    },
+    {
+      "name": "io.github.deepseekbridge.RuntimeHardLinkTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.245"
+    },
+    {
+      "name": "io.github.deepseekbridge.StartupRegressionTest",
+      "tests": "12",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.492"
+    }
+  ],
+  "managedHttpEnvironment": "Actual desktop-host Python HTTP process; Android PRoot runtime not physically connected"
+}

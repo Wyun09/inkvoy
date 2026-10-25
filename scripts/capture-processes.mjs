@@ -1,0 +1,9 @@
+import {chromium} from 'playwright';
+import {writeFile} from 'node:fs/promises';
+import {uiHarness,navigateStudio} from '../test/ui-harness.mjs';
+const browser=await chromium.launch({headless:true,channel:process.platform==='win32'?'msedge':undefined});
+const output=new URL('../preview/',import.meta.url),file=name=>new URL(name,output).pathname.replace(/^\/([A-Za-z]:)/,'$1');
+try{
+ const {page,context}=await uiHarness(browser,{width:390,height:844},{studio:true,initialPage:'chat'});await navigateStudio(page,'terminal');await page.locator('#managed-tasks>summary').click();await page.locator('.managed-new>summary').click();await page.locator('#managed-command').fill('python3 -u -m http.server 8899 --bind 127.0.0.1');await page.locator('#managed-cwd').fill('ui-kit');await page.locator('#managed-url').fill('http://127.0.0.1:8899/');await page.locator('#managed-start').click();await page.waitForFunction(()=>document.querySelector('.managed-job')?.dataset.state==='running');await page.locator('.managed-new>summary').click();await page.locator('.managed-job details>summary').click();await page.screenshot({path:file('managed-231-running.png'),animations:'disabled'});await page.evaluate(()=>BridgeDashboard.setTheme('dark'));await page.screenshot({path:file('managed-231-dark.png'),animations:'disabled'});await context.close();
+ await writeFile(new URL('managed-231-preview.json',output),JSON.stringify({productionUi:true,viewport:{width:390,height:844},processState:'explicit Native fixtures; actual HTTP lifecycle tested separately by ManagedTasksTest',physicalAndroidDevice:false,previews:['managed-231-running.png','managed-231-dark.png']},null,2)+'\n');console.log('Captured managed process panel in light/dark themes using explicit Native fixtures.');
+}finally{await browser.close();}

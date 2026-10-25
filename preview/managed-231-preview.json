@@ -1,0 +1,13 @@
+{
+  "productionUi": true,
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "processState": "explicit Native fixtures; actual HTTP lifecycle tested separately by ManagedTasksTest",
+  "physicalAndroidDevice": false,
+  "previews": [
+    "managed-231-running.png",
+    "managed-231-dark.png"
+  ]
+}

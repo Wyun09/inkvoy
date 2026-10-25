@@ -61,6 +61,12 @@ export function createReplyView({container,copy,openFile,showChange,openImage=()
       const sources=el('div','reply-search-sources');for(const source of r.sources||[])if(/^https?:\/\//i.test(source.url))sources.append(action(source.title||source.url,()=>openLink(source.url)));node.append(sources);
     }
     if(tool.call.function?.name==='ask_user')for(const answer of r.answers||[])node.append(el('p','reply-question-answer',answer.question+'\n'+(answer.skipped?'已跳过':[...(answer.selected||[]),answer.custom].filter(Boolean).join('；'))));
+    if(tool.call.function?.name==='process'){
+      node.append(el('p','reply-result-meta',r.state==='running'?'常驻任务运行中 · 离开页面后继续':r.state==='stopping'?'常驻任务正在停止':r.state==='exited'?'常驻任务已退出':''));
+      if(r.previewUrl&&/^http:\/\/(127\.0\.0\.1|localhost|\[::1\]):\d+\//i.test(r.previewUrl))node.append(action('打开预览',()=>openLink(r.previewUrl),'reply-change-open'));
+      node.append(action('管理常驻任务',()=>window.BridgeDashboard?.navigate('terminal'),'reply-change-open'));
+      for(const job of r.jobs||[])node.append(el('p','reply-result-meta',[job.title,job.state,job.previewUrl].filter(Boolean).join(' · ')));
+    }
     if(tool.call.function?.name==='browser'){
       node.append(el('p','reply-browser-meta',[r.title,r.url].filter(Boolean).join(' · ')));
       node.append(action('打开 AI 浏览器',()=>window.BridgeDashboard?.navigate('computer'),'reply-change-open'));
@@ -94,7 +100,7 @@ export function createReplyView({container,copy,openFile,showChange,openImage=()
       row.root.dataset.state=tool.status;row.label.textContent=TOOL_LABELS[tool.call.function?.name]||tool.call.function?.name||'工具';
       const target=tool.args.path||tool.args.query||tool.args.command||tool.args.url||tool.args.action||'';row.title.title=target;row.target.hidden=!target;row.target.textContent=target.length>100?target.slice(0,100)+'…':target;
       row.status.textContent={running:'执行中',queued:'等待',completed:'完成',failed:'失败',cancelled:'已停止',returned:'已返回',interrupted:'待确认'}[tool.status];
-      row.populate=()=>{const inputSignature=tool.call.function?.arguments;if(row.inputSignature!==inputSignature){row.inputSignature=inputSignature;row.input.replaceChildren();if(tool.call.function?.name==='terminal'&&tool.args.command)row.input.append(code(tool.args.command,'Bash'));else if(tool.args.path)row.input.append(el('p','reply-result-meta','路径：'+tool.args.path));}const resultSignature=tool.resultMessage?.content??tool.status;if(row.resultSignature!==resultSignature){row.resultSignature=resultSignature;resultContent(row.result,tool,session.project);}};
+      row.populate=()=>{const inputSignature=tool.call.function?.arguments;if(row.inputSignature!==inputSignature){row.inputSignature=inputSignature;row.input.replaceChildren();if(['terminal','process'].includes(tool.call.function?.name)&&tool.args.command)row.input.append(code(tool.args.command,'Bash'));else if(tool.args.path)row.input.append(el('p','reply-result-meta','路径：'+tool.args.path));}const resultSignature=tool.resultMessage?.content??tool.status;if(row.resultSignature!==resultSignature){row.resultSignature=resultSignature;resultContent(row.result,tool,session.project);}};
       if(row.root.open)row.populate();
     }
     for(const [key,row]of v.toolNodes)if(!keep.has(key)){row.root.remove();v.toolNodes.delete(key);}

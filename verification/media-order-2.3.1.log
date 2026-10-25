@@ -1,0 +1,12 @@
+✔ image attachment becomes an actual image message part; files keep a readable project reference (1.0514ms)
+✔ client sends user images and view_image pixels while saving only immutable references (5.7024ms)
+✔ the image window is bounded and missing pixel data stops instead of claiming visual input (0.6976ms)
+✔ image anchors follow every result of the same tool batch, including older persisted message order (0.8359ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 92.9101
