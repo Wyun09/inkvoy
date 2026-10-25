@@ -12,7 +12,8 @@ import org.json.*;
 final class ProviderGateway {
     private static final java.util.regex.Pattern DONE=java.util.regex.Pattern.compile("(?:^|\\n)data:[\\t ]*\\[DONE\\][\\t ]*\\r?\\n\\r?\\n");
     interface Sink { void event(String id, JSONObject value); }
-    private final ExecutorService workers=Executors.newFixedThreadPool(2,r->new Thread(r,"studio-model-api"));
+    // Up to three cluster workers plus one foreground/background catalog read.
+    private final ExecutorService workers=Executors.newFixedThreadPool(4,r->new Thread(r,"studio-model-api"));
     private final ConcurrentHashMap<String,Job> jobs=new ConcurrentHashMap<>();
     private static final class Job { volatile HttpURLConnection connection; volatile String accountId; final AtomicBoolean cancelled=new AtomicBoolean(); }
     static URL endpoint(String raw,boolean models)throws Exception {
@@ -32,11 +33,12 @@ final class ProviderGateway {
         if(id==null||id.length()>128||raw==null||raw.length()>4000000){try{emit(sink,id,"error","接口请求超过限制");}catch(JSONException ignored){}return;}
         Job job=new Job();if(jobs.size()>=8||jobs.putIfAbsent(id,job)!=null){try{emit(sink,id,"error","已有接口请求在处理，请稍后再试");}catch(JSONException ignored){}return;}
         workers.execute(()->{
-            String key="";
+            String key="",host="API 端点";
             try{
                 JSONObject input=new JSONObject(raw);boolean account="openai-account".equals(input.optString("kind"));boolean models="models".equals(input.optString("operation"));
                 if(account){if(accounts==null)throw new IOException("账号登录通道不可用");job.accountId=input.getString("accountId");key=accounts.call().access(job.accountId);}else key=input.optString("key");if(key.length()>16384||key.indexOf('\r')>=0||key.indexOf('\n')>=0)throw new IOException("API 凭据格式不正确");
                 URL url=account?new URL(OpenAiAccounts.RESOURCE+(models?"/models":"/responses")):endpoint(input.getString("endpoint"),models);
+                host=url.getHost();
                 HttpURLConnection connection=(HttpURLConnection)url.openConnection();job.connection=connection;connection.setInstanceFollowRedirects(false);connection.setConnectTimeout(20000);connection.setReadTimeout(45000);
                 connection.setRequestProperty("Accept",models?"application/json":"text/event-stream, application/json");if(!key.isEmpty())connection.setRequestProperty("Authorization","Bearer "+key);
                 if(job.cancelled.get())throw new InterruptedIOException("请求已停止");
@@ -58,7 +60,7 @@ final class ProviderGateway {
                         emit(sink,id,"end",null);
                     }
                 }
-            }catch(Exception error){try{emit(sink,id,"error",job.cancelled.get()?"请求已停止":safe(error.getMessage(),key));}catch(JSONException ignored){}}
+            }catch(Exception error){try{String reason=NetworkErrors.message(error,host);sink.event(id,new JSONObject().put("type","error").put("code",job.cancelled.get()?"cancelled":NetworkErrors.code(error)).put("retryable",!job.cancelled.get()&&!NetworkErrors.code(error).equals("provider_error")).put("host",host).put("message",job.cancelled.get()?"请求已停止":reason==null?safe(error.getMessage(),key):reason));}catch(JSONException ignored){}}
             finally{if(job.connection!=null)job.connection.disconnect();jobs.remove(id,job);}
         });
     }

@@ -8,7 +8,7 @@ const element=(tag,cls,text)=>{const node=document.createElement(tag);if(cls)nod
 const store={get(key,fallback){try{return localStorage?.getItem('inkvoy-'+key)||fallback;}catch{return fallback;}},set(key,value){try{localStorage?.setItem('inkvoy-'+key,value);}catch{}}};
 
 export function enhanceWorkspace({openDrawer,closeDrawer,client,providers,selectSession,notify}){
- document.body.dataset.uiVersion='4';const motion=createWorkspaceMotion();
+ document.body.dataset.uiVersion='5';const motion=createWorkspaceMotion();
  const routes=new Map(DESTINATIONS.map(([route,title,icon])=>[route,{title,icon}]));
  const navigate=page=>{if(page==='models')$('model-settings-open').click();else window.BridgeDashboard.navigate(page);};
  const topbar=document.querySelector('.topbar'),brand=document.querySelector('.brand');brand.querySelector('strong').textContent='Inkvoy';brand.querySelector(':scope>div>span').textContent='SECURITY WORKSPACE';document.title='Inkvoy';
@@ -23,7 +23,7 @@ export function enhanceWorkspace({openDrawer,closeDrawer,client,providers,select
   if(button.tagName!=='BUTTON')continue;const page=button.dataset.drawerPage,route=routes.get(page);if(route)iconLabel(button,route.icon,route.title);
   const key=button.id==='drawer-display'?'preferences':['model-settings-open','drawer-accounts','drawer-extensions'].includes(button.id)||['web','connect'].includes(page)?'connections':'workspace';groups.get(key).append(button);
  }
- const more=element('details','drawer-more');more.id='drawer-more';more.append(element('summary','','工具与服务'));for(const page of ['tools','home','web','connect','chat']){const button=[...groups.values()].flatMap(group=>[...group.querySelectorAll('button')]).find(b=>b.dataset.drawerPage===page);if(button)more.append(button);}
+ const more=element('details','drawer-more');more.id='drawer-more';more.append(element('summary','','工具与服务'));for(const page of ['tasks','tools','home','web','connect','chat']){const button=[...groups.values()].flatMap(group=>[...group.querySelectorAll('button')]).find(b=>b.dataset.drawerPage===page);if(button)more.append(button);}
  shortcuts.replaceChildren(...groups.values(),more);if($('session-manage')&&$('session-archived-toggle'))$('session-manage').append($('session-archived-toggle'));
  const drawerQuery=element('button','drawer-command');drawerQuery.type='button';drawerQuery.append(uiIcon('command'),element('span','','快速前往'),element('kbd','','⌘ K'));$('drawer-new').after(drawerQuery);
 
@@ -73,9 +73,9 @@ export function enhanceWorkspace({openDrawer,closeDrawer,client,providers,select
 
  function createAppearance(){
   const section=element('section','hub-setting appearance-personality');section.innerHTML='<div><span class="overline">MAKE IT YOURS</span><h2>工作区风格</h2><p>调整界面密度和强调色。</p></div><div class="appearance-preview" aria-hidden="true"><span></span><section><i></i><i></i><b></b></section></div><label class="setting-label">强调色</label><div class="accent-options" role="group" aria-label="工作区强调色"></div><label class="setting-label">内容密度</label><div class="density-options" role="group" aria-label="内容密度"></div>';$('page-settings').querySelector('.hub-heading').after(section);
-  const colors=[['violet','鸢尾'],['jade','青绿'],['blue','钴蓝']];let accent=store.get('accent','violet'),density=store.get('density','comfortable');
+  const colors=[['graphite','墨色'],['jade','青绿'],['blue','钴蓝'],['amber','琥珀'],['violet','鸢尾']];let accent=store.get('accent-v5','graphite'),density=store.get('density','compact');
   const apply=()=>{document.body.dataset.accent=colors.some(([id])=>id===accent)?accent:'violet';document.body.dataset.density=['compact','comfortable','spacious'].includes(density)?density:'comfortable';section.querySelectorAll('[data-accent-choice]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.accentChoice===accent)));section.querySelectorAll('[data-density-choice]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.densityChoice===density)));window.BridgeDashboard?.layout();};
-  for(const [id,label]of colors){const b=element('button','accent-choice');b.type='button';b.dataset.accentChoice=id;b.append(element('i'),element('span','',label));b.onclick=()=>{accent=id;store.set('accent',id);apply();};section.querySelector('.accent-options').append(b);}
+  for(const [id,label]of colors){const b=element('button','accent-choice');b.type='button';b.dataset.accentChoice=id;b.append(element('i'),element('span','',label));b.onclick=()=>{accent=id;store.set('accent-v5',id);apply();};section.querySelector('.accent-options').append(b);}
   for(const [id,label]of [['compact','紧凑'],['comfortable','标准'],['spacious','宽松']]){const b=element('button','',label);b.type='button';b.dataset.densityChoice=id;b.onclick=()=>{density=id;store.set('density',id);apply();};section.querySelector('.density-options').append(b);}apply();
  }
  function recomposeHome(){const home=$('page-home');home.querySelector('.page-heading h1').textContent='工作台';home.querySelector('.eyebrow').textContent='YOUR WORKSPACE';home.querySelector('.subtitle').textContent='本机服务、项目入口与真实执行记录';const quick=element('section','workspace-launchers');quick.setAttribute('aria-label','工作区入口');for(const [page,icon,title,caption]of [['chat','chat','开始对话','交给 Inky 一件事'],['files','files','项目文件','查看与编辑'],['terminal','terminal','终端','在设备上运行'],['computer','browser','浏览器','与 AI 一起操作']]){const b=element('button');b.append(uiIcon(icon));const text=element('span');text.append(element('strong','',title),element('small','',caption));b.append(text,uiIcon('next'));b.onclick=()=>navigate(page);quick.append(b);}home.querySelector('.hero').before(quick);const grid=element('div','overview-grid');home.querySelector('.hero').before(grid);for(const node of [home.querySelector('.hero'),home.querySelector('.work-metrics')])grid.append(node);home.querySelector('.hero-decoration')?.remove();}

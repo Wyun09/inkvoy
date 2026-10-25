@@ -1,0 +1,9 @@
+.reply-body.is-streaming::after{content:none;display:none}
+.stream-arrival{animation:stream-arrive .32s cubic-bezier(.22,.8,.25,1) both}
+@keyframes stream-arrive{from{opacity:.22;filter:blur(1.2px)}to{opacity:1;filter:blur(0)}}
+.reply-thinking>summary{transition:color .2s,background-color .2s}.reply-thinking>summary::after{transition:transform .28s cubic-bezier(.22,.8,.25,1)}.reply-thinking[open]>summary::after{transform:rotate(180deg)}.reply-thought{scrollbar-width:thin;overscroll-behavior:contain;overflow-anchor:none}
+.reply-thinking[data-live=true]>summary::before{content:'';width:7px;height:7px;border:1.5px solid currentColor;border-radius:50%;animation:thought-breath 2s ease-in-out infinite}
+@keyframes thought-breath{50%{opacity:.35;transform:scale(.78)}}
+body[data-ui-paused] .stream-arrival,body[data-ui-paused] .reply-thinking>summary::before{animation-play-state:paused!important}
+body.reduce-motion .stream-arrival,body.reduce-motion .reply-thinking>summary::before{animation:none!important;filter:none!important;opacity:1!important}body.reduce-motion .reply-thinking>summary::after{transition:none!important}
+@media(prefers-reduced-motion:reduce){.stream-arrival,.reply-thinking>summary::before{animation:none!important;filter:none!important;opacity:1!important}.reply-thinking>summary::after{transition:none!important}}

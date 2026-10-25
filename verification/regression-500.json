@@ -1,0 +1,322 @@
+{
+  "version": "5.0.0",
+  "date": "2026-10-24",
+  "javascript": {
+    "tests": 381,
+    "passed": 381,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "android": {
+    "tests": 196,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "frameworkSdk": [
+      26,
+      33
+    ],
+    "plainJavaPipeTests": 3,
+    "reports": [
+      {
+        "class": "io.github.deepseekbridge.AccessSettingsTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.BrowserImeRegressionTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.ChatMediaTest",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.CommandCaptureTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.ComputerBrowserTest",
+        "tests": 34,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.DisplayModeTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.ExtensionHubTest",
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.ExtensionImportTest",
+        "tests": 14,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.FileRevisionsTest",
+        "tests": 20,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.ManagedTasksTest",
+        "tests": 14,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.OpenAiAccountsTest",
+        "tests": 14,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.ProviderGatewayTest",
+        "tests": 14,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.ResponsivenessTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.RuntimeAssetsTest",
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.RuntimeHardLinkTest",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.StartupRegressionTest",
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.VersionFiveFeaturesTest",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  "apk": {
+    "apk": "deepseek-android-bridge-v5.0.0.apk",
+    "bytes": 616089858,
+    "sha256": "a5fbccb1b5530283c3d091d7266aec5a627a50e15d7853da031ee32b9a19ec36",
+    "rawZipPathsPortable": true,
+    "sourcePayloadsMatched": [
+      "assets/app.css",
+      "assets/browser-actions.js",
+      "assets/browser-observation.js",
+      "assets/browser-script.js",
+      "assets/companion.png",
+      "assets/compute.worker.js",
+      "assets/engine.bundle.js",
+      "assets/engine.html",
+      "assets/Geist.ttf",
+      "assets/logo.png",
+      "assets/mcp.worker.js",
+      "assets/NOTICE.txt",
+      "assets/runtime/debian-arm64.tar.gz",
+      "assets/runtime/manifest.json",
+      "lib/arm64-v8a/libandroid-shmem.so",
+      "lib/arm64-v8a/libproot.so",
+      "lib/arm64-v8a/libproot_loader.so",
+      "lib/arm64-v8a/libtalloc.so",
+      "lib/arm64-v8a/libtermux.so"
+    ],
+    "nativeLibraries": {
+      "lib/arm64-v8a/libandroid-shmem.so": {
+        "sha256": "84475798e07c8174dbbfaec70a827fdb02f19ffa69a589380c13e7507fd0e731",
+        "minLoadAlignment": 16384
+      },
+      "lib/arm64-v8a/libproot.so": {
+        "sha256": "0df9240e08015aa7f5194c32b3fe5d9c8a8ea16dfb895ccafb65847a7f392c7d",
+        "minLoadAlignment": 16384
+      },
+      "lib/arm64-v8a/libproot_loader.so": {
+        "sha256": "cbdef0e652c2b78af25d867e1719fdebbb0915e25aae2dd35b3b5c1835f6b551",
+        "minLoadAlignment": 16384
+      },
+      "lib/arm64-v8a/libtalloc.so": {
+        "sha256": "160d39bc0d7ed946f22310d1d6f20addda21b02b0972dffe929fe49951543941",
+        "minLoadAlignment": 16384
+      },
+      "lib/arm64-v8a/libtermux.so": {
+        "sha256": "937c85da731e3a8b1b0bb66a3ccfaca8d66d48ef1cde3b1962e9d18b97072852",
+        "minLoadAlignment": 16384
+      }
+    },
+    "signerSha256": "cc8f15b569d5e813c68d49f4fa17d19afbe6f7526ef5dbdade88e317116c2b59",
+    "sameSignerAsV1": true,
+    "minSdk": 26,
+    "targetSdk": 35,
+    "versionCode": 23,
+    "androidDeviceVerified": false
+  },
+  "logs": {
+    "verification/javascript-500.log": "bd2546bd5abeba6f7201927da90165cf2c40b62f9988c37ba175aa294f0feb9d",
+    "verification/android-500.log": "adfb3cffecabafb262695e3fe83be064b78d9651308d7ec705e094d304874db1",
+    "verification/apk-500.log": "628065cf30e8b23e6954409888655a7381031ed65d742b81b2af1fa83dde090d",
+    "verification/payload-500.log": "96bdb6c605282e10318fc299db5e44ae0f298588252fb5dbc59d6648adc38be4",
+    "verification/performance-500.log": "5563785254546326b1f69ba9173e69c768f00aa3e1113dd197c78d056544c207",
+    "verification/motion-500.log": "67d92bdac07e74e4e6563a543099d4d671aad1256ff6314a4b43c4dc276576e9",
+    "verification/motion-refinement-500.log": "deb3e5137da3065b5e4a258998074eef2860d6e74944d2614a5d5a9664dd33e2"
+  },
+  "productionScreenshots": 29,
+  "motionVideos": [
+    "preview/5.0.0/studio-working-motion.webm",
+    "preview/5.0.0/studio-logo-forms.webm",
+    "preview/5.0.0/studio-team-motion.webm",
+    "preview/5.0.0/studio-stream-motion.webm"
+  ],
+  "decodedVideoFrameChecks": [
+    {
+      "video": "preview/5.0.0/studio-working-motion.webm",
+      "contactSheet": "preview/5.0.0/studio-working-motion-contact.png",
+      "frames": [
+        "preview/5.0.0/studio-working-motion-frame-1.png",
+        "preview/5.0.0/studio-working-motion-frame-2.png",
+        "preview/5.0.0/studio-working-motion-frame-3.png"
+      ],
+      "durationSeconds": 7.48,
+      "times": [
+        2.9920000000000004,
+        4.114000000000001,
+        5.236
+      ],
+      "frameHashes": [
+        "2bbf232ddc14b2516b29c4ac69d8f2d9de06208bd5d07d77e576f7cf47e67b50",
+        "2649ce39c21dfa423d027a6782306b4bcba9373eaed19949251290f368d5f58c",
+        "1eade645d6a5d7907f201224120941090bb4f630fdc7d20c684b230371669f57"
+      ],
+      "distinctFrames": 3
+    },
+    {
+      "video": "preview/5.0.0/studio-logo-forms.webm",
+      "contactSheet": "preview/5.0.0/studio-logo-motion-contact.png",
+      "frames": [
+        "preview/5.0.0/studio-logo-motion-frame-1.png",
+        "preview/5.0.0/studio-logo-motion-frame-2.png",
+        "preview/5.0.0/studio-logo-motion-frame-3.png"
+      ],
+      "durationSeconds": 14.6,
+      "times": [
+        5.84,
+        8.030000000000001,
+        10.219999999999999
+      ],
+      "frameHashes": [
+        "2a1c83096d48dd78d88b501f7ce44515afcf2296f8fa1d2f29130082257b7c47",
+        "748e61365b4b0ec54ed05118df0337c7f510414eb0671b79407f54671e5addff",
+        "26cd8c6cc712f97ec7326980efade8c3eb9630f15d01a192e02a6a4f70e3129a"
+      ],
+      "distinctFrames": 3
+    },
+    {
+      "video": "preview/5.0.0/studio-team-motion.webm",
+      "contactSheet": "preview/5.0.0/studio-team-motion-contact.png",
+      "frames": [
+        "preview/5.0.0/studio-team-motion-frame-1.png",
+        "preview/5.0.0/studio-team-motion-frame-2.png",
+        "preview/5.0.0/studio-team-motion-frame-3.png"
+      ],
+      "durationSeconds": 8.08,
+      "times": [
+        3.232,
+        4.444000000000001,
+        5.656
+      ],
+      "frameHashes": [
+        "d0cfc569f608ec1ded2c7beaa5a529b148e3a05e0e29a425476fc3d44bb1d549",
+        "193b5834a4e988fb2f743dddd5f7bc4a96c959fc42ee75ea45e0af6b2bff685d",
+        "ccbb37ed35443e514f3fbccaeab9e130eb9723f8ccf76cb18a952b4ed46eb7ba"
+      ],
+      "distinctFrames": 3
+    },
+    {
+      "video": "preview/5.0.0/studio-stream-motion.webm",
+      "contactSheet": "preview/5.0.0/studio-stream-motion-contact.png",
+      "frames": [
+        "preview/5.0.0/studio-stream-motion-frame-1.png",
+        "preview/5.0.0/studio-stream-motion-frame-2.png",
+        "preview/5.0.0/studio-stream-motion-frame-3.png"
+      ],
+      "durationSeconds": 10.08,
+      "times": [
+        4.032,
+        5.5440000000000005,
+        7.055999999999999
+      ],
+      "frameHashes": [
+        "429029d686349222142a260c08a1d88883e51b20cadb87328f63f8b4b6efcedd",
+        "d068e55fc0eb5925bca1ed4ae7ad70e42069b10525d58ad350d692914c412a88",
+        "466249f1d0d9383ea6b44a096e7a376f863a3dd353c1134951ce5eab4ed11a89"
+      ],
+      "distinctFrames": 3
+    }
+  ],
+  "dependencies": 35,
+  "physicalAndroidDevice": false,
+  "realDeepseekAccount": false,
+  "realOpenAiAccount": false,
+  "realAndroidMcpProcess": false,
+  "lockScreenBackground": false,
+  "postStyleUi": {
+    "tests": 22,
+    "passed": 22,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "delta": {
+      "fullSuiteApkSha256": "1ad34374d5f7e0127110de9d97fd3d7c34d3116bd8821da0d370ef54d2271d3c",
+      "finalApkSha256": "a5fbccb1b5530283c3d091d7266aec5a627a50e15d7853da031ee32b9a19ec36",
+      "changedPayloadEntries": [
+        "assets/app.css"
+      ],
+      "codeAndNativePayloadsUnchanged": true,
+      "reason": "After 381 passing full-suite tests, increase the intact phone-logo CSS motion amplitude. Followed by 22 focused UI/protocol tests and final APK verification."
+    }
+  }
+}

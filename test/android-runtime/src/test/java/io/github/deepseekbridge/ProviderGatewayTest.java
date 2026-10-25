@@ -25,6 +25,22 @@ public class ProviderGatewayTest {
     }
     private JSONObject request(String endpoint,String op)throws Exception{return new JSONObject().put("endpoint",endpoint).put("operation",op).put("key","fixture-key").put("body",new JSONObject().put("model","fixture-model").put("messages",new JSONArray()).put("stream",true));}
     private void response(Socket socket,int status,String type,String text)throws Exception{byte[] bytes=text.getBytes(StandardCharsets.UTF_8);OutputStream out=socket.getOutputStream();out.write(("HTTP/1.1 "+status+" Fixture\r\nContent-Type: "+type+"\r\nContent-Length: "+bytes.length+"\r\nConnection: close\r\n\r\n").getBytes(StandardCharsets.UTF_8));out.write(bytes);out.flush();}
+    @Test public void threeClusterEndpointsAndCatalogCanReceiveRequestsBeforeAnyAnswerCompletes()throws Exception{
+        CountDownLatch entered=new CountDownLatch(4),release=new CountDownLatch(1),done=new CountDownLatch(4);List<JSONObject> errors=new CopyOnWriteArrayList<>();
+        Serve handler=(socket,headers)->{entered.countDown();release.await(5,TimeUnit.SECONDS);response(socket,200,"application/json",headers.startsWith("GET")?"{\"data\":[]}":"{\"choices\":[{\"message\":{\"role\":\"assistant\",\"content\":\"actual endpoint response\"}}]}");};
+        try(Server a=new Server(handler);Server b=new Server(handler);Server c=new Server(handler);Server catalog=new Server(handler)){
+            ProviderGateway gateway=new ProviderGateway();try{
+                ProviderGateway.Sink sink=(id,event)->{if(event.optString("type").equals("error"))errors.add(event);if(event.optString("type").equals("response")||event.optString("type").equals("error"))done.countDown();};
+                gateway.request("worker-a",request(a.base(),"chat").put("key","fixture-a").toString(),sink);
+                gateway.request("worker-b",request(b.base(),"chat").put("key","fixture-b").toString(),sink);
+                gateway.request("worker-c",request(c.base(),"chat").put("key","fixture-c").toString(),sink);
+                gateway.request("catalog",request(catalog.base(),"models").toString(),sink);
+                assertTrue("Native transport must not serialize the cluster behind two threads",entered.await(5,TimeUnit.SECONDS));assertEquals(4,done.getCount());
+                assertTrue(a.request.get().contains("Bearer fixture-a"));assertFalse(a.request.get().contains("fixture-b"));assertTrue(b.request.get().contains("Bearer fixture-b"));assertTrue(c.request.get().contains("Bearer fixture-c"));assertTrue(catalog.request.get().startsWith("GET /v1/models"));
+                release.countDown();assertTrue(done.await(5,TimeUnit.SECONDS));assertTrue(errors.toString(),errors.isEmpty());
+            }finally{release.countDown();gateway.close();}
+        }
+    }
     @Test public void endpointsAcceptBasesAndFullPathsWithoutDuplicatingV1()throws Exception{assertEquals("https://example.test/v1/chat/completions",ProviderGateway.endpoint("https://example.test/v1/chat/completions",false).toString());assertEquals("http://127.0.0.1:11434/v1/models",ProviderGateway.endpoint("http://127.0.0.1:11434/v1/",true).toString());assertEquals("https://example.test/v1/chat/completions",ProviderGateway.endpoint("https://example.test",false).toString());try{ProviderGateway.endpoint("file:///private",false);fail();}catch(IOException expected){}}
     @Test public void nativeTransportEmitsFirstSseBeforeServerCompletes()throws Exception{
         CountDownLatch finishServer=new CountDownLatch(1),first=new CountDownLatch(1),done=new CountDownLatch(1),closeServer=new CountDownLatch(1);List<String> parts=new CopyOnWriteArrayList<>();AtomicReference<String> error=new AtomicReference<>();

@@ -9,6 +9,7 @@ import { initStudio } from './ui/studio.js';
 import { setTimeout, clearTimeout, fireTimer } from './native-clock.js';
 import { createClientStream } from './client-stream.js';
 import { createProviders } from './providers.js';
+import {createCoordinator} from './coordination.js';
 import {createAgentTools,createWebSearch} from './agent-tools.js';
 globalThis.Buffer = MobileBuffer;
 let sequence = 0;
@@ -70,11 +71,12 @@ try { clientState = JSON.parse(NativeBridge.loadClientState?.() || '{}'); } catc
 const requestWeb=(id,body,onProgress,requestKey)=>new Promise((resolve,reject)=>{clientRequests.set(id,{resolve,reject,onProgress,stream:createClientStream()});engine.receive({id,path:'/v1/chat/completions',body,requestKey});});
 const interactions=createAgentTools({search:createWebSearch({request:requestWeb,cancel:id=>engine.cancel(id,false),evidence:text=>backend.searchEvidence(text)}),onQuestion:value=>window.StudioUI?.questionState(value)});
 const extensions=createExtensions({native:workspace,onChange:value=>window.StudioUI?.extensionState?.(value)});
-const agentTools={...interactions,cancelPreparation:()=>extensions.cancelPreparation(),supports:name=>extensions.supports(name)||interactions.supports(name),run:(id,name,args,context)=>extensions.supports(name)?extensions.run(id,name,args,context):interactions.run(id,name,args,context),cancel:id=>extensions.cancel(id)||interactions.cancel(id)};
+const coordinator=createCoordinator({providers,requestWeb,cancelWeb:id=>engine.cancel(id,false),native:workspace,interactions,tools:LOCAL_TOOLS,onUpdate:(event,persist)=>client.coordinationState(event,persist)});
+const agentTools={...interactions,cancelPreparation:()=>extensions.cancelPreparation(),supports:name=>coordinator.supports(name)||extensions.supports(name)||interactions.supports(name),run:(id,name,args,context)=>coordinator.supports(name)?coordinator.run(id,name,args,context):extensions.supports(name)?extensions.run(id,name,args,context):interactions.run(id,name,args,context),cancel:id=>coordinator.cancel(id)||extensions.cancel(id)||interactions.cancel(id)};
 const renderClient=frameQueue(state=>window.StudioUI?.render(state));
 const client = createClient({
   modelInfo:()=>providers.current()?{name:providers.current().name,model:providers.current().model,source:'api',provider:{...providers.current()}}:{name:'DeepSeek',model:'deepseek-web',source:'web'},
-  initialState:clientState, native:workspace,agentTools,
+  initialState:clientState, native:workspace,agentTools,coordinationInfo:work=>coordinator.catalog(work),
   toolCatalog:async context=>[...LOCAL_TOOLS,...await extensions.listTools(context)],extensionInstructions:()=>extensions.skillHints(),
   request:(id,body,onProgress,connection)=>connection?.source==='api'?providers.request(id,body,onProgress,connection.provider):requestWeb(id,body,onProgress),
   cancel:id=>{if(!providers.cancel(id))engine.cancel(id,false);},serialize:encodeState,saveState:raw=>saveLocal('client', raw),
@@ -107,7 +109,7 @@ globalThis.AndroidEngine = {
   timer: fireTimer,
   stateSaved(id, ok) { const target = statePending.get(id); if (!target) return; clearTimeout(target.timer); statePending.delete(id); target.resolve(ok === true); },
   workspaceRpc(id, response) { const target=workspacePending.get(id);if(!target)return;clearTimeout(target.timer);workspacePending.delete(id);if(response.ok)target.resolve(response.value);else target.reject(new Error(response.error?.message||'本机操作失败')); },
-  nativeEvent:event=>{extensions.event(event);window.StudioUI?.nativeEvent(event);},
+  nativeEvent:event=>{client.output(event);extensions.event(event);window.StudioUI?.nativeEvent(event);},
   providerEvent:(id,value)=>providers.event(id,value),
   rpc(id, response) {
     const target = pending.get(id); if (!target) return;

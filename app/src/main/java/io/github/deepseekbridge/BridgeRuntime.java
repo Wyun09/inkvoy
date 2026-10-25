@@ -388,6 +388,7 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
         private boolean current() { return epoch == engineEpoch && !destroyed; }
         @JavascriptInterface public String loadState() { return current() ? localState.load() : "{}"; }
         @JavascriptInterface public int uiScale(){return context.getSharedPreferences("studio-display",Context.MODE_PRIVATE).getInt("scale",90);}
+        @JavascriptInterface public boolean fullscreen(){return DisplayMode.fullscreen(context);}
         @JavascriptInterface public String loadClientState() { return current() ? clientState.load() : "{}"; }
         @JavascriptInterface public String loadProviders() { return current() ? providerState.load() : "{}"; }
         @JavascriptInterface public void providerCancel(String id) { if (current()) providers.cancel(id); }

@@ -47,7 +47,12 @@ public final class MainActivity extends Activity {
             if (Build.VERSION.SDK_INT >= 30) {
                 android.graphics.Insets bars = insets.getInsets(WindowInsets.Type.systemBars());
                 android.graphics.Insets keyboard = insets.getInsets(WindowInsets.Type.ime());
-                view.setPadding(bars.left, bars.top, bars.right, Math.max(bars.bottom, keyboard.bottom));
+                android.graphics.Insets cutout=insets.getInsets(WindowInsets.Type.displayCutout());
+                boolean full=DisplayMode.fullscreen(this);
+                view.setPadding(Math.max(bars.left,cutout.left),full?0:bars.top,Math.max(bars.right,cutout.right),Math.max(full?0:bars.bottom,keyboard.bottom));
+            } else {
+                boolean full=DisplayMode.fullscreen(this);int bottom=insets.getSystemWindowInsetBottom();
+                view.setPadding(full?0:insets.getSystemWindowInsetLeft(),full?0:insets.getSystemWindowInsetTop(),full?0:insets.getSystemWindowInsetRight(),bottom>getResources().getDisplayMetrics().density*100?bottom:full?0:bottom);
             }
             return insets;
         });
@@ -57,7 +62,8 @@ public final class MainActivity extends Activity {
         launchBridge();
     }
     private boolean available(){return service!=null&&service.runtime!=null;}
-    @Override public void onConfigurationChanged(android.content.res.Configuration configuration){super.onConfigurationChanged(configuration);if(root!=null)root.post(()->{if(available()){service.runtime.engine.evaluateJavascript("window.dispatchEvent(new Event('resize'))",null);applyBrowserLayout();service.runtime.publishUi();}});}
+    @Override public void onWindowFocusChanged(boolean focused){super.onWindowFocusChanged(focused);if(focused)DisplayMode.applyFullscreen(this);}
+    @Override public void onConfigurationChanged(android.content.res.Configuration configuration){super.onConfigurationChanged(configuration);DisplayMode.applyFullscreen(this);if(root!=null)root.post(()->{if(available()){service.runtime.engine.evaluateJavascript("window.dispatchEvent(new Event('resize'))",null);applyBrowserLayout();service.runtime.publishUi();}});}
     private void launchBridge(){
         root.removeAllViews();
         int major = 0;
@@ -140,6 +146,7 @@ public final class MainActivity extends Activity {
     }
     private void handleAction(String action, JSONObject argument) {
         if (!available()) return;
+        if(action.equals("fullscreen")){DisplayMode.fullscreen(this,argument.optBoolean("enabled",true));service.runtime.publishUi();return;}
         if(action.equals("orientation")){try{DisplayMode.set(this,argument.optString("mode"));service.runtime.publishUi();}catch(IllegalArgumentException e){service.runtime.toast("不支持的屏幕方向");service.runtime.publishUi();}return;}
         if(action.equals("ui-scale")){int value=argument.optInt("value",90);if(value>=30&&value<=110&&value%10==0)getSharedPreferences("studio-display",MODE_PRIVATE).edit().putInt("scale",value).apply();return;}
         if(action.equals("account-usage")){try{startActivity(new Intent(Intent.ACTION_VIEW,android.net.Uri.parse("https://chatgpt.com/settings/usage")));}catch(ActivityNotFoundException e){service.runtime.toast("系统浏览器不可用");}return;}

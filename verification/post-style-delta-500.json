@@ -1,0 +1,9 @@
+{
+  "fullSuiteApkSha256": "1ad34374d5f7e0127110de9d97fd3d7c34d3116bd8821da0d370ef54d2271d3c",
+  "finalApkSha256": "a5fbccb1b5530283c3d091d7266aec5a627a50e15d7853da031ee32b9a19ec36",
+  "changedPayloadEntries": [
+    "assets/app.css"
+  ],
+  "codeAndNativePayloadsUnchanged": true,
+  "reason": "After 381 passing full-suite tests, increase the intact phone-logo CSS motion amplitude. Followed by 22 focused UI/protocol tests and final APK verification."
+}

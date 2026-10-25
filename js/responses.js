@@ -1,3 +1,4 @@
+import {requestEffort} from './reasoning.js';
 export function toResponses(body,profile){
  const input=[];for(const message of body.messages||[]){
   if(message.role==='tool'){input.push({type:'function_call_output',call_id:message.tool_call_id,output:message.content||''});continue;}
@@ -6,7 +7,7 @@ export function toResponses(body,profile){
   if(parts.length)input.push({role:message.role,content:parts});
   for(const call of message.tool_calls||[])input.push({type:'function_call',call_id:call.id,name:call.function.name,arguments:call.function.arguments});
  }
- return {model:profile.model,input,store:false,stream:true,include:['reasoning.encrypted_content'],...(body.tools?.length?{tools:body.tools.map(t=>({type:'function',name:t.function.name,description:t.function.description,parameters:t.function.parameters,strict:false}))}:{}),...(body.reasoning_effort==='high'?{reasoning:{effort:'high',summary:'auto'}}:{})};
+ return {model:profile.model,input,store:false,stream:true,include:['reasoning.encrypted_content'],...(Number.isInteger(body.max_tokens)&&body.max_tokens>0?{max_output_tokens:body.max_tokens}:{}),...(body.tools?.length?{tools:body.tools.map(t=>({type:'function',name:t.function.name,description:t.function.description,parameters:t.function.parameters,strict:false}))}:{}),...(requestEffort(profile,body.reasoning_effort)?{reasoning:{effort:requestEffort(profile,body.reasoning_effort),summary:'auto'}}:{})};
 }
 export function createResponsesStream(){
  let buffer='',content='',reasoning='',error,response,done=false,started=false;const items=[];

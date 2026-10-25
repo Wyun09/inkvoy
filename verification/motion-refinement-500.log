@@ -1,0 +1,30 @@
+✔ companion follows actual tool names and distinguishes terminal, writing and reading (1.1493ms)
+✔ completion, error, input, cancellation and inactive sessions have truthful states (0.2453ms)
+✔ Inky really follows a pointer drag, springs back to its own anchor and stops moving under reduced motion (10152.2864ms)
+✔ the reply logo follows the actual pending tool, then resolves to idle animation on stop (8844.5783ms)
+✔ catalog metadata survives profile persistence without guessing capabilities from model names (2.8699ms)
+✔ effort is scoped to connection and model and invalid values resolve to provider default (0.5258ms)
+✔ manual declarations apply only to the explicitly configured model (0.3216ms)
+✔ custom requests and Responses both pass only supported explicit tiers; default omits the parameter (2.1544ms)
+✔ catalog discovery retains account tiers and custom metadata, without treating visibility as support (4.1578ms)
+✔ the agent request uses the selected model tier and retains the web toggle separately (4.6316ms)
+✔ automatic discovery persists actual capacities without changing the selected connection (1.1069ms)
+✔ a discovery response for old credentials cannot overwrite an edited profile (2.1911ms)
+✔ account catalogs accept the standard data envelope and retain remote effort metadata (0.7498ms)
+✔ failure before any answer keeps an incomplete response and retry notice (8509.9319ms)
+✔ one response groups tool results, renders rich code/table, and copies exact code (9409.8678ms)
+✔ keyed replies keep expanded tools and code DOM while state changes, and preserve reading position (8949.3645ms)
+✔ file diff opens real snapshot contract, reverts via native operation, and closes with back/focus (9043.6463ms)
+✔ failed commands keep stderr visible in their own result and changed files cannot be reverted (8958.4567ms)
+✔ the intact logo transitions from its current pose and keeps one continuous breathing phase (12361.7597ms)
+✔ stream chunks appear immediately without a cursor or replaying settled text, then retain exact final copy (9932.3484ms)
+✔ reasoning disclosure can reverse during motion and reduced motion shows new chunks without animation (9593.6473ms)
+✔ the phone-sized logo visibly moves while its state stays constant, pauses in background and resumes (11428.5498ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 63191.4177

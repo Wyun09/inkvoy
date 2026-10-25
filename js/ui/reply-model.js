@@ -1,9 +1,9 @@
-export const TOOL_LABELS={terminal:'运行命令',process:'常驻任务',read_file:'读取文件',write_file:'修改文件',list_files:'查看目录',search_files:'搜索文件',view_image:'查看图片',browser:'操作浏览器',web_search:'网页搜索',ask_user:'问答交互'};
-export const STATUS_LABELS={idle:'准备就绪',preparing:'准备工作区',generating:'正在生成',tools:'正在执行',cancelling:'正在停止',completed:'已完成',needs_input:'等你补充',budget:'等待继续',failed:'运行遇到问题',interrupted:'运行中断',cancelled:'已停止'};
+export const TOOL_LABELS={update_plan:'更新计划',report_goal:'报告验收',delegate:'委派子代理',team_dispatch:'团队并行任务',terminal:'运行命令',process:'常驻任务',read_file:'读取文件',write_file:'修改文件',list_files:'查看目录',search_files:'搜索文件',view_image:'查看图片',browser:'操作浏览器',web_search:'网页搜索',ask_user:'问答交互'};
+export const STATUS_LABELS={idle:'准备就绪',preparing:'准备工作区',compacting:'正在压缩上下文',generating:'正在生成',tools:'正在执行',cancelling:'正在停止',completed:'已完成',needs_input:'等你补充',budget:'等待继续',failed:'运行遇到问题',interrupted:'运行中断',cancelled:'已停止'};
 export function parseJSON(value){try{return JSON.parse(value);}catch{return null;}}
 const parsed=new WeakMap();
 function cachedJSON(owner,source){const previous=parsed.get(owner);if(previous?.source===source)return previous.value;const value=parseJSON(source);parsed.set(owner,{source,value});return value;}
-export function replyTurns(session,active=false,startIndex=0,draft){
+export function replyTurns(session,active=false,startIndex=0,draft,output){
   const items=[];let turn=null;
   const ensure=(index)=>turn||(turn={key:'turn:'+index,type:'assistant',messages:[],tools:[],orphanResults:[]},items.push(turn),turn);
   const messages=session?.messages||[];
@@ -16,10 +16,10 @@ export function replyTurns(session,active=false,startIndex=0,draft){
   // The same turn key is used when its first committed assistant message arrives.
   if((active||['failed','interrupted','cancelled','needs_input','budget'].includes(session?.status))&&items.at(-1)?.type==='user')ensure((session?.messages||[]).length);
   const preview=active&&draft?.sessionId===session?.id?draft:!active?session?.partial:null;
-  if(preview&&(preview.content||preview.reasoning)){const t=ensure(messages.length);t.draft=active?'live':'partial';t.messages.push({key:'draft',message:{role:'assistant',content:preview.content||'',reasoning_content:preview.reasoning||'',model_label:session.modelLabel}});}
+  if(preview&&(preview.content||preview.reasoning)){const t=ensure(messages.length);t.draft=active?'live':'partial';t.phase=preview.phase;t.messages.push({key:'draft',message:{role:'assistant',content:preview.content||'',reasoning_content:preview.reasoning||'',model_label:session.modelLabel}});}
   const last=items.filter(i=>i.type==='assistant').at(-1);
-  for(const item of items){if(item.type!=='assistant')continue;item.live=active&&item===last;item.status=item===last?(session?.status||'idle'):'completed';
-    for(const tool of item.tools){tool.status=tool.resultMessage?(tool.result?.cancelled?'cancelled':tool.result?.ok===false||Number.isFinite(tool.result?.exitCode)&&tool.result.exitCode!==0?'failed':tool.result?.ok===true?'completed':'returned'):item.live&&session?.tool?.id===tool.call.id?'running':item.live?'queued':'interrupted';}
+  for(const item of items){if(item.type!=='assistant')continue;item.latest=item===last;item.live=active&&item===last;item.status=item===last?(session?.status||'idle'):'completed';
+    for(const tool of item.tools){tool.workers=['delegate','team_dispatch'].includes(tool.call.function?.name)?(session?.work?.runs||[]).filter(r=>r.group===tool.call.id):[];tool.progress=item.live&&output?.id===tool.call.id?output:null;tool.status=tool.resultMessage?(tool.result?.cancelled?'cancelled':tool.result?.ok===false||Number.isFinite(tool.result?.exitCode)&&tool.result.exitCode!==0?'failed':tool.result?.ok===true?'completed':'returned'):item.live&&session?.tool?.id===tool.call.id?'running':item.live?'queued':'interrupted';}
     item.final=item.messages.at(-1);if(item.final?.message.tool_calls?.length)item.final=null;
     item.notes=item.messages.filter(m=>m!==item.final&&m.message.content);
     item.reasoning=item.messages.filter(m=>m.message.reasoning_content).map(m=>String(m.message.reasoning_content)).join('\n\n');

@@ -11,10 +11,13 @@ import {createComputerView} from './computer.js';
 import {createQuestionView} from './questions.js';
 import {createAttachments} from './attachments.js';
 import {createSettingsHub} from './settings-hub.js';
+import {createComposer} from './composer.js';
+import {createWorkView} from './workflows.js';
+import {installBrowserScripts} from './browser-scripts.js';
 
 const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const shellQuote=s=>"'"+String(s).replaceAll("'","'\\''")+"'";
-const labels={idle:'准备开始',generating:'正在生成',tools:'工具执行中',cancelling:'正在停止',completed:'已完成',needs_input:'等待你的补充',cancelled:'已停止',failed:'需要处理',interrupted:'上次运行中断',budget:'已达本轮预算'};
+const labels={idle:'准备开始',generating:'正在生成',compacting:'正在压缩上下文',tools:'工具执行中',cancelling:'正在停止',completed:'已完成',needs_input:'等待你的补充',cancelled:'已停止',failed:'需要处理',interrupted:'上次运行中断',budget:'已达本轮预算'};
 const uiIcon=(path)=>`<svg viewBox="0 0 24 24" aria-hidden="true">${path}</svg>`;
 const icons={code:uiIcon('<path d="m8 7-5 5 5 5m8-10 5 5-5 5m-3-14-2 18"/>'),spark:uiIcon('<path d="m12 3 2.7 6.3L21 12l-6.3 2.7L12 21l-2.7-6.3L3 12l6.3-2.7Z"/>'),search:uiIcon('<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/>'),folder:uiIcon('<path d="M3 7h6l2-3h5l2 3h3v13H3Z"/>'),send:uiIcon('<path d="M12 20V4m-6 6 6-6 6 6"/>'),copy:uiIcon('<rect x="8" y="8" width="12" height="13" rx="3"/><path d="M16 8V4H4v12h4"/>')};
 export function initStudio({client,native,providers,agentTools,extensions}) {
@@ -26,7 +29,7 @@ export function initStudio({client,native,providers,agentTools,extensions}) {
   const $=id=>document.getElementById(id);const toast=t=>window.BridgeDashboard?.toast(t);
   const wrap=fn=>async event=>{const button=event?.currentTarget?.tagName==='BUTTON'?event.currentTarget:null;const disabled=button?.disabled;if(button){button.disabled=true;button.setAttribute('aria-busy','true');}try{await fn(event);}catch(e){toast(e?.message||'操作失败，请检查环境状态');}finally{if(button){button.disabled=!!disabled;button.removeAttribute('aria-busy');}}};
   const click=(id,fn)=>$(id).addEventListener('click',wrap(fn));
-  let changeView,modelView,mediaView,workspaceView,cached,renderFingerprint='',dir='',file='',dirty=false,currentTerm,terminalSerial=0,activePage='chat',runtimeCurrent={},runtimeRevision=0,showArchived=false;const terminals=new Map();
+  let changeView,modelView,mediaView,workspaceView,composerView,workView,browserScriptView,cached,renderFingerprint='',dir='',file='',dirty=false,currentTerm,terminalSerial=0,activePage='chat',runtimeCurrent={},runtimeRevision=0,showArchived=false;const terminals=new Map();
   const scrim=mountWorkspaceDrawer(icons);
   $('app').append(scrim);$('drawer-sessions').append($('session-picker'));$('session-picker').hidden=false;
   const search=document.createElement('div');search.className='drawer-search';search.innerHTML=icons.search+'<input id="session-search" type="search" placeholder="搜索会话…" aria-label="搜索本机会话">';$('drawer-new').after(search);$('drawer-new').innerHTML='<span>＋</span> 新建会话';
@@ -43,7 +46,7 @@ export function initStudio({client,native,providers,agentTools,extensions}) {
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('composer-modes').hidden){closeOptions();$('composer-options').focus();e.preventDefault();}});
   document.addEventListener('visibilitychange',()=>{document.body.toggleAttribute('data-ui-paused',document.hidden);});
   let drawerFocus;
-  function closeDrawer(){if(workspaceView?.close())return true;if(mediaView?.close())return true;if(modelView?.close())return true;if(changeView?.close())return true;if(scrim.hidden)return false;scrim.hidden=true;$('session-menu').setAttribute('aria-expanded','false');document.querySelectorAll('.page,.topbar,.bottom-nav').forEach(n=>n.inert=false);drawerFocus?.focus();return true;}
+  function closeDrawer(){if(workView?.close())return true;if(browserScriptView?.close())return true;if(composerView?.close())return true;if(workspaceView?.close())return true;if(mediaView?.close())return true;if(modelView?.close())return true;if(changeView?.close())return true;if(scrim.hidden)return false;scrim.hidden=true;$('session-menu').setAttribute('aria-expanded','false');document.querySelectorAll('.page,.topbar,.bottom-nav').forEach(n=>n.inert=false);drawerFocus?.focus();return true;}
   function openDrawer(event){closeOptions();drawerFocus=event?.currentTarget||document.activeElement;scrim.hidden=false;$('session-menu').setAttribute('aria-expanded','true');document.querySelectorAll('.page,.topbar,.bottom-nav').forEach(n=>n.inert=true);$('drawer-close').focus();}
   click('drawer-close',closeDrawer);click('drawer-new',()=>{if($('chat-new').disabled)return;$('chat-new').click();closeDrawer();});click('drawer-theme',()=>$('theme').click());$('display-orientation').onchange=e=>NativeBridge.uiAction('orientation',JSON.stringify({mode:e.target.value}));
   scrim.addEventListener('click',event=>{if(event.target===scrim)closeDrawer();});
@@ -77,7 +80,7 @@ export function initStudio({client,native,providers,agentTools,extensions}) {
     const listKey=JSON.stringify([state.selected,query,showArchived,visibleSessions.map(({id,title,pinned,archived})=>[id,title,pinned,archived])]);
     if(listKey!==renderFingerprint){renderFingerprint=listKey;$('client-sessions').replaceChildren(...visibleSessions.map(session=>{const b=document.createElement('button');b.className=session.id===state.selected?'selected':'';const label=document.createElement('span');label.className='drawer-session-label';label.textContent=(session.pinned?'★ ':'')+session.title+(session.archived?' · 已归档':'');b.append(label);b.addEventListener('click',()=>{if(dirty){toast('先保存或关闭文件改动，再切换项目');return;}client.select(session.id);closeDrawer();dir='';file='';$('file-editor').hidden=true;renderFingerprint='';});return b;}));
     if(!visibleSessions.length)$('client-sessions').innerHTML='<p class="drawer-empty">'+(query?'没有找到匹配的会话':'暂无对话')+'</p>';}
-    if(activePage==='chat'||activePage==='computer'&&document.getElementById('computer-workspace')?.dataset.split==='true')replyView.render(s,isActive,state.draft);
+    if(activePage==='chat'||activePage==='computer'&&document.getElementById('computer-workspace')?.dataset.split==='true')replyView.render(s,isActive,state.draft,false,state.toolOutput);
     changeView.refresh();
     const companion=companionState(s,isActive);
     $('client-progress').hidden=!companion.visible;$('client-progress').classList.toggle('is-finished',!isActive);
@@ -85,10 +88,10 @@ export function initStudio({client,native,providers,agentTools,extensions}) {
     $('client-phase').textContent=state.draft&&state.draft.sessionId===s?.id?(state.draft.phase==='searching'?'搜索网页':state.draft.phase==='repairing'?'校验回复格式':state.draft.reasoning&&!state.draft.content?'正在思考':'正在回复'):companion.label;$('client-progress').dataset.active=String(isActive);updateWorkStatus();
     $('client-stop').hidden=!isActive;$('composer-options').disabled=!!state.active;if(state.active)closeOptions();
     $('client-notice').hidden=!(s?.notice||state.storage?.error);$('client-notice').querySelector('span').textContent=s?.notice||state.storage?.error||'';$('client-resume').hidden=isActive||s?.status==='completed';
-    $('chat-send').disabled=!!state.active;$('chat-input').disabled=!!state.active;$('chat-new').disabled=!!state.active;
+    $('chat-send').disabled=!!state.active&&!/^\//.test($('chat-input').value.trim());$('chat-input').disabled=false;$('chat-new').disabled=!!state.active;
     $('client-stop').disabled=s?.status==='cancelling';
     for(const [id,key]of [['client-agent','agent'],['client-thinking','thinking'],['client-search','search']]){const enabled=s?.settings?.[key]??key!=='thinking';$(id).classList.toggle('selected',enabled);$(id).setAttribute('aria-pressed',String(enabled));$(id).disabled=!!state.active;}
-    modelView?.render();workspaceView?.render(state,s,companion);
+    modelView?.render();workspaceView?.render(state,s,companion);composerView?.render(state);workView?.render(state);
   }
   click('chat-new',()=>{if(dirty)throw new Error('先保存或关闭文件改动，再新建项目');client.create();dir='';$('file-editor').hidden=true;});
   click('session-menu',openDrawer);
@@ -99,12 +102,13 @@ export function initStudio({client,native,providers,agentTools,extensions}) {
   let deleteArmed=0;
   click('session-delete',()=>{const s=client.current();if(!s)return;if(dirty)throw new Error('先保存或关闭文件改动');if(Date.now()-deleteArmed>4000){deleteArmed=Date.now();toast('再次点击删除本机聊天记录；项目文件保留');return;}client.remove(s.id);deleteArmed=0;});
   click('session-export',()=>{const s=client.current();if(s)NativeBridge.uiAction('export-chat',JSON.stringify({id:s.id}));});
-  $('chat-form').addEventListener('submit',wrap(async e=>{e.preventDefault();const text=$('chat-input').value;if(!text.trim()&&!mediaView.current().length)return;$('chat-input').value='';await client.send(text,mediaView.take());}));
+  $('chat-form').addEventListener('submit',wrap(async e=>{e.preventDefault();const text=$('chat-input').value;if(composerView?.isBusy())throw new Error('正在读取引用，请稍候再发送。');if(!text.trim()&&!mediaView.current().length&&!composerView.references().length)return;if(/^\//.test(text.trim())){await composerView.command(text);$('chat-input').value='';composerView.sent();return;}if(client.snapshot().active)throw new Error('任务正在运行；可以先写草稿，或用 /stop 停止。');await client.send(text,mediaView.current(),composerView.references(),()=>{mediaView.take();composerView.takeReferences();$('chat-input').value='';composerView.sent();});}));
   $('chat-input').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){$('chat-form').requestSubmit();e.preventDefault();}});
   click('client-stop',()=>client.stop());click('client-resume',()=>client.resume());
 
-  $('chat-input').addEventListener('input',()=>{$('chat-input').style.height='auto';$('chat-input').style.height=Math.min(160,Math.max(54,$('chat-input').scrollHeight))+'px';});
-  for(const [id,key]of [['client-agent','agent'],['client-thinking','thinking'],['client-search','search']])click(id,()=>{const s=client.current()||client.create();client.settings({[key]:!s.settings[key]});});
+  $('chat-input').addEventListener('input',()=>{$('chat-input').style.height='auto';$('chat-input').style.height=Math.min(180,Math.max(48,$('chat-input').scrollHeight))+'px';$('chat-send').disabled=!!client.snapshot().active&&!/^\//.test($('chat-input').value.trim());});
+  for(const [id,key]of [['client-agent','agent'],['client-search','search']])click(id,()=>{const s=client.current()||client.create();client.settings({[key]:!s.settings[key]});});
+  click('client-thinking',()=>modelView?.reasoning());
   async function loadFiles() {
     const currentProject=project(),currentDirectory=dir;
     const data=await native('file.list',{project:currentProject,path:currentDirectory});if(project()!==currentProject||dir!==currentDirectory)return;$('file-directory').textContent='/workspace'+(dir?'/'+dir:'');
@@ -167,7 +171,7 @@ export function initStudio({client,native,providers,agentTools,extensions}) {
   setInterval(()=>{if(!document.hidden&&activePage==='chat'&&cached?.active)updateWorkStatus();},1000);
   async function refreshRuntime(){const revision=++runtimeRevision;const value=await native('runtime.status',{});if(revision===runtimeRevision)runtimeState(value);}
   const diagnostic=document.createElement('button');diagnostic.id='runtime-diagnostic';diagnostic.textContent='复制诊断';$('runtime-test').after(diagnostic);
-  click('runtime-diagnostic',async()=>{await refreshRuntime();NativeBridge.uiAction('copy-text',JSON.stringify({text:JSON.stringify({appVersion:'3.1.0',runtime:runtimeCurrent},null,2)}));toast('环境诊断已复制');});
+  click('runtime-diagnostic',async()=>{await refreshRuntime();NativeBridge.uiAction('copy-text',JSON.stringify({text:JSON.stringify({appVersion:'5.0.0',runtime:runtimeCurrent},null,2)}));toast('环境诊断已复制');});
   click('runtime-refresh',refreshRuntime);click('runtime-install',async()=>{try{await native('runtime.ensure',{project:project()});toast('环境校验完成');}finally{await refreshRuntime();}});
   click('runtime-test',async()=>{$('runtime-test').disabled=true;$('runtime-report').hidden=false;$('runtime-report').textContent='正在运行真实工具自检…';try{const r=await native('runtime.test',{project:project()});$('runtime-report').textContent=JSON.stringify(r,null,2);}finally{await refreshRuntime();}});
   document.querySelectorAll('[data-analysis]').forEach(b=>b.addEventListener('click',wrap(async()=>{
@@ -178,9 +182,12 @@ export function initStudio({client,native,providers,agentTools,extensions}) {
   window.addEventListener('bridge:navigate',event=>{closeOptions();activePage=event.detail;if(activePage==='chat'||activePage==='computer')render(client.snapshot());if(activePage==='files')void loadFiles().catch(e=>toast(e.message));if(activePage==='tools')void refreshRuntime().catch(e=>toast(e.message));if(activePage==='terminal'){selectTerminal(currentTerm);if(!terminals.size)void native('terminal.list',{project:project()}).then(async r=>{for(const s of r.sessions||[])await startTerminal(s.id);}).catch(e=>toast(e.message));}});
   const processView=createProcessView({native,project,openLink:url=>NativeBridge.uiAction('open-link',JSON.stringify({url})),notify:toast});
   const computerView=createComputerView({native,client,notify:toast});
+  browserScriptView=installBrowserScripts({native,notify:toast});
   const questionView=agentTools?createQuestionView({tools:agentTools,client,notify:toast}):null;
   const settingsHub=extensions?createSettingsHub({native,providers,client,extensions,notify:toast,closeDrawer}):null;
   workspaceView=enhanceWorkspace({openDrawer,closeDrawer,client,providers,notify:toast,selectSession(id){if(dirty)throw new Error('先保存或关闭文件改动，再切换项目');client.select(id);dir='';file='';$('file-editor').hidden=true;renderFingerprint='';BridgeDashboard.navigate('chat');}});
-  window.StudioUI={render,extensionState:value=>settingsHub?.extensionState(value),questionState:value=>questionView?.render(value),platformState,closeDrawer,providerState:()=>modelView?.render(),nativeEvent(event){settingsHub?.event(event);if(event.type==='process'){processView.changed();}else if(event.type==='computer'){computerView.render(event.value);}else if(event.type==='runtime'){runtimeRevision++;runtimeState(event.value);}else if(event.type==='clipboard'){terminals.get(currentTerm)?.term.paste(event.text||'');}else if(event.type==='terminal'){const t=terminals.get(event.id);if(t){if(event.data)t.term.write(Uint8Array.from(atob(event.data),c=>c.charCodeAt(0)));if(event.exitCode!==undefined){t.exitCode=event.exitCode;t.term.writeln('\r\n[进程退出：'+event.exitCode+']');renderTermTabs();}}}else if(event.type==='import'){toast(event.error||'已导入 '+event.path);if(!event.error){void mediaView.imported(event);void loadFiles().catch(()=>{});}}}};
+  composerView=createComposer({reasoning:arg=>modelView?.reasoning(arg),client,native,extensions,attachments:mediaView,notify:toast,navigate:page=>BridgeDashboard.navigate(page),openModel:()=>modelView.open(),openWork:section=>workView?.open(section),newChat:()=>{if(client.snapshot().active)throw new Error('请先停止当前任务。');$('chat-new').click();BridgeDashboard.navigate('chat');}});
+  workView=createWorkView({client,providers,notify:toast,closeDrawer});
+  window.StudioUI={render,openWork:section=>workView?.open(section),extensionState:value=>settingsHub?.extensionState(value),questionState:value=>questionView?.render(value),platformState,closeDrawer,providerState:()=>{modelView?.render();composerView?.render(client.snapshot());},nativeEvent(event){settingsHub?.event(event);if(event.type==='process'){processView.changed();}else if(event.type==='computer'){computerView.render(event.value);}else if(event.type==='runtime'){runtimeRevision++;runtimeState(event.value);}else if(event.type==='clipboard'){terminals.get(currentTerm)?.term.paste(event.text||'');}else if(event.type==='terminal'){const t=terminals.get(event.id);if(t){if(event.data)t.term.write(Uint8Array.from(atob(event.data),c=>c.charCodeAt(0)));if(event.exitCode!==undefined){t.exitCode=event.exitCode;t.term.writeln('\r\n[进程退出：'+event.exitCode+']');renderTermTabs();}}}else if(event.type==='import'){toast(event.error||'已导入 '+event.path);if(!event.error){void mediaView.imported(event);void loadFiles().catch(()=>{});}}}};
   client.publish();void refreshRuntime().catch(()=>{});
 }

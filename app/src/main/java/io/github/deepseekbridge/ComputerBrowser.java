@@ -25,7 +25,7 @@ public final class ComputerBrowser {
     private final ExecutorService captures=Executors.newSingleThreadExecutor();
     private final Listener listener;
     private final File captureDirectory;
-    private final String observeScript,actionScript;
+    private final String observeScript,actionScript,scriptTemplate;
     private boolean desktop;
     private final LinkedHashMap<String,JSONObject> observedPages=new LinkedHashMap<>();
     private FrameLayout surface;
@@ -48,6 +48,7 @@ public final class ComputerBrowser {
         String source="";try(InputStream in=context.getAssets().open("browser-observation.js")){ByteArrayOutputStream out=new ByteArrayOutputStream();byte[] b=new byte[4096];int n;while((n=in.read(b))!=-1)out.write(b,0,n);source=new String(out.toByteArray(),StandardCharsets.UTF_8);}catch(IOException ignored){}
         observeScript=source;
         String actions="";try(InputStream in=context.getAssets().open("browser-actions.js")){ByteArrayOutputStream out=new ByteArrayOutputStream();byte[] b=new byte[4096];int n;while((n=in.read(b))!=-1)out.write(b,0,n);actions=new String(out.toByteArray(),StandardCharsets.UTF_8);}catch(IOException ignored){}actionScript=actions;
+        String template="";try(InputStream in=context.getAssets().open("browser-script.js")){ByteArrayOutputStream out=new ByteArrayOutputStream();byte[] b=new byte[4096];int n;while((n=in.read(b))!=-1)out.write(b,0,n);template=new String(out.toByteArray(),StandardCharsets.UTF_8);}catch(IOException ignored){}scriptTemplate=template;
         desktop=context.getSharedPreferences("studio-browser",Context.MODE_PRIVATE).getBoolean("desktop",true);
     }
     public void attach(Context activity){activityContext.setBaseContext(activity);}
@@ -105,6 +106,11 @@ public final class ComputerBrowser {
     public void ui(JSONObject a,StudioRuntime.Reply reply){
         try{switch(a.optString("action")){
             case "status":break;
+            case "script":
+                if(busy)throw new IOException("浏览器正在执行操作，请等待当前步骤完成");
+                humanActivity();surface();busy=true;phase="执行网页脚本";int scriptToken=++epoch;
+                pendingCancel=()->{busy=false;reply.done(false,"页面已变化或操作被接管，脚本结果未确认；未自动重跑。");};
+                executeScript(a,scriptToken,(ok,result)->{pendingCancel=null;busy=false;phase=ok?"脚本已返回":"脚本未成功";emit();try{reply.done(ok,ok?state().put("scriptResult",result):result);}catch(Exception e){reply.done(false,e.getMessage());}});return;
             case "allow":enabled=true;phase="人机协作";error="";showPointer();break;
             case "takeover":takeOver();break;
             case "open":humanActivity();surface();navigateTo(normalizeUrl(a.optString("url")));break;
@@ -139,6 +145,7 @@ public final class ComputerBrowser {
             if(action.equals("open")){navigateTo(normalizeUrl(a.optString("url")));main.postDelayed(()->waitLoaded(token,reply,0),250);return;}
             if(action.equals("observe")){waitLoaded(token,reply,0);return;}
             if(loading||navigationPending){waitReadyForAction(a,token,reply,0);return;}
+            if(action.equals("script")){executeScript(a,token,reply);return;}
             freshAction(a,token,reply);
         }catch(Exception e){reply.done(false,e.getMessage());}
     }
@@ -191,6 +198,7 @@ public final class ComputerBrowser {
     private void execute(JSONObject a,int token,StudioRuntime.Reply reply){
         try{
             String action=a.getString("action");
+            if(action.equals("script")){executeScript(a,token,reply);return;}
             if(action.equals("move")||action.equals("click")){
                 JSONObject point=verifiedTarget==null?a:verifiedTarget;
                 float x=(float)(coordinate(point,"x",cssWidth)*web.getWidth()/cssWidth),y=(float)(coordinate(point,"y",cssHeight)*web.getHeight()/cssHeight);
@@ -214,6 +222,19 @@ public final class ComputerBrowser {
             else throw new IOException("未知 computer-use 动作");
             main.postDelayed(()->waitLoaded(token,reply,0),250);
         }catch(Exception e){reply.done(false,e.getMessage());}
+    }
+    private void executeScript(JSONObject args,int token,StudioRuntime.Reply reply){
+        try{
+            if(web==null||!allowedUrl(web.getUrl())||loading||navigationPending)throw new IOException("请先打开并完成加载一个 HTTP(S) 网页");
+            String key="__inkvoy_script_"+UUID.randomUUID().toString().replace("-",""),quoted=JSONObject.quote(key),source=BrowserScripts.source(scriptTemplate,args.optString("script"),key);int document=generation;
+            web.evaluateJavascript(source,ignored->main.post(new Runnable(){int tries;public void run(){if(token!=epoch||closed)return;
+                if(document!=generation){reply.done(false,"脚本执行期间页面发生变化，未确认结果；未自动重跑。");return;}
+                web.evaluateJavascript("JSON.stringify(globalThis["+quoted+"]||null)",raw->{if(token!=epoch||closed)return;try{Object decoded=new JSONTokener(raw).nextValue();JSONObject value=decoded instanceof String?new JSONObject((String)decoded):null;
+                    if(value!=null&&value.optBoolean("done")){web.evaluateJavascript("delete globalThis["+quoted+"]",null);observation="";lastPage=null;reply.done(value.optBoolean("ok"),value.opt(value.optBoolean("ok")?"value":"error"));return;}
+                    if(++tries>=125){web.evaluateJavascript("delete globalThis["+quoted+"]",null);reply.done(false,"脚本未在 5 秒内返回，请检查语法或异步任务；已发生的页面变化保留，未自动重跑。");return;}main.postDelayed(this,40);
+                }catch(Exception e){reply.done(false,"无法读取脚本结果，未自动重复执行。");}});
+            }}));
+        }catch(Exception error){reply.done(false,error.getMessage());}
     }
     private void nativeClick(float x,float y,int token,Runnable done){
         pointer.pulse();injecting=true;try{web.requestFocusFromTouch();hover(x,y);touch(MotionEvent.ACTION_DOWN,x,y);}finally{injecting=false;}
@@ -246,7 +267,7 @@ public final class ComputerBrowser {
         }finally{input.endBatchEdit();}
     }
     static void applyKey(JSONObject a,WebView web)throws Exception{String key=a.optString("key");if(key.equalsIgnoreCase("SELECTALL")||key.equalsIgnoreCase("CTRL+A")){InputConnection input=web.onCreateInputConnection(new EditorInfo());if(input==null||!input.performContextMenuAction(android.R.id.selectAll))throw new IOException("当前输入框未接受全选");}else{int code=keyCode(key);if(code==-1)throw new IOException("不支持的按键");web.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN,code));web.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP,code));}}
-    static String actionLabel(String action){switch(action){case "open":return "AI 正在打开网页";case "observe":return "AI 正在观察页面";case "move":return "AI 正在移动光标";case "click":return "AI 正在点击";case "type":return "AI 正在输入";case "clear":case "delete":return "AI 正在删除文本";case "zoom":return "AI 正在缩放";case "key":return "AI 正在按键";case "scroll":return "AI 正在滚动";default:return "AI 正在浏览";}}
+    static String actionLabel(String action){switch(action){case "open":return "AI 正在打开网页";case "observe":return "AI 正在观察页面";case "move":return "AI 正在移动光标";case "click":return "AI 正在点击";case "type":return "AI 正在输入";case "clear":case "delete":return "AI 正在删除文本";case "zoom":return "AI 正在缩放";case "key":return "AI 正在按键";case "scroll":return "AI 正在滚动";case "script":return "AI 正在执行网页脚本";default:return "AI 正在浏览";}}
     static int keyCode(String key){switch(key.toUpperCase(Locale.ROOT)){case "ENTER":return KeyEvent.KEYCODE_ENTER;case "TAB":return KeyEvent.KEYCODE_TAB;case "ESCAPE":return KeyEvent.KEYCODE_ESCAPE;case "BACKSPACE":return KeyEvent.KEYCODE_DEL;case "DELETE":return KeyEvent.KEYCODE_FORWARD_DEL;case "ARROWUP":return KeyEvent.KEYCODE_DPAD_UP;case "ARROWDOWN":return KeyEvent.KEYCODE_DPAD_DOWN;case "ARROWLEFT":return KeyEvent.KEYCODE_DPAD_LEFT;case "ARROWRIGHT":return KeyEvent.KEYCODE_DPAD_RIGHT;case "HOME":return KeyEvent.KEYCODE_MOVE_HOME;case "END":return KeyEvent.KEYCODE_MOVE_END;default:return -1;}}
     private void touch(int action,float x,float y){long now=SystemClock.uptimeMillis();if(action==MotionEvent.ACTION_DOWN)mouseDown=now;MotionEvent.PointerProperties pointer=new MotionEvent.PointerProperties();pointer.id=0;pointer.toolType=MotionEvent.TOOL_TYPE_MOUSE;MotionEvent.PointerCoords point=new MotionEvent.PointerCoords();point.x=x;point.y=y;point.pressure=action==MotionEvent.ACTION_DOWN?1:0;point.size=1;MotionEvent event=MotionEvent.obtain(mouseDown,now,action,1,new MotionEvent.PointerProperties[]{pointer},new MotionEvent.PointerCoords[]{point},0,action==MotionEvent.ACTION_DOWN?MotionEvent.BUTTON_PRIMARY:0,1,1,0,0,InputDevice.SOURCE_MOUSE,0);web.dispatchTouchEvent(event);event.recycle();}
     private void hover(float x,float y){long now=SystemClock.uptimeMillis();MotionEvent event=MotionEvent.obtain(now,now,MotionEvent.ACTION_HOVER_MOVE,x,y,0);event.setSource(android.view.InputDevice.SOURCE_MOUSE);if(web instanceof PageWebView)((PageWebView)web).mouseHover(event);else web.dispatchGenericMotionEvent(event);event.recycle();}

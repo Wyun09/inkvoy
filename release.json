@@ -1,11 +1,11 @@
 {
-  "version": "4.0.0",
-  "versionCode": 22,
-  "buildDate": "2026-10-23",
+  "version": "5.0.0",
+  "versionCode": 23,
+  "buildDate": "2026-10-24",
   "package": "io.github.deepseekbridge",
-  "apk": "deepseek-android-bridge-v4.0.0.apk",
-  "bytes": 616048828,
-  "sha256": "1038a4a3d5a63e0bb2df9f5f76c536aeddb145da8deb7689770e30b6aea7a28d",
+  "apk": "deepseek-android-bridge-v5.0.0.apk",
+  "bytes": 616089858,
+  "sha256": "a5fbccb1b5530283c3d091d7266aec5a627a50e15d7853da031ee32b9a19ec36",
   "signerSha256": "cc8f15b569d5e813c68d49f4fa17d19afbe6f7526ef5dbdade88e317116c2b59",
   "minSdk": 26,
   "targetSdk": 35,
@@ -92,8 +92,8 @@
     }
   },
   "verification": {
-    "javascript": 328,
-    "androidFrameworkRegression": 181,
+    "javascript": 381,
+    "androidFrameworkRegression": 196,
     "androidImeThreads": 6,
     "androidComputerUse": 34,
     "androidChatMedia": 8,
@@ -103,33 +103,34 @@
     "rawZipPathsPortable": true,
     "signedApkReadByAndroidAssetManager": true,
     "fullInstalledApkImageHashChecked": true,
-    "sourcePayloadsCompared": 18,
+    "sourcePayloadsCompared": 19,
     "physicalAndroidDevice": false,
     "realDeepseekAccount": false,
     "realOpenAiAccount": false,
     "realAndroidMcpProcess": false,
     "lockScreenBackground": false,
     "currentRun": [
-      "328 JavaScript tests",
-      "181 Android API 26/33 tests against final signed APK",
-      "Final APK signing, assets, runtime hash, portable ZIP paths and native alignment",
-      "Production screenshots and two actual desktop interaction videos",
-      "Desktop benchmark against final 3.1.0 APK"
+      "381 JavaScript tests",
+      "196 Android API 26/33 framework and Java pipe-capture tests",
+      "Final APK signer, AssetManager image hash, payload comparison, portable paths and native alignment",
+      "29 production UI screenshots and desktop fixture videos, decoded frames inspected",
+      "Desktop 4x CPU benchmark against signed 4.0.0 APK"
     ],
-    "detailedRecord": "verification/regression-400.json"
+    "detailedRecord": "verification/regression-500.json",
+    "postStyleUiChecks": 22
   },
   "debianSources": {
     "packages": 465,
     "files": 2145,
     "bytes": 1134408545
   },
-  "fix": "FIX_4.0.0.md",
+  "fix": "FIX_5.0.0.md",
   "ui": {
-    "reference": "https://m3.material.io/",
+    "reference": "DESIGN_5.0.md",
     "commit": "e97f7c61365ef0f73686c7b596751802f1a1ddd2",
     "license": "MIT",
-    "adaptation": "Original Material-inspired saturated flat-color workspace; persistent tool rail, document tabs, continuous activity journal, full-screen mobile model editor, interactive Inky and stateful generated reply logo.",
-    "desktopRenderedPreviews": 23,
+    "adaptation": "Original neutral graphite workspace, mobile bottom navigation, compact desktop sidebar, commands and references, continuous activity chain, live command logs and model-scoped context controls.",
+    "desktopRenderedPreviews": 29,
     "physicalAndroidDevice": false,
     "originalGeneratedCompanion": true,
     "companionPoses": 8,
@@ -154,7 +155,7 @@
       8
     ],
     "companionBackground": "transparent",
-    "currentVersionNewDesktopPreviews": 23,
+    "currentVersionNewDesktopPreviews": 29,
     "historicalDesktopPreviews": 47,
     "previewDisclosure": "Production assets in desktop Edge with explicit Native/model fixtures; native cursor is a geometry preview, not an Android screenshot",
     "defaultScale": 90,
@@ -178,29 +179,50 @@
       "license": "ISC; some icons derived from MIT sources; complete license in notices"
     },
     "workspaceModules": [
-      "v4/pages.js",
+      "atelier5/*.css",
+      "composer.js",
+      "living-mark.js",
+      "browser-scripts.js",
       "v4/workspace.js",
-      "v4/lab-composition.js",
       "v4/motion.js",
       "v4/expressive-motion.js",
-      "v4/palette.js",
       "expressive/*.css"
     ],
     "motionVideos": [
-      "preview/4.0.0/interaction-motion.webm",
-      "preview/4.0.0/research-motion.webm"
+      "preview/5.0.0/studio-working-motion.webm",
+      "preview/5.0.0/studio-logo-forms.webm",
+      "preview/5.0.0/studio-team-motion.webm",
+      "preview/5.0.0/studio-stream-motion.webm"
     ],
     "logoGenerated": true,
     "logoGeneration": "branding/logo-generation-400.json",
     "logoStateAnimations": [
-      "thinking",
+      "idle",
+      "think",
+      "reply",
+      "search",
+      "read",
+      "write",
+      "terminal",
+      "browser",
+      "compact",
       "tools",
-      "waiting",
-      "done",
-      "error",
-      "idle"
+      "wait",
+      "success",
+      "error"
     ],
-    "physicsInkyDrag": true
+    "physicsInkyDrag": true,
+    "logoGenerationReusedFrom": "4.0.0",
+    "defaultAccent": "graphite",
+    "minRestoreButtonCssPixels": 44,
+    "logoTransition": {
+      "singleIntactSilhouette": true,
+      "fragmented": false,
+      "poseTransitionMs": 560,
+      "continuousBreathingPhase": true,
+      "loopSeconds": 2.8,
+      "phoneSizedMotionVerified": true
+    }
   },
   "hardLinks": {
     "deniedErrnos": [
@@ -245,16 +267,22 @@
     "builtInWebClient": "Revisable current-turn draft snapshots, final validated SSE completion",
     "nativeApiClient": "Actual upstream SSE deltas",
     "tools": "Full validated call and durable checkpoint required before execution",
-    "commandStdoutLive": false
+    "commandStdoutLive": true,
+    "simulatedCursor": false,
+    "characterPlaybackQueue": false,
+    "receivedChunksImmediate": true,
+    "newChunkTransitionMs": 320,
+    "maxTransientChunkNodes": 6,
+    "reasoningDisclosureTransitionMs": 280
   },
   "performance": {
-    "record": "verification/ui-performance-400.json",
+    "record": "verification/ui-performance-500.json",
     "environment": "Desktop Edge, 390 x 844 CSS pixels, 4x CPU throttle. Synthetic 60-turn history. This is not a physical Android frame-rate measurement.",
     "combined": [
       {
-        "name": "3.1.0 signed APK",
-        "renderMedianMs": 1.900000000372529,
-        "renderP95Ms": 3.1000000005587935,
+        "name": "4.0.0 signed APK",
+        "renderMedianMs": 3,
+        "renderP95Ms": 4.5,
         "samples": 50,
         "repeatedLayouts": [
           0,
@@ -270,9 +298,9 @@
         ]
       },
       {
-        "name": "4.0.0 current bundle",
-        "renderMedianMs": 1.2000000001862645,
-        "renderP95Ms": 1.800000000745058,
+        "name": "5.0.0 current bundle",
+        "renderMedianMs": 4.199999999953434,
+        "renderP95Ms": 7.900000000023283,
         "samples": 50,
         "repeatedLayouts": [
           0,
@@ -283,19 +311,21 @@
           20
         ],
         "chatElements": [
-          805,
-          805
+          843,
+          843
         ]
       }
     ],
-    "physicalAndroidDevice": false
+    "physicalAndroidDevice": false,
+    "speedupClaimed": false
   },
   "harnessSourceReview": {
     "repository": "https://github.com/deepseek-ai/deepseek-harness",
     "commit": "687f282e8625c6b8d11ff58211a90524be2e4317",
     "filesReviewed": 16,
     "upstreamCodeImported": false,
-    "notes": "verification/harness-source-review.md"
+    "notes": "HARNESS_PARITY.md",
+    "fullParity": false
   },
   "computerUse": {
     "actions": [
@@ -311,7 +341,8 @@
       "scroll",
       "back",
       "forward",
-      "reload"
+      "reload",
+      "script"
     ],
     "separateRemoteWebView": true,
     "lazyCreated": true,
@@ -358,6 +389,17 @@
       "clickPulseMs": 160,
       "tipCoordinatesUnchanged": true,
       "physicalAndroidScreenshotVerified": false
+    },
+    "pageScripts": {
+      "manualEditor": true,
+      "awaitAndReturn": true,
+      "maxSourceCharacters": 32768,
+      "callbackBudgetMs": 5000,
+      "synchronousLoopPreemption": false,
+      "automaticallyRetried": false,
+      "nativeJavascriptInterface": false,
+      "maxResultCharacters": 48000,
+      "consoleLines": 40
     }
   },
   "webSearch": {
@@ -404,7 +446,10 @@
   },
   "knownIssues": [
     "The one-shot terminal tool still cleans up its background children. Use the process tool to retain a foreground server.",
-    "Managed tasks and log buffers are in-memory; Android process death or service stop requires an explicit restart."
+    "Managed tasks and log buffers are in-memory; Android process death or service stop requires an explicit restart.",
+    "Real Android smoothness, coverage installation, logged-in model calls and lock-screen background behavior require physical-device validation.",
+    "The selected model context capacity is distinct from the bounded local conversation store.",
+    "Short page scripts support async results; synchronous infinite loops cannot be interrupted by the callback budget."
   ],
   "managedProcesses": {
     "tool": "process",
@@ -438,7 +483,12 @@
     "activityRecreatedForRotation": false,
     "landscapeSplit": "side by side",
     "portraitSplit": "top and bottom",
-    "physicalAndroidDeviceVerified": false
+    "physicalAndroidDeviceVerified": false,
+    "fullscreenDefault": true,
+    "fullscreenToggle": true,
+    "transientSystemBars": true,
+    "earlyDecorInitialization": true,
+    "collapsibleComposer": true
   },
   "customApiForm": {
     "visibleOnOpen": true,
@@ -549,7 +599,119 @@
     ],
     "sseHeaderSniff": true,
     "nonStreamingResponsesJson": true,
-    "bomAndSplitCrLf": true
+    "bomAndSplitCrLf": true,
+    "networkFailures": {
+      "separateFromAuthorization": true,
+      "inlineRetry": true,
+      "anonymousNetworkDiagnosis": true,
+      "doesNotSignOut": true,
+      "phoneDnsFixedByThisBuild": false
+    }
   },
-  "verificationDate": "2026-10-23T00:14:59.253849+08:00"
+  "verificationDate": "2026-10-24",
+  "commandOutput": {
+    "stdoutAndStderr": true,
+    "coalesceMs": 120,
+    "maxFinalBytesPerStream": 131072,
+    "maxLiveCharactersPerStream": 16000,
+    "previewTransient": true,
+    "confirmedExitCodeOnly": true,
+    "scopedBy": [
+      "tool ID",
+      "project",
+      "monotonic sequence"
+    ],
+    "latestCommandVisible": true,
+    "manualCollapseRetained": true,
+    "copy": true,
+    "utf8AcrossChunks": true,
+    "noOutputRetry": true,
+    "physicalDeviceVerified": false
+  },
+  "modelCapabilities": {
+    "automaticDiscoveryForExistingConnections": true,
+    "source": "Selected model catalog metadata, or explicit manual per-model declaration",
+    "defaultEffortParameterOmitted": true,
+    "nameBasedTierGuessing": false,
+    "capacityAutomatic": true,
+    "fallbackCapacityTokens": 65536,
+    "fallbackMarkedEstimate": true,
+    "manualOneMillionOption": 1000000,
+    "allModelsAssumedOneMillion": false
+  },
+  "context": {
+    "estimatesNotProviderTokenCounts": true,
+    "capacitySourceVisible": true,
+    "manualBoundToConnectionAndModel": true,
+    "preserveOriginalTranscript": true,
+    "recentCompleteTurnsPreserved": 3,
+    "autoThreshold": 0.78,
+    "guardThreshold": 0.95,
+    "partitionedRollingSummary": true,
+    "atomicCheckpoint": true,
+    "restore": true,
+    "fork": true,
+    "maxLocalSerializedCharacters": 3000000
+  },
+  "composer": {
+    "commands": 23,
+    "references": [
+      "project file snapshot",
+      "enabled skill",
+      "session excerpt",
+      "browser metadata"
+    ],
+    "collapsible": true,
+    "draftPreserved": true,
+    "attachmentsPreserved": true
+  },
+  "workflow": {
+    "modes": [
+      "execute",
+      "plan"
+    ],
+    "humanGoalAndAcceptance": true,
+    "structuredPlan": true,
+    "humanApprovalBeforeExecution": true,
+    "readOnlyPlanning": true,
+    "defaultTeamMode": "solo",
+    "teamModes": [
+      "solo",
+      "subagent",
+      "team",
+      "cluster"
+    ],
+    "realModelWorkers": true,
+    "workerTools": [
+      "read_file",
+      "list_files",
+      "search_files",
+      "web_search"
+    ],
+    "leaderOwnsMutations": true,
+    "maxParallel": 3,
+    "maxTasksPerDispatch": 6,
+    "workerRoundBudget": {
+      "default": 4,
+      "min": 1,
+      "max": 12
+    },
+    "memberContextGuard": true,
+    "mainHasFixedThirtyRoundLimit": false,
+    "cluster": "Phone schedules configured model/API endpoints; not distributed execution devices",
+    "sameConnectionSerialized": true,
+    "nativeApiIoThreads": 4,
+    "nativeConcurrentEndpointRegression": true,
+    "realReportsAndErrors": true,
+    "stopCancelsWorkers": true,
+    "restartDoesNotAutomaticallyRetry": true,
+    "physicalEndpointsVerified": false
+  },
+  "historyMigration": {
+    "inventory": "verification/history-inventory-500.json",
+    "plan": "GITHUB_MIGRATION.md",
+    "repositoryUrlPending": true,
+    "commitsCreated": false,
+    "sourcesDeleted": false
+  }
 }

@@ -1,0 +1,10 @@
+export const SCRIPT_TEMPLATE=`(function(){
+ const key=__INKVOY_SCRIPT_KEY__,start=Date.now(),logs=[];
+ const normalize=(v,seen=new WeakSet(),depth=0)=>{if(depth>7)return '[depth limit]';if(v===undefined)return null;if(typeof v==='bigint')return String(v)+'n';if(typeof v==='function'||typeof v==='symbol')return String(v);if(v===null||typeof v!=='object')return v;if(seen.has(v))return '[circular]';seen.add(v);if(v instanceof Element)return {tag:v.tagName.toLowerCase(),id:v.id,text:(v.innerText||v.textContent||'').slice(0,1000)};if(v instanceof Error)return {name:v.name,message:v.message};if(Array.isArray(v))return v.slice(0,200).map(x=>normalize(x,seen,depth+1));const out={};for(const k of Object.keys(v).slice(0,100)){if(k==='__proto__'||k==='constructor'||k==='prototype')continue;try{out[k]=normalize(v[k],seen,depth+1);}catch{out[k]='[unreadable]';}}return out;};
+ const log=(level,...values)=>{if(logs.length<40)logs.push({level,text:values.map(v=>{try{return typeof v==='string'?v:JSON.stringify(normalize(v));}catch{return String(v);}}).join(' ').slice(0,2000)});};
+ const console={log:(...v)=>log('log',...v),info:(...v)=>log('info',...v),warn:(...v)=>log('warn',...v),error:(...v)=>log('error',...v),debug:(...v)=>log('debug',...v)};
+ globalThis[key]={done:false};
+ (async function(){__INKVOY_SCRIPT_BODY__
+ }).call(globalThis).then(value=>{let result=normalize(value);if(JSON.stringify(result).length>48000)result={truncated:true,preview:JSON.stringify(result).slice(0,48000)};globalThis[key]={done:true,ok:true,value:{ok:true,result,console:logs,url:location.href,title:document.title,elapsedMs:Date.now()-start}};}).catch(error=>{globalThis[key]={done:true,ok:false,error:String(error?.message||error).slice(0,1000),console:logs};});
+})()`;
+export function buildBrowserScript(source,key){if(typeof source!=='string'||!source.trim()||source.length>32768)throw new Error('脚本需为 1–32768 字符');return SCRIPT_TEMPLATE.replace('__INKVOY_SCRIPT_KEY__',JSON.stringify(key)).replace('__INKVOY_SCRIPT_BODY__',()=>source);}

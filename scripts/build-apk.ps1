@@ -2,17 +2,17 @@ param([string]$Toolchain, [string]$SigningDirectory, [switch]$CompileOnly, [stri
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 $androidProject = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
-$releaseVersion = (Get-Content -LiteralPath (Join-Path $androidProject 'package.json') -Raw | ConvertFrom-Json).version
+$releaseVersion = (Get-Content -LiteralPath (Join-Path $androidProject 'package.json') -Encoding UTF8 -Raw | ConvertFrom-Json).version
 if(-not $CompileOnly){
     $runtimeManifest=Join-Path $androidProject 'app/src/main/assets/runtime/manifest.json'
     $runtimeArchive=Join-Path $androidProject 'app/src/main/assets/runtime/debian-arm64.tar.gz'
     if(-not(Test-Path -LiteralPath $runtimeManifest) -or -not(Test-Path -LiteralPath $runtimeArchive)){throw 'The offline Debian image is required for a distributable v2 APK. Build the runtime image first; use -CompileOnly for development compilation.'}
-    $runtimeInfo=Get-Content -LiteralPath $runtimeManifest -Raw | ConvertFrom-Json
+    $runtimeInfo=Get-Content -LiteralPath $runtimeManifest -Encoding UTF8 -Raw | ConvertFrom-Json
     if((Get-Item -LiteralPath $runtimeArchive).Length -ne $runtimeInfo.compressedBytes -or (Get-FileHash -LiteralPath $runtimeArchive -Algorithm SHA256).Hash.ToLowerInvariant() -ne $runtimeInfo.sha256){throw 'Offline runtime image verification failed.'}
 }
 if (-not $Toolchain) { $Toolchain = Join-Path $androidProject '..\..\work\android-toolchain\toolchain.json' }
 if (-not $SigningDirectory) { $SigningDirectory = Join-Path $androidProject '..\..\work\android-signing' }
-$toolchainConfig = Get-Content -LiteralPath $Toolchain -Raw | ConvertFrom-Json
+$toolchainConfig = Get-Content -LiteralPath $Toolchain -Encoding UTF8 -Raw | ConvertFrom-Json
 $javaTool = Join-Path $toolchainConfig.javaHome 'bin\java.exe'
 $javacTool = Join-Path $toolchainConfig.javaHome 'bin\javac.exe'
 $jarTool = Join-Path $toolchainConfig.javaHome 'bin\jar.exe'
@@ -56,7 +56,7 @@ try {
         $signing = [pscustomobject]@{password=[Guid]::NewGuid().ToString('N');alias='android-bridge-test'}
         $signing | ConvertTo-Json | Set-Content -LiteralPath $signingFile -Encoding utf8
     }
-    $signing = Get-Content -LiteralPath $signingFile -Raw | ConvertFrom-Json
+    $signing = Get-Content -LiteralPath $signingFile -Encoding UTF8 -Raw | ConvertFrom-Json
     if (-not (Test-Path -LiteralPath $keystore)) {
         & $keyTool -genkeypair -keystore $keystore -alias $signing.alias -storepass $signing.password -keypass $signing.password -keyalg RSA -keysize 3072 -validity 3650 -dname 'CN=DeepSeek Android Bridge Test Build'; Assert-AndroidExit 'test signing identity'
     }

@@ -1,0 +1,199 @@
+{
+  "date": "2026-10-23T18:49:06.039576+08:00",
+  "purpose": "Actual metadata inventory only; ZIP payload hashes, full history coverage and reconstruction are not yet verified. No commits, pushes or deletions performed.",
+  "records": [
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\work\\android-010-baseline\\deepseek-android-bridge",
+      "kind": "source directory",
+      "version": "0.1.0",
+      "metadataSha256": "6f29e39b5c11d5b52d54ee09b4cae3e6efdcd67e599bf96a30d8ce45d17ba0d0",
+      "snapshotTime": "2026-10-16T22:43:53.034701",
+      "gitHistoryVerified": false
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\work\\android-020-baseline\\deepseek-android-bridge",
+      "kind": "source directory",
+      "version": "0.2.0",
+      "metadataSha256": "c00f0427541e55a58bad760de3fbf197dafb1d7ca6436ee3ef4707eeac370680",
+      "snapshotTime": "2026-10-16T22:58:42.081241",
+      "gitHistoryVerified": false
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\work\\android-021-baseline\\deepseek-android-bridge",
+      "kind": "source directory",
+      "version": "0.2.1",
+      "metadataSha256": "2210215dfc2e7b5ffefc7c7fb53dca5f352f8adaf665f44c0f3f0de02d0add1f",
+      "snapshotTime": "2026-10-16T23:58:56.694363",
+      "gitHistoryVerified": false
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\work\\android-030-baseline\\deepseek-android-bridge",
+      "kind": "source directory",
+      "version": "0.3.0",
+      "metadataSha256": "489ed29c4143da24bdf1e76d281be891fedcbe17a2442485fb9cd1c18e40b8d4",
+      "snapshotTime": "2026-10-17T00:27:10.737782",
+      "gitHistoryVerified": false
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\work\\android-040-baseline\\deepseek-android-bridge",
+      "kind": "source directory",
+      "version": "0.4.0",
+      "metadataSha256": "3cf50dee1eb1bd4ea25ddabef2b6131b28d6d8512814fcc4330a9e2746c1b2b9",
+      "snapshotTime": "2026-10-17T23:10:08.656008",
+      "gitHistoryVerified": false
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\work\\android-release-20261016-174511\\deepseek-android-bridge",
+      "kind": "source directory",
+      "version": "0.1.0",
+      "metadataSha256": "6f29e39b5c11d5b52d54ee09b4cae3e6efdcd67e599bf96a30d8ce45d17ba0d0",
+      "snapshotTime": "2026-10-16T17:45:12.068784",
+      "gitHistoryVerified": false
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\work\\android-release-20261016-224409\\deepseek-android-bridge",
+      "kind": "source directory",
+      "version": "0.2.0",
+      "metadataSha256": "c00f0427541e55a58bad760de3fbf197dafb1d7ca6436ee3ef4707eeac370680",
+      "snapshotTime": "2026-10-16T22:44:09.928671",
+      "gitHistoryVerified": false
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\work\\android-release-20261016-225842\\deepseek-android-bridge",
+      "kind": "source directory",
+      "version": "0.2.1",
+      "metadataSha256": "2210215dfc2e7b5ffefc7c7fb53dca5f352f8adaf665f44c0f3f0de02d0add1f",
+      "snapshotTime": "2026-10-16T22:58:43.172232",
+      "gitHistoryVerified": false
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\work\\android-release-20261017-000128\\deepseek-android-bridge",
+      "kind": "source directory",
+      "version": "0.3.0",
+      "metadataSha256": "489ed29c4143da24bdf1e76d281be891fedcbe17a2442485fb9cd1c18e40b8d4",
+      "snapshotTime": "2026-10-17T00:01:28.653175",
+      "gitHistoryVerified": false
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\work\\android-release-20261017-002941\\deepseek-android-bridge",
+      "kind": "source directory",
+      "version": "0.4.0",
+      "metadataSha256": "3cf50dee1eb1bd4ea25ddabef2b6131b28d6d8512814fcc4330a9e2746c1b2b9",
+      "snapshotTime": "2026-10-17T00:29:42.206651",
+      "gitHistoryVerified": false
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\work\\android-release-20261017-231134\\deepseek-android-bridge",
+      "kind": "source directory",
+      "version": "1.0.0",
+      "metadataSha256": "17d2e25aec1a4a4340c7bdbd5bb956ee691c848c500cb1691a150e3d8aa53e1a",
+      "snapshotTime": "2026-10-17T23:11:34.268759",
+      "gitHistoryVerified": false
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\work\\android-release-20261017-231147\\deepseek-android-bridge",
+      "kind": "source directory",
+      "version": "1.0.0",
+      "metadataSha256": "17d2e25aec1a4a4340c7bdbd5bb956ee691c848c500cb1691a150e3d8aa53e1a",
+      "snapshotTime": "2026-10-17T23:11:47.352109",
+      "gitHistoryVerified": false
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\work\\android-release-20261017-231219\\deepseek-android-bridge",
+      "kind": "source directory",
+      "version": "1.0.0",
+      "metadataSha256": "17d2e25aec1a4a4340c7bdbd5bb956ee691c848c500cb1691a150e3d8aa53e1a",
+      "snapshotTime": "2026-10-17T23:12:19.628241",
+      "gitHistoryVerified": false
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\work\\android-release-20261017-231229\\deepseek-android-bridge",
+      "kind": "source directory",
+      "version": "1.0.0",
+      "metadataSha256": "17d2e25aec1a4a4340c7bdbd5bb956ee691c848c500cb1691a150e3d8aa53e1a",
+      "snapshotTime": "2026-10-17T23:12:29.989769",
+      "gitHistoryVerified": false
+    },
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-2.2.0\\final\\deepseek-android-bridge-v2.2.0-source.zip",
+      "kind": "ZIP metadata inspected",
+      "version": "2.2.0",
+      "metadataSha256": "6d4787aa57c6bfad31aec78fdb72d6a9e87fdf66dd114e1cc368d0a8d06fc3b4",
+      "snapshotTime": "2026-10-19T23:20:42.432341",
+      "gitHistoryVerified": false,
+      "bytes": 1816560116
+    },
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-2.3.0\\final\\deepseek-android-bridge-v2.3.0-source.zip",
+      "kind": "ZIP metadata inspected",
+      "version": "2.3.0",
+      "metadataSha256": "fd1a142b402251e47e384b1629a3526b62199847544391f4ea1c0404928e8f4e",
+      "snapshotTime": "2026-10-20T00:15:47.071424",
+      "gitHistoryVerified": false,
+      "bytes": 1816766213
+    },
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-2.3.1\\final\\deepseek-android-bridge-v2.3.1-source.zip",
+      "kind": "ZIP metadata inspected",
+      "version": "2.3.1",
+      "metadataSha256": "9164e869b7cd687ba7441d95ca56ba08d3ba1cddc1d990dcb318bc17465b8f2d",
+      "snapshotTime": "2026-10-20T22:09:07.572879",
+      "gitHistoryVerified": false,
+      "bytes": 1816866392
+    },
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-2.4.0\\final\\deepseek-android-bridge-v2.4.0-source.zip",
+      "kind": "ZIP metadata inspected",
+      "version": "2.4.0",
+      "metadataSha256": "b38395020960f20e51f929c6b14669656d3428f3f2217d6efbc36dead03a6269",
+      "snapshotTime": "2026-10-20T23:03:30.195822",
+      "gitHistoryVerified": false,
+      "bytes": 1817051359
+    },
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-2.4.1\\final\\deepseek-android-bridge-v2.4.1-source.zip",
+      "kind": "ZIP metadata inspected",
+      "version": "2.4.1",
+      "metadataSha256": "82fc8769630dab118935b9fa1a04f808240fecc9619b571bc9447550ceeaa78d",
+      "snapshotTime": "2026-10-20T23:09:05.563664",
+      "gitHistoryVerified": false,
+      "bytes": 1817053311
+    },
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-2.4.2\\final\\deepseek-android-bridge-v2.4.2-source.zip",
+      "kind": "ZIP metadata inspected",
+      "version": "2.4.2",
+      "metadataSha256": "3d7a3470213dfc0dfaebb1e6e60015b62e954dc84d8a05f2a844e26cf1527fa5",
+      "snapshotTime": "2026-10-20T23:44:40.343451",
+      "gitHistoryVerified": false,
+      "bytes": 1817129137
+    },
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-3.0.0\\final\\deepseek-android-bridge-v3.0.0-source.zip",
+      "kind": "ZIP metadata inspected",
+      "version": "3.0.0",
+      "metadataSha256": "bc87f7925cec4eac22eb65b55f0feee9762fe859f9c338334bc289cf407b949d",
+      "snapshotTime": "2026-10-21T22:40:34.152566",
+      "gitHistoryVerified": false,
+      "bytes": 1817539477
+    },
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-4.0.0\\delivery\\deepseek-android-bridge-v4.0.0-source.zip",
+      "kind": "ZIP metadata inspected",
+      "version": "4.0.0",
+      "metadataSha256": "64cf11c981d7e19446477359c2a7c406a739c294dc5902ac9f226eca0bf1bb21",
+      "snapshotTime": "2026-10-23T00:15:06.249659",
+      "gitHistoryVerified": false,
+      "bytes": 1820578781
+    },
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-4.0.0\\final\\deepseek-android-bridge-v4.0.0-source.zip",
+      "kind": "ZIP metadata inspected",
+      "version": "4.0.0",
+      "metadataSha256": "64cf11c981d7e19446477359c2a7c406a739c294dc5902ac9f226eca0bf1bb21",
+      "snapshotTime": "2026-10-23T00:08:19.322790",
+      "gitHistoryVerified": false,
+      "bytes": 1820576931
+    }
+  ]
+}

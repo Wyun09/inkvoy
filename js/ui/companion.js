@@ -10,6 +10,10 @@ const tools = {
   web_search:['reading','网页搜索'],
   ask_user:['waiting','等你回答'],
   view_image:['reading','查看图片'],
+  update_plan:['thinking','整理计划'],
+  report_goal:['reading','核对目标证据'],
+  delegate:['thinking','子代理正在工作'],
+  team_dispatch:['thinking','团队协作中'],
 };
 
 export function companionState(session, active) {
@@ -17,6 +21,7 @@ export function companionState(session, active) {
   const status=session.status;
   let pose='idle', label='准备就绪';
   if(active && status==='preparing') {pose='thinking';label='准备工作区';}
+  else if(active && status==='compacting') {pose='thinking';label='正在压缩上下文';}
   else if(active && status==='tools') [pose,label]=tools[session.tool?.name]||['thinking','执行工具'];
   else if(active && status==='cancelling') {pose='waiting';label='正在停止';}
   else if(active) {pose='thinking';label='正在生成';}

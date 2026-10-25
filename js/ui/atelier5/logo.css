@@ -1,0 +1,17 @@
+.living-mark{display:inline-block;position:relative;width:29px;height:29px;flex:0 0 29px;color:var(--brand);transform:rotate(0) scale(1);transform-origin:50% 50%;transition:transform .56s cubic-bezier(.22,.8,.25,1),color .3s;isolation:isolate}
+.living-mark>i{position:absolute;inset:0;background:currentColor;-webkit-mask:url(logo.png) center/contain no-repeat;mask:url(logo.png) center/contain no-repeat;transform-origin:50% 50%;animation:mark-breathe 2.8s ease-in-out infinite}
+[data-logo-form=think] .living-mark{transform:rotate(-14deg) scale(.94,1.03)}
+[data-logo-form=reply] .living-mark{transform:rotate(10deg) scale(1.06,.94)}
+[data-logo-form=search] .living-mark{transform:rotate(48deg) scale(.97)}
+[data-logo-form=read] .living-mark{transform:rotate(-6deg) scale(1.08,.9)}
+[data-logo-form=write] .living-mark{transform:rotate(-24deg) skewX(-5deg) scale(.98,1.02)}
+[data-logo-form=terminal] .living-mark{transform:rotate(45deg) scale(.91,.95)}
+[data-logo-form=browser] .living-mark{transform:rotate(20deg) scale(1.05)}
+[data-logo-form=compact] .living-mark{transform:rotate(72deg) scale(.8,.86)}
+[data-logo-form=tools] .living-mark{transform:rotate(90deg) scale(.96)}
+[data-logo-form=wait] .living-mark{transform:rotate(-8deg) scale(.92,.96)}
+[data-logo-form=success] .living-mark{transform:rotate(0) scale(1.04)}
+[data-logo-form=error] .living-mark{color:var(--danger);transform:rotate(-12deg) scale(.96)}
+@keyframes mark-breathe{0%,100%{transform:translateY(.5px) rotate(-9deg) scale(.94,1.035)}35%{transform:translateY(-.8px) rotate(4deg) scale(1.055,.965)}65%{transform:translateY(-.25px) rotate(11deg) scale(.99,1.055)}}
+.brand-mark:has(.living-mark)::before{display:none}.brand-mark .living-mark{width:27px;height:27px;flex-basis:27px}.brand-preview-mark>.brand-preview-glyph{display:none}.brand-preview-mark .living-mark{width:54px;height:54px;flex-basis:54px}
+body[data-ui-paused] .living-mark>i{animation-play-state:paused!important}body.reduce-motion .living-mark,body.reduce-motion .living-mark>i{animation:none!important;transition:none!important}@media(prefers-reduced-motion:reduce){.living-mark,.living-mark>i{animation:none!important;transition:none!important}}

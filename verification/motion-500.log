@@ -1,0 +1,90 @@
+{
+  "version": "5.0.0",
+  "method": "FFmpeg decodes actual recorded production UI videos at 40/55/70 percent; exported frames are visually inspected. Native/model data are fixtures.",
+  "records": [
+    {
+      "video": "preview/5.0.0/studio-working-motion.webm",
+      "contactSheet": "preview/5.0.0/studio-working-motion-contact.png",
+      "frames": [
+        "preview/5.0.0/studio-working-motion-frame-1.png",
+        "preview/5.0.0/studio-working-motion-frame-2.png",
+        "preview/5.0.0/studio-working-motion-frame-3.png"
+      ],
+      "durationSeconds": 7.48,
+      "times": [
+        2.9920000000000004,
+        4.114000000000001,
+        5.236
+      ],
+      "frameHashes": [
+        "2bbf232ddc14b2516b29c4ac69d8f2d9de06208bd5d07d77e576f7cf47e67b50",
+        "2649ce39c21dfa423d027a6782306b4bcba9373eaed19949251290f368d5f58c",
+        "1eade645d6a5d7907f201224120941090bb4f630fdc7d20c684b230371669f57"
+      ],
+      "distinctFrames": 3
+    },
+    {
+      "video": "preview/5.0.0/studio-logo-forms.webm",
+      "contactSheet": "preview/5.0.0/studio-logo-motion-contact.png",
+      "frames": [
+        "preview/5.0.0/studio-logo-motion-frame-1.png",
+        "preview/5.0.0/studio-logo-motion-frame-2.png",
+        "preview/5.0.0/studio-logo-motion-frame-3.png"
+      ],
+      "durationSeconds": 14.6,
+      "times": [
+        5.84,
+        8.030000000000001,
+        10.219999999999999
+      ],
+      "frameHashes": [
+        "2a1c83096d48dd78d88b501f7ce44515afcf2296f8fa1d2f29130082257b7c47",
+        "748e61365b4b0ec54ed05118df0337c7f510414eb0671b79407f54671e5addff",
+        "26cd8c6cc712f97ec7326980efade8c3eb9630f15d01a192e02a6a4f70e3129a"
+      ],
+      "distinctFrames": 3
+    },
+    {
+      "video": "preview/5.0.0/studio-team-motion.webm",
+      "contactSheet": "preview/5.0.0/studio-team-motion-contact.png",
+      "frames": [
+        "preview/5.0.0/studio-team-motion-frame-1.png",
+        "preview/5.0.0/studio-team-motion-frame-2.png",
+        "preview/5.0.0/studio-team-motion-frame-3.png"
+      ],
+      "durationSeconds": 8.08,
+      "times": [
+        3.232,
+        4.444000000000001,
+        5.656
+      ],
+      "frameHashes": [
+        "d0cfc569f608ec1ded2c7beaa5a529b148e3a05e0e29a425476fc3d44bb1d549",
+        "193b5834a4e988fb2f743dddd5f7bc4a96c959fc42ee75ea45e0af6b2bff685d",
+        "ccbb37ed35443e514f3fbccaeab9e130eb9723f8ccf76cb18a952b4ed46eb7ba"
+      ],
+      "distinctFrames": 3
+    },
+    {
+      "video": "preview/5.0.0/studio-stream-motion.webm",
+      "contactSheet": "preview/5.0.0/studio-stream-motion-contact.png",
+      "frames": [
+        "preview/5.0.0/studio-stream-motion-frame-1.png",
+        "preview/5.0.0/studio-stream-motion-frame-2.png",
+        "preview/5.0.0/studio-stream-motion-frame-3.png"
+      ],
+      "durationSeconds": 10.08,
+      "times": [
+        4.032,
+        5.5440000000000005,
+        7.055999999999999
+      ],
+      "frameHashes": [
+        "429029d686349222142a260c08a1d88883e51b20cadb87328f63f8b4b6efcedd",
+        "d068e55fc0eb5925bca1ed4ae7ad70e42069b10525d58ad350d692914c412a88",
+        "466249f1d0d9383ea6b44a096e7a376f863a3dd353c1134951ce5eab4ed11a89"
+      ],
+      "distinctFrames": 3
+    }
+  ]
+}
