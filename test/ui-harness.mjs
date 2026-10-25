@@ -77,6 +77,7 @@ export async function navigateStudio(page,tab) {
   if(await page.locator('#page-'+tab).isVisible())return;
   if(await page.locator('#page-chat').isVisible()){
     await page.locator('#session-menu').click();
+    const extra=page.locator('#studio-drawer [data-drawer-page="'+tab+'"]');if(await extra.count()&&!(await extra.isVisible()))await page.locator('#drawer-more>summary').click();
     await page.locator('[data-drawer-page="'+tab+'"]').click();
   }else await navigateLegacy(page,tab);
 }

@@ -1,0 +1,21 @@
+{
+  "version": "3.1.0",
+  "date": "2026-10-21",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "assets": "Final production HTML/CSS/JS",
+  "native": "Explicit deterministic test fixture; no Android device or account",
+  "animationSettleMs": 450,
+  "files": [
+    "preview/3.1.0/chat.png",
+    "preview/3.1.0/drawer.png",
+    "preview/3.1.0/models.png",
+    "preview/3.1.0/accounts.png",
+    "preview/3.1.0/mcp.png",
+    "preview/3.1.0/settings.png",
+    "preview/3.1.0/settings-dark.png",
+    "preview/3.1.0/working.png"
+  ]
+}

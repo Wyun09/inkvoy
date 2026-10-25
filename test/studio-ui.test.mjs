@@ -38,7 +38,7 @@ test('compact chat sidebar owns sessions and permissions, closes with Escape/bac
  for(const permission of ['files','notifications','battery'])assert.ok((await page.evaluate(()=>nativeActions)).some(a=>a.action==='permission-'+permission));
  await page.keyboard.press('Escape');assert.equal(await page.locator('#studio-drawer-scrim').isVisible(),false);assert.equal(await page.locator('#session-menu').evaluate(node=>node===document.activeElement),true);
  await page.locator('#session-menu').click();assert.equal(await page.evaluate(()=>BridgeDashboard.back()),true);assert.equal(await page.locator('#page-chat').isVisible(),true);
- await page.locator('#session-menu').click();await page.locator('[data-drawer-page="tools"]').click();assert.equal(await page.locator('#page-tools').isVisible(),true);assert.equal(await page.locator('#studio-drawer-scrim').isVisible(),false);
+ await page.locator('#session-menu').click();await page.locator('#drawer-more>summary').click();await page.locator('[data-drawer-page="tools"]').click();assert.equal(await page.locator('#page-tools').isVisible(),true);assert.equal(await page.locator('#studio-drawer-scrim').isVisible(),false);
  await page.evaluate(()=>AndroidEngine.nativeEvent({type:'runtime',value:{ready:false,installing:false,progress:30,message:'过时进度',error:'读取镜像失败：manifest.json',errorCode:'manifest_unavailable'}}));
  assert.equal(await page.locator('#runtime-detail').textContent(),'读取镜像失败：manifest.json');assert.equal(await page.locator('#runtime-install').textContent(),'重试初始化');assert.equal(await page.locator('#runtime-progress').isVisible(),false);
 });

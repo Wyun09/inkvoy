@@ -1,0 +1,14 @@
+{
+  "version": "3.1.0",
+  "source": "Production UI and native cursor path; explicit desktop Native/model fixtures",
+  "files": [
+    "preview/3.1.0/mcp-quick.png",
+    "preview/3.1.0/skills.png",
+    "preview/3.1.0/scale-30.png",
+    "preview/3.1.0/scale-50.png",
+    "preview/3.1.0/files.png",
+    "preview/3.1.0/model-desktop.png",
+    "preview/3.1.0/cursor.png"
+  ],
+  "physicalAndroidDevice": false
+}

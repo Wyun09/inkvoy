@@ -1,0 +1,18 @@
+✔ quick MCP input accepts a URL or multiple desktop/VSCode configurations without manual JSON editing (1.8809ms)
+✔ launch command parsing preserves quotes, empty arguments and environment assignments (1.9363ms)
+✔ extra parameters and env fields accept ordinary lines and retain pasted JSON compatibility (0.6635ms)
+✔ invalid or unsupported MCP setup is rejected before saving (0.309ms)
+✔ Responses receives real text before completion and never accepts an incomplete tool call (2.6906ms)
+✔ Responses preserves reasoning items and pairs renamed tool IDs across stateless turns (0.5034ms)
+✔ Responses reports late plan limits and incomplete status instead of claiming a finished reply (0.5366ms)
+✔ BOM, split CRLF and typed event lines produce text before completion (0.461ms)
+✔ account JSON fallback goes through Responses validation rather than Chat Completions parsing (7.0411ms)
+✔ account provider sends only an opaque account ID, reads its catalog, and validates dynamic MCP calls (40.5615ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 253.1606

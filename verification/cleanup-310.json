@@ -1,0 +1,29 @@
+{
+  "version": "3.1.0",
+  "removed": [
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-3.1.0\\build\\resources.apk",
+      "bytes": 615748311
+    },
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-3.1.0\\build\\unsigned.apk",
+      "bytes": 616017401
+    },
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-3.1.0\\build\\aligned.apk",
+      "bytes": 616017413
+    },
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-3.1.0\\final\\deepseek-android-bridge-v3.1.0.apk",
+      "bytes": 616028286
+    },
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-3.1.0\\final\\deepseek-android-bridge-v3.1.0.apk.idsig",
+      "bytes": 4859805
+    }
+  ],
+  "freedBytes": 2468671216,
+  "verifiedFinalApkPreserved": "D:\\CodexBuild\\deepseek-studio-3.1.0\\release\\deepseek-android-bridge-v3.1.0.apk",
+  "previousDeliveredVersionsPreserved": true,
+  "recursiveRemoval": false
+}

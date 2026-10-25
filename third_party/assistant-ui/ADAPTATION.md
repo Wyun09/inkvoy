@@ -23,3 +23,12 @@ There is no Claude model picker, voice button, or feedback endpoint: those
 reference controls were replaced with operations this Android app supports.
 No demo model output, reference networking, CDN assets, or upstream API keys
 were copied into the running application.
+
+Version 3.1.0 separates page and drawer markup into `js/ui/workspace-shell.js`,
+navigation and connection-sheet composition into `workspace-chrome.js`, and
+shared visual tokens, workspace layouts and connection styles into
+`design-system.css`, `workspace.css` and `connections.css`. Existing task state,
+input nodes and execution safeguards remain in the application's own modules.
+The pinned upstream files and their hashes remain unchanged. Lucide 1.61.0
+icons are an additional dependency with their own license in the generated
+third-party notices; they are not assets copied from the Claude example.

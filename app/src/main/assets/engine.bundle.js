@@ -12587,7 +12587,7 @@ data: [DONE]
       });
       return true;
     }
-    return { snapshot, load, refresh, listTools, skillHints: () => config.plugins.filter((p) => p.enabled).flatMap((p) => (p.skills || []).map((s15) => ({ plugin: p.id, name: s15.name, path: s15.path }))).slice(0, 64), cancelPreparation() {
+    return { snapshot, load, refresh, listTools, skillHints: () => config.plugins.filter((p) => p.enabled).flatMap((p) => (p.skills || []).map((s15) => ({ plugin: p.id, name: s15.name, description: s15.description, path: s15.path }))).slice(0, 64), cancelPreparation() {
       if (!refreshing) return;
       epoch++;
       refreshing = null;
@@ -12601,7 +12601,7 @@ data: [DONE]
       revision = "";
       void native("extension.disconnect").catch(() => {
       });
-    }, supports, run: run2, cancel, save: (value) => mutate("extension.save", value), toggle: (id, enabled) => mutate("extension.toggle", { id, enabled }), remove: (id) => mutate("extension.remove", { id }), pluginToggle: (id, enabled) => mutate("plugin.toggle", { id, enabled }), pluginRemove: (id) => mutate("plugin.remove", { id }), event(value) {
+    }, supports, run: run2, cancel, save: (value) => mutate("extension.save", value), toggle: (id, enabled) => mutate("extension.toggle", { id, enabled }), remove: (id) => mutate("extension.remove", { id }), builtinSkill: (id) => mutate("plugin.builtin", { id }), pluginFromUrl: (url) => mutate("plugin.from-url", { url }), pluginFromText: (name, content2) => mutate("plugin.from-text", { name, content: content2 }), pluginToggle: (id, enabled) => mutate("plugin.toggle", { id, enabled }), pluginRemove: (id) => mutate("plugin.remove", { id }), event(value) {
       if (value.type === "extension") worker2?.postMessage({ kind: "event", value });
       if (value.type === "plugin-import") {
         if (value.value) {
@@ -12614,6 +12614,359 @@ data: [DONE]
     }, invalidate() {
       revision = "";
     }, id: randomUUID };
+  }
+
+  // js/ui/workspace-shell.js
+  function mountWorkspacePages(nav) {
+    const main = document.createElement("div");
+    main.id = "studio-pages";
+    main.innerHTML = `
+  <main class="page studio-chat" id="page-chat" hidden>
+    <div class="chat-heading"><button id="session-menu" aria-expanded="false" aria-controls="studio-drawer" aria-label="\u6253\u5F00\u4F1A\u8BDD\u4E0E\u8BBE\u7F6E\u4FA7\u680F"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h12M4 18h16"/></svg></button><div><strong id="session-current">\u65B0\u4F1A\u8BDD</strong><small>DeepSeek</small></div><button id="chat-new" aria-label="\u65B0\u5EFA\u4F1A\u8BDD">\uFF0B</button></div>
+    <section id="session-picker" class="session-picker" hidden><div id="client-sessions"></div><div class="session-edit"><input id="session-title" aria-label="\u4F1A\u8BDD\u540D\u79F0" maxlength="80"><button id="session-rename">\u547D\u540D</button><button id="session-archive">\u5F52\u6863</button><button id="session-export">\u5BFC\u51FA</button><button id="session-delete">\u5220\u9664</button></div><p>\u5220\u9664\u53EA\u79FB\u9664\u672C\u673A\u804A\u5929\u8BB0\u5F55\uFF1B\u9879\u76EE\u6587\u4EF6\u4E0E\u7F51\u9875\u5386\u53F2\u4FDD\u7559\u3002</p></section>
+    <div id="chat-stage" class="chat-stage is-empty"><div id="chat-messages" class="chat-messages" role="log" aria-live="polite" aria-relevant="additions text"></div>
+    <section id="client-progress" class="client-progress" hidden><button id="task-companion" class="task-companion" type="button" data-pose="idle" aria-label="\u5C0F\u58A8\uFF1A\u51C6\u5907\u5C31\u7EEA\uFF0C\u70B9\u51FB\u5C55\u5F00\u6267\u884C\u8FC7\u7A0B"><span class="companion-sprite"></span></button><div><div class="work-status-heading"><strong id="client-phase"></strong><time id="client-elapsed" aria-live="off"></time></div><p id="client-detail"></p><span class="work-activity-line" aria-hidden="true"></span></div><button id="client-stop">\u505C\u6B62</button></section>
+    <div id="client-notice" class="client-notice" hidden><span></span><button id="client-resume">\u7EE7\u7EED\u4EFB\u52A1</button></div>
+    <form id="chat-form" class="chat-composer"><textarea id="chat-input" rows="2" placeholder="\u56DE\u590D DeepSeek\u2026" aria-label="\u53D1\u9001\u7ED9 AI \u7684\u6D88\u606F"></textarea><div class="composer-bottom"><button type="button" id="composer-options" aria-label="\u5BF9\u8BDD\u9009\u9879" aria-expanded="false" aria-controls="composer-modes"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 17h16M8 4v6m8 4v6"/></svg></button><div id="composer-modes" class="composer-modes" role="group" aria-label="\u5BF9\u8BDD\u9009\u9879" hidden><button type="button" id="client-agent" aria-pressed="true">\u2318 Agent</button><button type="button" id="client-thinking" aria-pressed="false">\u2726 \u601D\u8003</button><button type="button" id="client-search" aria-pressed="true">\u25CE \u641C\u7D22</button></div><span class="composer-model">DeepSeek</span><button id="chat-send" type="submit" aria-label="\u53D1\u9001\u6D88\u606F">\u2191</button></div></form>
+    </div>
+  </main>
+  <main class="page studio-files" id="page-files" hidden><div class="studio-title"><div><h1>\u9879\u76EE\u6587\u4EF6</h1></div><button id="file-refresh" class="studio-square" aria-label="\u5237\u65B0\u6587\u4EF6">\u21BB</button></div>
+    <div class="file-actions"><button id="file-import">\uFF0B \u5BFC\u5165\u6587\u4EF6</button><button id="file-new">\u65B0\u6587\u4EF6</button><button data-navigate="tools">\u5DE5\u5177\u4E2D\u5FC3 \u2197</button></div><div class="file-breadcrumb"><button id="file-parent" aria-label="\u4E0A\u4E00\u7EA7\u76EE\u5F55">\u21B0</button><code id="file-directory">/workspace</code></div><div class="file-search"><input id="file-query" aria-label="\u641C\u7D22\u9879\u76EE\u6587\u4EF6\u5185\u5BB9" placeholder="\u5728\u9879\u76EE\u4E2D\u641C\u7D22\u6587\u5B57"><button id="file-find">\u641C\u7D22</button></div><div id="file-results"></div><div id="file-list" class="file-list"></div>
+    <section id="file-editor" hidden><div class="editor-heading"><input id="file-path" aria-label="\u6587\u4EF6\u8DEF\u5F84" placeholder="src/main.py"><span id="file-dirty"></span></div><textarea id="file-content" spellcheck="false" aria-label="\u7F16\u8F91\u6587\u4EF6\u5185\u5BB9"></textarea><div class="editor-actions"><button id="file-save">\u4FDD\u5B58\u6587\u4EF6</button><button id="file-export">\u5BFC\u51FA</button><button id="file-analyze">\u5206\u6790\u6B64\u6587\u4EF6 \u2197</button><button id="file-close">\u5173\u95ED</button></div></section><p class="studio-footnote">\u5BFC\u5165\u6587\u4EF6\u4F1A\u590D\u5236\u5230\u5F53\u524D\u9879\u76EE\u3002\u73AF\u5883\u5347\u7EA7\u4FDD\u7559\u9879\u76EE\u4E0E\u5206\u6790\u7ED3\u679C\u3002</p>
+  </main>
+  <main class="page studio-terminal" id="page-terminal" hidden><div class="terminal-heading"><div><span class="terminal-led"></span><strong>Debian \u7EC8\u7AEF</strong><small id="terminal-state">\u5C1A\u672A\u542F\u52A8</small></div><button id="terminal-add" aria-label="\u65B0\u5EFA\u7EC8\u7AEF">\uFF0B</button><button id="terminal-close" aria-label="\u5173\u95ED\u5F53\u524D\u7EC8\u7AEF">\xD7</button></div><div id="terminal-tabs" class="terminal-tabs"></div><div id="terminal-host" class="terminal-host"><div id="terminal-empty"><span>\u203A_</span><h2>Debian \u7EC8\u7AEF</h2><p>Bash \xB7 Python \xB7 Node \xB7 Git<br>\u4E0E AI \u5171\u7528\u5F53\u524D\u9879\u76EE</p><button id="terminal-start">\u542F\u52A8 Debian</button></div></div><div class="terminal-keys"><button data-key="">Ctrl C</button><button data-key="">Ctrl D</button><button data-key="	">Tab</button><button data-key="\x1B">Esc</button><button data-key="\x1B[A">\u2191</button><button data-key="\x1B[B">\u2193</button><button data-key="\x1B[D">\u2190</button><button data-key="\x1B[C">\u2192</button></div><div class="terminal-footer"><span>PRoot / ARM64 \xB7 /workspace</span><button id="terminal-copy">\u590D\u5236\u9009\u4E2D</button><button id="terminal-clear">\u6E05\u5C4F</button></div></main>
+  <main class="page studio-tools" id="page-tools" hidden><div class="studio-title"><div><h1>\u5DE5\u5177\u4E0E\u73AF\u5883</h1></div><button class="studio-square" id="runtime-refresh" aria-label="\u5237\u65B0\u5DE5\u5177\u72B6\u6001">\u21BB</button></div><section class="runtime-card"><div><span class="runtime-symbol">\u25C8</span><div><h2>Debian ARM64</h2><p id="runtime-state">\u68C0\u67E5\u79BB\u7EBF\u8FD0\u884C\u73AF\u5883\u2026</p></div></div><progress id="runtime-progress" max="100" value="0" hidden></progress><p id="runtime-detail"></p><div><button id="runtime-install">\u521D\u59CB\u5316\u73AF\u5883</button><button id="runtime-test">\u8FD0\u884C\u81EA\u68C0</button></div></section><div class="tool-intro"><h2>\u5DF2\u968F\u955C\u50CF\u6536\u5F55</h2><p>\u9996\u6B21\u521D\u59CB\u5316\u5728\u672C\u673A\u89E3\u538B\uFF0C\u4E0D\u9010\u4E2A\u4E0B\u8F7D\u5DE5\u5177\u3002</p></div><div id="runtime-tools" class="tool-grid"></div><section class="tool-target"><label for="analysis-path">\u9879\u76EE\u5185\u7684\u5206\u6790\u76EE\u6807</label><input id="analysis-path" placeholder="sample.apk"><div><button data-analysis="jadx">Java \u6E90\u7801</button><button data-analysis="apktool">\u8D44\u6E90 / Smali</button><button data-analysis="cfr">JAR / Class</button><button data-analysis="radare2">ELF / SO \u4F2A\u4EE3\u7801</button></div><p>\u7ED3\u679C\u5199\u5165 analysis/\u3002\u5DE5\u5177\u4F1A\u4FDD\u7559\u9519\u8BEF\u4E0E\u4E0D\u5B8C\u6574\u6062\u590D\u4FE1\u606F\u3002</p></section><pre id="runtime-report" hidden></pre><p class="studio-footnote">PRoot \u590D\u7528 Android \u5185\u6838\uFF1B\u5B83\u4E0D\u662F\u9694\u79BB\u6C99\u7BB1\u3002\u8FD0\u884C\u672A\u77E5\u7A0B\u5E8F\u524D\u8BF7\u81EA\u884C\u68C0\u67E5\u3002</p></main>`;
+    while (main.firstChild) nav.before(main.firstChild);
+  }
+  function mountWorkspaceDrawer(icons3) {
+    const scrim = document.createElement("div");
+    scrim.id = "studio-drawer-scrim";
+    scrim.hidden = true;
+    scrim.innerHTML = `<aside id="studio-drawer" class="studio-drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title"><header><img src="logo.png" width="28" height="28" alt=""><div><strong id="drawer-title">DeepSeek Studio</strong></div><button id="drawer-close" aria-label="\u5173\u95ED\u4FA7\u680F">\xD7</button></header><button id="drawer-new">\uFF0B \u65B0\u5EFA\u4F1A\u8BDD</button><div class="drawer-section-title"><span>\u6700\u8FD1\u5BF9\u8BDD</span><button id="session-pin" aria-label="\u7F6E\u9876\u5F53\u524D\u4F1A\u8BDD">\u2606</button></div><div id="drawer-sessions"></div><nav class="drawer-shortcuts" aria-label="\u5DE5\u4F5C\u533A"><button data-drawer-page="files">${icons3.folder} \u9879\u76EE\u6587\u4EF6</button><button data-drawer-page="terminal">${icons3.code} \u7EC8\u7AEF</button><button data-drawer-page="tools">${icons3.code} \u5DE5\u5177\u4E0E\u73AF\u5883</button><button data-drawer-page="web">${icons3.search} DeepSeek \u7F51\u9875</button><button data-drawer-page="home">${icons3.code} \u5DE5\u4F5C\u53F0</button><button data-drawer-page="connect">${icons3.code} \u5916\u63A5\u5BA2\u6237\u7AEF\u914D\u7F6E</button></nav><details id="drawer-settings" class="drawer-settings"><summary>\u8BBE\u7F6E\u4E0E\u6743\u9650</summary><label class="display-orientation-setting">\u5C4F\u5E55\u65B9\u5411<select id="display-orientation" data-display-orientation aria-label="\u5E94\u7528\u5C4F\u5E55\u65B9\u5411"><option value="auto">\u81EA\u52A8\u65CB\u8F6C</option><option value="portrait">\u7AD6\u5C4F</option><option value="landscape">\u6A2A\u5C4F</option></select></label><button id="drawer-theme">\u5207\u6362\u660E\u6697\u4E3B\u9898</button><section class="permission-card"><div><strong>\u6743\u9650\u4E0E\u540E\u53F0\u8FD0\u884C</strong><span id="permission-summary">\u6B63\u5728\u8BFB\u53D6\u7CFB\u7EDF\u72B6\u6001\u2026</span></div><button data-permission="files"><span>\u6240\u6709\u6587\u4EF6\u8BBF\u95EE<small>\u6388\u6743\u540E\uFF0C\u65B0\u5EFA\u7EC8\u7AEF\u53EF\u8BBF\u95EE /shared</small></span><b id="permission-files-status">\u67E5\u770B\u8BBE\u7F6E \u203A</b></button><button data-permission="notifications"><span>\u670D\u52A1\u901A\u77E5<small>\u663E\u793A\u6865\u7684\u8FD0\u884C\u72B6\u6001\u548C\u8FD4\u56DE\u5165\u53E3</small></span><b id="permission-notifications-status">\u67E5\u770B\u8BBE\u7F6E \u203A</b></button><button data-permission="battery"><span>\u540E\u53F0\u8FD0\u884C<small>\u5141\u8BB8\u5FFD\u7565\u7535\u6C60\u4F18\u5316\uFF0C\u51CF\u5C11\u9501\u5C4F\u4E2D\u65AD</small></span><b id="permission-battery-status">\u67E5\u770B\u8BBE\u7F6E \u203A</b></button><button data-permission="app-settings"><span>\u7CFB\u7EDF\u5E94\u7528\u8BBE\u7F6E<small>\u90E8\u5206\u624B\u673A\u8FD8\u9700\u5141\u8BB8\u81EA\u542F\u52A8\u3001\u540E\u53F0\u6D3B\u52A8</small></span><b>\u6253\u5F00 \u203A</b></button><p>\u5171\u4EAB\u5B58\u50A8\u6743\u9650\u4E0D\u5305\u542B\u5176\u4ED6\u5E94\u7528\u7684\u79C1\u6709\u76EE\u5F55\u3002Android/data \u4ECD\u53D7\u7CFB\u7EDF\u9650\u5236\u3002</p></section></details><footer id="drawer-service-state">\u672C\u673A\u6865 \xB7 \u7B49\u5F85\u8FDE\u63A5</footer></aside>`;
+    return scrim;
+  }
+
+  // node_modules/lucide/dist/esm/defaultAttributes.mjs
+  var defaultAttributes = {
+    xmlns: "http://www.w3.org/2000/svg",
+    width: 24,
+    height: 24,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    "stroke-width": 2,
+    "stroke-linecap": "round",
+    "stroke-linejoin": "round"
+  };
+
+  // node_modules/lucide/dist/esm/createElement.mjs
+  var createSVGElement = ([tag, attrs, children]) => {
+    const element = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    Object.keys(attrs).forEach((name) => {
+      element.setAttribute(name, String(attrs[name]));
+    });
+    if (children?.length) {
+      children.forEach((child) => {
+        const childElement = createSVGElement(child);
+        element.appendChild(childElement);
+      });
+    }
+    return element;
+  };
+  var createElement = (iconNode, customAttrs = {}) => {
+    const tag = "svg";
+    const attrs = {
+      ...defaultAttributes,
+      ...customAttrs
+    };
+    return createSVGElement([tag, attrs, iconNode]);
+  };
+
+  // node_modules/lucide/dist/esm/icons/arrow-up.mjs
+  var ArrowUp = [
+    ["path", { d: "m5 12 7-7 7 7" }],
+    ["path", { d: "M12 19V5" }]
+  ];
+
+  // node_modules/lucide/dist/esm/icons/blocks.mjs
+  var Blocks = [
+    [
+      "path",
+      {
+        d: "M10 22V7a1 1 0 0 0-1-1H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5a1 1 0 0 0-1-1H2"
+      }
+    ],
+    ["rect", { x: "14", y: "2", width: "8", height: "8", rx: "1" }]
+  ];
+
+  // node_modules/lucide/dist/esm/icons/book-open.mjs
+  var BookOpen = [
+    ["path", { d: "M12 5v16" }],
+    [
+      "path",
+      {
+        d: "M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z"
+      }
+    ]
+  ];
+
+  // node_modules/lucide/dist/esm/icons/brain-circuit.mjs
+  var BrainCircuit = [
+    ["path", { d: "M12 13h4" }],
+    ["path", { d: "M12 18h6a2 2 0 012 2v1" }],
+    ["path", { d: "M12 8h8" }],
+    ["path", { d: "M12 9a4.17 4.17 0 01-3 4" }],
+    ["path", { d: "M16 8V5a2 2 0 012-2" }],
+    ["path", { d: "M6 18a4 4 0 01-2-7.465" }],
+    ["path", { d: "M6.004 5.125a4 4 0 00-2.526 5.77" }],
+    ["path", { d: "M6.294 6.294A3 3 0 1112 5v13a4 4 0 11-7.967-.518" }],
+    ["circle", { cx: "16", cy: "13", r: "0.5", fill: "currentColor" }],
+    ["circle", { cx: "18", cy: "3", r: "0.5", fill: "currentColor" }],
+    ["circle", { cx: "20", cy: "21", r: "0.5", fill: "currentColor" }],
+    ["circle", { cx: "20", cy: "8", r: "0.5", fill: "currentColor" }]
+  ];
+
+  // node_modules/lucide/dist/esm/icons/chevron-right.mjs
+  var ChevronRight = [["path", { d: "m9 18 6-6-6-6" }]];
+
+  // node_modules/lucide/dist/esm/icons/circle-user-round.mjs
+  var CircleUserRound = [
+    ["path", { d: "M17.925 20.056a6 6 0 0 0-11.851.001" }],
+    ["circle", { cx: "12", cy: "11", r: "4" }],
+    ["circle", { cx: "12", cy: "12", r: "10" }]
+  ];
+
+  // node_modules/lucide/dist/esm/icons/command.mjs
+  var Command = [
+    ["path", { d: "M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" }]
+  ];
+
+  // node_modules/lucide/dist/esm/icons/download.mjs
+  var Download = [
+    ["path", { d: "M12 15V3" }],
+    ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" }],
+    ["path", { d: "m7 10 5 5 5-5" }]
+  ];
+
+  // node_modules/lucide/dist/esm/icons/folder-open.mjs
+  var FolderOpen = [
+    [
+      "path",
+      {
+        d: "m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"
+      }
+    ]
+  ];
+
+  // node_modules/lucide/dist/esm/icons/globe.mjs
+  var Globe = [
+    ["circle", { cx: "12", cy: "12", r: "10" }],
+    ["path", { d: "M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" }],
+    ["path", { d: "M2 12h20" }]
+  ];
+
+  // node_modules/lucide/dist/esm/icons/message-square.mjs
+  var MessageSquare = [
+    [
+      "path",
+      {
+        d: "M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"
+      }
+    ]
+  ];
+
+  // node_modules/lucide/dist/esm/icons/monitor.mjs
+  var Monitor = [
+    ["rect", { width: "20", height: "14", x: "2", y: "3", rx: "2" }],
+    ["line", { x1: "8", x2: "16", y1: "21", y2: "21" }],
+    ["line", { x1: "12", x2: "12", y1: "17", y2: "21" }]
+  ];
+
+  // node_modules/lucide/dist/esm/icons/panel-left.mjs
+  var PanelLeft = [
+    ["rect", { width: "18", height: "18", x: "3", y: "3", rx: "2" }],
+    ["path", { d: "M9 3v18" }]
+  ];
+
+  // node_modules/lucide/dist/esm/icons/plug.mjs
+  var Plug = [
+    ["path", { d: "M12 22v-5" }],
+    ["path", { d: "M15 8V2" }],
+    ["path", { d: "M17 8a1 1 0 0 1 1 1v4a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1z" }],
+    ["path", { d: "M9 8V2" }]
+  ];
+
+  // node_modules/lucide/dist/esm/icons/plus.mjs
+  var Plus = [
+    ["path", { d: "M5 12h14" }],
+    ["path", { d: "M12 5v14" }]
+  ];
+
+  // node_modules/lucide/dist/esm/icons/refresh-cw.mjs
+  var RefreshCw = [
+    ["path", { d: "M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" }],
+    ["path", { d: "M21 3v5h-5" }],
+    ["path", { d: "M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" }],
+    ["path", { d: "M8 16H3v5" }]
+  ];
+
+  // node_modules/lucide/dist/esm/icons/search.mjs
+  var Search = [
+    ["path", { d: "m21 21-4.34-4.34" }],
+    ["circle", { cx: "11", cy: "11", r: "8" }]
+  ];
+
+  // node_modules/lucide/dist/esm/icons/settings-2.mjs
+  var Settings2 = [
+    ["path", { d: "M14 17H5" }],
+    ["path", { d: "M19 7h-9" }],
+    ["circle", { cx: "17", cy: "17", r: "3" }],
+    ["circle", { cx: "7", cy: "7", r: "3" }]
+  ];
+
+  // node_modules/lucide/dist/esm/icons/shield-check.mjs
+  var ShieldCheck = [
+    [
+      "path",
+      {
+        d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"
+      }
+    ],
+    ["path", { d: "m9 12 2 2 4-4" }]
+  ];
+
+  // node_modules/lucide/dist/esm/icons/sliders-horizontal.mjs
+  var SlidersHorizontal = [
+    ["path", { d: "M10 5H3" }],
+    ["path", { d: "M12 19H3" }],
+    ["path", { d: "M14 3v4" }],
+    ["path", { d: "M16 17v4" }],
+    ["path", { d: "M21 12h-9" }],
+    ["path", { d: "M21 19h-5" }],
+    ["path", { d: "M21 5h-7" }],
+    ["path", { d: "M8 10v4" }],
+    ["path", { d: "M8 12H3" }]
+  ];
+
+  // node_modules/lucide/dist/esm/icons/square-pen.mjs
+  var SquarePen = [
+    ["path", { d: "M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" }],
+    [
+      "path",
+      {
+        d: "M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"
+      }
+    ]
+  ];
+
+  // node_modules/lucide/dist/esm/icons/terminal.mjs
+  var Terminal = [
+    ["path", { d: "M12 19h8" }],
+    ["path", { d: "m4 17 6-6-6-6" }]
+  ];
+
+  // node_modules/lucide/dist/esm/icons/upload.mjs
+  var Upload = [
+    ["path", { d: "M12 3v12" }],
+    ["path", { d: "m17 8-5-5-5 5" }],
+    ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" }]
+  ];
+
+  // node_modules/lucide/dist/esm/icons/x.mjs
+  var X = [
+    ["path", { d: "M18 6 6 18" }],
+    ["path", { d: "m6 6 12 12" }]
+  ];
+
+  // js/ui/icon-system.js
+  var icons = { menu: PanelLeft, new: SquarePen, chat: MessageSquare, files: FolderOpen, terminal: Terminal, browser: Globe, extensions: Blocks, appearance: SlidersHorizontal, account: CircleUserRound, settings: Settings2, connect: Plug, home: Monitor, search: Search, close: X, plus: Plus, send: ArrowUp, refresh: RefreshCw, download: Download, upload: Upload, next: ChevronRight, thinking: BrainCircuit, agent: Command, docs: BookOpen, shield: ShieldCheck };
+  function uiIcon(name) {
+    return createElement(icons[name] || icons.settings, { "aria-hidden": "true", width: 20, height: 20, "stroke-width": 1.7, focusable: "false", class: "studio-icon" });
+  }
+  function iconLabel(button, name, text2) {
+    if (!button) return;
+    const label = document.createElement("span");
+    label.textContent = text2;
+    button.replaceChildren(uiIcon(name), label);
+  }
+
+  // js/ui/workspace-chrome.js
+  var ROUTES = { chat: ["\u5BF9\u8BDD", "chat"], files: ["\u9879\u76EE\u6587\u4EF6", "files"], terminal: ["\u7EC8\u7AEF", "terminal"], computer: ["AI \u6D4F\u89C8\u5668", "browser"], tools: ["\u5DE5\u5177\u4E0E\u73AF\u5883", "settings"], web: ["DeepSeek \u7F51\u9875", "browser"], home: ["\u5DE5\u4F5C\u53F0", "home"], connect: ["\u5916\u63A5\u5BA2\u6237\u7AEF", "connect"], accounts: ["\u8D26\u53F7\u4E0E\u6A21\u578B", "account"], extensions: ["\u6269\u5C55\u4E0E\u6280\u80FD", "extensions"], settings: ["\u5916\u89C2\u4E0E\u663E\u793A", "appearance"], tasks: ["\u4EFB\u52A1\u8BB0\u5F55", "home"] };
+  function enhanceWorkspace({ openDrawer }) {
+    const $3 = (id) => document.getElementById(id);
+    document.body.dataset.uiVersion = "3.1";
+    for (const [id, icon2] of [["session-menu", "menu"], ["chat-new", "new"], ["drawer-close", "close"], ["composer-import", "plus"], ["composer-options", "appearance"], ["chat-send", "send"], ["client-browser", "browser"], ["file-refresh", "refresh"], ["runtime-refresh", "refresh"], ["model-close", "close"]]) $3(id)?.replaceChildren(uiIcon(icon2));
+    for (const [id, icon2, text2] of [["drawer-new", "new", "\u65B0\u5EFA\u5BF9\u8BDD"], ["drawer-computer", "browser", "AI \u6D4F\u89C8\u5668"], ["client-agent", "agent", "Agent"], ["client-thinking", "thinking", "\u6DF1\u5EA6\u601D\u8003"], ["client-search", "search", "\u7F51\u9875\u641C\u7D22"], ["model-settings-open", "connect", "\u6A21\u578B\u4E0E API"], ["drawer-accounts", "account", "\u8D26\u53F7\u4E0E\u6A21\u578B"], ["drawer-extensions", "extensions", "\u6269\u5C55\u4E0E\u6280\u80FD"], ["drawer-display", "appearance", "\u5916\u89C2\u4E0E\u663E\u793A"]]) iconLabel($3(id), icon2, text2);
+    document.querySelectorAll("[data-drawer-page]").forEach((button) => {
+      const [title, icon2] = ROUTES[button.dataset.drawerPage] || ["\u5DE5\u4F5C\u533A", "home"];
+      iconLabel(button, icon2, title);
+    });
+    for (const button of document.querySelectorAll(".bottom-nav>[data-navigate]")) {
+      const route = button.dataset.navigate, name = ROUTES[route]?.[1] || "home";
+      button.firstElementChild?.replaceChildren(uiIcon(name));
+    }
+    const menu = document.createElement("button");
+    menu.id = "workspace-menu";
+    menu.className = "icon-button";
+    menu.setAttribute("aria-label", "\u6253\u5F00\u5DE5\u4F5C\u533A\u4FA7\u680F");
+    menu.append(uiIcon("menu"));
+    menu.onclick = openDrawer;
+    document.querySelector(".topbar").prepend(menu);
+    const breadcrumb = document.createElement("span");
+    breadcrumb.id = "workspace-page-name";
+    breadcrumb.className = "workspace-page-name";
+    document.querySelector(".brand").append(breadcrumb);
+    const shortcuts = document.querySelector(".drawer-shortcuts");
+    shortcuts.setAttribute("aria-label", "\u5DE5\u4F5C\u533A\u4E0E\u8FDE\u63A5");
+    const headings = [["workspace", "\u5DE5\u4F5C\u533A"], ["connections", "\u8FDE\u63A5\u4E0E\u6269\u5C55"], ["preferences", "\u504F\u597D\u8BBE\u7F6E"]];
+    const groups = /* @__PURE__ */ new Map();
+    for (const [id, label] of headings) {
+      const section = document.createElement("section"), title = document.createElement("h2");
+      section.className = "drawer-nav-group";
+      title.textContent = label;
+      section.append(title);
+      groups.set(id, section);
+    }
+    for (const button of [...shortcuts.children]) {
+      if (button.tagName !== "BUTTON") continue;
+      const route = button.dataset.drawerPage;
+      const group = button.id === "drawer-display" ? "preferences" : ["model-settings-open", "drawer-accounts", "drawer-extensions"].includes(button.id) || ["web", "connect"].includes(route) ? "connections" : "workspace";
+      groups.get(group).append(button);
+    }
+    const more = document.createElement("details");
+    more.id = "drawer-more";
+    more.className = "drawer-more";
+    const moreSummary = document.createElement("summary");
+    moreSummary.textContent = "\u66F4\u591A\u5DE5\u5177\u4E0E\u8FDE\u63A5";
+    more.append(moreSummary);
+    for (const route of ["tools", "home", "web", "connect"]) {
+      const b2 = shortcuts.querySelector('[data-drawer-page="' + route + '"]') || [...groups.values()].flatMap((g) => [...g.querySelectorAll("button")]).find((b3) => b3.dataset.drawerPage === route);
+      if (b2) more.append(b2);
+    }
+    shortcuts.replaceChildren(...groups.values(), more);
+    const recent = document.querySelector(".drawer-section-title");
+    recent?.classList.add("drawer-recents-heading");
+    if ($3("session-manage") && $3("session-archived-toggle")) $3("session-manage").append($3("session-archived-toggle"));
+    const form = $3("model-form"), connections = document.createElement("aside"), editor = document.createElement("section");
+    connections.className = "model-connections-pane";
+    editor.className = "model-editor-pane";
+    const connectionTitle = document.createElement("h3");
+    connectionTitle.textContent = "\u8FDE\u63A5";
+    connections.append(connectionTitle);
+    for (const selector of [".provider-connection", "#provider-profiles", ".provider-account-note"]) {
+      const element = form?.querySelector(selector) || document.querySelector(".model-dialog " + selector);
+      if (element) connections.append(element);
+    }
+    for (const element of [...form.children]) editor.append(element);
+    form.append(connections, editor);
+    form.classList.add("model-layout");
+    const update = (page) => {
+      breadcrumb.textContent = ROUTES[page]?.[0] || "\u5DE5\u4F5C\u533A";
+      document.querySelectorAll("[data-drawer-page]").forEach((b2) => b2.toggleAttribute("data-current", b2.dataset.drawerPage === page));
+    };
+    update(document.body.dataset.page || "chat");
+    window.addEventListener("bridge:navigate", (event) => update(event.detail));
+    return { update };
   }
 
   // js/ui/processes.js
@@ -18110,7 +18463,7 @@ ${h3.join(`
     }
   };
   var B = 3;
-  var X = Object.freeze(new De());
+  var X2 = Object.freeze(new De());
   var an = 0;
   var Ls = 2;
   var Ze = class s12 {
@@ -18392,7 +18745,7 @@ ${h3.join(`
       this.tabs = {};
       this.savedY = 0;
       this.savedX = 0;
-      this.savedCurAttrData = X.clone();
+      this.savedCurAttrData = X2.clone();
       this.savedCharset = Je;
       this.markers = [];
       this._nullCell = q.fromCharData([0, ir, 1, 0]);
@@ -18425,7 +18778,7 @@ ${h3.join(`
     }
     fillViewportRows(t) {
       if (this.lines.length === 0) {
-        t === void 0 && (t = X);
+        t === void 0 && (t = X2);
         let e = this._rows;
         for (; e--; ) this.lines.push(this.getBlankLine(t));
       }
@@ -18434,7 +18787,7 @@ ${h3.join(`
       this.ydisp = 0, this.ybase = 0, this.y = 0, this.x = 0, this.lines = new zi(this._getCorrectBufferLength(this._rows)), this.scrollTop = 0, this.scrollBottom = this._rows - 1, this.setupTabStops();
     }
     resize(t, e) {
-      let i = this.getNullCell(X), r = 0, n = this._getCorrectBufferLength(e);
+      let i = this.getNullCell(X2), r = 0, n = this._getCorrectBufferLength(e);
       if (n > this.lines.maxLength && (this.lines.maxLength = n), this.lines.length > 0) {
         if (this._cols < t) for (let l = 0; l < this.lines.length; l++) r += +this.lines.get(l).resize(t, i);
         let o2 = 0;
@@ -18464,19 +18817,19 @@ ${h3.join(`
       this._cols !== t && (t > this._cols ? this._reflowLarger(t, e) : this._reflowSmaller(t, e));
     }
     _reflowLarger(t, e) {
-      let i = this._optionsService.rawOptions.reflowCursorLine, r = sl(this.lines, this._cols, t, this.ybase + this.y, this.getNullCell(X), i);
+      let i = this._optionsService.rawOptions.reflowCursorLine, r = sl(this.lines, this._cols, t, this.ybase + this.y, this.getNullCell(X2), i);
       if (r.length > 0) {
         let n = ol(this.lines, r);
         ll(this.lines, n.layout), this._reflowLargerAdjustViewport(t, e, n.countRemoved);
       }
     }
     _reflowLargerAdjustViewport(t, e, i) {
-      let r = this.getNullCell(X), n = i;
+      let r = this.getNullCell(X2), n = i;
       for (; n-- > 0; ) this.ybase === 0 ? (this.y > 0 && this.y--, this.lines.length < e && this.lines.push(new Ze(t, r))) : (this.ydisp === this.ybase && this.ydisp--, this.ybase--);
       this.savedY = Math.max(this.savedY - i, 0);
     }
     _reflowSmaller(t, e) {
-      let i = this._optionsService.rawOptions.reflowCursorLine, r = this.getNullCell(X), n = [], o2 = 0;
+      let i = this._optionsService.rawOptions.reflowCursorLine, r = this.getNullCell(X2), n = [], o2 = 0;
       for (let l = this.lines.length - 1; l >= 0; l--) {
         let a3 = this.lines.get(l);
         if (!a3 || !a3.isWrapped && a3.getTrimmedLength() <= t) continue;
@@ -18490,7 +18843,7 @@ ${h3.join(`
         this.ybase === 0 && this.y !== this.lines.length - 1 ? _3 = Math.max(0, this.y - this.lines.maxLength + d) : _3 = Math.max(0, this.lines.length - this.lines.maxLength + d);
         let p = [];
         for (let I2 = 0; I2 < d; I2++) {
-          let k = this.getBlankLine(X, true);
+          let k = this.getBlankLine(X2, true);
           p.push(k);
         }
         p.length > 0 && (n.push({ start: l + u.length + o2, newLines: p }), o2 += p.length), u.push(...p);
@@ -19583,8 +19936,8 @@ ${h3.join(`
       this._iconName = "";
       this._windowTitleStack = [];
       this._iconNameStack = [];
-      this._curAttrData = X.clone();
-      this._eraseAttrDataInternal = X.clone();
+      this._curAttrData = X2.clone();
+      this._eraseAttrDataInternal = X2.clone();
       this._onRequestBell = this._register(new v());
       this.onRequestBell = this._onRequestBell.event;
       this._onRequestRefreshRows = this._register(new v());
@@ -19883,7 +20236,7 @@ ${h3.join(`
     }
     scrollDown(e) {
       let i = e.params[0] || 1;
-      for (; i--; ) this._activeBuffer.lines.splice(this._activeBuffer.ybase + this._activeBuffer.scrollBottom, 1), this._activeBuffer.lines.splice(this._activeBuffer.ybase + this._activeBuffer.scrollTop, 0, this._activeBuffer.getBlankLine(X));
+      for (; i--; ) this._activeBuffer.lines.splice(this._activeBuffer.ybase + this._activeBuffer.scrollBottom, 1), this._activeBuffer.lines.splice(this._activeBuffer.ybase + this._activeBuffer.scrollTop, 0, this._activeBuffer.getBlankLine(X2));
       return this._dirtyRowTracker.markRangeDirty(this._activeBuffer.scrollTop, this._activeBuffer.scrollBottom), true;
     }
     scrollLeft(e) {
@@ -20147,12 +20500,12 @@ ${h3.join(`
       i.extended = i.extended.clone(), (!~e || e > 5) && (e = 1), i.extended.underlineStyle = e, i.fg |= 268435456, e === 0 && (i.fg &= -268435457), i.updateExtended();
     }
     _processSGR0(e) {
-      e.fg = X.fg, e.bg = X.bg, e.extended = e.extended.clone(), e.extended.underlineStyle = 0, e.extended.underlineColor &= -67108864, e.updateExtended();
+      e.fg = X2.fg, e.bg = X2.bg, e.extended = e.extended.clone(), e.extended.underlineStyle = 0, e.extended.underlineColor &= -67108864, e.updateExtended();
     }
     charAttributes(e) {
       if (e.length === 1 && e.params[0] === 0) return this._processSGR0(this._curAttrData), true;
       let i = e.length, r, n = this._curAttrData;
-      for (let o2 = 0; o2 < i; o2++) r = e.params[o2], r >= 30 && r <= 37 ? (n.fg &= -50331904, n.fg |= 16777216 | r - 30) : r >= 40 && r <= 47 ? (n.bg &= -50331904, n.bg |= 16777216 | r - 40) : r >= 90 && r <= 97 ? (n.fg &= -50331904, n.fg |= 16777216 | r - 90 | 8) : r >= 100 && r <= 107 ? (n.bg &= -50331904, n.bg |= 16777216 | r - 100 | 8) : r === 0 ? this._processSGR0(n) : r === 1 ? n.fg |= 134217728 : r === 3 ? n.bg |= 67108864 : r === 4 ? (n.fg |= 268435456, this._processUnderline(e.hasSubParams(o2) ? e.getSubParams(o2)[0] : 1, n)) : r === 5 ? n.fg |= 536870912 : r === 7 ? n.fg |= 67108864 : r === 8 ? n.fg |= 1073741824 : r === 9 ? n.fg |= 2147483648 : r === 2 ? n.bg |= 134217728 : r === 21 ? this._processUnderline(2, n) : r === 22 ? (n.fg &= -134217729, n.bg &= -134217729) : r === 23 ? n.bg &= -67108865 : r === 24 ? (n.fg &= -268435457, this._processUnderline(0, n)) : r === 25 ? n.fg &= -536870913 : r === 27 ? n.fg &= -67108865 : r === 28 ? n.fg &= -1073741825 : r === 29 ? n.fg &= 2147483647 : r === 39 ? (n.fg &= -67108864, n.fg |= X.fg & 16777215) : r === 49 ? (n.bg &= -67108864, n.bg |= X.bg & 16777215) : r === 38 || r === 48 || r === 58 ? o2 += this._extractColor(e, o2, n) : r === 53 ? n.bg |= 1073741824 : r === 55 ? n.bg &= -1073741825 : r === 59 ? (n.extended = n.extended.clone(), n.extended.underlineColor = -1, n.updateExtended()) : r === 100 ? (n.fg &= -67108864, n.fg |= X.fg & 16777215, n.bg &= -67108864, n.bg |= X.bg & 16777215) : this._logService.debug("Unknown SGR attribute: %d.", r);
+      for (let o2 = 0; o2 < i; o2++) r = e.params[o2], r >= 30 && r <= 37 ? (n.fg &= -50331904, n.fg |= 16777216 | r - 30) : r >= 40 && r <= 47 ? (n.bg &= -50331904, n.bg |= 16777216 | r - 40) : r >= 90 && r <= 97 ? (n.fg &= -50331904, n.fg |= 16777216 | r - 90 | 8) : r >= 100 && r <= 107 ? (n.bg &= -50331904, n.bg |= 16777216 | r - 100 | 8) : r === 0 ? this._processSGR0(n) : r === 1 ? n.fg |= 134217728 : r === 3 ? n.bg |= 67108864 : r === 4 ? (n.fg |= 268435456, this._processUnderline(e.hasSubParams(o2) ? e.getSubParams(o2)[0] : 1, n)) : r === 5 ? n.fg |= 536870912 : r === 7 ? n.fg |= 67108864 : r === 8 ? n.fg |= 1073741824 : r === 9 ? n.fg |= 2147483648 : r === 2 ? n.bg |= 134217728 : r === 21 ? this._processUnderline(2, n) : r === 22 ? (n.fg &= -134217729, n.bg &= -134217729) : r === 23 ? n.bg &= -67108865 : r === 24 ? (n.fg &= -268435457, this._processUnderline(0, n)) : r === 25 ? n.fg &= -536870913 : r === 27 ? n.fg &= -67108865 : r === 28 ? n.fg &= -1073741825 : r === 29 ? n.fg &= 2147483647 : r === 39 ? (n.fg &= -67108864, n.fg |= X2.fg & 16777215) : r === 49 ? (n.bg &= -67108864, n.bg |= X2.bg & 16777215) : r === 38 || r === 48 || r === 58 ? o2 += this._extractColor(e, o2, n) : r === 53 ? n.bg |= 1073741824 : r === 55 ? n.bg &= -1073741825 : r === 59 ? (n.extended = n.extended.clone(), n.extended.underlineColor = -1, n.updateExtended()) : r === 100 ? (n.fg &= -67108864, n.fg |= X2.fg & 16777215, n.bg &= -67108864, n.bg |= X2.bg & 16777215) : this._logService.debug("Unknown SGR attribute: %d.", r);
       return true;
     }
     deviceStatus(e) {
@@ -20185,7 +20538,7 @@ ${h3.join(`
       return true;
     }
     softReset(e) {
-      return this._coreService.isCursorHidden = false, this._onRequestSyncScrollBar.fire(), this._activeBuffer.scrollTop = 0, this._activeBuffer.scrollBottom = this._bufferService.rows - 1, this._curAttrData = X.clone(), this._coreService.reset(), this._charsetService.reset(), this._activeBuffer.savedX = 0, this._activeBuffer.savedY = this._activeBuffer.ybase, this._activeBuffer.savedCurAttrData.fg = this._curAttrData.fg, this._activeBuffer.savedCurAttrData.bg = this._curAttrData.bg, this._activeBuffer.savedCharset = this._charsetService.charset, this._coreService.decPrivateModes.origin = false, true;
+      return this._coreService.isCursorHidden = false, this._onRequestSyncScrollBar.fire(), this._activeBuffer.scrollTop = 0, this._activeBuffer.scrollBottom = this._bufferService.rows - 1, this._curAttrData = X2.clone(), this._coreService.reset(), this._charsetService.reset(), this._activeBuffer.savedX = 0, this._activeBuffer.savedY = this._activeBuffer.ybase, this._activeBuffer.savedCurAttrData.fg = this._curAttrData.fg, this._activeBuffer.savedCurAttrData.bg = this._curAttrData.bg, this._activeBuffer.savedCharset = this._charsetService.charset, this._coreService.decPrivateModes.origin = false, true;
     }
     setCursorStyle(e) {
       let i = e.length === 0 ? 1 : e.params[0];
@@ -20345,7 +20698,7 @@ ${h3.join(`
       return this._parser.reset(), this._onRequestReset.fire(), true;
     }
     reset() {
-      this._curAttrData = X.clone(), this._eraseAttrDataInternal = X.clone();
+      this._curAttrData = X2.clone(), this._eraseAttrDataInternal = X2.clone();
     }
     _eraseAttrData() {
       return this._eraseAttrDataInternal.bg &= -67108864, this._eraseAttrDataInternal.bg |= this._curAttrData.bg & 67108863, this._eraseAttrDataInternal;
@@ -21466,7 +21819,7 @@ ${h3.join(`
     clear() {
       if (!(this.buffer.ybase === 0 && this.buffer.y === 0)) {
         this.buffer.clearAllMarkers(), this.buffer.lines.set(0, this.buffer.lines.get(this.buffer.ybase + this.buffer.y)), this.buffer.lines.length = 1, this.buffer.ydisp = 0, this.buffer.ybase = 0, this.buffer.y = 0;
-        for (let e = 1; e < this.rows; e++) this.buffer.lines.push(this.buffer.getBlankLine(X));
+        for (let e = 1; e < this.rows; e++) this.buffer.lines.push(this.buffer.getBlankLine(X2));
         this._onScroll.fire({ position: this.buffer.ydisp }), this.refresh(0, this.rows - 1);
       }
     }
@@ -22097,7 +22450,7 @@ ${h3.join(`
     else if (a3[n] === e[1] && (t--, t < 0)) return n;
     return t > 0 ? -2 : -1;
   }
-  function X2(a3, e = 0) {
+  function X3(a3, e = 0) {
     let t = e, n = "";
     for (let i of a3) if (i === "	") {
       let r = 4 - t % 4;
@@ -22253,14 +22606,14 @@ ${H2.join(`
           let g = i();
           e = e.substring(t[0].length);
           let k = t[2].split(`
-`, 1)[0], P = t[1].length, R = this.options.pedantic ? X2(k, P) : k.replace(this.rules.other.leadingSpaceTab, (W) => X2(W, P)), m = e.split(`
+`, 1)[0], P = t[1].length, R = this.options.pedantic ? X3(k, P) : k.replace(this.rules.other.leadingSpaceTab, (W) => X3(W, P)), m = e.split(`
 `, 1)[0], E = !R.trim(), b2 = 0;
           if (this.options.pedantic ? (b2 = 2, d = R.trimStart()) : E ? b2 = P + 1 : (b2 = R.search(this.rules.other.nonSpaceChar), b2 = b2 > 4 ? 1 : b2, d = R.slice(b2), b2 += P), E && this.rules.other.blankLine.test(m) && (e = e.substring(m.length + 1), p = true), !p) {
             let W = this.rules.other.nextBulletRegex(b2), ue2 = this.rules.other.hrRegex(b2), pe2 = this.rules.other.fencesBeginRegex(b2), ce2 = this.rules.other.headingBeginRegex(b2), $e2 = this.rules.other.htmlBeginRegex(b2), Le2 = this.rules.other.blockquoteBeginRegex(b2);
             for (; e; ) {
               let he2 = e.split(`
 `, 1)[0], G2;
-              if (m = he2, this.options.pedantic ? (m = m.replace(this.rules.other.listReplaceNesting, "  "), G2 = m) : G2 = m.replace(this.rules.other.leadingSpaceTab, (Ae2) => X2(Ae2)), pe2.test(m) || ce2.test(m) || $e2.test(m) || Le2.test(m) || W.test(m) || ue2.test(m)) break;
+              if (m = he2, this.options.pedantic ? (m = m.replace(this.rules.other.listReplaceNesting, "  "), G2 = m) : G2 = m.replace(this.rules.other.leadingSpaceTab, (Ae2) => X3(Ae2)), pe2.test(m) || ce2.test(m) || $e2.test(m) || Le2.test(m) || W.test(m) || ue2.test(m)) break;
               if (G2.search(this.rules.other.nonSpaceChar) >= b2 || !m.trim()) d += `
 ` + G2.slice(b2);
               else {
@@ -23441,13 +23794,13 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     for (let index = 0; index < array.length; index++) if (!objectHasOwnProperty(array, index)) array[index] = null;
     return array;
   }
-  function clone2(object3) {
+  function clone2(object4) {
     const newObject = create(null);
-    for (const _ref2 of entries(object3)) {
+    for (const _ref2 of entries(object4)) {
       var _ref3 = _slicedToArray(_ref2, 2);
       const property = _ref3[0];
       const value = _ref3[1];
-      if (objectHasOwnProperty(object3, property)) {
+      if (objectHasOwnProperty(object4, property)) {
         if (arrayIsArray(value)) newObject[property] = cleanArray(value);
         else if (value && typeof value === "object" && value.constructor === Object) newObject[property] = clone2(value);
         else newObject[property] = value;
@@ -23484,25 +23837,25 @@ Please report this to https://github.com/markedjs/marked.`, e) {
         return objectToString(value);
     }
   }
-  function lookupGetter(object3, prop) {
-    while (object3 !== null) {
-      const desc = getOwnPropertyDescriptor(object3, prop);
+  function lookupGetter(object4, prop) {
+    while (object4 !== null) {
+      const desc = getOwnPropertyDescriptor(object4, prop);
       if (desc) {
         if (desc.get) return unapply(desc.get);
         if (typeof desc.value === "function") return unapply(desc.value);
       }
-      object3 = getPrototypeOf(object3);
+      object4 = getPrototypeOf(object4);
     }
     function fallbackValue() {
       return null;
     }
     return fallbackValue;
   }
-  function lookupAccessor(object3, prop) {
-    while (object3 !== null) {
-      const desc = getOwnPropertyDescriptor(object3, prop);
+  function lookupAccessor(object4, prop) {
+    while (object4 !== null) {
+      const desc = getOwnPropertyDescriptor(object4, prop);
       if (desc) return desc.get ? unapply(desc.get) : null;
-      object3 = getPrototypeOf(object3);
+      object4 = getPrototypeOf(object4);
     }
     return null;
   }
@@ -26721,6 +27074,247 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     return { render };
   }
 
+  // js/extension-input.js
+  function object3(value) {
+    return value && typeof value === "object" && !Array.isArray(value);
+  }
+  function json(raw, label) {
+    try {
+      return JSON.parse(raw);
+    } catch {
+      throw new Error(label + "\u683C\u5F0F\u6709\u8BEF\uFF0C\u8BF7\u7C98\u8D34\u5B8C\u6574\u5185\u5BB9");
+    }
+  }
+  function parseLaunch(raw) {
+    const words = [];
+    let current = "", quote = "", escaped = false, started = false;
+    for (const c of String(raw).trim()) {
+      if (escaped) {
+        current += c;
+        escaped = false;
+        started = true;
+        continue;
+      }
+      if (c === "\\" && quote !== "'") {
+        escaped = true;
+        started = true;
+        continue;
+      }
+      if (quote) {
+        if (c === quote) quote = "";
+        else current += c;
+        started = true;
+        continue;
+      }
+      if (c === '"' || c === "'") {
+        quote = c;
+        started = true;
+        continue;
+      }
+      if (/\s/.test(c)) {
+        if (started) {
+          words.push(current);
+          current = "";
+          started = false;
+        }
+        continue;
+      }
+      if (/[|&;<>`]/.test(c) || c === "\0") throw new Error("\u8FD9\u91CC\u53EA\u586B\u5199\u542F\u52A8\u7A0B\u5E8F\u548C\u53C2\u6570\uFF0C\u8BF7\u79FB\u9664\u7BA1\u9053\u3001\u91CD\u5B9A\u5411\u6216\u591A\u6761\u547D\u4EE4");
+      current += c;
+      started = true;
+    }
+    if (quote || escaped) throw new Error("\u542F\u52A8\u547D\u4EE4\u7684\u5F15\u53F7\u6216\u53CD\u659C\u6760\u5C1A\u672A\u95ED\u5408");
+    if (started) words.push(current);
+    const env = {};
+    while (words.length && /^[A-Za-z_][A-Za-z0-9_]*=/.test(words[0])) {
+      const entry = words.shift(), at3 = entry.indexOf("=");
+      env[entry.slice(0, at3)] = entry.slice(at3 + 1);
+    }
+    if (!words.length) throw new Error("\u8BF7\u586B\u5199\u542F\u52A8\u547D\u4EE4\uFF0C\u4F8B\u5982 npx -y \u670D\u52A1\u5305\u540D");
+    return { command: words[0], args: words.slice(1), ...Object.keys(env).length ? { env } : {} };
+  }
+  function parseArguments(raw) {
+    if (!raw.trim()) return [];
+    const value = raw.trim().startsWith("[") ? json(raw, "\u53C2\u6570") : raw.split(/\r?\n/).filter((s15) => s15.trim());
+    if (!Array.isArray(value) || value.some((v3) => typeof v3 !== "string")) throw new Error("\u53C2\u6570\u8BF7\u6BCF\u884C\u586B\u5199\u4E00\u4E2A\uFF0C\u6216\u7C98\u8D34\u5B57\u7B26\u4E32\u6570\u7EC4");
+    return value;
+  }
+  function parseEnvironment(raw) {
+    if (!raw.trim()) return {};
+    let value = {};
+    if (raw.trim().startsWith("{")) value = json(raw, "\u73AF\u5883\u53D8\u91CF");
+    else for (const line of raw.split(/\r?\n/)) {
+      if (!line.trim() || line.trim().startsWith("#")) continue;
+      const text2 = line.replace(/^\s*export\s+/, ""), at3 = text2.indexOf("=");
+      if (at3 < 1) throw new Error("\u73AF\u5883\u53D8\u91CF\u8BF7\u6309 NAME=value \u6BCF\u884C\u586B\u5199\u4E00\u4E2A");
+      let entry = text2.slice(at3 + 1);
+      if (entry.startsWith('"') && entry.endsWith('"') || entry.startsWith("'") && entry.endsWith("'")) entry = entry.slice(1, -1);
+      value[text2.slice(0, at3).trim()] = entry;
+    }
+    if (!object3(value) || Object.entries(value).some(([k, v3]) => !/^[_A-Za-z][_A-Za-z0-9]{0,79}$/.test(k) || typeof v3 !== "string")) throw new Error("\u73AF\u5883\u53D8\u91CF\u540D\u79F0\u6216\u5185\u5BB9\u4E0D\u6B63\u786E");
+    return value;
+  }
+  function parseMcpInput(raw) {
+    const text2 = String(raw).trim();
+    if (!text2) throw new Error("\u8BF7\u7C98\u8D34 MCP \u94FE\u63A5\u3001\u914D\u7F6E\u6216\u542F\u52A8\u547D\u4EE4");
+    if (text2.startsWith("{")) {
+      const parsed2 = json(text2, "MCP \u914D\u7F6E");
+      if (!object3(parsed2)) throw new Error("MCP \u914D\u7F6E\u5E94\u4E3A\u4E00\u4E2A\u5BF9\u8C61");
+      const mappings = parsed2.mcpServers || parsed2.servers || parsed2.mcp?.servers;
+      const entries2 = mappings ? Object.entries(mappings) : [["MCP \u670D\u52A1", parsed2]];
+      if (!entries2.length || entries2.length > 16) throw new Error("\u4E00\u6B21\u53EF\u6DFB\u52A0 1\u201316 \u4E2A MCP \u670D\u52A1");
+      return entries2.map(([name, v3]) => {
+        if (!object3(v3)) throw new Error("MCP \u670D\u52A1\u914D\u7F6E\u4E0D\u5B8C\u6574");
+        if (v3.type === "sse" || v3.transport === "sse") throw new Error("\u6B64\u5730\u5740\u4F7F\u7528\u65E7 SSE \u534F\u8BAE\uFF0C\u8BF7\u4F7F\u7528\u670D\u52A1\u63D0\u4F9B\u7684 Streamable HTTP /mcp \u7AEF\u70B9");
+        if (v3.url) {
+          const u = new URL(v3.url);
+          if (!["http:", "https:"].includes(u.protocol) || u.username || u.password) throw new Error("MCP \u94FE\u63A5\u5E94\u4E3A HTTP(S) \u670D\u52A1\u7AEF\u70B9");
+          return { name: v3.name || name, type: "http", url: u.href, ...v3.headers ? { headers: v3.headers } : {}, enabled: v3.disabled !== true };
+        }
+        if (typeof v3.command !== "string" || v3.args && !Array.isArray(v3.args)) throw new Error("\u672C\u673A MCP \u914D\u7F6E\u9700\u5305\u542B\u542F\u52A8\u7A0B\u5E8F\u548C\u53C2\u6570");
+        return { name: v3.name || name, type: "stdio", command: v3.command, args: v3.args || [], ...v3.env ? { env: v3.env } : {}, enabled: v3.disabled !== true };
+      });
+    }
+    if (/^https?:\/\//i.test(text2)) {
+      const u = new URL(text2);
+      if (u.username || u.password || u.hash) throw new Error("MCP \u94FE\u63A5\u4E0D\u80FD\u5305\u542B\u8D26\u53F7\u6216\u7247\u6BB5");
+      return [{ name: u.hostname, type: "http", url: u.href, enabled: true }];
+    }
+    const launch = parseLaunch(text2);
+    return [{ name: launch.args.find((s15) => s15.startsWith("@")) || launch.command, type: "stdio", ...launch, enabled: true }];
+  }
+
+  // js/ui/extension-setup.js
+  function createExtensionSetup({ native, extensions: extensions2, project, refresh, render, editServer, notify }) {
+    const $3 = (id) => document.getElementById(id);
+    const quick = document.createElement("section");
+    quick.className = "extension-quick hub-form";
+    quick.innerHTML = `<h2>\u5FEB\u901F\u6DFB\u52A0</h2><p class="hub-caption">\u590D\u5236\u670D\u52A1\u63D0\u4F9B\u7684\u94FE\u63A5\u3001\u6574\u6BB5\u914D\u7F6E\u6216\u542F\u52A8\u547D\u4EE4\uFF0C\u76F4\u63A5\u7C98\u8D34\u5230\u8FD9\u91CC\u3002</p><label class="sr-only" for="mcp-quick-input">MCP \u94FE\u63A5\u3001\u914D\u7F6E\u6216\u542F\u52A8\u547D\u4EE4</label><textarea id="mcp-quick-input" rows="3" spellcheck="false" placeholder="https://example.com/mcp&#10;\u4E5F\u53EF\u7C98\u8D34 mcpServers \u914D\u7F6E\u6216 npx \u542F\u52A8\u547D\u4EE4"></textarea><div class="quick-actions"><span id="mcp-quick-feedback" role="status"></span><button id="mcp-quick-connect" class="hub-primary">\u6DFB\u52A0\u5E76\u8FDE\u63A5</button></div><details class="extension-examples"><summary>\u4E0D\u77E5\u9053\u4ECE\u54EA\u5F00\u59CB\uFF1F</summary><p>\u6587\u6863\u67E5\u8BE2\u670D\u52A1 Context7\uFF1A\u81EA\u52A8\u586B\u597D\u5730\u5740\uFF0C\u53EA\u9700\u586B\u5199\u5B83\u63D0\u4F9B\u7684\u5BC6\u94A5\u3002</p><button id="mcp-context7">\u914D\u7F6E Context7</button><p>\u672C\u673A\u542F\u52A8\u547D\u4EE4\u53EF\u76F4\u63A5\u5199\uFF1A<code>npx -y \u670D\u52A1\u5305\u540D</code>\u3002\u9996\u6B21\u4F7F\u7528\u65F6\u4F1A\u51C6\u5907\u672C\u673A\u73AF\u5883\uFF0Cnpx \u53EF\u80FD\u8054\u7F51\u4E0B\u8F7D\u4F9D\u8D56\u3002</p></details>`;
+    $3("extensions-mcp").prepend(quick);
+    $3("mcp-add").textContent = "\u624B\u52A8\u914D\u7F6E";
+    const oldArgs = $3("mcp-args"), oldEnv = $3("mcp-env"), advanced = document.createElement("details");
+    advanced.className = "mcp-extra-options";
+    advanced.innerHTML = "<summary>\u9644\u52A0\u53C2\u6570\u4E0E\u73AF\u5883\u53D8\u91CF\uFF08\u53EF\u9009\uFF09</summary>";
+    advanced.append(oldArgs.closest("label"), oldEnv.closest("label"));
+    $3("mcp-stdio-fields").append(advanced);
+    $3("mcp-command").closest("label").firstChild.textContent = "\u542F\u52A8\u547D\u4EE4";
+    $3("mcp-command").placeholder = "npx -y @example/mcp-server";
+    oldArgs.closest("label").firstChild.textContent = "\u9644\u52A0\u53C2\u6570\uFF0C\u6BCF\u884C\u4E00\u4E2A";
+    oldArgs.placeholder = "/workspace\n--verbose";
+    oldEnv.closest("label").firstChild.textContent = "\u73AF\u5883\u53D8\u91CF\uFF0C\u6BCF\u884C NAME=value";
+    oldEnv.placeholder = "API_KEY=\u4F60\u7684\u5BC6\u94A5";
+    $3("mcp-name").required = false;
+    $3("mcp-name").closest("label").firstChild.textContent = "\u540D\u79F0\uFF08\u53EF\u9009\uFF0C\u81EA\u52A8\u8BC6\u522B\uFF09";
+    const library = document.createElement("section");
+    library.className = "extension-library";
+    library.innerHTML = `<div class="hub-section-heading"><h2>\u5185\u7F6E\u6280\u80FD</h2><span class="hub-caption">\u65E0\u9700\u914D\u7F6E\uFF0C\u65E0\u9700\u7EC8\u7AEF</span></div><div id="builtin-skills" class="builtin-skills"></div><div class="plugin-import-actions"><button id="plugin-file" class="hub-primary">\u4ECE\u6587\u4EF6\u5BFC\u5165</button><button id="plugin-url-open">\u4ECE GitHub \u6DFB\u52A0</button><button id="skill-create-open">\u81EA\u5DF1\u5199\u6280\u80FD</button></div><p class="hub-caption">\u652F\u6301\u5355\u4E2A SKILL.md\u3001\u6280\u80FD ZIP\u3001\u63D2\u4EF6 ZIP \u548C MCP \u914D\u7F6E\u6587\u4EF6\uFF0C\u81EA\u52A8\u8BC6\u522B\u683C\u5F0F\u3002</p><form id="plugin-url-form" class="hub-form" hidden><label>GitHub \u4ED3\u5E93\u6216 ZIP \u94FE\u63A5<input id="plugin-url" type="url" required placeholder="https://github.com/\u4F5C\u8005/\u4ED3\u5E93"></label><button id="plugin-url-add" class="hub-primary">\u4E0B\u8F7D\u5E76\u5BFC\u5165</button></form><form id="skill-create-form" class="hub-form" hidden><label>\u6280\u80FD\u540D\u79F0<input id="skill-create-name" required maxlength="80" placeholder="\u4F8B\u5982\uFF1A\u6211\u7684\u4EE3\u7801\u89C4\u8303"></label><label>\u8BA9 AI \u9075\u5FAA\u7684\u5DE5\u4F5C\u6B65\u9AA4<textarea id="skill-create-content" required rows="6" placeholder="\u5199\u660E\u5728\u4EC0\u4E48\u4EFB\u52A1\u4E2D\u4F7F\u7528\uFF0C\u4EE5\u53CA\u5177\u4F53\u5DE5\u4F5C\u6B65\u9AA4\u2026"></textarea></label><button id="skill-create-save" class="hub-primary">\u4FDD\u5B58\u6280\u80FD</button></form><p id="plugin-setup-feedback" class="hub-feedback" role="status"></p>`;
+    $3("extensions-plugins").prepend(library);
+    $3("plugin-import").textContent = "\u5BFC\u5165\u6587\u4EF6";
+    const note = $3("extensions-plugins").querySelector(".hub-caption:not(.extension-library .hub-caption)");
+    if (note) note.textContent = "\u5BFC\u5165\u540E\u70B9\u51FB\u542F\u7528\uFF0CAI \u5373\u53EF\u8BFB\u53D6\u6280\u80FD\u6216\u4F7F\u7528\u63D2\u4EF6\u7684\u5DE5\u5177\u3002";
+    const specs = [["debug", "\u6392\u9519\u4E0E\u4FEE\u590D", "\u590D\u73B0 \u2192 \u5B9A\u4F4D \u2192 \u4FEE\u590D \u2192 \u9A8C\u8BC1"], ["review", "\u4EE3\u7801\u5BA1\u67E5", "\u5B9A\u4F4D\u6709\u8BC1\u636E\u7684\u7F3A\u9677\u4E0E\u56DE\u5F52"], ["research", "\u7F51\u9875\u8C03\u7814", "\u641C\u7D22\u3001\u6D4F\u89C8\u548C\u6765\u6E90\u6838\u5BF9"]];
+    for (const [id, name, description] of specs) {
+      const card = document.createElement("article");
+      card.className = "builtin-skill";
+      const text2 = document.createElement("div"), title = document.createElement("strong"), desc = document.createElement("p"), button = document.createElement("button");
+      title.textContent = name;
+      desc.textContent = description;
+      button.textContent = "\u542F\u7528";
+      button.dataset.builtin = id;
+      text2.append(title, desc);
+      card.append(text2, button);
+      $3("builtin-skills").append(card);
+      button.onclick = () => run2(button, $3("plugin-setup-feedback"), async () => {
+        await extensions2.builtinSkill(id);
+        render(extensions2.snapshot());
+        update();
+      }, "\u6B63\u5728\u6DFB\u52A0\u6280\u80FD\u2026");
+    }
+    function update() {
+      for (const b2 of library.querySelectorAll("[data-builtin]")) {
+        const installed = extensions2.snapshot().plugins.find((p) => p.builtin === b2.dataset.builtin);
+        b2.textContent = installed?.enabled ? "\u5DF2\u542F\u7528" : "\u542F\u7528";
+        b2.disabled = !!installed?.enabled;
+      }
+    }
+    async function run2(button, feedback, work, label) {
+      if (button.disabled) return;
+      button.disabled = true;
+      button.setAttribute("aria-busy", "true");
+      const before = button.textContent;
+      button.textContent = label;
+      feedback.textContent = label;
+      try {
+        const result = await work();
+        feedback.textContent = typeof result === "string" ? result : "\u5DF2\u5B8C\u6210";
+      } catch (error) {
+        feedback.textContent = error.message || "\u64CD\u4F5C\u5931\u8D25";
+      } finally {
+        button.textContent = before;
+        button.disabled = false;
+        button.removeAttribute("aria-busy");
+        update();
+      }
+    }
+    async function prepare(servers, feedback) {
+      if (servers.some((s15) => s15.type === "stdio" && s15.enabled)) {
+        const status = await native("runtime.status");
+        if (!status.installed && !status.ready) {
+          feedback.textContent = "\u6B63\u5728\u51C6\u5907\u672C\u673A Linux \u73AF\u5883\uFF0C\u8BF7\u4FDD\u6301\u5E94\u7528\u8FD0\u884C\u2026";
+          await native("runtime.ensure", { project: project() });
+        }
+      }
+    }
+    $3("mcp-quick-connect").onclick = () => run2($3("mcp-quick-connect"), $3("mcp-quick-feedback"), async () => {
+      const servers = parseMcpInput($3("mcp-quick-input").value);
+      await prepare(servers, $3("mcp-quick-feedback"));
+      await native("extension.import", { servers });
+      await extensions2.load();
+      $3("mcp-quick-input").value = "";
+      render(extensions2.snapshot());
+      await refresh();
+      const failed = extensions2.snapshot().status.filter((s15) => s15.error);
+      return failed.length ? "\u914D\u7F6E\u5DF2\u4FDD\u5B58\uFF0C\u90E8\u5206\u670D\u52A1\u8FDE\u63A5\u5931\u8D25\uFF0C\u8BF7\u67E5\u770B\u4E0B\u65B9\u539F\u56E0" : "\u5DF2\u6DFB\u52A0 " + servers.length + " \u4E2A\u670D\u52A1\uFF0C\u76EE\u5F55\u5DF2\u66F4\u65B0";
+    }, "\u6B63\u5728\u8FDE\u63A5\u2026");
+    $3("mcp-context7").onclick = () => {
+      editServer({ name: "Context7 \u6587\u6863\u67E5\u8BE2", type: "http", url: "https://mcp.context7.com/mcp", enabled: true });
+      $3("mcp-token").placeholder = "\u586B\u5199 Context7 \u63D0\u4F9B\u7684 API Key";
+      $3("mcp-feedback").textContent = "\u5BC6\u94A5\u53EF\u4ECE context7.com \u83B7\u53D6\uFF1B\u7531 Context7 \u63D0\u4F9B\u6587\u6863\u67E5\u8BE2\u670D\u52A1\u3002";
+      $3("mcp-form").scrollIntoView({ block: "start", behavior: "smooth" });
+    };
+    $3("plugin-file").onclick = () => NativeBridge.uiAction("import-plugin", "{}");
+    $3("plugin-url-open").onclick = () => {
+      $3("plugin-url-form").hidden = !$3("plugin-url-form").hidden;
+      $3("skill-create-form").hidden = true;
+      if (!$3("plugin-url-form").hidden) $3("plugin-url").focus();
+    };
+    $3("skill-create-open").onclick = () => {
+      $3("skill-create-form").hidden = !$3("skill-create-form").hidden;
+      $3("plugin-url-form").hidden = true;
+      if (!$3("skill-create-form").hidden) $3("skill-create-name").focus();
+    };
+    $3("plugin-url-form").onsubmit = (e) => {
+      e.preventDefault();
+      void run2($3("plugin-url-add"), $3("plugin-setup-feedback"), async () => {
+        await extensions2.pluginFromUrl($3("plugin-url").value);
+        $3("plugin-url-form").hidden = true;
+        render(extensions2.snapshot());
+        notify("\u5DF2\u5BFC\u5165\uFF0C\u70B9\u51FB\u542F\u7528\u5373\u53EF\u4F7F\u7528");
+      }, "\u6B63\u5728\u4E0B\u8F7D\u2026");
+    };
+    $3("skill-create-form").onsubmit = (e) => {
+      e.preventDefault();
+      void run2($3("skill-create-save"), $3("plugin-setup-feedback"), async () => {
+        await extensions2.pluginFromText($3("skill-create-name").value, $3("skill-create-content").value);
+        $3("skill-create-form").hidden = true;
+        $3("skill-create-content").value = "";
+        render(extensions2.snapshot());
+        notify("\u6280\u80FD\u5DF2\u4FDD\u5B58\uFF0C\u70B9\u51FB\u542F\u7528\u5373\u53EF\u4F7F\u7528");
+      }, "\u6B63\u5728\u4FDD\u5B58\u2026");
+    };
+    return { update, prepare };
+  }
+
   // js/ui/settings-hub.js
   var node = (tag, cls, text2) => {
     const n = document.createElement(tag);
@@ -26737,6 +27331,12 @@ Please report this to https://github.com/markedjs/marked.`, e) {
  <main id="page-extensions" class="page hub-page" hidden><header class="hub-heading"><div><span>\u5DE5\u4F5C\u533A</span><h1>\u6269\u5C55</h1></div><button id="extensions-refresh" aria-label="\u5237\u65B0\u6269\u5C55">\u21BB</button></header><div class="hub-tabs" role="tablist"><button id="extensions-tab-mcp" role="tab" aria-selected="true">MCP \u670D\u52A1</button><button id="extensions-tab-plugins" role="tab" aria-selected="false">\u63D2\u4EF6\u4E0E\u6280\u80FD</button></div><section id="extensions-mcp"><div class="hub-section-heading"><h2>\u5DF2\u8FDE\u63A5\u670D\u52A1</h2><button id="mcp-add">\uFF0B \u6DFB\u52A0\u670D\u52A1</button></div><p class="hub-caption">\u542F\u7528\u540E\uFF0CAI \u53EF\u76F4\u63A5\u8C03\u7528\u670D\u52A1\u516C\u5F00\u7684\u5DE5\u5177\u3002</p><div id="mcp-list" class="hub-list"></div><form id="mcp-form" class="hub-form" hidden><h2 id="mcp-form-title">\u6DFB\u52A0 MCP \u670D\u52A1</h2><label>\u540D\u79F0<input id="mcp-name" required maxlength="80" placeholder="\u6211\u7684 MCP \u670D\u52A1"></label><label>\u8FDE\u63A5\u65B9\u5F0F<select id="mcp-type"><option value="http">HTTP \xB7 Streamable HTTP</option><option value="stdio">\u672C\u673A\u8FDB\u7A0B \xB7 stdio</option></select></label><div id="mcp-http-fields"><label>\u670D\u52A1\u7AEF\u70B9<input id="mcp-url" type="url" placeholder="https://example.com/mcp"></label><label>\u8BBF\u95EE\u4EE4\u724C\uFF08\u53EF\u9009\uFF09<input id="mcp-token" type="password" autocomplete="off" placeholder="\u7F16\u8F91\u65F6\u7559\u7A7A\u4FDD\u7559\u539F\u4EE4\u724C"></label></div><div id="mcp-stdio-fields" hidden><label>\u53EF\u6267\u884C\u7A0B\u5E8F<input id="mcp-command" placeholder="node \u6216 python3"></label><label>\u53C2\u6570\uFF08JSON \u6570\u7EC4\uFF09<textarea id="mcp-args" rows="3" spellcheck="false" placeholder='["/workspace/server.mjs"]'></textarea></label><label>\u73AF\u5883\u53D8\u91CF\uFF08JSON \u5BF9\u8C61\uFF0C\u53EF\u9009\uFF09<textarea id="mcp-env" rows="2" spellcheck="false" placeholder='{"NAME":"value"}'></textarea></label><p class="hub-caption">\u8FDB\u7A0B\u5728\u672C\u673A Debian \u4E2D\u8FD0\u884C\uFF0C\u5F53\u524D\u9879\u76EE\u4F4D\u4E8E /workspace\u3002</p></div><label class="hub-check"><input id="mcp-enabled" type="checkbox" checked>\u4FDD\u5B58\u540E\u542F\u7528\u6B64\u670D\u52A1</label><p id="mcp-feedback" class="hub-feedback" role="status"></p><footer><button id="mcp-cancel" type="button">\u53D6\u6D88</button><button id="mcp-save" class="hub-primary" type="submit">\u4FDD\u5B58\u670D\u52A1</button></footer></form></section><section id="extensions-plugins" hidden><div class="hub-section-heading"><h2>\u5DF2\u5B89\u88C5\u63D2\u4EF6</h2><button id="plugin-import">\uFF0B \u5BFC\u5165 ZIP</button></div><p class="hub-caption">\u652F\u6301 Studio\u3001Claude \u548C Codex \u63D2\u4EF6\u6E05\u5355\u4E2D\u7684 MCP \u914D\u7F6E\u53CA SKILL.md \u6280\u80FD\u3002\u5BFC\u5165\u540E\u624B\u52A8\u542F\u7528\u3002</p><div id="plugin-list" class="hub-list"></div><p class="hub-footnote">\u5176\u4ED6\u5BBF\u4E3B\u4E13\u6709\u7684\u754C\u9762\u7EC4\u4EF6\u548C hooks \u5C1A\u672A\u517C\u5BB9\uFF1B\u4E0D\u4F1A\u81EA\u52A8\u6267\u884C\u8FD9\u4E9B hooks\u3002</p></section><p id="extensions-feedback" class="hub-feedback" role="status"></p></main>
  <main id="page-settings" class="page hub-page" hidden><header class="hub-heading"><div><span>\u504F\u597D</span><h1>\u5916\u89C2\u4E0E\u663E\u793A</h1></div></header><section class="hub-setting"><h2>\u754C\u9762\u663E\u793A\u6BD4\u4F8B</h2><p>\u7F29\u5C0F\u754C\u9762\uFF0C\u663E\u793A\u66F4\u591A\u5BF9\u8BDD\u548C\u64CD\u4F5C\u5185\u5BB9\u3002</p><div id="ui-scale-options" class="scale-options" role="group" aria-label="\u754C\u9762\u663E\u793A\u6BD4\u4F8B"><button data-ui-scale="80">80%</button><button data-ui-scale="90">90%</button><button data-ui-scale="100">100%</button><button data-ui-scale="110">110%</button></div><p class="hub-caption">\u4EC5\u8C03\u6574\u5E94\u7528\u754C\u9762\uFF1B\u7F51\u9875\u7F29\u653E\u5355\u72EC\u63A7\u5236\u3002</p></section><section class="hub-setting"><h2>\u989C\u8272\u4E0E\u52A8\u6001\u6548\u679C</h2><button id="settings-theme" class="hub-setting-row">\u660E\u6697\u4E3B\u9898<span>\u5207\u6362 \u2197</span></button><label class="hub-setting-row">\u51CF\u5C11\u52A8\u6001\u6548\u679C<input id="ui-reduce-motion" type="checkbox"></label></section><section class="hub-setting"><h2>\u5C4F\u5E55\u65B9\u5411</h2><select id="settings-orientation" data-display-orientation aria-label="\u663E\u793A\u65B9\u5411"><option value="auto">\u81EA\u52A8\u65CB\u8F6C</option><option value="portrait">\u7AD6\u5C4F</option><option value="landscape">\u6A2A\u5C4F</option></select></section></main>`;
     document.querySelector(".bottom-nav").before(pages);
+    const scaleValues = [30, 40, 50, 60, 70, 80, 90, 100, 110];
+    $3("ui-scale-options").replaceChildren(...scaleValues.map((value) => {
+      const b2 = node("button", "", value + "%");
+      b2.dataset.uiScale = String(value);
+      return b2;
+    }));
     for (const [id, page, label] of [["drawer-accounts", "accounts", "\u25CE \u8D26\u53F7\u4E0E\u6A21\u578B"], ["drawer-extensions", "extensions", "\u25C7 \u6269\u5C55 \xB7 MCP \u4E0E\u63D2\u4EF6"], ["drawer-display", "settings", "\u25D0 \u5916\u89C2\u4E0E\u663E\u793A"]]) {
       const button2 = node("button", "", label);
       button2.id = id;
@@ -26766,7 +27366,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
       b2.onclick = act(b2, fn2);
       return b2;
     };
-    let accountState = { accounts: [] }, extensionState = extensions2.snapshot(), editingMcp;
+    let accountState = { accounts: [] }, extensionState = extensions2.snapshot(), editingMcp, setup;
     const models = /* @__PURE__ */ new Map();
     function accountRender(value) {
       accountState = value;
@@ -26870,7 +27470,8 @@ Please report this to https://github.com/markedjs/marked.`, e) {
         for (const skill of plugin.skills || []) card.append(node("span", "skill-chip", skill.name));
         plugins.append(card);
       }
-      if (!value.plugins?.length) plugins.append(node("p", "hub-empty", "\u5BFC\u5165\u63D2\u4EF6 ZIP\uFF0C\u542F\u7528\u540E\u4F7F\u7528\u5B83\u7684\u5DE5\u5177\u548C\u6280\u80FD\u3002"));
+      if (!value.plugins?.length) plugins.append(node("p", "hub-empty", "\u8FD8\u6CA1\u6709\u81EA\u5B9A\u4E49\u63D2\u4EF6\u3002\u53EF\u5148\u542F\u7528\u4E0A\u65B9\u6280\u80FD\uFF0C\u6216\u76F4\u63A5\u5BFC\u5165\u6587\u4EF6\u3002"));
+      setup?.update();
     }
     const project = () => client2.current()?.project || client2.create().project;
     async function refreshExtensions() {
@@ -26917,16 +27518,22 @@ Please report this to https://github.com/markedjs/marked.`, e) {
       const type = $3("mcp-type").value, value = { ...editingMcp ? { id: editingMcp.id, plugin: editingMcp.plugin } : {}, name: $3("mcp-name").value, type, enabled: $3("mcp-enabled").checked };
       if (type === "http") {
         value.url = $3("mcp-url").value;
+        if (!value.name) value.name = new URL(value.url).hostname;
         if ($3("mcp-token").value.trim()) value.headers = { Authorization: "Bearer " + $3("mcp-token").value.trim() };
       } else {
-        value.command = $3("mcp-command").value;
-        value.args = JSON.parse($3("mcp-args").value || "[]");
-        if ($3("mcp-env").value.trim()) value.env = JSON.parse($3("mcp-env").value);
+        const launch = parseLaunch($3("mcp-command").value);
+        value.command = launch.command;
+        value.args = [...launch.args, ...parseArguments($3("mcp-args").value)];
+        if (!value.name) value.name = value.command;
+        const env = { ...launch.env, ...parseEnvironment($3("mcp-env").value) };
+        if (Object.keys(env).length) value.env = env;
+        await setup.prepare([value], $3("mcp-feedback"));
       }
       await extensions2.save(value);
       $3("mcp-token").value = "";
       $3("mcp-env").value = "";
       $3("mcp-form").hidden = true;
+      extensionRender(extensions2.snapshot());
       await refreshExtensions();
     });
     $3("extensions-refresh").onclick = act($3("extensions-refresh"), async () => {
@@ -26934,6 +27541,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
       await refreshExtensions();
     });
     $3("plugin-import").onclick = () => NativeBridge.uiAction("import-plugin", "{}");
+    setup = createExtensionSetup({ native, extensions: extensions2, project, refresh: refreshExtensions, render: extensionRender, editServer, notify });
     for (const which of ["mcp", "plugins"]) $3("extensions-tab-" + which).onclick = () => {
       for (const tab of ["mcp", "plugins"]) {
         $3("extensions-tab-" + tab).setAttribute("aria-selected", String(tab === which));
@@ -26947,7 +27555,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     } catch {
     }
     function applyScale(value) {
-      scale = [80, 90, 100, 110].includes(value) ? value : 90;
+      scale = scaleValues.includes(value) ? value : 90;
       document.documentElement.style.setProperty("--ui-scale", scale / 100);
       for (const b2 of document.querySelectorAll("[data-ui-scale]")) b2.setAttribute("aria-pressed", String(Number(b2.dataset.uiScale) === scale));
       try {
@@ -26991,30 +27599,12 @@ Please report this to https://github.com/markedjs/marked.`, e) {
   // js/ui/studio.js
   var escapeHTML = (s15) => String(s15 ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   var shellQuote = (s15) => "'" + String(s15).replaceAll("'", "'\\''") + "'";
-  var uiIcon = (path) => `<svg viewBox="0 0 24 24" aria-hidden="true">${path}</svg>`;
-  var icons = { code: uiIcon('<path d="m8 7-5 5 5 5m8-10 5 5-5 5m-3-14-2 18"/>'), spark: uiIcon('<path d="m12 3 2.7 6.3L21 12l-6.3 2.7L12 21l-2.7-6.3L3 12l6.3-2.7Z"/>'), search: uiIcon('<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/>'), folder: uiIcon('<path d="M3 7h6l2-3h5l2 3h3v13H3Z"/>'), send: uiIcon('<path d="M12 20V4m-6 6 6-6 6 6"/>'), copy: uiIcon('<rect x="8" y="8" width="12" height="13" rx="3"/><path d="M16 8V4H4v12h4"/>') };
+  var uiIcon2 = (path) => `<svg viewBox="0 0 24 24" aria-hidden="true">${path}</svg>`;
+  var icons2 = { code: uiIcon2('<path d="m8 7-5 5 5 5m8-10 5 5-5 5m-3-14-2 18"/>'), spark: uiIcon2('<path d="m12 3 2.7 6.3L21 12l-6.3 2.7L12 21l-2.7-6.3L3 12l6.3-2.7Z"/>'), search: uiIcon2('<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/>'), folder: uiIcon2('<path d="M3 7h6l2-3h5l2 3h3v13H3Z"/>'), send: uiIcon2('<path d="M12 20V4m-6 6 6-6 6 6"/>'), copy: uiIcon2('<rect x="8" y="8" width="12" height="13" rx="3"/><path d="M16 8V4H4v12h4"/>') };
   function initStudio({ client: client2, native, providers: providers2, agentTools: agentTools2, extensions: extensions2 }) {
     const nav = document.querySelector(".bottom-nav");
     if (!nav) return;
-    const main = document.createElement("div");
-    main.id = "studio-pages";
-    main.innerHTML = `
-  <main class="page studio-chat" id="page-chat" hidden>
-    <div class="chat-heading"><button id="session-menu" aria-expanded="false" aria-controls="studio-drawer" aria-label="\u6253\u5F00\u4F1A\u8BDD\u4E0E\u8BBE\u7F6E\u4FA7\u680F"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h12M4 18h16"/></svg></button><div><strong id="session-current">\u65B0\u4F1A\u8BDD</strong><small>DeepSeek</small></div><button id="chat-new" aria-label="\u65B0\u5EFA\u4F1A\u8BDD">\uFF0B</button></div>
-    <section id="session-picker" class="session-picker" hidden><div id="client-sessions"></div><div class="session-edit"><input id="session-title" aria-label="\u4F1A\u8BDD\u540D\u79F0" maxlength="80"><button id="session-rename">\u547D\u540D</button><button id="session-archive">\u5F52\u6863</button><button id="session-export">\u5BFC\u51FA</button><button id="session-delete">\u5220\u9664</button></div><p>\u5220\u9664\u53EA\u79FB\u9664\u672C\u673A\u804A\u5929\u8BB0\u5F55\uFF1B\u9879\u76EE\u6587\u4EF6\u4E0E\u7F51\u9875\u5386\u53F2\u4FDD\u7559\u3002</p></section>
-    <div id="chat-stage" class="chat-stage is-empty"><div id="chat-messages" class="chat-messages" role="log" aria-live="polite" aria-relevant="additions text"></div>
-    <section id="client-progress" class="client-progress" hidden><button id="task-companion" class="task-companion" type="button" data-pose="idle" aria-label="\u5C0F\u58A8\uFF1A\u51C6\u5907\u5C31\u7EEA\uFF0C\u70B9\u51FB\u5C55\u5F00\u6267\u884C\u8FC7\u7A0B"><span class="companion-sprite"></span></button><div><div class="work-status-heading"><strong id="client-phase"></strong><time id="client-elapsed" aria-live="off"></time></div><p id="client-detail"></p><span class="work-activity-line" aria-hidden="true"></span></div><button id="client-stop">\u505C\u6B62</button></section>
-    <div id="client-notice" class="client-notice" hidden><span></span><button id="client-resume">\u7EE7\u7EED\u4EFB\u52A1</button></div>
-    <form id="chat-form" class="chat-composer"><textarea id="chat-input" rows="2" placeholder="\u56DE\u590D DeepSeek\u2026" aria-label="\u53D1\u9001\u7ED9 AI \u7684\u6D88\u606F"></textarea><div class="composer-bottom"><button type="button" id="composer-options" aria-label="\u5BF9\u8BDD\u9009\u9879" aria-expanded="false" aria-controls="composer-modes"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 17h16M8 4v6m8 4v6"/></svg></button><div id="composer-modes" class="composer-modes" role="group" aria-label="\u5BF9\u8BDD\u9009\u9879" hidden><button type="button" id="client-agent" aria-pressed="true">\u2318 Agent</button><button type="button" id="client-thinking" aria-pressed="false">\u2726 \u601D\u8003</button><button type="button" id="client-search" aria-pressed="true">\u25CE \u641C\u7D22</button></div><span class="composer-model">DeepSeek</span><button id="chat-send" type="submit" aria-label="\u53D1\u9001\u6D88\u606F">\u2191</button></div></form>
-    </div>
-  </main>
-  <main class="page studio-files" id="page-files" hidden><div class="studio-title"><div><h1>\u9879\u76EE\u6587\u4EF6</h1></div><button id="file-refresh" class="studio-square" aria-label="\u5237\u65B0\u6587\u4EF6">\u21BB</button></div>
-    <div class="file-actions"><button id="file-import">\uFF0B \u5BFC\u5165\u6587\u4EF6</button><button id="file-new">\u65B0\u6587\u4EF6</button><button data-navigate="tools">\u5DE5\u5177\u4E2D\u5FC3 \u2197</button></div><div class="file-breadcrumb"><button id="file-parent" aria-label="\u4E0A\u4E00\u7EA7\u76EE\u5F55">\u21B0</button><code id="file-directory">/workspace</code></div><div class="file-search"><input id="file-query" aria-label="\u641C\u7D22\u9879\u76EE\u6587\u4EF6\u5185\u5BB9" placeholder="\u5728\u9879\u76EE\u4E2D\u641C\u7D22\u6587\u5B57"><button id="file-find">\u641C\u7D22</button></div><div id="file-results"></div><div id="file-list" class="file-list"></div>
-    <section id="file-editor" hidden><div class="editor-heading"><input id="file-path" aria-label="\u6587\u4EF6\u8DEF\u5F84" placeholder="src/main.py"><span id="file-dirty"></span></div><textarea id="file-content" spellcheck="false" aria-label="\u7F16\u8F91\u6587\u4EF6\u5185\u5BB9"></textarea><div class="editor-actions"><button id="file-save">\u4FDD\u5B58\u6587\u4EF6</button><button id="file-export">\u5BFC\u51FA</button><button id="file-analyze">\u5206\u6790\u6B64\u6587\u4EF6 \u2197</button><button id="file-close">\u5173\u95ED</button></div></section><p class="studio-footnote">\u5BFC\u5165\u6587\u4EF6\u4F1A\u590D\u5236\u5230\u5F53\u524D\u9879\u76EE\u3002\u73AF\u5883\u5347\u7EA7\u4FDD\u7559\u9879\u76EE\u4E0E\u5206\u6790\u7ED3\u679C\u3002</p>
-  </main>
-  <main class="page studio-terminal" id="page-terminal" hidden><div class="terminal-heading"><div><span class="terminal-led"></span><strong>Debian \u7EC8\u7AEF</strong><small id="terminal-state">\u5C1A\u672A\u542F\u52A8</small></div><button id="terminal-add" aria-label="\u65B0\u5EFA\u7EC8\u7AEF">\uFF0B</button><button id="terminal-close" aria-label="\u5173\u95ED\u5F53\u524D\u7EC8\u7AEF">\xD7</button></div><div id="terminal-tabs" class="terminal-tabs"></div><div id="terminal-host" class="terminal-host"><div id="terminal-empty"><span>\u203A_</span><h2>Debian \u7EC8\u7AEF</h2><p>Bash \xB7 Python \xB7 Node \xB7 Git<br>\u4E0E AI \u5171\u7528\u5F53\u524D\u9879\u76EE</p><button id="terminal-start">\u542F\u52A8 Debian</button></div></div><div class="terminal-keys"><button data-key="">Ctrl C</button><button data-key="">Ctrl D</button><button data-key="	">Tab</button><button data-key="\x1B">Esc</button><button data-key="\x1B[A">\u2191</button><button data-key="\x1B[B">\u2193</button><button data-key="\x1B[D">\u2190</button><button data-key="\x1B[C">\u2192</button></div><div class="terminal-footer"><span>PRoot / ARM64 \xB7 /workspace</span><button id="terminal-copy">\u590D\u5236\u9009\u4E2D</button><button id="terminal-clear">\u6E05\u5C4F</button></div></main>
-  <main class="page studio-tools" id="page-tools" hidden><div class="studio-title"><div><h1>\u5DE5\u5177\u4E0E\u73AF\u5883</h1></div><button class="studio-square" id="runtime-refresh" aria-label="\u5237\u65B0\u5DE5\u5177\u72B6\u6001">\u21BB</button></div><section class="runtime-card"><div><span class="runtime-symbol">\u25C8</span><div><h2>Debian ARM64</h2><p id="runtime-state">\u68C0\u67E5\u79BB\u7EBF\u8FD0\u884C\u73AF\u5883\u2026</p></div></div><progress id="runtime-progress" max="100" value="0" hidden></progress><p id="runtime-detail"></p><div><button id="runtime-install">\u521D\u59CB\u5316\u73AF\u5883</button><button id="runtime-test">\u8FD0\u884C\u81EA\u68C0</button></div></section><div class="tool-intro"><h2>\u5DF2\u968F\u955C\u50CF\u6536\u5F55</h2><p>\u9996\u6B21\u521D\u59CB\u5316\u5728\u672C\u673A\u89E3\u538B\uFF0C\u4E0D\u9010\u4E2A\u4E0B\u8F7D\u5DE5\u5177\u3002</p></div><div id="runtime-tools" class="tool-grid"></div><section class="tool-target"><label for="analysis-path">\u9879\u76EE\u5185\u7684\u5206\u6790\u76EE\u6807</label><input id="analysis-path" placeholder="sample.apk"><div><button data-analysis="jadx">Java \u6E90\u7801</button><button data-analysis="apktool">\u8D44\u6E90 / Smali</button><button data-analysis="cfr">JAR / Class</button><button data-analysis="radare2">ELF / SO \u4F2A\u4EE3\u7801</button></div><p>\u7ED3\u679C\u5199\u5165 analysis/\u3002\u5DE5\u5177\u4F1A\u4FDD\u7559\u9519\u8BEF\u4E0E\u4E0D\u5B8C\u6574\u6062\u590D\u4FE1\u606F\u3002</p></section><pre id="runtime-report" hidden></pre><p class="studio-footnote">PRoot \u590D\u7528 Android \u5185\u6838\uFF1B\u5B83\u4E0D\u662F\u9694\u79BB\u6C99\u7BB1\u3002\u8FD0\u884C\u672A\u77E5\u7A0B\u5E8F\u524D\u8BF7\u81EA\u884C\u68C0\u67E5\u3002</p></main>`;
-    while (main.firstChild) nav.before(main.firstChild);
+    mountWorkspacePages(nav);
     nav.innerHTML = `<button data-navigate="chat" class="active" aria-current="page"><span>\u2726</span><span>\u5BF9\u8BDD</span></button><button data-navigate="files"><span>\u25A4</span><span>\u6587\u4EF6</span></button><button data-navigate="terminal"><span>\u203A_</span><span>\u7EC8\u7AEF</span></button><button data-navigate="web"><span data-icon="globe"></span><span>\u7F51\u9875</span></button><button data-navigate="home"><span data-icon="grid"></span><span>\u5DE5\u4F5C\u53F0</span><i id="task-nav-dot" hidden></i></button>`;
     document.querySelector(".brand strong").textContent = "DeepSeek Studio";
     document.querySelector(".brand>div>span").textContent = "\u672C\u673A\u5DE5\u4F5C\u5BA4";
@@ -27041,23 +27631,20 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     const click = (id, fn2) => $3(id).addEventListener("click", wrap(fn2));
     let changeView, modelView, mediaView, cached, renderFingerprint = "", dir = "", file = "", dirty = false, currentTerm, terminalSerial = 0, activePage = "chat", runtimeCurrent = {}, runtimeRevision = 0, showArchived = false;
     const terminals = /* @__PURE__ */ new Map();
-    const scrim = document.createElement("div");
-    scrim.id = "studio-drawer-scrim";
-    scrim.hidden = true;
-    scrim.innerHTML = `<aside id="studio-drawer" class="studio-drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title"><header><img src="logo.png" width="28" height="28" alt=""><div><strong id="drawer-title">DeepSeek Studio</strong></div><button id="drawer-close" aria-label="\u5173\u95ED\u4FA7\u680F">\xD7</button></header><button id="drawer-new">\uFF0B \u65B0\u5EFA\u4F1A\u8BDD</button><div class="drawer-section-title"><span>\u6700\u8FD1\u5BF9\u8BDD</span><button id="session-pin" aria-label="\u7F6E\u9876\u5F53\u524D\u4F1A\u8BDD">\u2606</button></div><div id="drawer-sessions"></div><nav class="drawer-shortcuts" aria-label="\u5DE5\u4F5C\u533A"><button data-drawer-page="files">${icons.folder} \u9879\u76EE\u6587\u4EF6</button><button data-drawer-page="terminal">${icons.code} \u7EC8\u7AEF</button><button data-drawer-page="tools">${icons.code} \u5DE5\u5177\u4E0E\u73AF\u5883</button><button data-drawer-page="web">${icons.search} DeepSeek \u7F51\u9875</button><button data-drawer-page="home">${icons.code} \u5DE5\u4F5C\u53F0</button><button data-drawer-page="connect">${icons.code} \u5916\u63A5\u5BA2\u6237\u7AEF\u914D\u7F6E</button></nav><details id="drawer-settings" class="drawer-settings"><summary>\u8BBE\u7F6E\u4E0E\u6743\u9650</summary><label class="display-orientation-setting">\u5C4F\u5E55\u65B9\u5411<select id="display-orientation" data-display-orientation aria-label="\u5E94\u7528\u5C4F\u5E55\u65B9\u5411"><option value="auto">\u81EA\u52A8\u65CB\u8F6C</option><option value="portrait">\u7AD6\u5C4F</option><option value="landscape">\u6A2A\u5C4F</option></select></label><button id="drawer-theme">\u5207\u6362\u660E\u6697\u4E3B\u9898</button><section class="permission-card"><div><strong>\u6743\u9650\u4E0E\u540E\u53F0\u8FD0\u884C</strong><span id="permission-summary">\u6B63\u5728\u8BFB\u53D6\u7CFB\u7EDF\u72B6\u6001\u2026</span></div><button data-permission="files"><span>\u6240\u6709\u6587\u4EF6\u8BBF\u95EE<small>\u6388\u6743\u540E\uFF0C\u65B0\u5EFA\u7EC8\u7AEF\u53EF\u8BBF\u95EE /shared</small></span><b id="permission-files-status">\u67E5\u770B\u8BBE\u7F6E \u203A</b></button><button data-permission="notifications"><span>\u670D\u52A1\u901A\u77E5<small>\u663E\u793A\u6865\u7684\u8FD0\u884C\u72B6\u6001\u548C\u8FD4\u56DE\u5165\u53E3</small></span><b id="permission-notifications-status">\u67E5\u770B\u8BBE\u7F6E \u203A</b></button><button data-permission="battery"><span>\u540E\u53F0\u8FD0\u884C<small>\u5141\u8BB8\u5FFD\u7565\u7535\u6C60\u4F18\u5316\uFF0C\u51CF\u5C11\u9501\u5C4F\u4E2D\u65AD</small></span><b id="permission-battery-status">\u67E5\u770B\u8BBE\u7F6E \u203A</b></button><button data-permission="app-settings"><span>\u7CFB\u7EDF\u5E94\u7528\u8BBE\u7F6E<small>\u90E8\u5206\u624B\u673A\u8FD8\u9700\u5141\u8BB8\u81EA\u542F\u52A8\u3001\u540E\u53F0\u6D3B\u52A8</small></span><b>\u6253\u5F00 \u203A</b></button><p>\u5171\u4EAB\u5B58\u50A8\u6743\u9650\u4E0D\u5305\u542B\u5176\u4ED6\u5E94\u7528\u7684\u79C1\u6709\u76EE\u5F55\u3002Android/data \u4ECD\u53D7\u7CFB\u7EDF\u9650\u5236\u3002</p></section></details><footer id="drawer-service-state">\u672C\u673A\u6865 \xB7 \u7B49\u5F85\u8FDE\u63A5</footer></aside>`;
+    const scrim = mountWorkspaceDrawer(icons2);
     $3("app").append(scrim);
     $3("drawer-sessions").append($3("session-picker"));
     $3("session-picker").hidden = false;
     const search = document.createElement("div");
     search.className = "drawer-search";
-    search.innerHTML = icons.search + '<input id="session-search" type="search" placeholder="\u641C\u7D22\u4F1A\u8BDD\u2026" aria-label="\u641C\u7D22\u672C\u673A\u4F1A\u8BDD">';
+    search.innerHTML = icons2.search + '<input id="session-search" type="search" placeholder="\u641C\u7D22\u4F1A\u8BDD\u2026" aria-label="\u641C\u7D22\u672C\u673A\u4F1A\u8BDD">';
     $3("drawer-new").after(search);
     $3("drawer-new").innerHTML = "<span>\uFF0B</span> \u65B0\u5EFA\u4F1A\u8BDD";
     $3("session-search").addEventListener("input", () => render(client2.snapshot()));
-    $3("client-agent").innerHTML = icons.code + "Agent";
-    $3("client-thinking").innerHTML = icons.spark + "\u601D\u8003";
-    $3("client-search").innerHTML = icons.search + "\u641C\u7D22";
-    $3("chat-send").innerHTML = icons.send;
+    $3("client-agent").innerHTML = icons2.code + "Agent";
+    $3("client-thinking").innerHTML = icons2.spark + "\u601D\u8003";
+    $3("client-search").innerHTML = icons2.search + "\u641C\u7D22";
+    $3("chat-send").innerHTML = icons2.send;
     const attach = document.createElement("button");
     attach.type = "button";
     attach.id = "composer-import";
@@ -27162,7 +27749,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
       const p = state.permissions || {};
       for (const [key, property] of [["files", "allFiles"], ["notifications", "notifications"], ["battery", "batteryUnrestricted"]]) $3("permission-" + key + "-status").textContent = p[property] === true ? "\u5DF2\u5F00\u542F \u2713" : p[property] === false ? "\u53BB\u5F00\u542F \u203A" : "\u67E5\u770B\u8BBE\u7F6E \u203A";
       $3("permission-summary").textContent = p.allFiles && p.notifications && p.batteryUnrestricted ? "\u6743\u9650\u5DF2\u5C31\u7EEA" : "\u6309\u9700\u5F00\u542F\uFF0C\u7CFB\u7EDF\u6388\u6743\u540E\u81EA\u52A8\u66F4\u65B0";
-      $3("drawer-service-state").textContent = (state.running ? "\u25CF \u672C\u673A\u6865\u8FD0\u884C\u4E2D" : "\u25CB \u672C\u673A\u6865\u5DF2\u505C\u6B62") + (state.busy ? " \xB7 \u6B63\u5728\u5904\u7406\u4EFB\u52A1" : "") + " \xB7 " + (state.version || "3.0.0");
+      $3("drawer-service-state").textContent = (state.running ? "\u25CF \u672C\u673A\u6865\u8FD0\u884C\u4E2D" : "\u25CB \u672C\u673A\u6865\u5DF2\u505C\u6B62") + (state.busy ? " \xB7 \u6B63\u5728\u5904\u7406\u4EFB\u52A1" : "") + " \xB7 " + (state.version || "3.1.0");
     }
     const archivedButton = document.createElement("button");
     archivedButton.id = "session-archived-toggle";
@@ -27637,7 +28224,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     $3("runtime-test").after(diagnostic);
     click("runtime-diagnostic", async () => {
       await refreshRuntime();
-      NativeBridge.uiAction("copy-text", JSON.stringify({ text: JSON.stringify({ appVersion: "3.0.0", runtime: runtimeCurrent }, null, 2) }));
+      NativeBridge.uiAction("copy-text", JSON.stringify({ text: JSON.stringify({ appVersion: "3.1.0", runtime: runtimeCurrent }, null, 2) }));
       toast("\u73AF\u5883\u8BCA\u65AD\u5DF2\u590D\u5236");
     });
     click("runtime-refresh", refreshRuntime);
@@ -27689,6 +28276,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     const computerView = createComputerView({ native, client: client2, notify: toast });
     const questionView = agentTools2 ? createQuestionView({ tools: agentTools2, client: client2, notify: toast }) : null;
     const settingsHub = extensions2 ? createSettingsHub({ native, providers: providers2, client: client2, extensions: extensions2, notify: toast, closeDrawer }) : null;
+    enhanceWorkspace({ openDrawer });
     window.StudioUI = { render, extensionState: (value) => settingsHub?.extensionState(value), questionState: (value) => questionView?.render(value), platformState, closeDrawer, providerState: () => modelView?.render(), nativeEvent(event) {
       settingsHub?.event(event);
       if (event.type === "process") {
@@ -27806,30 +28394,52 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     return { model: profile.model, input, store: false, stream: true, include: ["reasoning.encrypted_content"], ...body.tools?.length ? { tools: body.tools.map((t) => ({ type: "function", name: t.function.name, description: t.function.description, parameters: t.function.parameters, strict: false })) } : {}, ...body.reasoning_effort === "high" ? { reasoning: { effort: "high", summary: "auto" } } : {} };
   }
   function createResponsesStream() {
-    let buffer = "", content2 = "", reasoning = "", error, response, done = false;
+    let buffer = "", content2 = "", reasoning = "", error, response, done = false, started = false;
     const items = [];
+    function accept(value) {
+      if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("OpenAI \u8FD4\u56DE\u7684\u56DE\u590D\u683C\u5F0F\u65E0\u6548");
+      if (value.error) {
+        error = new Error([value.error.code, value.error.message || "OpenAI \u8BF7\u6C42\u5931\u8D25"].filter(Boolean).join("\uFF1A"));
+        throw error;
+      }
+      if (value.status !== "completed") {
+        error = new Error(value.status === "incomplete" ? "OpenAI \u56DE\u590D\u672A\u5B8C\u6210\uFF1A" + (value.incomplete_details?.reason || "unknown") : "OpenAI \u672A\u786E\u8BA4\u56DE\u590D\u5B8C\u6210");
+        throw error;
+      }
+      response = value;
+      done = true;
+    }
     function event(value) {
       if (value.type === "response.output_text.delta") content2 += value.delta || "";
       else if (value.type === "response.reasoning_summary_text.delta") reasoning += value.delta || "";
       else if (value.type === "response.output_item.done") items[value.output_index] = value.item;
-      else if (value.type === "response.completed") {
-        response = value.response;
-        if (response?.status !== "completed") error = new Error("OpenAI \u672A\u786E\u8BA4\u56DE\u590D\u5B8C\u6210");
-        else done = true;
-      } else if (value.type === "error" || value.type === "response.failed" || value.type === "response.incomplete") {
+      else if (value.type === "response.completed") accept(value.response);
+      else if (value.type === "error" || value.type === "response.failed" || value.type === "response.incomplete") {
         const detail = value.error || value.response?.error || value.response?.incomplete_details || {};
         error = new Error([detail.code || value.code, detail.message || value.message || detail.reason || "OpenAI \u56DE\u590D\u672A\u5B8C\u6210"].filter(Boolean).join("\uFF1A"));
       }
     }
     function push(text2) {
+      if (!started && text2) {
+        text2 = text2.replace(/^\uFEFF/, "");
+        started = true;
+      }
       buffer = (buffer + text2).replace(/\r\n/g, "\n");
       if (buffer.length > 8388608) throw new Error("Responses \u6D41\u5F0F\u7F13\u51B2\u8D85\u8FC7\u9650\u5236");
       let boundary;
       while ((boundary = buffer.indexOf("\n\n")) >= 0) {
         const frame = buffer.slice(0, boundary);
         buffer = buffer.slice(boundary + 2);
-        const data = frame.split("\n").filter((line) => line.startsWith("data:")).map((line) => line.slice(5).trimStart()).join("\n");
-        if (data && data !== "[DONE]") event(JSON.parse(data));
+        const data = frame.split("\n").filter((line) => line.startsWith("data:")).map((line) => line.slice(5).replace(/^ /, "")).join("\n");
+        if (data && data !== "[DONE]") {
+          let value;
+          try {
+            value = JSON.parse(data);
+          } catch {
+            throw new Error("OpenAI \u8FD4\u56DE\u4E86\u65E0\u6548\u7684\u6D41\u5F0F\u4E8B\u4EF6\uFF0C\u672A\u6267\u884C\u672A\u786E\u8BA4\u5DE5\u5177");
+          }
+          event(value);
+        }
       }
       if (error) throw error;
     }
@@ -27841,7 +28451,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
       const usage2 = response.usage || {};
       return { id: response.id, model: response.model, choices: [{ finish_reason: calls.length ? "tool_calls" : "stop", message: { role: "assistant", content: finalText || content2 || null, ...reasoning ? { reasoning_content: reasoning } : {}, ...calls.length ? { tool_calls: calls } : {}, response_items: output } }], usage: { prompt_tokens: usage2.input_tokens, completion_tokens: usage2.output_tokens, total_tokens: usage2.total_tokens, prompt_tokens_details: usage2.input_tokens_details, completion_tokens_details: usage2.output_tokens_details } };
     }
-    return { push, finish, preview: () => ({ content: content2, reasoning, phase: "generating" }), get done() {
+    return { push, accept, finish, preview: () => ({ content: content2, reasoning, phase: "generating" }), get done() {
       return done;
     } };
   }
@@ -28004,7 +28614,8 @@ Please report this to https://github.com/markedjs/marked.`, e) {
         }
         if (value.type === "error") throw new Error(value.message || "\u81EA\u5B9A\u4E49\u63A5\u53E3\u8BF7\u6C42\u5931\u8D25");
         if (value.type !== "end" && value.type !== "response") return;
-        const result = value.type === "response" ? value.body : p.stream.finish();
+        if (value.type === "response" && p.account && p.operation !== "models") p.stream.accept(value.body);
+        const result = value.type === "response" && !(p.account && p.operation !== "models") ? value.body : p.stream.finish();
         if (result?.error) throw new Error(result.error.message || "\u63A5\u53E3\u8FD4\u56DE\u9519\u8BEF");
         clearTimeout2(p.timer);
         pending4.delete(id);
@@ -28245,6 +28856,40 @@ Please report this to https://github.com/markedjs/marked.`, e) {
   }
 })();
 /*! Bundled license information:
+
+lucide/dist/esm/defaultAttributes.mjs:
+lucide/dist/esm/createElement.mjs:
+lucide/dist/esm/icons/arrow-up.mjs:
+lucide/dist/esm/icons/blocks.mjs:
+lucide/dist/esm/icons/book-open.mjs:
+lucide/dist/esm/icons/brain-circuit.mjs:
+lucide/dist/esm/icons/chevron-right.mjs:
+lucide/dist/esm/icons/circle-user-round.mjs:
+lucide/dist/esm/icons/command.mjs:
+lucide/dist/esm/icons/download.mjs:
+lucide/dist/esm/icons/folder-open.mjs:
+lucide/dist/esm/icons/globe.mjs:
+lucide/dist/esm/icons/message-square.mjs:
+lucide/dist/esm/icons/monitor.mjs:
+lucide/dist/esm/icons/panel-left.mjs:
+lucide/dist/esm/icons/plug.mjs:
+lucide/dist/esm/icons/plus.mjs:
+lucide/dist/esm/icons/refresh-cw.mjs:
+lucide/dist/esm/icons/search.mjs:
+lucide/dist/esm/icons/settings-2.mjs:
+lucide/dist/esm/icons/shield-check.mjs:
+lucide/dist/esm/icons/sliders-horizontal.mjs:
+lucide/dist/esm/icons/square-pen.mjs:
+lucide/dist/esm/icons/terminal.mjs:
+lucide/dist/esm/icons/upload.mjs:
+lucide/dist/esm/icons/x.mjs:
+lucide/dist/esm/lucide.mjs:
+  (**
+   * @license lucide v1.61.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
+   *)
 
 @xterm/xterm/lib/xterm.mjs:
 @xterm/addon-fit/lib/addon-fit.mjs:

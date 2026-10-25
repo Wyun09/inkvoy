@@ -20,7 +20,7 @@ await build({entryPoints:[new URL('js/mcp-worker.js',root).pathname.replace(/^\/
 await writeFile(new URL('engine.html', assets), await readFile(new URL('js/ui/app.html', root)));
 await writeFile(new URL('browser-observation.js',assets),OBSERVE_SCRIPT);
 await writeFile(new URL('browser-actions.js',assets),ACTION_SCRIPT);
-await writeFile(new URL('app.css', assets), (await Promise.all(['node_modules/@xterm/xterm/css/xterm.css','js/ui/app.css','js/ui/workbench.css','js/ui/studio.css','js/ui/thread.css','js/ui/reply.css','js/ui/motion.css','js/ui/computer.css','js/ui/upgrade.css'].map(file=>readFile(new URL(file,root),'utf8')))).join('\n'));
+await writeFile(new URL('app.css', assets), (await Promise.all(['node_modules/@xterm/xterm/css/xterm.css','js/ui/app.css','js/ui/workbench.css','js/ui/studio.css','js/ui/thread.css','js/ui/reply.css','js/ui/motion.css','js/ui/computer.css','js/ui/design-system.css','js/ui/workspace.css','js/ui/connections.css'].map(file=>readFile(new URL(file,root),'utf8')))).join('\n'));
 await writeFile(new URL('logo.png', assets), await readFile(new URL('js/ui/logo.png', root)));
 console.log('Built isolated Android engine assets.');
 

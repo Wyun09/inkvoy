@@ -1,0 +1,185 @@
+{
+  "version": "3.1.0",
+  "date": "2026-10-22T00:01:05.516687+08:00",
+  "javascript": {
+    "tests": 322,
+    "passed": 322,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "android": {
+    "total": 177,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "sdk": [
+      26,
+      33
+    ],
+    "reports": [
+      {
+        "class": "io.github.deepseekbridge.AccessSettingsTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.BrowserImeRegressionTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.ChatMediaTest",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.ComputerBrowserTest",
+        "tests": 34,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.DisplayModeTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.ExtensionHubTest",
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.ExtensionImportTest",
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.FileRevisionsTest",
+        "tests": 20,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.ManagedTasksTest",
+        "tests": 14,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.OpenAiAccountsTest",
+        "tests": 14,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.ProviderGatewayTest",
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.ResponsivenessTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.RuntimeAssetsTest",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.RuntimeHardLinkTest",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.StartupRegressionTest",
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  "apk": "deepseek-android-bridge-v3.1.0.apk",
+  "apkSha256": "d5bfea2b249a35a30d82c260a6a7a51439ecfddb4865da590169785fd825e9f1",
+  "negativeControl": {
+    "implementation": "Old ProviderGateway response-header-only classification",
+    "tests": 12,
+    "expectedFailures": 4,
+    "actualFailures": 4,
+    "errors": 0,
+    "restoredFixedImplementation": true
+  },
+  "physicalAndroidDevice": false,
+  "realDeepseekAccount": false,
+  "realOpenAiAccount": false,
+  "realAndroidMcpProcess": false,
+  "previewFixtures": "Production assets in desktop Edge with explicit Native/model fixtures; native cursor is a geometry preview, not an Android screenshot",
+  "previewFiles": [
+    "preview/3.1.0/chat.png",
+    "preview/3.1.0/drawer.png",
+    "preview/3.1.0/models.png",
+    "preview/3.1.0/accounts.png",
+    "preview/3.1.0/mcp.png",
+    "preview/3.1.0/settings.png",
+    "preview/3.1.0/settings-dark.png",
+    "preview/3.1.0/working.png",
+    "preview/3.1.0/mcp-quick.png",
+    "preview/3.1.0/skills.png",
+    "preview/3.1.0/scale-30.png",
+    "preview/3.1.0/scale-50.png",
+    "preview/3.1.0/files.png",
+    "preview/3.1.0/model-desktop.png",
+    "preview/3.1.0/cursor.png"
+  ],
+  "performanceBaselineAssetsFromSigned300Apk": {
+    "engine.html": "5b52c195aa791df3cf9c8071966357903995225470f010b972cbf7fc6d710b13",
+    "engine.bundle.js": "7503ba4adfaf44bce2bd69caa4e6d6b00f1a0afcc40ab7ac6f231c316c60c13e",
+    "compute.worker.js": "31ebd4889417fc793fb8e41d3bd22adc3b4c163e028d976e63d5751b737db574",
+    "mcp.worker.js": "2aa1f22c124e37285623a92ebdc60052db22c8536064c5d80e31809cc88603a5",
+    "app.css": "c9acfee76e03dd2e2ff36ddbf1258a84d280daabe3cc72aff0c278deefc14688",
+    "companion.png": "d0d98a789365205f95135ec91d5cf4049871c51d79913217333fe33ecf684d44",
+    "logo.png": "6565e95319835025d409146b756dee88a203e0e5bc4689ec53d34e9425638908"
+  },
+  "dependencies": {
+    "version": "3.1.0",
+    "checkedInstalledPackageVersions": 29,
+    "allMatch": true,
+    "privateDependenciesIncluded": false
+  },
+  "logs": {
+    "javascript-310-full.log": "177080e0fa6f4edcfbc6c283d874fe379f427fc387deef158e6b96fc3048edaa",
+    "android-310-full.log": "ff2698493f8c69be9cc4cca11add1b7b96a95a80d9b805e6ea948b9e32a5f6b2",
+    "ui-performance-310.log": "18666205ec7904b539754f6b645ed860efac2250594a7743608a08c22da46e63",
+    "apk-3.1.0.log": "0d52cc309df901db781d8a711392bb80f754ae4431d00694ba6424391dae6993",
+    "verify-310.log": "445c305073da0e588ea34e9a30da6f7f417204e8a49b351bed6baf9099753bde",
+    "provider-301-negative.log": "7f37a968d9fe5769e25a26963ececb2aded1254a92048f6caee1cc4d435b7b52",
+    "provider-imports-310.log": "b327de02413bccb316a18320fba6013dc5529bc9831a0cd3a629c5b34f86d201",
+    "input-responses-301.log": "c0a65a4c02a99da12cd6baf5b984bd925b3a3458b26c2426c4c0002c8e4eb495"
+  }
+}

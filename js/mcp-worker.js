@@ -28,7 +28,7 @@ class NativeStdio {
 async function connect(server,project){
  const key=server.id+'@'+project;let item=connections.get(key);if(item&&item.revision===server.revision)return item;
  if(item)await item.client.close().catch(()=>{});
- const client=new Client({name:'DeepSeek Studio',version:'3.0.0'},{capabilities:{},versionNegotiation:{mode:server.type==='http'?'auto':'legacy'}});
+ const client=new Client({name:'DeepSeek Studio',version:'3.1.0'},{capabilities:{},versionNegotiation:{mode:server.type==='http'?'auto':'legacy'}});
  const transport=server.type==='http'?new StreamableHTTPClientTransport(new URL(server.url),{fetch:nativeFetch(server),redirectPolicy:'same-origin',insufficientScopePolicy:'throw',reconnectionOptions:{maxRetries:0}}):new NativeStdio(server,project);
  await client.connect(transport,{timeout:20000});
  item={client,server,revision:server.revision,project};connections.set(key,item);return item;

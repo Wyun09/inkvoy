@@ -141,9 +141,9 @@ public final class MainActivity extends Activity {
     private void handleAction(String action, JSONObject argument) {
         if (!available()) return;
         if(action.equals("orientation")){try{DisplayMode.set(this,argument.optString("mode"));service.runtime.publishUi();}catch(IllegalArgumentException e){service.runtime.toast("不支持的屏幕方向");service.runtime.publishUi();}return;}
-        if(action.equals("ui-scale")){int value=argument.optInt("value",90);if(value==80||value==90||value==100||value==110)getSharedPreferences("studio-display",MODE_PRIVATE).edit().putInt("scale",value).apply();return;}
+        if(action.equals("ui-scale")){int value=argument.optInt("value",90);if(value>=30&&value<=110&&value%10==0)getSharedPreferences("studio-display",MODE_PRIVATE).edit().putInt("scale",value).apply();return;}
         if(action.equals("account-usage")){try{startActivity(new Intent(Intent.ACTION_VIEW,android.net.Uri.parse("https://chatgpt.com/settings/usage")));}catch(ActivityNotFoundException e){service.runtime.toast("系统浏览器不可用");}return;}
-        if(action.equals("import-plugin")){try{startActivityForResult(new Intent(Intent.ACTION_OPEN_DOCUMENT).setType("application/zip").addCategory(Intent.CATEGORY_OPENABLE),43);}catch(ActivityNotFoundException e){service.runtime.toast("系统文件选择器不可用");}return;}
+        if(action.equals("import-plugin")){try{startActivityForResult(new Intent(Intent.ACTION_OPEN_DOCUMENT).setType("*/*").addCategory(Intent.CATEGORY_OPENABLE),43);}catch(ActivityNotFoundException e){service.runtime.toast("系统文件选择器不可用");}return;}
         if(action.equals("account-auth")){String url=service.runtime.studio.accountAuthUrl();if(url!=null)try{startActivity(new Intent(Intent.ACTION_VIEW,android.net.Uri.parse(url)));}catch(ActivityNotFoundException e){service.runtime.toast("请安装可用的系统浏览器");}return;}
         if(action.equals("permission-files")||action.equals("permission-battery")||action.equals("permission-notifications")||action.equals("permission-app-settings")){AccessSettings.request(this,action);return;}
         if (action.equals("startupError")) {

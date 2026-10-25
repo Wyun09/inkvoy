@@ -1,10 +1,20 @@
-# DeepSeek 工作室 v3.0.0
+# DeepSeek 工作室 v3.1.0
 
 在一个安卓 App 中聊天、操作项目文件、运行真实 Linux 终端，并让内置 Agent 执行工具后自动继续。手机独立运行，电脑可关机。默认模型复用应用内已登录的 DeepSeek 网页，无需外部 API。也可从侧栏第一层「模型与 API」、工作台同名入口或输入框模型按钮添加自己的 OpenAI 兼容 API、模型 ID 与密钥。
 
 完整离线 APK 包含 Debian 13 ARM64 用户空间和预装工具。首次初始化只检查空间、校验 SHA-256 和解压；不会在手机上逐个下载必需工具。模型聊天和 DeepSeek 网页搜索仍需联网。
 
-## 3.0.0 更新
+## 3.1.0 更新
+
+修复 ChatGPT 账号请求中 `Value event of type java.lang.String cannot be converted to JSONObject`：转发层增加有限前缀识别，不再只信任响应头；缺失或错误标注的 Content-Type 也能识别 SSE。完整事件到达就向客户端传递，不等待连接关闭。支持 BOM、拆分 CRLF 和非流式 Responses JSON，仍须确认 response.completed 才能执行工具。
+
+界面结构拆为页面骨架、导航、图标、连接和设计系统模块。使用 Lucide 1.61.0 图标及随包许可，延续 assistant-ui MIT 示例的会话结构参考。侧栏按工作区、连接和偏好分组，次要入口折叠；非聊天页也可直接打开侧栏。模型设置在宽屏分为连接列表和编辑区，小屏转为纵向布局，旋转保留输入。统一表单、工具执行链、主题、焦点与短动效。
+
+「外观与显示」新增 30%、40%、50%、60%、70%，现在共九档，默认 90%。小比例会真实缩小内容和普通控件，恢复比例的九个按钮保持可读、可点击。原生网页比例仍单独控制。网页光标从约 28dp 高改为 16dp，采用浅色填充、细深色轮廓和轻点击圈。
+
+MCP 可直接粘贴服务链接、整段桌面客户端配置或 npx/python/node 启动命令，批量校验后原子保存；本机服务首次使用时自动准备环境。手动配置的附加参数与环境变量改为普通分行输入，仍兼容原 JSON。扩展页提供一键启用的排错、审查、网页调研技能；可从文件导入单个 Markdown、技能 ZIP、插件 ZIP 或 MCP JSON，也可填写公开 GitHub 仓库链接下载。自建技能只需名称和工作步骤。第三方导入后点启用；不自动运行宿主 hooks。
+
+## 3.0.0 历史更新
 
 界面改用更紧凑的暖灰、纸白与铜色，收起装饰性区块，保留对话执行链和透明 32 帧小墨。侧栏第一层可直接进入「模型与 API」「账号与模型」「扩展 · MCP 与插件」「外观与显示」。新增页面、弹层和按钮的轻量动效；可选择减少动态效果。
 
@@ -56,7 +66,7 @@
 
 ## 安装和开始
 
-1. 安装 `deepseek-android-bridge-v3.0.0.apk`。包名 `io.github.deepseekbridge`，versionCode 20，与本项目旧版使用同一签名，可覆盖升级。要求 ARM64 Android 8.0 / API 26+、Chromium 120+ 的系统 WebView。无需 Root、Termux、电脑或桌面 Harness。
+1. 安装 `deepseek-android-bridge-v3.1.0.apk`。包名 `io.github.deepseekbridge`，versionCode 21，与本项目旧版使用同一签名，可覆盖升级。要求 ARM64 Android 8.0 / API 26+、Chromium 120+ 的系统 WebView。无需 Root、Termux、电脑或桌面 Harness。
 2. 默认网页连接：打开左上角侧栏的「DeepSeek 网页」，在应用内登录；验证码和人机验证由用户完成。自定义 API：打开侧栏第一层「模型与 API」（工作台同名入口、输入框模型按钮也可）→ 直接填写地址、密钥和模型 ID → 保存并使用。
 3. 回「对话」直接提问。点击输入框下方的选项按钮可切换 Agent、深度思考和搜索；默认 Agent 和搜索开启。回复在生成时逐段更新，工具在校验通过并保存记录后执行，等待时显示实际阶段和耗时。
 4. 使用终端或 Agent 的终端工具时，首次解压 Debian；也可到侧栏「工具与环境」手动初始化。保持应用前台，等待进度完成，再点「运行自检」。实际镜像大小和空间要求见 `app/src/main/assets/runtime/manifest.json`。
@@ -159,10 +169,14 @@ PRoot 是共享 Android 内核的用户空间环境，不提供独立内核、�
 
 ## MCP 和插件
 
-侧栏「扩展 · MCP 与插件」→「添加服务」。HTTP 填服务的完整 MCP 端点和可选 Bearer 令牌；本机进程填写可执行程序、JSON 参数数组和可选环境变量。stdio 需要先初始化内置 Debian；`/workspace` 指向当前项目。服务程序及其额外依赖需自行提供，并在「工具与环境」确认环境已就绪。
+侧栏「扩展与技能」→「快速添加」，直接粘贴完整 MCP URL、`mcpServers` / `servers` 配置或一条启动命令，点击「添加并连接」。不需要自己拆开 JSON。HTTP 服务不需要本机 Linux；stdio 首次使用会准备内置 Debian，`/workspace` 指向当前项目。npx 首次下载包需要联网；任意第三方包仍可能有自己的依赖和平台要求。
+
+「手动配置」可填写地址或整条启动命令；附加参数每行一个，环境变量每行 `NAME=value`，编辑时留空保留已有凭据。Context7 预设会填好服务地址，密钥由该服务提供。
 
 保存并启用后点击刷新服务目录，下一次 Agent 运行自动获取其工具。MCP 在独立 Worker 内使用官方 `@modelcontextprotocol/client`；原生层负责 HTTP 流和独立 stdin/stdout/stderr 管道。工具调用必须通过动态 schema 校验并持久记录。网络中断或执行状态未知时明确报错，不自动重放有副作用的调用。模型可通过 `extensions` 工具读取资源、提示词和已启用插件的技能内容；MCP 图片会转为真实项目文件和聊天附件。
 
-「插件与技能」支持 ZIP 根目录（或单层外包目录）中的 `studio-plugin.json`、`.claude-plugin/plugin.json`、`.codex-plugin/plugin.json`，读取清单或 `.mcp.json` 的 `mcpServers`，以及 `skills/<技能>/SKILL.md`。`${CLAUDE_PLUGIN_ROOT}` 与 `${CODEX_PLUGIN_ROOT}` 可用于程序和参数的插件目录定位。导入后默认停用，需手动启用。这里只兼容这些配置及技能；不执行宿主专有 hooks，也不宣称完整兼容 Claude/Codex 插件生态。
+「插件与技能」可以一键启用三项本机技能，不需要账号、终端或额外依赖。「从文件导入」自动识别 Markdown、MCP JSON 或 ZIP；没有专用清单的 ZIP 也会递归查找 `SKILL.md`。有清单时兼容 `studio-plugin.json`、`.claude-plugin/plugin.json`、`.codex-plugin/plugin.json` 及 `.mcp.json` 的 `mcpServers`。`${CLAUDE_PLUGIN_ROOT}` 与 `${CODEX_PLUGIN_ROOT}` 可用于程序和参数的插件目录定位。
+
+「从 GitHub 添加」支持公开仓库首页和 Download ZIP 链接，下载到本机后采用同一导入校验。导入后点启用；「自己写技能」只填写名称和步骤即可保存。技能只作为当前用户任务中的工作方法，不覆盖系统约束。兼容范围是配置与技能，宿主专有 hooks 和 UI 组件尚未支持。
 
 最多保存 16 个 MCP 服务和 16 个插件，同时运行最多 4 个 stdio 服务。ZIP 解压上限 32 MiB / 1000 个条目；拒绝越界路径。插件运行在与终端相同的 Debian 环境中，具有该应用可用的文件及网络能力。
