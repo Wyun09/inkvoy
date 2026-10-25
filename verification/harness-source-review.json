@@ -1,0 +1,87 @@
+{
+  "repository": "https://github.com/deepseek-ai/deepseek-harness",
+  "commit": "687f282e8625c6b8d11ff58211a90524be2e4317",
+  "license": "MIT",
+  "date": "2026-10-19",
+  "mode": "read-only source review; no upstream source incorporated into the APK",
+  "files": [
+    {
+      "path": "LICENSE",
+      "bytes": 1065,
+      "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+      "url": "https://github.com/deepseek-ai/deepseek-harness/blob/687f282e8625c6b8d11ff58211a90524be2e4317/LICENSE"
+    },
+    {
+      "path": "docs/architecture.md",
+      "bytes": 18900,
+      "sha256": "95a7722c7096d665d8adedeb733b8f5ad7740e67cb5c6e9dc91ec05f430cb760",
+      "url": "https://github.com/deepseek-ai/deepseek-harness/blob/687f282e8625c6b8d11ff58211a90524be2e4317/docs/architecture.md"
+    },
+    {
+      "path": "packages/core/agent-loop/README.md",
+      "bytes": 22983,
+      "sha256": "4c9fb8c7bcd7e563e5f24abbb1d9f52479ed7388ffa50e288bc1ec1eca4ab551",
+      "url": "https://github.com/deepseek-ai/deepseek-harness/blob/687f282e8625c6b8d11ff58211a90524be2e4317/packages/core/agent-loop/README.md"
+    },
+    {
+      "path": "packages/core/agent-loop/src/assistant-stream.ts",
+      "bytes": 4263,
+      "sha256": "120d2bec5efeec2aa54bf0e4261a45282936272d610dbbab21eee36b902629de",
+      "url": "https://github.com/deepseek-ai/deepseek-harness/blob/687f282e8625c6b8d11ff58211a90524be2e4317/packages/core/agent-loop/src/assistant-stream.ts"
+    },
+    {
+      "path": "packages/core/agent-loop/src/tool-calls.ts",
+      "bytes": 11591,
+      "sha256": "5c7e8d8ff0028b436efdd13e5dffa4801d2311c211c3af039e7dab705f87b303",
+      "url": "https://github.com/deepseek-ai/deepseek-harness/blob/687f282e8625c6b8d11ff58211a90524be2e4317/packages/core/agent-loop/src/tool-calls.ts"
+    },
+    {
+      "path": "packages/core/session/src/repair.ts",
+      "bytes": 9428,
+      "sha256": "c2835c920aba203c709e44686e55f43bb4d357ea59cfef3561c371b8ff115540",
+      "url": "https://github.com/deepseek-ai/deepseek-harness/blob/687f282e8625c6b8d11ff58211a90524be2e4317/packages/core/session/src/repair.ts"
+    },
+    {
+      "path": "packages/api/session-controller/src/client/sessions/assistant-stream.ts",
+      "bytes": 8899,
+      "sha256": "6a5dd6365dc47f26e26cbb243af453c5ae441d08fe5133203e66a69ec15667fc",
+      "url": "https://github.com/deepseek-ai/deepseek-harness/blob/687f282e8625c6b8d11ff58211a90524be2e4317/packages/api/session-controller/src/client/sessions/assistant-stream.ts"
+    },
+    {
+      "path": "packages/client/ui-chat/src/client/chat/TurnProcessNodeView.tsx",
+      "bytes": 2893,
+      "sha256": "b7aa82eeb7c8e32bc7e67cca6f4695d23d0ee497c4fc537160a78716a3283dd6",
+      "url": "https://github.com/deepseek-ai/deepseek-harness/blob/687f282e8625c6b8d11ff58211a90524be2e4317/packages/client/ui-chat/src/client/chat/TurnProcessNodeView.tsx"
+    },
+    {
+      "path": "packages/client/ui-chat/src/client/chat/turn-rail-items.ts",
+      "bytes": 3914,
+      "sha256": "55021e6b0f0fa1cf93abd84fd41e3403be23ee27905390366e6a3d2e87a0eadf",
+      "url": "https://github.com/deepseek-ai/deepseek-harness/blob/687f282e8625c6b8d11ff58211a90524be2e4317/packages/client/ui-chat/src/client/chat/turn-rail-items.ts"
+    },
+    {
+      "path": "packages/client/ui-chat/src/client/chat/use-scroll-follow.ts",
+      "bytes": 7332,
+      "sha256": "fd0734320e326292e614991476c1ffe492a40b90e44534b47a0368528a9415f0",
+      "url": "https://github.com/deepseek-ai/deepseek-harness/blob/687f282e8625c6b8d11ff58211a90524be2e4317/packages/client/ui-chat/src/client/chat/use-scroll-follow.ts"
+    },
+    {
+      "path": "packages/client/ui-chat/src/client/conversation-nodes/event-projection.ts",
+      "bytes": 6721,
+      "sha256": "9b112628ca6b6678504d373a8a017a9cc3c6f89189abd3fa1d38fe035b796a6c",
+      "url": "https://github.com/deepseek-ai/deepseek-harness/blob/687f282e8625c6b8d11ff58211a90524be2e4317/packages/client/ui-chat/src/client/conversation-nodes/event-projection.ts"
+    },
+    {
+      "path": "packages/llm/llm/src/assistant-stream.ts",
+      "bytes": 21368,
+      "sha256": "9ff074108132ef0ffeefffd8e7967d05db4c6bef1689242807ef7a1d2105dfeb",
+      "url": "https://github.com/deepseek-ai/deepseek-harness/blob/687f282e8625c6b8d11ff58211a90524be2e4317/packages/llm/llm/src/assistant-stream.ts"
+    },
+    {
+      "path": "packages/llm/llm-deepseek/src/sse.ts",
+      "bytes": 1403,
+      "sha256": "7ffcba377583018aa1a7f86c6d757b7dd6c1955ad8252103e2f33a4ceb90a741",
+      "url": "https://github.com/deepseek-ai/deepseek-harness/blob/687f282e8625c6b8d11ff58211a90524be2e4317/packages/llm/llm-deepseek/src/sse.ts"
+    }
+  ]
+}

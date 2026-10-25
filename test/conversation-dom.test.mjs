@@ -37,14 +37,13 @@ test('shared wrapper cannot finish a new turn using an old toolbar', async t => 
   const state = await adapter._readState(page); assert.equal(state.text, 'NEW'); assert.equal(state.completed, true);
 });
 
-test('historical DOM replacement is recovered only when the fingerprint matches', async t => {
+test('historical DOM remounts and edits do not invalidate a confirmed current answer node', async t => {
   const page = await fixture(t, reply('OLD'));
   const adapter = new MobileBrowser(() => {}); adapter._turnBoundary = await page.evaluate(conversationDom, { nonce: 'replace' });
   await page.locator('#log').evaluate((node, html) => { node.innerHTML = html; }, reply('OLD') + reply('NEW'));
   let state = await adapter._readState(page); assert.equal(state.turnValid, true); assert.equal(state.text, 'NEW');
   await page.locator('.ds-assistant-message-main-content').first().evaluate(node => { node.removeAttribute('data-local-bridge-history'); node.textContent = 'DIFFERENT_HISTORY'; });
-  state = await adapter._readState(page); assert.equal(state.turnValid, false); assert.equal(state.text, '');
-  assert.throws(() => adapter._checkState(state, 'prompt'), error => error.code === 'conversation_changed');
+  state = await adapter._readState(page); assert.equal(state.turnValid, true); assert.equal(state.text, 'NEW');
 });
 
 test('new reasoning streams before its answer while historical reasoning stays excluded', async t => {
@@ -54,13 +53,46 @@ test('new reasoning streams before its answer while historical reasoning stays e
   const state = await adapter._readState(page); assert.equal(state.answerCount, 0); assert.equal(state.reasoningCount, 1); assert.equal(state.reasoningText, 'NEW THINKING'); assert.equal(state.completed, false);
 });
 
-test('URL changes and missing historical anchors fail before exposing any reply', async t => {
+test('URL changes reject replies while temporarily missing anchors wait without exposing text', async t => {
   const page = await fixture(t, reply('OLD'));
   const adapter = new MobileBrowser(() => {}); adapter._turnBoundary = await page.evaluate(conversationDom, { nonce: 'path-check' });
   await page.evaluate(() => history.pushState({}, '', '/a/chat/s/another-task'));
   assert.equal((await adapter._readState(page)).turnValid, false);
   await page.evaluate(() => { history.pushState({}, '', '/a/chat/s/task-1'); document.querySelector('#log').innerHTML = ''; });
-  assert.equal((await adapter._readState(page)).turnValid, false);
+  const pending=await adapter._readState(page);assert.equal(pending.turnValid, true);assert.equal(pending.turnPending,true);assert.equal(pending.text,'');
+});
+
+test('code toolbar changes during a full remount do not change content identity',async t=>{
+  const code='<section><div class="ds-message"><div class="ds-markdown ds-assistant-message-main-content"><div class="md-code-block"><div class="md-code-block-banner-wrap">JavaScript <button>复制</button></div><pre><span>const value = 42;</span></pre></div></div></div><div aria-label="朗读">done</div></section>';
+  const page=await fixture(t,code),adapter=new MobileBrowser(()=>{});adapter._turnBoundary=await page.evaluate(conversationDom,{nonce:'toolbar'});
+  await page.locator('#log').evaluate((node,html)=>node.innerHTML=html.replace('复制','已复制')+'<section><div class="ds-message"><div class="ds-markdown ds-assistant-message-main-content"><pre>NEW_ONLY</pre></div></div><div aria-label="朗读">done</div></section>',code);
+  const state=await adapter._readState(page);assert.equal(state.turnPending,false);assert.equal(state.text,'NEW_ONLY');assert.equal(state.completed,true);
+});
+
+test('hidden and virtualized historical messages cannot cancel the retained current answer',async t=>{
+  const page=await fixture(t,reply('OLD_1')+reply('OLD_2')),adapter=new MobileBrowser(()=>{});adapter._turnBoundary=await page.evaluate(conversationDom,{nonce:'virtual'});
+  await page.locator('#log').evaluate((node,html)=>node.insertAdjacentHTML('beforeend',html),reply('CURRENT'));
+  assert.equal((await adapter._readState(page)).text,'CURRENT');
+  await page.locator('.turn').first().evaluate(node=>node.style.display='none');
+  assert.equal((await adapter._readState(page)).text,'CURRENT');
+  await page.locator('.turn').evaluateAll(nodes=>{nodes[0].remove();nodes[1].remove();});
+  const state=await adapter._readState(page);assert.equal(state.turnValid,true);assert.equal(state.text,'CURRENT');assert.equal(state.completed,true);assert.equal(state.reasoningText,'thought CURRENT');
+});
+
+test('unconfirmed missing boundary suppresses foreign text then recovers from a remount',async t=>{
+  const page=await fixture(t,reply('OLD')),adapter=new MobileBrowser(()=>{});adapter._turnBoundary=await page.evaluate(conversationDom,{nonce:'pending'});
+  await page.locator('#log').evaluate((node,html)=>node.innerHTML=html,reply('UNCONFIRMED'));
+  let state=await adapter._readState(page);assert.equal(state.turnPending,true);assert.equal(state.text,'');assert.equal(state.completed,false);
+  await page.locator('#log').evaluate((node,html)=>node.innerHTML=html,reply('OLD')+reply('NEW'));
+  state=await adapter._readState(page);assert.equal(state.turnPending,false);assert.equal(state.text,'NEW');
+});
+
+test('an initially empty turn binds its new chat path before accepting more output',async t=>{
+  const page=await fixture(t,''),adapter=new MobileBrowser(()=>{});adapter._turnBoundary=await page.evaluate(conversationDom,{nonce:'bind-new'});
+  await page.locator('#log').evaluate((node,html)=>node.innerHTML=html,reply('CURRENT'));
+  assert.equal((await adapter._readState(page)).text,'CURRENT');
+  await page.evaluate(()=>history.pushState({},'','/a/chat/s/foreign'));
+  const state=await adapter._readState(page);assert.equal(state.turnValid,false);assert.equal(state.text,'');
 });
 
 test('restoring a conversation waits for delayed history instead of starting a new chat', async t => {

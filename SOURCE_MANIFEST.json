@@ -4,96 +4,160 @@
     "bytes": 55
   },
   "CLAUDE_CODE.md": {
-    "sha256": "f2697ae259e65a69d4339c6509678b9f543ecf3c3a38143b9f3fd2fe89abea00",
-    "bytes": 4331
+    "sha256": "a925d0ffd05cbdb5e0dc40301e2dbadd0defa46fb50218c186873c68910f3fb5",
+    "bytes": 1045
   },
   "CORE_PROVENANCE.json": {
-    "sha256": "1ab705aa8d9ca32c1c4e35691e69c71006dd50c26da35ba14c1afe6d0f45afd2",
-    "bytes": 3789
+    "sha256": "bcac5938570c7a6aedb9757797d3e45576174c442a30cff1a9cc96bee92e7cd3",
+    "bytes": 5307
   },
-  "FIX_0.2.1.md": {
-    "sha256": "c93bd29d2fe102516b941b0f65c3c42d3da4edbf75344295e1db7d30426591de",
-    "bytes": 2464
-  },
-  "FIX_0.3.0.md": {
-    "sha256": "a833a07158993d892cb0f1596541649447e5c9b52710dafd622de7116d958a86",
-    "bytes": 2359
-  },
-  "FIX_0.4.0.md": {
-    "sha256": "9b3f3124f871f7f5dfffe6d883182e328d7b8ed730a7acade25aca505709fd67",
-    "bytes": 3664
+  "FIX_2.2.0.md": {
+    "sha256": "17355f6ac4f785ecd53f099d265ea9eda31f18b3d2b23a3f48c13e6b8710f4a3",
+    "bytes": 3273
   },
   "README.md": {
-    "sha256": "be3466a63feadec2cc077c4bd188b6501dada3fbbeda8517c8bfeb7794efcf6c",
-    "bytes": 12164
-  },
-  "SOURCE_DIFF.patch": {
-    "sha256": "a31846edd93730826e36867fbb89c8aac3e2768aae3e7cc30adcf231fe0d2c69",
-    "bytes": 383531
+    "sha256": "76f9b187b5721d2cdc19e70a2b06ba555dbae816203785e05f6dbed777c0ea09",
+    "bytes": 11999
   },
   "THIRD_PARTY_NOTICES.md": {
-    "sha256": "64b220459dc7f4f8780e2ff815db6456c1ddc0ef6baee3086168f2a79336e042",
-    "bytes": 6378
-  },
-  "UI_UPGRADE.md": {
-    "sha256": "fd27335c76c30f4d6ca84acc3fdab26319f7b8206623caaa0e52f09633374a06",
-    "bytes": 3286
-  },
-  "UPGRADE_1.0.0.md": {
-    "sha256": "96f46442d2c72b8875a38c3cd512d7ac56e170c38c88da5fd7d70b6abc95b316",
-    "bytes": 6209
+    "sha256": "d101f82823d0d64d4c88cbccac6819dc6274ec193d4e7e792d996a0e8c6803aa",
+    "bytes": 105574
   },
   "VERIFICATION.md": {
-    "sha256": "c5e30af4086804c90d2dfd779605bca4b4aa40b71969d6b71462d48fe4dd69ad",
-    "bytes": 2414
+    "sha256": "db40d2bf1698d73e12617d2f580de6bfbb4bf380dcaa5ee62602125babc75521",
+    "bytes": 4516
   },
   "app/src/main/AndroidManifest.xml": {
-    "sha256": "22a62d17293a12e5a20def415732a14e3e74980815d7bb6a96826500d0a95877",
-    "bytes": 1673
+    "sha256": "9ada29d7d4df4f4b63a8a3e6aca2a8ea69e9125df5aa8624bf6df8e0dd632c8c",
+    "bytes": 2277
   },
   "app/src/main/assets/NOTICE.txt": {
-    "sha256": "64b220459dc7f4f8780e2ff815db6456c1ddc0ef6baee3086168f2a79336e042",
-    "bytes": 6378
+    "sha256": "d101f82823d0d64d4c88cbccac6819dc6274ec193d4e7e792d996a0e8c6803aa",
+    "bytes": 105574
   },
   "app/src/main/assets/app.css": {
-    "sha256": "772aa8b526d4f66c92d045c682671d456f56d3987fee742064f9f49973aa1b48",
-    "bytes": 32565
+    "sha256": "26f488e3f14fc192e725586f9bfb5662ae8980df60d341c8f9a825f36e5f52e8",
+    "bytes": 101311
+  },
+  "app/src/main/assets/companion.png": {
+    "sha256": "d0d98a789365205f95135ec91d5cf4049871c51d79913217333fe33ecf684d44",
+    "bytes": 1007507
   },
   "app/src/main/assets/engine.bundle.js": {
-    "sha256": "8d43b44426acffa46a73bfe544eb8c30a9f62980cb71668e3982039ada46fe07",
-    "bytes": 533187
+    "sha256": "eec3ee44601a9e06f99f40f3484e60e005731209d0b894e123c211dce7af1339",
+    "bytes": 1406306
   },
   "app/src/main/assets/engine.html": {
-    "sha256": "3582e7ec345587647a4add35040c915ce4ada8ead6bd0ed8bf8eea63787d0481",
-    "bytes": 12615
+    "sha256": "dc26b39905c7ccd3620345f20655fe817f6473b9e54b52592ad10131ecab15e2",
+    "bytes": 12540
   },
   "app/src/main/assets/logo.png": {
     "sha256": "6565e95319835025d409146b756dee88a203e0e5bc4689ec53d34e9425638908",
     "bytes": 45848
   },
+  "app/src/main/assets/runtime/manifest.json": {
+    "sha256": "0f79284a4cb93d9cec5e9e3fdeddf871106444d56454537e17e4ae17edaefbee",
+    "bytes": 1752
+  },
+  "app/src/main/cpp/studio.c": {
+    "sha256": "e93be90a9039dcfcea2263f26b3743d7c8b271ed3657b8ef52a9d31c315998bc",
+    "bytes": 4487
+  },
+  "app/src/main/cpp/termux.c": {
+    "sha256": "778fee34326aaf6c8d9f5916d4667bb7d8f12af58a00e98c3c424c4e65d9debf",
+    "bytes": 7716
+  },
+  "app/src/main/java/com/termux/terminal/JNI.java": {
+    "sha256": "e57f7252a312c899a7c9ac09ef15b35e481d4d9e71a2f149f22e72c7c7c78c47",
+    "bytes": 780
+  },
+  "app/src/main/java/io/github/deepseekbridge/AccessSettings.java": {
+    "sha256": "8bf56fe01572b5ddde8f5b9e20eaaf948e9e99549e1f8e2babf2c319124bda43",
+    "bytes": 3044
+  },
   "app/src/main/java/io/github/deepseekbridge/BridgeRuntime.java": {
-    "sha256": "13551e465f6dc6a0118641eecb43dab8174486c415824c9ea632ff63bbdf0038",
-    "bytes": 29322
+    "sha256": "2b63532b4b669358548ec009a84a83e3ed11c4dcf966a81e625337850847952b",
+    "bytes": 37393
   },
   "app/src/main/java/io/github/deepseekbridge/BridgeService.java": {
-    "sha256": "e2acb58d276a6ed31c435b5a45eb40258534b59e4a0df685ab26be30201fd20a",
-    "bytes": 1748
+    "sha256": "1b78438fcecdfea7f6f20c7acb6ca932f97209e2cf0daebabbaa8a66d5e3368e",
+    "bytes": 2109
+  },
+  "app/src/main/java/io/github/deepseekbridge/CrashDiagnostics.java": {
+    "sha256": "13fab03b485a2ca303d9e9fb093377fd8f55089cc71341b91cade56ce95eeafc",
+    "bytes": 1832
   },
   "app/src/main/java/io/github/deepseekbridge/EncryptedStateStore.java": {
     "sha256": "f0cb326ff521bf9b89c4abad721406ff8689b42c4a38c2a8c143799c2df23b09",
     "bytes": 2708
   },
+  "app/src/main/java/io/github/deepseekbridge/FileRevisions.java": {
+    "sha256": "414fc286a7095b0d847e8e249e2051dc5dcd29477354da53a3ca6ff2da56e260",
+    "bytes": 9561
+  },
   "app/src/main/java/io/github/deepseekbridge/LocalState.java": {
-    "sha256": "05625ddbbb8d8f4472ad585b2f037db89e236fa49bd14a1a143c9481aa442d65",
-    "bytes": 2100
+    "sha256": "e2ff190c8763909102bee30cd853ae3639f82c51a7fa8201267a0b616a799d9f",
+    "bytes": 2440
   },
   "app/src/main/java/io/github/deepseekbridge/LoopbackServer.java": {
     "sha256": "873407f5430263ecfbce32832006b82a6dbc45580c082fd1a0d18b862845e9f5",
     "bytes": 12777
   },
   "app/src/main/java/io/github/deepseekbridge/MainActivity.java": {
-    "sha256": "30dc905b3c09c2200daa61a0b54f90cba7aebf9398b964edd2a0aa4e012a69ac",
-    "bytes": 14029
+    "sha256": "8ba5bbcfa66ccfbfb9f00024d29f856e6e624c8e0c73e4a76c3230d5bf4a86d8",
+    "bytes": 22113
+  },
+  "app/src/main/java/io/github/deepseekbridge/NativePty.java": {
+    "sha256": "90282ebd619b30ccd14d040012cb7bb06bdfa85734c5e89209f21947914c6bb2",
+    "bytes": 317
+  },
+  "app/src/main/java/io/github/deepseekbridge/ProjectFiles.java": {
+    "sha256": "3dbf6aa24ab4108f9d2537056443a8059d4503c191580b419ede70b44cae64a4",
+    "bytes": 5948
+  },
+  "app/src/main/java/io/github/deepseekbridge/ProviderGateway.java": {
+    "sha256": "8b3661cebd2e93d2f0cff2016e4d8b458867b61b96981e53afea1d2262858e33",
+    "bytes": 7367
+  },
+  "app/src/main/java/io/github/deepseekbridge/RuntimeAssets.java": {
+    "sha256": "e06b6574e935cfa7ad9e0d3c4513721df4468d8601e51d6db5b9b6dde877e5a2",
+    "bytes": 2269
+  },
+  "app/src/main/java/io/github/deepseekbridge/RuntimeInstaller.java": {
+    "sha256": "d424a1b4a8e99f0eaf26c46c855cbca07c106cd3aae03d22a6250eaf961c5fba",
+    "bytes": 16418
+  },
+  "app/src/main/java/io/github/deepseekbridge/StudioApplication.java": {
+    "sha256": "de6bea03dad46bc1f2121d7300d0907abb22858f7bda0e8cde81ad041cb1123e",
+    "bytes": 626
+  },
+  "app/src/main/java/io/github/deepseekbridge/StudioRuntime.java": {
+    "sha256": "a74b90e5438e45f3efcb3f16da61c0e07c7755401f4e141f19c906646bf940f8",
+    "bytes": 21453
+  },
+  "app/src/main/java/io/github/deepseekbridge/ToolJournal.java": {
+    "sha256": "54ac681eaefff5d6bb54b3c8bb904e81ffa67180a1b6521027d0eac0808d61b1",
+    "bytes": 4804
+  },
+  "app/src/main/jniLibs/arm64-v8a/libandroid-shmem.so": {
+    "sha256": "84475798e07c8174dbbfaec70a827fdb02f19ffa69a589380c13e7507fd0e731",
+    "bytes": 14432
+  },
+  "app/src/main/jniLibs/arm64-v8a/libproot.so": {
+    "sha256": "0df9240e08015aa7f5194c32b3fe5d9c8a8ea16dfb895ccafb65847a7f392c7d",
+    "bytes": 247488
+  },
+  "app/src/main/jniLibs/arm64-v8a/libproot_loader.so": {
+    "sha256": "cbdef0e652c2b78af25d867e1719fdebbb0915e25aae2dd35b3b5c1835f6b551",
+    "bytes": 18136
+  },
+  "app/src/main/jniLibs/arm64-v8a/libtalloc.so": {
+    "sha256": "160d39bc0d7ed946f22310d1d6f20addda21b02b0972dffe929fe49951543941",
+    "bytes": 33592
+  },
+  "app/src/main/jniLibs/arm64-v8a/libtermux.so": {
+    "sha256": "3bd5991c15635b71db2c51893095a75b4fe46a5e3c480d947bfd789c8920eb37",
+    "bytes": 15856
   },
   "app/src/main/res/drawable-nodpi/ic_launcher_art.png": {
     "sha256": "8e65da52d028d718ef3bee7498ba4ce00766f0d52fa8a9ef6d7048b92880d504",
@@ -128,40 +192,56 @@
     "bytes": 479
   },
   "branding/README.md": {
-    "sha256": "02d08b3ff5bc0721426500d642865f54c872c2a60ee99011d46ac31c3900bd9b",
-    "bytes": 2187
+    "sha256": "e322144e68f44adfeee235708b7334f0d600d8074491298a3d57ebfdf08ff650",
+    "bytes": 2882
+  },
+  "branding/companion-motion-origin.json": {
+    "sha256": "a647b507b1c48c8f8704a6c6cf768464b3279f07e4f829b21d270fbc4b852b03",
+    "bytes": 588
+  },
+  "branding/companion-motion-prompt.txt": {
+    "sha256": "04a0c442bd00f40ad5050b2ad87e8c1b9b626a44ca41d3523b48a9c7577c8ce4",
+    "bytes": 926
+  },
+  "branding/companion-origin.json": {
+    "sha256": "d43a4787838988e492f2a399a0111afdd79e216281e742c67e4b2b248f658e93",
+    "bytes": 587
+  },
+  "branding/companion-prompt.txt": {
+    "sha256": "783c945598b94cfaaa7542951f7eed6782cb25fc71c795738112b5ee78da01f9",
+    "bytes": 1795
   },
   "branding/logo-source.png": {
     "sha256": "832c4463c4fcd6264b0ec454b95abc7beaaccfc2f430d4628a0d4f6087414388",
     "bytes": 1087639
   },
-  "build-apk.log": {
-    "sha256": "d3ccd117e06b4cb21aea69fe5bc5de2627e58c2ab845631f02c259b30cc2d4fd",
-    "bytes": 2608
-  },
-  "claude-smoke-results.json": {
-    "sha256": "5d904c30e081ff4879341c7d54710c0375059bb5f6809627dc4d8489ea86e180",
-    "bytes": 729
-  },
   "js/anthropic.js": {
     "sha256": "6e772d47571a674a4d96405dd1a7e91759cd8591b8e7c88bc1991b35398fd5ce",
     "bytes": 13686
   },
+  "js/client-stream.js": {
+    "sha256": "fe612964032138291120d1a549947a724bfa6ed8242e3c3d5700e377fc6cff7b",
+    "bytes": 2043
+  },
+  "js/client.js": {
+    "sha256": "87c94d1d7a69afef4f0da0a6563f3a1e1eb4a0b8699739305f5fdbef6634a415",
+    "bytes": 12498
+  },
   "js/conversation-dom.js": {
-    "sha256": "d62ab01b832c4ac9441cc83c85d6dfd7400c345740856e48b256bc22492631df",
-    "bytes": 1951
+    "sha256": "a898404f1372a7e39b02e14698c45e24219b5928dafc7eaa80808b2cf63c5ab8",
+    "bytes": 2555
   },
   "js/conversations.js": {
     "sha256": "190ebc5cdc899b57366cbab8478609b56f9dca0c26a3267116896277966cce86",
     "bytes": 6752
   },
   "js/core/browser.js": {
-    "sha256": "1454a40661c593e9a246cd8b70371ecfb3b1bef2cd398b62dfac1868065b4ddc",
-    "bytes": 38886
+    "sha256": "6750295877ca060a776136c392433350c6e7020a1fbe1f32bd19b52c137c8927",
+    "bytes": 40155
   },
   "js/core/dom-text.js": {
-    "sha256": "9666221092c158de7937091886b8b9c46dc4e41c2d180efe561bb1845eb3816f",
-    "bytes": 11802
+    "sha256": "28793edd7d3a3a3e5b5f8d8bf77f2076b75c853fc8cee8a1eb3b16c2b1d8eb90",
+    "bytes": 16172
   },
   "js/core/protocol.js": {
     "sha256": "9b47f12d3d1f887267946b0912a76e4f4565a356e895ec8408bd3e108e54f4fb",
@@ -180,132 +260,352 @@
     "bytes": 1294
   },
   "js/engine.js": {
-    "sha256": "a297248233df84c6e9bfafa8da632a56dd3b6108885c3f0da5e1957c9034ae25",
-    "bytes": 21928
+    "sha256": "5b2772972d7801148d7991f4da1cd4917acce5d66fd671895968ed49f4d4c5e7",
+    "bytes": 23497
   },
   "js/entry.js": {
-    "sha256": "5b9e774b5bc128702b09dc4e8799418d8c508f6266f59235d988586f8ab52f57",
-    "bytes": 4771
+    "sha256": "33e245d7fd85c8e17536919e812fbf47ed44eb3a6246fc159ede317585bf3765",
+    "bytes": 7776
   },
   "js/mobile-browser.js": {
-    "sha256": "bdd0a257a0e62e90bd3339b225bb80d98cce005911658ccde83c47ff2ae2d4a3",
-    "bytes": 12800
+    "sha256": "f1976572b01fc74bdeb206e365ca650de72a0774ca673cfe14cebe13de527fba",
+    "bytes": 13174
+  },
+  "js/native-clock.js": {
+    "sha256": "f1441294ae3ec55c3bba1b3a431bd3f36669e42d70f7548a0d41a543cd6dc6c4",
+    "bytes": 848
   },
   "js/platform.js": {
     "sha256": "63a06228a2c09fcdddfb7d0b17975381910aa0fe5808346a73cc54db5d9f5d9d",
     "bytes": 1630
+  },
+  "js/providers.js": {
+    "sha256": "3e29598848901912b808a5d1a3b61a628b82d52603c06b024aee442979d233af",
+    "bytes": 6765
   },
   "js/send-control.js": {
     "sha256": "a3650c214fde83974679d970cf34d6cdd1fd585fda5b483ee7bccf7580d57f54",
     "bytes": 4784
   },
   "js/tasks.js": {
-    "sha256": "c050e9f97b2074d042084b29fbe10db77ce532f6e774ca7b479fddcf6769b9a0",
-    "bytes": 10569
+    "sha256": "1567d992f13df107d3a260fd65e6fdc23af33fb72c6b10a3a74960647fa53892",
+    "bytes": 10596
   },
   "js/ui/app.css": {
     "sha256": "4b2c70552a9d15e15bb355ae0681151ce5bd5dcb0b8a0e4601b7af4dc452f644",
     "bytes": 16700
   },
   "js/ui/app.html": {
-    "sha256": "3582e7ec345587647a4add35040c915ce4ada8ead6bd0ed8bf8eea63787d0481",
-    "bytes": 12615
+    "sha256": "dc26b39905c7ccd3620345f20655fe817f6473b9e54b52592ad10131ecab15e2",
+    "bytes": 12540
+  },
+  "js/ui/atelier.css": {
+    "sha256": "71275c2a03fbd4bcc51723ed08f148fd41ac2894f03a26260d8a3497018c8303",
+    "bytes": 23689
+  },
+  "js/ui/changes.js": {
+    "sha256": "ad0fbb6f98e582ce81daf8eb83ec2eec59b7a9dbd2804357a40dac3bfae334a6",
+    "bytes": 6172
+  },
+  "js/ui/companion-motion.png": {
+    "sha256": "d0d98a789365205f95135ec91d5cf4049871c51d79913217333fe33ecf684d44",
+    "bytes": 1007507
+  },
+  "js/ui/companion.js": {
+    "sha256": "91721fb447fa0277beec1e93b35be335ee3829fcac030d53b1775e33118710b6",
+    "bytes": 1320
+  },
+  "js/ui/companion.png": {
+    "sha256": "642e0481e4d1a784e6859b697f90c925122524602545170c423b9b5e2e8609b2",
+    "bytes": 632383
   },
   "js/ui/dashboard.js": {
-    "sha256": "339b75c3c13de6aa911120c87cfe64dc3b7c1f3ddcecf4aa3a05d717451b83aa",
-    "bytes": 32661
+    "sha256": "c05ec2c4567e52150d16aca661cab8ecdcb312f62803a41b844131b6c2083dc6",
+    "bytes": 33470
   },
   "js/ui/logo.png": {
     "sha256": "6565e95319835025d409146b756dee88a203e0e5bc4689ec53d34e9425638908",
     "bytes": 45848
+  },
+  "js/ui/model-settings.js": {
+    "sha256": "1a958e3c8a4df0d91a668d5e3de80477940d5097a9ae6a5339f1366522a850c5",
+    "bytes": 6959
+  },
+  "js/ui/motion.css": {
+    "sha256": "3fb4aeea8cc5764a6ac24980203856afbd346da6f68164ac08e18b87e01da59a",
+    "bytes": 11909
+  },
+  "js/ui/replies.js": {
+    "sha256": "b9cff72fdb6b5e47b64fb32512afbed632a37750b962ce31fa2911fb2487a57d",
+    "bytes": 18701
+  },
+  "js/ui/reply-model.js": {
+    "sha256": "677c127479b4753764ce1f15bc8178731ff6e23ff7b008837b576ca922f6cedc",
+    "bytes": 4803
+  },
+  "js/ui/reply.css": {
+    "sha256": "0a423ba162fefdc01542a1c8dc1e18d2bd17463bf929a65511dae1c7b592599d",
+    "bytes": 12311
+  },
+  "js/ui/studio.css": {
+    "sha256": "25c38a2212691739ae2de541ac3ff156213cf0912c7193b6f887d6d3c3e8d4ab",
+    "bytes": 19464
+  },
+  "js/ui/studio.js": {
+    "sha256": "325a9e1a43ba14fcf59870a1aa44e489054377756f9c1ddc0002c785c23d5706",
+    "bytes": 37658
+  },
+  "js/ui/thread.css": {
+    "sha256": "44fb95fa7193129031c601721a11c723c20a142bd18ac5dbb8a87d510e0a2905",
+    "bytes": 17945
   },
   "js/ui/workbench.css": {
     "sha256": "09208a2b32586eab58c43bd18b90ca1fa6fd82b7bed0d6edca6b46ab01280574",
     "bytes": 15864
   },
   "package-lock.json": {
-    "sha256": "077e177201ac7b45cf49de449525f2ec1fb0fe854e6d4d0daa78fc49d239fb65",
-    "bytes": 17687
+    "sha256": "3c2e551f47d5b181d25a15e5133396a4495035780e489b1cf5932e19954de9d6",
+    "bytes": 20612
   },
   "package.json": {
-    "sha256": "17d2e25aec1a4a4340c7bdbd5bb956ee691c848c500cb1691a150e3d8aa53e1a",
-    "bytes": 368
+    "sha256": "6d4787aa57c6bfad31aec78fdb72d6a9e87fdf66dd114e1cc368d0a8d06fc3b4",
+    "bytes": 573
   },
   "preview/README.md": {
-    "sha256": "c2a9e7633e4b50838cdac20730795bf406436c2409bf567eeb0876336689f540",
-    "bytes": 208
+    "sha256": "23e318c129798ee9d713cff5709ccff039920bce99bcef14ad71e1f09c162c6a",
+    "bytes": 248
   },
-  "preview/connect-light.png": {
-    "sha256": "cc682dfdfb76aea3734a9bea222cac6bd1d22d11331fc9c1561c31d7422141d0",
-    "bytes": 40235
+  "preview/companion-animation.json": {
+    "sha256": "7ddf17198b344ab39550ea3b0c2f860d7186c0cea82fcfa7ce0754be0d68f58e",
+    "bytes": 319
   },
-  "preview/conversation-sheet.png": {
-    "sha256": "2532c6214f53bea3e31f5adae865825376771640cf40c9ec6b977bb939ea5fcf",
-    "bytes": 58103
+  "preview/reply-210-320.png": {
+    "sha256": "3ecd9a331b9f0dfb210c83847848121b1df0025ff2619837db3b4c2cf615063f",
+    "bytes": 22853
   },
-  "preview/home-dark.png": {
-    "sha256": "91d73cad26212dca2d597b0000441cfb6a2d027886b19c65f872517ed69aff29",
-    "bytes": 53702
+  "preview/reply-210-answer.png": {
+    "sha256": "7d7216a882f604ee1f311e2c2c4bc506c44341636f2c4ad7d593c0a8637497a5",
+    "bytes": 32743
   },
-  "preview/home-empty.png": {
-    "sha256": "5deea4d8c9113aa6b1c436c75545580d1aa278108b1807be9302c40cb4efe4fa",
-    "bytes": 54119
+  "preview/reply-210-dark.png": {
+    "sha256": "fa45037880dd4f2d7dca21e71db52714dfa679f70e318c903f59037243514445",
+    "bytes": 32864
   },
-  "preview/home-light.png": {
-    "sha256": "9d99cc4fee79eecfc9b960d1f653e30a19aef91ce8306246ebe5d62a7da77a91",
-    "bytes": 53385
+  "preview/reply-210-diff.png": {
+    "sha256": "e04e7306526ba0ad3dea2a87e2fe12297308dbee3d51406973057f801e763bbd",
+    "bytes": 19425
   },
-  "preview/reasoning-sheet.png": {
-    "sha256": "b391febd5c5839979eb92e99c251cfdc742ef02d6cab2685101094bb38dc2ac2",
-    "bytes": 59398
+  "preview/reply-210-process.png": {
+    "sha256": "49d4f5e8e2449715080a083a8397fd5b9172d10d2b559effd161f2732cdeebc0",
+    "bytes": 29714
   },
-  "preview/sessions-light.png": {
-    "sha256": "6d5daa85156f72a47b9fa37ba43ffa2de6e1d31ed8508934cfb2b949f03f6820",
-    "bytes": 45993
+  "preview/reply-220-320.png": {
+    "sha256": "21c22a858ee10537530854f11af234bbf04f21cbc8796dd81f6c79234868c13f",
+    "bytes": 24509
   },
-  "preview/task-detail.png": {
-    "sha256": "d1cc1b6f54bbfcf8978f243c611408201108906dcdd5c7e8784e29084e56fe5b",
-    "bytes": 42087
+  "preview/reply-220-answer.png": {
+    "sha256": "28eb86aea428f5e850e70b37a77537449cb74292a71a9fbeebeb647ad9eb8c04",
+    "bytes": 33394
   },
-  "preview/tasks-320.png": {
-    "sha256": "b36e3106b6a3e6961bf059b7cd1f88f704ded6b81f661bcb1834bccef794d76e",
-    "bytes": 34596
+  "preview/reply-220-dark.png": {
+    "sha256": "731e10dc7d42c2ec38f3b526208430761fd240a6eead28ba4d55eabd6de113dd",
+    "bytes": 31504
   },
-  "preview/tasks-dark.png": {
-    "sha256": "f7cc2dddfa128a3ca8ad6c3f08c5076435286ea38a1c4e30b4a3658141de11e5",
-    "bytes": 43609
+  "preview/reply-220-diff.png": {
+    "sha256": "a750d5be4066d126ffa048403a88ba69ac289c5f4045b5e1f00eccc884b79c08",
+    "bytes": 20331
   },
-  "preview/tasks-light.png": {
-    "sha256": "4f0ab53c361fab702b22324a07dede31f59a8af4efb1b5ffde1caf0f638990c0",
-    "bytes": 42905
+  "preview/reply-220-process.png": {
+    "sha256": "31204eb11db521d38d5550873bfd6b4ed71ccd1fd00b4bf50a3aaa534efb540f",
+    "bytes": 31519
+  },
+  "preview/studio-320.png": {
+    "sha256": "39742681c2def2d0b930f43ee0582e27a9831125016de7f19268c1bcbc2e642e",
+    "bytes": 17685
+  },
+  "preview/studio-conversation.png": {
+    "sha256": "af577daff19964611a63ec5922b463eced57424f3d63aa5904507af0878bf8f4",
+    "bytes": 32912
+  },
+  "preview/studio-dark.png": {
+    "sha256": "e294cf1a584f194077cefbc6d1b49cacfa59c5fba65f9d48869fcc3baff0c129",
+    "bytes": 18754
+  },
+  "preview/studio-files.png": {
+    "sha256": "a9f7130d55567aac0ad75774925a5a532a68585f1079c4145a82274ec80b50e5",
+    "bytes": 22400
+  },
+  "preview/studio-pet-generating.png": {
+    "sha256": "d26b43abf342f164f9952c5ac660c6f8ad6b15fe41bf0c598c6738938ca9129e",
+    "bytes": 32093
+  },
+  "preview/studio-pet-reading.png": {
+    "sha256": "cead724ab5311902ee9e6a4f96db7b7f8a162a71e0831a9c2af2bd075864f29a",
+    "bytes": 32672
+  },
+  "preview/studio-pet-terminal.png": {
+    "sha256": "6a02a1d70a5ac3cf160eaf41d14869eee61164ad50ddb55797649c152453d8ca",
+    "bytes": 32081
+  },
+  "preview/studio-pet-writing.png": {
+    "sha256": "ededae572b18c67eadb577480a1372a7b26ac491a270372afd31dadae9f36566",
+    "bytes": 32355
+  },
+  "preview/studio-sidebar-session.png": {
+    "sha256": "aae6b010422d26e4b878c35ce4a58ed6f8a4ee1854d0205bbfefc68c3e49855a",
+    "bytes": 24326
+  },
+  "preview/studio-sidebar.png": {
+    "sha256": "5a34b75b0804b08f44901952ad797c6eb6f802aeb998741948c01d2b51e44547",
+    "bytes": 20221
+  },
+  "preview/studio-terminal.png": {
+    "sha256": "af8b06d080fcc0b10b83044c14a608815e890b1314d7caa09b931ece0b208f02",
+    "bytes": 19997
+  },
+  "preview/studio-tools.png": {
+    "sha256": "86d65dff0456e593d8cf9ba6395e5e6921048afdc8cca768bf6974d52062ebcb",
+    "bytes": 35241
+  },
+  "preview/studio-welcome.png": {
+    "sha256": "10bafe751c663687b7761eec1eb985a26fddadd7384f3db9ebd0f5f232557459",
+    "bytes": 18776
+  },
+  "preview/upgrade-220-chain-dark.png": {
+    "sha256": "a964e39e0d75829eb37e40a7fbd771476e7b4efb1b335090fd92002852abe3c2",
+    "bytes": 35221
+  },
+  "preview/upgrade-220-chain-working.png": {
+    "sha256": "808e771022b829d1bb5450f472aa8379697d98dfc9823894c594a1a480ed4624",
+    "bytes": 35223
+  },
+  "preview/upgrade-220-chain.png": {
+    "sha256": "04c2a7f4feccafb824bc279ceac38f7fe3ff365a9c99f4402fb61941757653ae",
+    "bytes": 35583
+  },
+  "preview/upgrade-220-model-settings.png": {
+    "sha256": "23308c14c8b492b8940ea97cb3920aa16233330490f747bee05f9d6067e57a99",
+    "bytes": 33865
+  },
+  "preview/upgrade-220-preview.json": {
+    "sha256": "5b57fbcf852020f8277ca0e9f1235ae6049e9a339602f452788d86f960d5e7ce",
+    "bytes": 1362
   },
   "release.json": {
-    "sha256": "ab59142c946b6990056af12137ac815fcec6bebbbebfc2ee25fa116e57b5e787",
-    "bytes": 2148
+    "sha256": "86e34eefa04b4f3192ed1f3fa8c695f6408e5d0a612af2b82264293b8a8dac5c",
+    "bytes": 8273
+  },
+  "scripts/benchmark-ui.mjs": {
+    "sha256": "e736b7760cb090668ad7d24baefdb2f602acc9f2bc10f5ede9b49fd0234aec01",
+    "bytes": 2742
   },
   "scripts/build-apk.ps1": {
-    "sha256": "f8d7fbf0ad1a4700d4882a54af05b9d09d3abff8b418a5fc5a51b09bf1fed7b1",
-    "bytes": 4542
+    "sha256": "545abbd5b0a5bc4256938860a8dccc4abf90d5c531fbb0522d73a53c65f3364e",
+    "bytes": 6578
   },
   "scripts/build-assets.mjs": {
-    "sha256": "62dc509911653a0bfcf2092655ff79f91dbae5fcc908a7b9e2591c1cd65b4b6f",
-    "bytes": 1246
+    "sha256": "243153111f683faef23550e85678e48e2a797aace7623e238ff2d5745827660f",
+    "bytes": 1487
   },
   "scripts/build-icons.ps1": {
     "sha256": "e269854a43c385f0aa1d765905dc1f4b290055f64d395d613cc164ce950b940c",
     "bytes": 1786
   },
+  "scripts/build-native.ps1": {
+    "sha256": "f0e56ee5fe2bb597900298c611640c55e57edf7c0e2fa61ce9985669afc99faf",
+    "bytes": 1001
+  },
+  "scripts/capture-companion.mjs": {
+    "sha256": "9b9513b7083cf7416bad80d81846997d3b835b6c020eb75b29d007cd672c07d1",
+    "bytes": 2914
+  },
+  "scripts/capture-replies.mjs": {
+    "sha256": "689236527ea19471d27aed2c1ad8e0fc319a42c1b2ffdc80419b14414fb70024",
+    "bytes": 1771
+  },
+  "scripts/capture-studio.mjs": {
+    "sha256": "a5997244d6bf59fe148476654473d5db7a4b58eb41b24280d6d8baa6f7c475a2",
+    "bytes": 3586
+  },
   "scripts/capture-ui.mjs": {
     "sha256": "dd73ab9f8d0970b29ee5fa44cdbdc921208c39bb1a3006d869242e7be4b7ff37",
     "bytes": 4172
+  },
+  "scripts/capture-upgrade.mjs": {
+    "sha256": "c93ef78fefef659242136ce1413d336a82005fdac25b1d823a11cb40711070e1",
+    "bytes": 2863
+  },
+  "scripts/inspect-layout.mjs": {
+    "sha256": "da14f5206a58c16d075a1af02b46517979a11eb068dcd0148951076faea6bba5",
+    "bytes": 946
+  },
+  "scripts/make-runtime-fixtures.ps1": {
+    "sha256": "924468f6ba8f729377730f9268d3ed9e8dd12f8b82a035a66bdea3e5e06dd01f",
+    "bytes": 1845
+  },
+  "scripts/normalize-apk-paths.py": {
+    "sha256": "17ac8852d2d0cb1a2453c3f9ccaea840689e79a5288ff5466b49709d6aae991c",
+    "bytes": 2264
+  },
+  "scripts/package-release.py": {
+    "sha256": "bbb85a2acda2d28f20b14e80f45bae3406ff35eb02c46589a3db6e178d1cf258",
+    "bytes": 3419
+  },
+  "scripts/provision-android-test.py": {
+    "sha256": "37d2e35154c0648c594633924910e103e5496d6be5dcf1a377fb14eed9963109",
+    "bytes": 1065
   },
   "scripts/provision-android.ps1": {
     "sha256": "7e2e6e6c78a15ba533c42bb4c39e9fa612dc783a8d000bddb4bcead7a3deeb68",
     "bytes": 3929
   },
+  "scripts/provision-test-dependencies.py": {
+    "sha256": "b98f7e32c59ab658490581c12f252379fc968c8a74e952098a7f360722bd10ec",
+    "bytes": 700
+  },
   "scripts/record-core.mjs": {
-    "sha256": "c8822521f8ede92b8d640ccc75a36c481272f615faea8eef09df0d741667cdba",
-    "bytes": 3170
+    "sha256": "61d1636b2b49de2b48dc38deac0b2258ac73bbfcf6fc2e4a39ac6c05dc8c3b41",
+    "bytes": 3954
+  },
+  "scripts/runtime/artifacts.json": {
+    "sha256": "7c6a09b8db20486613f2dd52cc059407e1526cc55a509aec5c4ab143a15cfd6f",
+    "bytes": 1026
+  },
+  "scripts/runtime/build-image.sh": {
+    "sha256": "45647ecf29dbb6aa95beac195bf36bef983a686b973c0fa3a9b5a9d65976264a",
+    "bytes": 2163
+  },
+  "scripts/runtime/download-artifacts.py": {
+    "sha256": "88a0ebafdbc8ef8dcccac5bbd9a9872c171e780be747da8b87c9be82d3c22a7b",
+    "bytes": 1006
+  },
+  "scripts/runtime/fetch-debian-sources.py": {
+    "sha256": "dc7448ca68daf7df024b522943df32056e00d7a05d0c8f94f3692d1ded52aedc",
+    "bytes": 3284
+  },
+  "scripts/runtime/finalize-image.sh": {
+    "sha256": "c187378c598bc660711bc439e9f0d69b534c86c7b2a4216a96dbc27a49bc66a6",
+    "bytes": 2889
+  },
+  "scripts/runtime/install-tools.sh": {
+    "sha256": "6e3d849d34e21bd180ffb463ca02f966b8c617714cc11adfcdffb4fff387a112",
+    "bytes": 2838
+  },
+  "scripts/runtime/prepare-native.py": {
+    "sha256": "9fa18a06ad632d30e50b13d670102a9314e49fdfc7642608c9ff1624b6e8831c",
+    "bytes": 3481
+  },
+  "scripts/runtime/record-runtime.py": {
+    "sha256": "03f4ce1683bd0df819dd217b89dd9c01862d0ea32974a1b34fed0af00f62570b",
+    "bytes": 3192
+  },
+  "scripts/runtime/self-test.sh": {
+    "sha256": "cebd9af87ddfc31cd2400bbad2b2f1be613fcb210112fdfe96b299080715a074",
+    "bytes": 2797
+  },
+  "scripts/runtime/test-native-linux.sh": {
+    "sha256": "da0efadcba15c13bb70b69e864896f37b94b90e5bb95a7eb43b477be271f8ae4",
+    "bytes": 844
   },
   "scripts/smoke-claude.mjs": {
     "sha256": "520e9597b48ff57c6f3bc37efac3cdef5b9b8b0bf692c6bdec402c3e8e636fbc",
@@ -319,6 +619,14 @@
     "sha256": "ee9e9e3e8bddbcf73ef1b89f8ec65171e0d5d3e7c2ea08d3a65ddf4e3a3886cc",
     "bytes": 692
   },
+  "scripts/test-dependencies.json": {
+    "sha256": "21bc0f061832762a4693783843d1100fee9486ebad8a0d039979d989a506978e",
+    "bytes": 896
+  },
+  "scripts/test-journal.ps1": {
+    "sha256": "df60e6bb181b66b607ccaed3a63c4848ab9bd6f2f9a0781c746b74be5e817ab3",
+    "bytes": 1483
+  },
   "scripts/test-storage.ps1": {
     "sha256": "afa15d41a279055b616b4c51017982954eec8930836eedcb0dda2a24e69568aa",
     "bytes": 962
@@ -327,21 +635,29 @@
     "sha256": "4d10e67f488821b15767c2dbfd01bf58d00390b3ed7d9421292bd7367244b7df",
     "bytes": 967
   },
+  "scripts/test-workspace.ps1": {
+    "sha256": "61b10784d539fc2729828597eb33f05de412d4202c9e536e8f761d1f32ab30ff",
+    "bytes": 1243
+  },
+  "scripts/verify-package.py": {
+    "sha256": "b14df623edad7d69eb313f41d5c2bf48c182085a36ef2be9876a18f2575aef58",
+    "bytes": 3327
+  },
   "scripts/write-notices.mjs": {
-    "sha256": "0d90e612a04a6a35607ca5bce339c078f0c043258ff428c1ea65a34cd87e2f78",
-    "bytes": 1148
+    "sha256": "bc8bb741ca6ee86b3559a9fd2cb4a7e1cc13ccd31f10dd98d975549c8b64e531",
+    "bytes": 1917
   },
-  "signature-comparison.json": {
-    "sha256": "a14218f8691b5455c3779532452772fd186befb46b4d626c65ff44f7aea360ee",
-    "bytes": 166
+  "test/ImageArchiveSelfTest.java": {
+    "sha256": "ad79ec75174f3eb8579db03bb8c08d5591a68689b47472f3cfe32e2db7491c46",
+    "bytes": 1475
   },
-  "storage-results.log": {
-    "sha256": "0dd0679c5d487797ef0dca5729d8f3543ec28224534bd2acd17f3b182cdd12a5",
-    "bytes": 28
+  "test/JournalSelfTest.java": {
+    "sha256": "7ab94b9868e4b1793d260f8341f5d767990c6440e8b7f5eded9196ab97d7a509",
+    "bytes": 3345
   },
-  "test-results.log": {
-    "sha256": "5fd14be0da70971f7c86eafc4aa32c53bf87c250f0d8078d4203bc483961d2d6",
-    "bytes": 18133
+  "test/NativeExecutionSelfTest.java": {
+    "sha256": "a2a931319489bd7ebbecdfdc3f7998116ddae7bfa43df8727aa1fce702e679f4",
+    "bytes": 4611
   },
   "test/StorageSelfTest.java": {
     "sha256": "d77a5e3b1ba29d960cec11b156644089a351fdd218c49af0784e64b04e2958e2",
@@ -351,21 +667,85 @@
     "sha256": "0489385ce3fd56d3ee7af08e82a7cec1a93556282d47ce6f8d8f2a60a436fc53",
     "bytes": 11033
   },
+  "test/WorkspaceSelfTest.java": {
+    "sha256": "2744a00dfa487318f522bbec5ecf979cab3b0b71a699bbae330031a8c07da4aa",
+    "bytes": 4746
+  },
+  "test/android-runtime/README.md": {
+    "sha256": "26bb302bf35d853f8c8bb31c43ae437940a2990d8441c8e18eda20fbb962428f",
+    "bytes": 2256
+  },
+  "test/android-runtime/lib/origins.json": {
+    "sha256": "46157555df5799b63310df2cfca9e8b6a9cf78126baee1e84f70100af37cb65a",
+    "bytes": 663
+  },
+  "test/android-runtime/pom.xml": {
+    "sha256": "575d27abf6e9b6f94025b341f81c07ddbd3d39a9e11697ee7dcb9d5910b1f40d",
+    "bytes": 2356
+  },
+  "test/android-runtime/src/test/java/io/github/deepseekbridge/AccessSettingsTest.java": {
+    "sha256": "e5f286e3ced67383b661c424f48b63f23ef709e38a1017fe8297f533bc94b529",
+    "bytes": 3315
+  },
+  "test/android-runtime/src/test/java/io/github/deepseekbridge/FileRevisionsTest.java": {
+    "sha256": "bf002620dcd902b15a7ee43adc22837bee59597ff5f984b35c37af575d473119",
+    "bytes": 5891
+  },
+  "test/android-runtime/src/test/java/io/github/deepseekbridge/ProviderGatewayTest.java": {
+    "sha256": "d7c9ad4be349d18c6e86af698e6c59b5be999dc411599882332607df562acb60",
+    "bytes": 6574
+  },
+  "test/android-runtime/src/test/java/io/github/deepseekbridge/ResponsivenessTest.java": {
+    "sha256": "70c3c21930ffeb8180035302ef5346bc0869b3e78b809129e146983403ef2abf",
+    "bytes": 4969
+  },
+  "test/android-runtime/src/test/java/io/github/deepseekbridge/RuntimeAssetsTest.java": {
+    "sha256": "79f42a5dd800195d90fba1905329d840152ae794bae6aad29068a7463959e74e",
+    "bytes": 7136
+  },
+  "test/android-runtime/src/test/java/io/github/deepseekbridge/RuntimeHardLinkTest.java": {
+    "sha256": "c2614f0a9f8e6391b99eccf9121b1b7d30cbeb1f6a703cfc26c177be0db22a6a",
+    "bytes": 3592
+  },
+  "test/android-runtime/src/test/java/io/github/deepseekbridge/StartupRegressionTest.java": {
+    "sha256": "8bb9abbd4bd047f5f9dc20e7f0fd44672a813ef8204f1d8beea7be9c650ca9e5",
+    "bytes": 4960
+  },
   "test/anthropic.test.mjs": {
     "sha256": "de55911846a04b533a0a592a6be1c967503653bc6b2705998ea83d584eca2613",
     "bytes": 9930
   },
+  "test/chain-fixtures.mjs": {
+    "sha256": "953f14db198b0c2a0f7269fef1d41539bff708bca2d0b7b4f022deefe2f65338",
+    "bytes": 1016
+  },
+  "test/client-live-ui.test.mjs": {
+    "sha256": "15ba040acde73170f0e014f00276b664eb066bbc07ce8564ac14a6859a83bb19",
+    "bytes": 4509
+  },
+  "test/client-stream.test.mjs": {
+    "sha256": "c01e3d42dea0334b224a70fcc4dca46b3aa00e8e390424ca5cbc34cc6f949725",
+    "bytes": 1302
+  },
+  "test/client.test.mjs": {
+    "sha256": "b6c57786f2ff25be26c7b5ec1df3b9f7b62ed4757616010a1040f1d8381d47ce",
+    "bytes": 13296
+  },
+  "test/companion-state.test.mjs": {
+    "sha256": "ebecf06c34d9e3e43fb0bdab4334fa3e2b02e31b0a1897429ab2fe80d3cba4ef",
+    "bytes": 1292
+  },
   "test/conversation-dom.test.mjs": {
-    "sha256": "890d522263694d3c977ae22186b292d219bff7d58a3e545b86986675d2c0b7f3",
-    "bytes": 13042
+    "sha256": "01e49cbd9fb03bf3095e21eaa1894d803f65a8bd228375feafed06907a844b0a",
+    "bytes": 16231
   },
   "test/conversations.test.mjs": {
     "sha256": "19f696e5fde921153d2805d2e02b2ad1728afd4cf491b3cdaaaf18d55690ff9f",
     "bytes": 10923
   },
   "test/core-browser.test.mjs": {
-    "sha256": "77523487b461817bf3ebda4f14566c5ad9db347d40de728efbe307cfe5271c3f",
-    "bytes": 30376
+    "sha256": "e526d7788ffcfd7c77040f97716fb9f850e9fe8014f2a7d08546589af7dd8f65",
+    "bytes": 31805
   },
   "test/core-dom-text.test.mjs": {
     "sha256": "92cd51ff56a86d1d5c5861e534ac45abab89e2439251f5780a497af7d0edd69e",
@@ -383,56 +763,2680 @@
     "sha256": "7a1e5820b8e27abf9a53917de8f14e51d88475ea6219864e4b724ee978746b65",
     "bytes": 3492
   },
+  "test/fixtures/StudioFixture.java": {
+    "sha256": "d92bab48601d794671e9c9526032e645b2fc8a9b895d85b4fe9dfa64e5ccdacb",
+    "bytes": 280
+  },
   "test/fixtures/deepseek-fenced-reply.html": {
     "sha256": "3fe29a9947a59c4061f49c9312a3b908e7c525648eb84d32e250541a0d1723c0",
     "bytes": 6863
   },
+  "test/host-stubs/android/system/Os.java": {
+    "sha256": "7f78d9c20cf42739a9fc810a275b3aaa656f5cd608a0854bb727f01a910f2b03",
+    "bytes": 663
+  },
+  "test/journal-stubs/android/content/Context.java": {
+    "sha256": "e827ccafa513b341a4d7b33920fdcfb6be4a4a7d2d2f772d886f0fadb840fc41",
+    "bytes": 704
+  },
+  "test/journal-stubs/android/database/Cursor.java": {
+    "sha256": "79bf9834a45a15c45d2f46774126a31cb583334542f5c45bbcec2974ab5de29d",
+    "bytes": 792
+  },
+  "test/journal-stubs/android/database/sqlite/SQLiteDatabase.java": {
+    "sha256": "1a666fc488cb9c29b07fee075a9ce8347dd751d721bbcb19522239649e057bdc",
+    "bytes": 2569
+  },
+  "test/journal-stubs/android/os/Build.java": {
+    "sha256": "40811677f38b3fcddd607b11d987bbf465169a2aa15da2330fa91af371b8af68",
+    "bytes": 244
+  },
   "test/mobile-bundle.test.mjs": {
-    "sha256": "8f49658fa53c536ca7974c20be0f687501b4ed5a3914b2add478de7325dc8ac6",
-    "bytes": 9302
+    "sha256": "75ebbecfcd7a44f98a57e03f5c5ae15702bbb216ec6b5ff2315892f4b010c1e3",
+    "bytes": 9412
   },
   "test/mobile-dom.test.mjs": {
     "sha256": "ad84ac5076a9aaa0ddc0e1548d1a33ea4c8937c5d5ae54008e76e723ef1ae5d5",
     "bytes": 2363
   },
   "test/mobile-engine.test.mjs": {
-    "sha256": "f75b6fc87d42f25e2329ca13706a09e847dab99336bf4c0cf9a4ee9b314ab33b",
-    "bytes": 6685
+    "sha256": "c2d28ed7a89a87a83046c6196ab52db584ef30cb78b54524a20ca7808d43d8e6",
+    "bytes": 7800
+  },
+  "test/providers-ui.test.mjs": {
+    "sha256": "356330f70e2aabaa3cfe81370b46563a6fb0e902b11b2949e3d969e2650a8372",
+    "bytes": 4241
+  },
+  "test/providers.test.mjs": {
+    "sha256": "67940211af3f36f079f90d172944e8cfe280e1ae32e55488f6d3217c57f08461",
+    "bytes": 5533
   },
   "test/reasoning-control.test.mjs": {
     "sha256": "18dc6c460aa6549e5242886a6dd466e2b3dcae430f4aa63b309f14b2f5ab4c01",
     "bytes": 9734
   },
+  "test/reply-chain-ui.test.mjs": {
+    "sha256": "df1cb17d14b93ce7011815c55739c7d22ae5a9698aa81e2cb85ee01947a08dbb",
+    "bytes": 1634
+  },
+  "test/reply-fixtures.mjs": {
+    "sha256": "be92e417bb3151640f228db89ebcbcb682b3827a07b579896565cfba2e54a7fd",
+    "bytes": 2153
+  },
+  "test/reply-model.test.mjs": {
+    "sha256": "f188af7481c1d3dbadbf3e9404cbfebaebfcc12b42d8717494c64e338a725e44",
+    "bytes": 3028
+  },
+  "test/reply-ui.test.mjs": {
+    "sha256": "66c959a34d9fb1830e669c8f19bbffdc658f63d32d5f4ad4ebb5a196cfd9dcd8",
+    "bytes": 8141
+  },
+  "test/responsiveness-ui.test.mjs": {
+    "sha256": "902a99769e203b2adde651b28636974864fcba09c6586449dd8c7cc70f6e6604",
+    "bytes": 3840
+  },
   "test/send-control.test.mjs": {
     "sha256": "ab24b670340bb784c4fcddf0a243eff6e8c0aa618d91f52970928e6774cb09c4",
     "bytes": 6985
+  },
+  "test/studio-ui.test.mjs": {
+    "sha256": "10ab634124475f8250634eeb79b3f543a514ca2e6a3ca3017696e33ed006c9d0",
+    "bytes": 11207
   },
   "test/tasks.test.mjs": {
     "sha256": "1d8aba2a17dafe40c52af7dbee46c646e5a558c1700058f2bc5971a3809e9b64",
     "bytes": 15512
   },
   "test/ui-harness.mjs": {
-    "sha256": "3eab9a0a5b7b7d7c5e54e23bc902d54714fc4dc4ef532423f33cc8456783217d",
-    "bytes": 5541
+    "sha256": "a51c1944b02fcf296d0b52959ac1e122c3b490413cba3cee27ecce25c2ad06fb",
+    "bytes": 10167
   },
   "test/ui-startup.test.mjs": {
-    "sha256": "eed0e8aa9685579336e302a2c229df47a96d4ea8e4de37ad062993dd9786348a",
-    "bytes": 2359
+    "sha256": "f8b7bb75a19ee2425f9002e0214eea40963135bdab14ebbff27cb2bded06b87d",
+    "bytes": 2345
   },
   "test/ui.test.mjs": {
-    "sha256": "77bd775f98fef954c0e016fd1255c35d56fcd5bd0da5ec934a1faa249d22dbd8",
-    "bytes": 5594
+    "sha256": "03a21ffdf20398043e97d6cbf38daa144a0addfa645cefce17ef021fdbf65388",
+    "bytes": 5570
   },
   "test/web-search.test.mjs": {
-    "sha256": "7eeca3c06e0021ace8b6fcf7f0d9bee175ed97ee53ed7f2e2fbfdfc63d1417cc",
-    "bytes": 5487
+    "sha256": "09367023a94511bcf66e9b9251c115b812afa24bd01177253275ad6e3344e55f",
+    "bytes": 9865
   },
   "test/workbench-ui.test.mjs": {
-    "sha256": "a4b48fdad457424c34513b1410e3ec40c75ceb3806155eb01a295d924f2655d7",
-    "bytes": 6296
+    "sha256": "5ee71a9f46c024760a3afd4810c5abb9d0e25d940ce41f4e21991a233eb97478",
+    "bytes": 6212
   },
-  "transport-results.log": {
+  "third_party/RUNTIME_NOTICES.md": {
+    "sha256": "50f613e9de2c890d465b1965b30e4664f046e625c4c47e14304222df56c24a8b",
+    "bytes": 2722
+  },
+  "third_party/assistant-ui/ADAPTATION.md": {
+    "sha256": "cdf74a6cba895a0c96d54f873f9ff2e678692eb21c5fc755dd223fb2552f7b42",
+    "bytes": 1471
+  },
+  "third_party/assistant-ui/LICENSE": {
+    "sha256": "71fd4b7b76d27a09af2e8b2bedf14e51f4c229e32b59654d327cc24dc63e60d7",
+    "bytes": 1073
+  },
+  "third_party/assistant-ui/claude.tsx": {
+    "sha256": "5f8eb5a456f14b5323a61adfa698a8435cc57ee516c13eb0459c0aa78e5640a5",
+    "bytes": 14316
+  },
+  "third_party/assistant-ui/clone-thread-shell.tsx": {
+    "sha256": "eb1f9d80562360ef434cad79934951857e7a49ae930d3a999d4e62a77642977f",
+    "bytes": 6849
+  },
+  "third_party/assistant-ui/origin.json": {
+    "sha256": "e3d19e9868d1f3a4da2f0136af9e85f7b4618003a92651ed456361f9200fbc98",
+    "bytes": 640
+  },
+  "third_party/debian-sources/acl_2.3.2-2.dsc": {
+    "sha256": "1f42130ccb5442fe2db2aee1dcc03c51a31512dd2519a38e8fc9270c5abbc807",
+    "bytes": 2604
+  },
+  "third_party/debian-sources/acl_2.3.2.orig.tar.xz.asc": {
+    "sha256": "184c6a903490885a096095db67b433a04542c6569f167cbe8115268c0f227273",
+    "bytes": 833
+  },
+  "third_party/debian-sources/acorn_8.8.1+ds+~cs25.17.7-2.dsc": {
+    "sha256": "f29d1f1ac78e8820fdfe07dbba53ed1bdbedfc2d21d8495dfc147c038571f375",
+    "bytes": 6969
+  },
+  "third_party/debian-sources/antlr3_3.5.3-2.dsc": {
+    "sha256": "60810ca88bbad7718d66e00c38e8d99a919840589a81fcffe85345c5d493c468",
+    "bytes": 2518
+  },
+  "third_party/debian-sources/apt_3.0.3.dsc": {
+    "sha256": "ccf1666e5b268d76bf62aafb22db089a2fdae9c17d1d1c446546b3621768add7",
+    "bytes": 3091
+  },
+  "third_party/debian-sources/atinject-jsr330_1.0+ds1-6.dsc": {
+    "sha256": "3be70905557e8f57be85b31e51d35272423de83db090bad0520f903a6ee9665b",
+    "bytes": 2290
+  },
+  "third_party/debian-sources/attr_2.5.2-3.dsc": {
+    "sha256": "c2ae3e15db059029030ddf4fdac179d8f90d423f2310a6ef8c745ba28ac18b0a",
+    "bytes": 2576
+  },
+  "third_party/debian-sources/attr_2.5.2.orig.tar.xz.asc": {
+    "sha256": "eeac729088d3c6379e91b7596cb3582e46b047c47f0fa3c5c77f9c9e84dc3a4c",
+    "bytes": 833
+  },
+  "third_party/debian-sources/audit_4.0.2-2+deb13u1.dsc": {
+    "sha256": "f72198219d4a50967e328a143c9c0a7ba981c8f3790b2880465b8a80ac33850e",
+    "bytes": 2761
+  },
+  "third_party/debian-sources/base-files_13.8+deb13u7.dsc": {
+    "sha256": "6240b5a02fc32bd6d925bb7776e00c467e80d930f8cf3c4a20c299ce692dc7e4",
+    "bytes": 1247
+  },
+  "third_party/debian-sources/base-passwd_3.6.7.dsc": {
+    "sha256": "23dafe71f85d7595d9e20efba17729c1c975a33bd469cf09bfad9e96b1f542f3",
+    "bytes": 1891
+  },
+  "third_party/debian-sources/bash_5.2.37-2.dsc": {
+    "sha256": "7e5f6d5a26093e812f8841d5cf3245054102e86986017d8edd859417b03707f9",
+    "bytes": 2162
+  },
+  "third_party/debian-sources/binutils_2.44-3.dsc": {
+    "sha256": "5abd1ae1adb61fd8ecbadfdc16668738668e81c745884aefa0ce97791b2a74b8",
+    "bytes": 11429
+  },
+  "third_party/debian-sources/brotli_1.1.0-2.dsc": {
+    "sha256": "39b06802a852629132d549a7f7449dee7f435e801706714a4bc2ea2f15b28f36",
+    "bytes": 2261
+  },
+  "third_party/debian-sources/build-essential_12.12.dsc": {
+    "sha256": "c947434e212c70963a1767c492b2a098fa2389bf6ce1b0be2a8971dead43a255",
+    "bytes": 2259
+  },
+  "third_party/debian-sources/bzip2_1.0.8-6.dsc": {
+    "sha256": "cd3bfd77254a6b5ef1be144bdc90a0dd374bc8206afd98ba4abf828741b79820",
+    "bytes": 1604
+  },
+  "third_party/debian-sources/c-ares_1.34.5-1+deb13u1.dsc": {
+    "sha256": "8848358552603070f98f37679a9361b4da8405b841bbf59d002556571670f7f1",
+    "bytes": 2388
+  },
+  "third_party/debian-sources/c-ares_1.34.5.orig.tar.gz.asc": {
+    "sha256": "146fcf8ac828903521da52b76852843480a9ee0bdd5e145f81e6df0bb27c40bd",
+    "bytes": 228
+  },
+  "third_party/debian-sources/ca-certificates-java_20240118.dsc": {
+    "sha256": "1b69c89b50f705bbe70ea19add2937c331dc02539f0630a87a4db86e734368b9",
+    "bytes": 1939
+  },
+  "third_party/debian-sources/ca-certificates_20250419.dsc": {
+    "sha256": "3fc919369a3b84e34a959faa8bdffb9bd2c5a7d4a948a4b07a09a5d43e257030",
+    "bytes": 1766
+  },
+  "third_party/debian-sources/cdebconf_0.280.dsc": {
+    "sha256": "36cdaa45fca445d2164fbdd81faad9918d748fa703678d8af237354d5744b1d1",
+    "bytes": 2703
+  },
+  "third_party/debian-sources/colors.js_1.4.0-4.dsc": {
+    "sha256": "dfae1db7ab7470e63f146d447b149496602259c51ca551b5a7fcfb074d437ccb",
+    "bytes": 2013
+  },
+  "third_party/debian-sources/coreutils_9.7-3.dsc": {
+    "sha256": "c3a207e3aaad165765c7a6fab89045f5fd20035fea6830b9f9ebbb92ebfbff89",
+    "bytes": 2122
+  },
+  "third_party/debian-sources/coreutils_9.7.orig.tar.xz.asc": {
+    "sha256": "5070e9428bd372a7fa1f66b395b81092bb40c98f9f56a2e2bc55c47fd387e901",
+    "bytes": 833
+  },
+  "third_party/debian-sources/curl_8.14.1-2+deb13u5.dsc": {
+    "sha256": "9a9a2c95cdc8b5d76892c70858f25eaf2dc0b0a475a1e43e0b4ad428414752df",
+    "bytes": 3263
+  },
+  "third_party/debian-sources/curl_8.14.1.orig.tar.gz.asc": {
+    "sha256": "39cc2ec8ddc39d04e3e7101bbed46d858d0875cbb297a6bfa20959fa2bc7d5c7",
+    "bytes": 488
+  },
+  "third_party/debian-sources/cyrus-sasl2_2.1.28+dfsg1-9.dsc": {
+    "sha256": "179cda376ee9f9a54098f902174299dd183ae78c703f72b86bd4c3297db4c153",
+    "bytes": 3306
+  },
+  "third_party/debian-sources/dash_0.5.12-12.dsc": {
+    "sha256": "589efc4d87a4ae4745c273bdb33198d7c4f28a71736a8ece81d3677cf9c6e5ce",
+    "bytes": 1460
+  },
+  "third_party/debian-sources/db5.3_5.3.28+dfsg2-9.dsc": {
+    "sha256": "045f392c75dffc9d4f3bd44978b90ca8d45b935cf0ae4202bf79a760f2ce07b1",
+    "bytes": 2373
+  },
+  "third_party/debian-sources/debconf_1.5.91.dsc": {
+    "sha256": "1aa3ceaef24ef533cfffe7f9ca750c6325dbaea86a7abca77cb4439ceae930d8",
+    "bytes": 2035
+  },
+  "third_party/debian-sources/debian-archive-keyring_2025.1.dsc": {
+    "sha256": "09604bd8d4562a1e942e5d1a19a6b82447cbdeb2e7c7f0df7c32a2503647ea47",
+    "bytes": 1267
+  },
+  "third_party/debian-sources/debianutils_5.23.2.dsc": {
+    "sha256": "471b65deec232bb033f3e3e06d5bf64dac0ced474c6fd61d41538f3f3de876f8",
+    "bytes": 1908
+  },
+  "third_party/debian-sources/diffutils_3.10-4.dsc": {
+    "sha256": "087b414ddfc92161a30186926bc4b4ac02c7cba589b0323561cacd54c8b48392",
+    "bytes": 1875
+  },
+  "third_party/debian-sources/diffutils_3.10.orig.tar.xz.asc": {
+    "sha256": "a94faf8f1baa04ff220f7b2ccb137c16337284e023ebc4a1d5df475c08d810f7",
+    "bytes": 833
+  },
+  "third_party/debian-sources/dpkg_1.22.22.dsc": {
+    "sha256": "fc481d9b87cd4416cd55673cc1fa716b57480a6b23253ac0d87c1abbfad4c964",
+    "bytes": 3449
+  },
+  "third_party/debian-sources/e2fsprogs_1.47.2-3.dsc": {
+    "sha256": "860abb653ecbe01a11bb7e41c9e09a45e83847bffa585f7a3d3c0f9401c9d4bb",
+    "bytes": 3035
+  },
+  "third_party/debian-sources/e2fsprogs_1.47.2.orig.tar.gz.asc": {
+    "sha256": "2063f62a198dd3df21f789c990c2cf9b4a5de24ed55f0b78d86e97e98daffc9d",
+    "bytes": 488
+  },
+  "third_party/debian-sources/error-prone-java_2.18.0-1.dsc": {
+    "sha256": "ef197621b99e2615da81e4c06df37745363f60611426ab3bb10546e63bbf4c91",
+    "bytes": 2114
+  },
+  "third_party/debian-sources/eslint_6.4.0~dfsg+~6.1.9-12.dsc": {
+    "sha256": "b374af0e32272aba6a4af76cfd75bed7e02475c29d90a8120fbbc93b4aa18269",
+    "bytes": 4334
+  },
+  "third_party/debian-sources/expat_2.8.3-1~deb13u1.dsc": {
+    "sha256": "d17f15fe413a553c72185d2d00448b87db72354e0d8fa6099ad19ee19e7117af",
+    "bytes": 1638
+  },
+  "third_party/debian-sources/file_5.46-5.dsc": {
+    "sha256": "b88a9648e785c073e46565a464334e63bb205b9892f43e44c018861b9608c926",
+    "bytes": 2268
+  },
+  "third_party/debian-sources/file_5.46.orig.tar.gz.asc": {
+    "sha256": "01e43559e64e173c9c9f02714fb48cf631ee810def768507f077ff1309c8badc",
+    "bytes": 201
+  },
+  "third_party/debian-sources/findutils_4.10.0-3.dsc": {
+    "sha256": "fa6b67056d9e5b4d8edbfc8ab95ac15ac769b140284426973f6a1ef07a4594ec",
+    "bytes": 2291
+  },
+  "third_party/debian-sources/findutils_4.10.0.orig.tar.xz.asc": {
+    "sha256": "7f53670eea6bd114e014571221eb652855c1129a3ed99f2a9257c2a313cc216f",
+    "bytes": 488
+  },
+  "third_party/debian-sources/gawk_5.2.1-2.dsc": {
+    "sha256": "1f2d11cd9b09419e86cf069571728802a068bb94d1947f3328ed430ab9b7540e",
+    "bytes": 1771
+  },
+  "third_party/debian-sources/gcc-14_14.2.0-19.dsc": {
+    "sha256": "7db1e202cce66617e9134a662c877a3a773de5b612fd52179815877e0ecfb847",
+    "bytes": 47347
+  },
+  "third_party/debian-sources/gcc-defaults_1.220.dsc": {
+    "sha256": "abfa2d362033435385e733f97d0cace1fbc917fd4160c81cc89abac38d3cdc37",
+    "bytes": 36895
+  },
+  "third_party/debian-sources/gdbm_1.24-2.dsc": {
+    "sha256": "28acecf1cf00240942833c04079a02bb4c199a48faa1f4ca90f0ea9b79dc5841",
+    "bytes": 2466
+  },
+  "third_party/debian-sources/gdbm_1.24.orig.tar.gz.asc": {
+    "sha256": "8fb2f87e817ed6bd1d7ef2ab976f6a0046814a5ff28a06c521b796e0d3fd1226",
+    "bytes": 195
+  },
+  "third_party/debian-sources/git_2.47.3-0+deb13u1.dsc": {
+    "sha256": "41ee783af84774dfab31ff6af54a07f70513dd09914e2d622626f4dfecae0a86",
+    "bytes": 2702
+  },
+  "third_party/debian-sources/glibc_2.41-12+deb13u4.dsc": {
+    "sha256": "0915324aa646bb99abfaa9aa6ecb734b30babd28454a3e51f3152912370fbd3e",
+    "bytes": 7576
+  },
+  "third_party/debian-sources/gmp_6.3.0+dfsg-3.dsc": {
+    "sha256": "f7b64af28f52b7346bb8581e01d3c19daf769639345f234f8ae1e29c42171443",
+    "bytes": 2251
+  },
+  "third_party/debian-sources/gnutls28_3.8.9-3+deb13u4.dsc": {
+    "sha256": "f1153e91212bdf60acf66cb62713ad4ed577f2e85f578a04df31a5619624c1e1",
+    "bytes": 3271
+  },
+  "third_party/debian-sources/gnutls28_3.8.9.orig.tar.xz.asc": {
+    "sha256": "7631d47762865d4ef494492cca794cf0fe6a8be892a4aa02f362ae29006d3054",
+    "bytes": 833
+  },
+  "third_party/debian-sources/grep_3.11-4.dsc": {
+    "sha256": "dd6f8eb933bc05446e483f7792c8bf0a1aba9d498e65c6ccafe64e9bf27ac054",
+    "bytes": 1642
+  },
+  "third_party/debian-sources/grep_3.11.orig.tar.xz.asc": {
+    "sha256": "89ec23ffd59b68822732dc8204fc89883c3af30a90ae390feb94346d9d09a589",
+    "bytes": 833
+  },
+  "third_party/debian-sources/guava-libraries_32.0.1-1.dsc": {
+    "sha256": "8e5048b5406ffdf17fe32860b2bea7bd5fe28c99285cd2ff11c2fa326987c0ac",
+    "bytes": 2349
+  },
+  "third_party/debian-sources/gyp_0.16.2-2.dsc": {
+    "sha256": "f43ca5da38cdf7adee97e696daff91dfc47a0b7999b13a9c61fa2179ae38e642",
+    "bytes": 2201
+  },
+  "third_party/debian-sources/gzip_1.13-1+deb13u1.dsc": {
+    "sha256": "0c25763da4f7242fbe7e9185b69bcb3f986011b04446b66a84c52bbdf731d308",
+    "bytes": 1708
+  },
+  "third_party/debian-sources/hostname_3.25.dsc": {
+    "sha256": "80aadf116c3423044be69a4cef8ba2766f412bd4d46a500aacb61f303c19c4ef",
+    "bytes": 1519
+  },
+  "third_party/debian-sources/icu_76.1-4.dsc": {
+    "sha256": "2587ef23962b42a074ceab2f0407058f8e3fca0e6edd5d7c0bc1df6c683724a6",
+    "bytes": 2236
+  },
+  "third_party/debian-sources/icu_76.1.orig.tar.gz.asc": {
+    "sha256": "6ef6ef96376eb6550f2b450e08b84c29238f60a77b89273f1521e1b57db73472",
+    "bytes": 228
+  },
+  "third_party/debian-sources/init-system-helpers_1.69~deb13u1.dsc": {
+    "sha256": "873082d72727267b6207e38df47e3002aeb0ed554f876db17c7bbfeb26174ee6",
+    "bytes": 2266
+  },
+  "third_party/debian-sources/isl_0.27-1.dsc": {
+    "sha256": "35ceb67dbb1b4098431b184e342143c2bd94c4a41ebfb3a983e3be31440b0453",
+    "bytes": 1829
+  },
+  "third_party/debian-sources/jansson_2.14-2.dsc": {
+    "sha256": "6296ddd9c0a022bd1b70074aefb171cfcdf5694a04ffd32b35fd66097621af87",
+    "bytes": 1980
+  },
+  "third_party/debian-sources/java-common_0.76.dsc": {
+    "sha256": "f5760144187b30940c9090934d4f0616e9e80a0cf1fa1ebdd3636d984c194a25",
+    "bytes": 1990
+  },
+  "third_party/debian-sources/java-wrappers_0.5.dsc": {
+    "sha256": "71e77e09b509dfdd43701c23a14614e6c4632299bfc8bd177af0029c0b46020d",
+    "bytes": 1653
+  },
+  "third_party/debian-sources/jcommander_1.71-4.dsc": {
+    "sha256": "8ab5fd5d78338aef8a7c3fed54427f721f49ed7f2bb5529bf84e0564347a4029",
+    "bytes": 1439
+  },
+  "third_party/debian-sources/keyutils_1.6.3-6.dsc": {
+    "sha256": "e63869474c390d5d5bdee8492f7b2f4d6034ff10d8190da18593620c0f35fbf8",
+    "bytes": 2100
+  },
+  "third_party/debian-sources/krb5_1.21.3-5+deb13u1.dsc": {
+    "sha256": "d17d2840bc97fea2c2375245569ca67838a2b557ee083c6cbe42b129a317212c",
+    "bytes": 4189
+  },
+  "third_party/debian-sources/krb5_1.21.3.orig.tar.gz.asc": {
+    "sha256": "85047c935fe949ef2e275885451b168557b923dd13a5aab0ef8fe6acd27b94d7",
+    "bytes": 833
+  },
+  "third_party/debian-sources/lcms2_2.16-2+deb13u2.dsc": {
+    "sha256": "8ff22453843eed5ef7bfb76b4cb2cfe490613337cb197141db658e5195ead9fc",
+    "bytes": 2004
+  },
+  "third_party/debian-sources/less_668-1.dsc": {
+    "sha256": "84c63a051999d30deab36131d98345d4277105dadfd5d7c63ffea6a631f498f1",
+    "bytes": 1889
+  },
+  "third_party/debian-sources/less_668.orig.tar.gz.asc": {
+    "sha256": "5b24942fb8e4352fc22ddff6ccaa61eb978d590fb3eecd26591f5cca8965ab03",
+    "bytes": 195
+  },
+  "third_party/debian-sources/libbsd_0.12.2-2.dsc": {
+    "sha256": "01eb1d0c896096f9038213f5f00376ecfd1c0d1def21b7042f28ae070e4837e3",
+    "bytes": 2446
+  },
+  "third_party/debian-sources/libbsd_0.12.2.orig.tar.xz.asc": {
+    "sha256": "620dc92f158ebe0a650c0e92214a8121b927276895dc9a1dcaa38f627fa0fcb0",
+    "bytes": 833
+  },
+  "third_party/debian-sources/libcap-ng_0.8.5-4.dsc": {
+    "sha256": "a5745b7d68a11068ae5beddcc7fbc94cd87dd81cb2d7495e7d48610603be3526",
+    "bytes": 1710
+  },
+  "third_party/debian-sources/libcap2_2.75-10+deb13u1.dsc": {
+    "sha256": "cb6af220de216655ec55bb1f5abf3fa8f03e82c9956f120b313056e895c02ea6",
+    "bytes": 2714
+  },
+  "third_party/debian-sources/libcap2_2.75.orig.tar.xz.asc": {
+    "sha256": "c71b593e7c3160fd7f406641074d93462bbc4906c9243937a0e232f42d5c54d2",
+    "bytes": 833
+  },
+  "third_party/debian-sources/liberror-perl_0.17030-1.dsc": {
+    "sha256": "44590c5e4057ee2b2090b7ca661cdbead886528a2b5b5fa7ae708f8b9c1814bf",
+    "bytes": 2337
+  },
+  "third_party/debian-sources/libffi_3.4.8-2.dsc": {
+    "sha256": "4424defe3f37c0084f062e03330b2ba3d3f927367c33be455cfacf7f85a78161",
+    "bytes": 1948
+  },
+  "third_party/debian-sources/libidn2_2.3.8-2.dsc": {
+    "sha256": "af3327227dbbf12fff281f71b7feb90371d2dbe597f3129e38b93c3faadcea61",
+    "bytes": 2961
+  },
+  "third_party/debian-sources/libidn2_2.3.8.orig.tar.gz.asc": {
+    "sha256": "8995cab7db361d9d6989eab26d9b521c74236960a5d78250121c8d369b013bd8",
+    "bytes": 1223
+  },
+  "third_party/debian-sources/libjpeg-turbo_2.1.5-4.dsc": {
+    "sha256": "26cbf22aa3b3e327df072513f14a5ddfb4a7b9a3d78c46a5dccfd711c13ac743",
+    "bytes": 2508
+  },
+  "third_party/debian-sources/libjsr305-java_0.1~+svn49-12.dsc": {
+    "sha256": "93742cb299ff1b6dbad5c824fd70aacadd79bd37d9f59cb2248871ef4fcd2033",
+    "bytes": 2175
+  },
+  "third_party/debian-sources/libmd_1.1.0-2.dsc": {
+    "sha256": "46cc951cd6d71bbfeff4522de66f968fb92601ec4cc622b07f6ac0a2a36ac5f0",
+    "bytes": 2280
+  },
+  "third_party/debian-sources/libmd_1.1.0.orig.tar.xz.asc": {
+    "sha256": "402fd3024e43ab975733d09e661804a58ca58697194e4b15216b1217cfe1dadb",
+    "bytes": 833
+  },
+  "third_party/debian-sources/libpsl_0.21.2-1.1.dsc": {
+    "sha256": "b9b5496ca2bffb827cb0b2d997469908a2b7a7475c20a11c02f9dcd1ed2a0cc9",
+    "bytes": 2285
+  },
+  "third_party/debian-sources/libseccomp_2.6.0-2.dsc": {
+    "sha256": "d05f94536558d34fa339326c6f958a3357b51efac8234470b5d97b69472db765",
+    "bytes": 2622
+  },
+  "third_party/debian-sources/libseccomp_2.6.0.orig.tar.gz.asc": {
+    "sha256": "52e338fa958128293cbd25d2be189e34da41c4f4abbb1b641cf58f373c001f94",
+    "bytes": 833
+  },
+  "third_party/debian-sources/libselinux_3.8.1-1.dsc": {
+    "sha256": "e430b782a396e266f86c32fa779efadebfd40e6a0d10ddbd786fc47905f723b9",
+    "bytes": 3013
+  },
+  "third_party/debian-sources/libselinux_3.8.1.orig.tar.gz.asc": {
+    "sha256": "7f983714a780d89f7677e7ba140ce29974022b8ba225f60246b6c33de1477dd6",
+    "bytes": 833
+  },
+  "third_party/debian-sources/libsemanage_3.8.1-1.dsc": {
+    "sha256": "b22bfc4ab2cd47fac46cc9e45d418bb30eb540c3e5c1052d6c669f53e180e4e5",
+    "bytes": 2992
+  },
+  "third_party/debian-sources/libsemanage_3.8.1.orig.tar.gz.asc": {
+    "sha256": "5b4856cb5823fba1b247ff1b5355692706da68a4df61a936d1b33b1f9e9b2f3d",
+    "bytes": 833
+  },
+  "third_party/debian-sources/libsepol_3.8.1-1.dsc": {
+    "sha256": "0351ffc8c3f66918c9e4ecae9244ae2af27857d8795e424e384ddda794718c34",
+    "bytes": 2347
+  },
+  "third_party/debian-sources/libsepol_3.8.1.orig.tar.gz.asc": {
+    "sha256": "183f6cf96054986704d4224f89518e9139370385c43a533078f45ca688dca8b6",
+    "bytes": 833
+  },
+  "third_party/debian-sources/libsigsegv_2.14-1.dsc": {
+    "sha256": "b1a374e54891e47d04c4a6c29784a7dcee632213bb918afad8b1e9ca5cf40a7e",
+    "bytes": 2338
+  },
+  "third_party/debian-sources/libsigsegv_2.14.orig.tar.gz.asc": {
+    "sha256": "d5046f2f3ccec42e6cd10252d5fd15c7bb1fb6422167f75509e6d6d895516fe8",
+    "bytes": 833
+  },
+  "third_party/debian-sources/libsmali-java_2.5.2.git2771eae-4.dsc": {
+    "sha256": "c546e46cb28c72f71eadf398825095444b39c34fb5d56ef80686d06cc33f3b6d",
+    "bytes": 2125
+  },
+  "third_party/debian-sources/libssh2_1.11.1-1+deb13u2.dsc": {
+    "sha256": "f584c22bccd948a432cc56f64adb896af2cb26d9b38bcaac13cdc7907e766599",
+    "bytes": 2351
+  },
+  "third_party/debian-sources/libssh2_1.11.1.orig.tar.gz.asc": {
+    "sha256": "f5618c9356a1d5a8059d6cf64015d86547f06b2b8b1f542fbbaf381a736c8075",
+    "bytes": 488
+  },
+  "third_party/debian-sources/libtasn1-6_4.20.0-2+deb13u1.dsc": {
+    "sha256": "3f8b0e7ddd5325278b1164f260e45e785e5907309d76b703c8716d068f9cd7e9",
+    "bytes": 2697
+  },
+  "third_party/debian-sources/libtasn1-6_4.20.0.orig.tar.gz.asc": {
+    "sha256": "0faa628b6a3e4bb84ca5f00f127c6dfa1fc96a7ad88030dd7aa048753cf4b201",
+    "bytes": 1223
+  },
+  "third_party/debian-sources/libunistring_1.3-2.dsc": {
+    "sha256": "0c09938cace7fbbf36c73af8bc2243fd2f70d3fe336539e8d4c10d0e61742571",
+    "bytes": 2215
+  },
+  "third_party/debian-sources/libunistring_1.3.orig.tar.xz.asc": {
+    "sha256": "62201b5b7ce9c0b033c50cefa5d7769dff4b7cee8205572e0cf917653cae9e33",
+    "bytes": 833
+  },
+  "third_party/debian-sources/libuv1_1.50.0-2.dsc": {
+    "sha256": "5691ae93bdd0c9b147e76290bc8816c805f565b6a52ad23691a31b6092056abc",
+    "bytes": 2112
+  },
+  "third_party/debian-sources/libxcrypt_4.4.38-1.dsc": {
+    "sha256": "feba1874a84616791c1c17f9a290c9e97562b2904b3b0200edc82a2db54f3f07",
+    "bytes": 1573
+  },
+  "third_party/debian-sources/libzip_1.11.3-2.dsc": {
+    "sha256": "9fed7b566de802b305fde039d7bc9a57941ec7b176a047ba8b1e51abbb994577",
+    "bytes": 2247
+  },
+  "third_party/debian-sources/libzstd_1.5.7+dfsg-1.dsc": {
+    "sha256": "8f6ab97fa772d921334e50fa5756a0951e23c718dc913e43a228f28c1a23adf9",
+    "bytes": 2371
+  },
+  "third_party/debian-sources/linux_6.12.107-1.dsc": {
+    "sha256": "00f5874a383295a3237321cf59a0f172495084f16cb3dac24ee5aae6649d809a",
+    "bytes": 290418
+  },
+  "third_party/debian-sources/lz4_1.10.0-4.dsc": {
+    "sha256": "394c635aa75a21cd5896680e48821c05336645072ae866b2717d53f36b9ba851",
+    "bytes": 1941
+  },
+  "third_party/debian-sources/make-dfsg_4.4.1-2.dsc": {
+    "sha256": "c3116d3a50914a68c7c1c32ca825b5fdea1c609b8c7cdd4119b79addf7e931ce",
+    "bytes": 1976
+  },
+  "third_party/debian-sources/manifest.json": {
+    "sha256": "82254b9d123a14f1882e992f42f010fa702b6eedb25034cad3a6e28a61023cd8",
+    "bytes": 695628
+  },
+  "third_party/debian-sources/mawk_1.3.4.20250131-1.dsc": {
+    "sha256": "147dd01670e2ebf61f3c78470e0025b87d14e69c7ba9cfafd54da32a355dea84",
+    "bytes": 2969
+  },
+  "third_party/debian-sources/mawk_1.3.4.20250131.orig.tar.gz.asc": {
+    "sha256": "bc83f127727edb42a91d516770c8d0d3cdb5f6e541aa3cb5213b79dae494db95",
+    "bytes": 729
+  },
+  "third_party/debian-sources/media-types_13.0.0.dsc": {
+    "sha256": "a664c287e8d358da16bae998374c546cf0eaf3e0416f7059a56818eefe018546",
+    "bytes": 1647
+  },
+  "third_party/debian-sources/mpclib3_1.3.1-1.dsc": {
+    "sha256": "b2252a499fd0f8e92ce2cf7d8e68477ffc9dd06127803a91f0a1115822efec75",
+    "bytes": 1877
+  },
+  "third_party/debian-sources/mpfr4_4.2.2-1.dsc": {
+    "sha256": "08ee7b45f8a9980570508770a9d48f70d4c1962fd7c98af4a78cbc3747002ecd",
+    "bytes": 1960
+  },
+  "third_party/debian-sources/nano_8.4-1+deb13u1.dsc": {
+    "sha256": "1d78da46bdda24af2a4d5ac2617f003a631ae685efbaca828a59c00ebcf1febf",
+    "bytes": 2191
+  },
+  "third_party/debian-sources/nano_8.4.orig.tar.xz.asc": {
+    "sha256": "b2726ed18311fdb65da1e2ead64f7ee680992f38de7e4a2b91a56c8cf34510bd",
+    "bytes": 833
+  },
+  "third_party/debian-sources/ncurses_6.5+20250216-2.dsc": {
+    "sha256": "00539cc2bc6bb84be1b8a8a5decf606682e14b6f39b76b9aa090e65d2c2d4580",
+    "bytes": 3890
+  },
+  "third_party/debian-sources/ncurses_6.5+20250216.orig.tar.gz.asc": {
+    "sha256": "64f4d17923322176c44079f18f170e2164a59d551d7e4e9c1a6e4eebedc5dd6f",
+    "bytes": 729
+  },
+  "third_party/debian-sources/netbase_6.5.dsc": {
+    "sha256": "e8691899f57c06fcc383b0f2214b662137df539227d9d7811dc8223f32ebe4c7",
+    "bytes": 899
+  },
+  "third_party/debian-sources/nettle_3.10.1-1.dsc": {
+    "sha256": "7b440850ce04b341363f3f5e23dfb9f96ebf7d52e0ef7ba2d07120c90ca61b3c",
+    "bytes": 2053
+  },
+  "third_party/debian-sources/nghttp2_1.64.0-1.1+deb13u1.dsc": {
+    "sha256": "11f4603a9f417bc3d195be36cb462bb9df0657f52b72dd9276453a31bc0227c7",
+    "bytes": 2201
+  },
+  "third_party/debian-sources/nghttp3_1.8.0-1.dsc": {
+    "sha256": "ffc623e78be62361a82f0a2e7b9a19ff0bcdfc371b8bcc1842039499a12adba2",
+    "bytes": 1603
+  },
+  "third_party/debian-sources/nghttp3_1.8.0.orig.tar.xz.asc": {
+    "sha256": "c2549dd50a5ad392610d108244357c1cc750fd5bf4a5ef91de1d94d11c49b0cf",
+    "bytes": 833
+  },
+  "third_party/debian-sources/ngtcp2_1.11.0-1+deb13u1.dsc": {
+    "sha256": "f14f724e9031e0565be0d75b8bb3b693887f5111e1901ed32401eb860e3ac004",
+    "bytes": 2609
+  },
+  "third_party/debian-sources/ngtcp2_1.11.0.orig.tar.xz.asc": {
+    "sha256": "56193493ac1e2a05dbf48d7b4480a2590d7fbdb2439475fd7c5087bc31cb988d",
+    "bytes": 833
+  },
+  "third_party/debian-sources/node-abbrev_1.1.1+~1.1.2-1.dsc": {
+    "sha256": "021ae60666ceee02db473beb197d699b3e041086232e95c293e458a6fc1c1097",
+    "bytes": 2375
+  },
+  "third_party/debian-sources/node-ajv-keywords_5.1.0-4.dsc": {
+    "sha256": "44a491ff913812a09dd136975b4f302468bc9327f798f71c0bb17fbe7fd9bb90",
+    "bytes": 3620
+  },
+  "third_party/debian-sources/node-ajv_8.12.0~ds+~2.1.1-5.dsc": {
+    "sha256": "76ad6eafe4478870391adb00211b05f837b30481e1826539757c43fbdc9d0190",
+    "bytes": 2655
+  },
+  "third_party/debian-sources/node-ampproject-remapping_2.2.0+~cs5.15.37-1.dsc": {
+    "sha256": "d052cdbee82077191f3fcc543127fe8bb4ee39bde9c1dd74744ecb1ed1fcdbd7",
+    "bytes": 4724
+  },
+  "third_party/debian-sources/node-ansi-escapes_5.0.0+really.4.3.1-1.dsc": {
+    "sha256": "6d0af00eb1f80e22561f409a165bc09fa26f85ccb1668d0378aa1a86eccea910",
+    "bytes": 2201
+  },
+  "third_party/debian-sources/node-ansi-regex_5.0.1-1.dsc": {
+    "sha256": "8edcc37047895662f5ceb0bbf465006f6b1a6d756de9480761e1e4cc81a02cc9",
+    "bytes": 2077
+  },
+  "third_party/debian-sources/node-ansi-styles_6.2.1-3.dsc": {
+    "sha256": "f8a62d04239c128165575659ec340d53feb168e77f70c5c8229166b875cd7d07",
+    "bytes": 2210
+  },
+  "third_party/debian-sources/node-anymatch_3.1.3+~cs4.6.1-2.dsc": {
+    "sha256": "ab83207e5bffb56dc05cd659101cf930f2ed934f8979bdd4fd84b2916fd03401",
+    "bytes": 2878
+  },
+  "third_party/debian-sources/node-aproba_2.0.0-3.dsc": {
+    "sha256": "e8a75ec88211ed8ef9a1edd046a163df8c400f060d8982287e23cd751f0e804c",
+    "bytes": 2022
+  },
+  "third_party/debian-sources/node-archy_1.0.0-6.dsc": {
+    "sha256": "5fbbfc19f1c89694b1c81e228a8dac322751d473628480207306823bd602d895",
+    "bytes": 2014
+  },
+  "third_party/debian-sources/node-are-we-there-yet_3.0.1+~1.1.0-1.dsc": {
+    "sha256": "74eeb99f5eae3584897faab28c622a9294059221a89162d35256b52a438a1b99",
+    "bytes": 2617
+  },
+  "third_party/debian-sources/node-argparse_2.0.1-2.dsc": {
+    "sha256": "0931b99818df4c1303b9fe23b1ef5f40e2ee13f0293ba850d29f0dbb6fc62cf8",
+    "bytes": 2079
+  },
+  "third_party/debian-sources/node-arrify_2.0.1-3.dsc": {
+    "sha256": "b1df06d60cc6e554c6c324d94e7c697cb626f166dd8a3aa5f2b1a8004ad05ed5",
+    "bytes": 2053
+  },
+  "third_party/debian-sources/node-assert_2.0.0+~cs3.9.8-2.dsc": {
+    "sha256": "38e781f236283517bd67586ec1e2e50912b2808f649d37c099fee9277f030992",
+    "bytes": 3138
+  },
+  "third_party/debian-sources/node-async-each_1.0.3-3.dsc": {
+    "sha256": "b5a3b4974b473a1156765dc8750ece439756d838d24960f424c1222cb23ec740",
+    "bytes": 2057
+  },
+  "third_party/debian-sources/node-async_3.2.6+dfsg-2.dsc": {
+    "sha256": "af1f24cc90f1701c2c00106fb46198fa10ce3eb6f93d30afc2c731ac23ca34b1",
+    "bytes": 2440
+  },
+  "third_party/debian-sources/node-babel-plugin-add-module-exports_1.0.4+dfsg1~cs5.8.0-4.dsc": {
+    "sha256": "011d51806289562ad85ca427bdee663a9794d11eeb173daa269aed70554ec855",
+    "bytes": 3793
+  },
+  "third_party/debian-sources/node-babel-plugin-lodash_3.3.4+~cs2.0.1-7.dsc": {
+    "sha256": "c75dd7dc157bfda4740027883e319d5bea9b7b24f6a13f5a922d099d424b11f9",
+    "bytes": 2824
+  },
+  "third_party/debian-sources/node-babel-polyfills_0~20220913+ds1-1.dsc": {
+    "sha256": "614eae5b6c468be93c00f27289d233821c4a66b9f291b117d5edbc89b085c3c7",
+    "bytes": 2867
+  },
+  "third_party/debian-sources/node-babel7_7.20.15+ds1+~cs214.269.168-8.dsc": {
+    "sha256": "4c94834b4a7e3de077c5e6d89d3a151ed7ff638ad6fe0c51ae7238a959637320",
+    "bytes": 19587
+  },
+  "third_party/debian-sources/node-balanced-match_2.0.0-1.dsc": {
+    "sha256": "ed8f350830126c20c2d45b68cf4c1b391b4d78f37a155c925e4a57726c5870da",
+    "bytes": 2128
+  },
+  "third_party/debian-sources/node-base64-js_1.5.1+dfsg+~1.3.0-2.dsc": {
+    "sha256": "fbc36ec483091cf28c79ab72f958a8bd87a7fdb9a48b31324e7b768de89e7002",
+    "bytes": 2515
+  },
+  "third_party/debian-sources/node-binary-extensions_2.2.0-2.dsc": {
+    "sha256": "07aed1354ecc7efe9f1e068ad59122718a9d1733482628f6fd2915830d4e2537",
+    "bytes": 2156
+  },
+  "third_party/debian-sources/node-brace-expansion_2.0.1+~1.1.0-2.dsc": {
+    "sha256": "28cfc7eb03f58eff8bd197945f3cc06fd379fc9e2642a74a50b7d7ee3d77d9b2",
+    "bytes": 2578
+  },
+  "third_party/debian-sources/node-braces_3.0.3+~3.0.5-1.dsc": {
+    "sha256": "7cfd41dfd08bc1f2e6d3768bb0f289cad9eb21ccd0ae55980ce15129686cc332",
+    "bytes": 2415
+  },
+  "third_party/debian-sources/node-browserslist_4.25.0+~cs6.3.22-1.dsc": {
+    "sha256": "b1c5daa6186dcdbeebe285bda95cb4c8aaae6aaddd4b527411157bc520194681",
+    "bytes": 3387
+  },
+  "third_party/debian-sources/node-builtins_5.0.1-1.dsc": {
+    "sha256": "f2c5512336f16f5157fbdf25b753b0027e413da3a5e003e6d0997c196e23a43a",
+    "bytes": 2077
+  },
+  "third_party/debian-sources/node-cacache_17.0.3+~cs10.3.7-2.dsc": {
+    "sha256": "7fc8d1e55ce8cfe0422729c2e2c8d2896f001a3d4f5cc271cdac8bc1f2c50764",
+    "bytes": 4337
+  },
+  "third_party/debian-sources/node-camelcase_7.0.0-3.dsc": {
+    "sha256": "3ba724deca30658731498675d3a58152bc2a2efde351d5d4b9d6a1d70a014deb",
+    "bytes": 2142
+  },
+  "third_party/debian-sources/node-caniuse-lite_1.0.30001723+dfsg+~1.0.5-1.dsc": {
+    "sha256": "9778178fc74a4a17425a348b4634e8276dfcf65307ec718312076fad7155544c",
+    "bytes": 2754
+  },
+  "third_party/debian-sources/node-chalk_5.3.0-1.dsc": {
+    "sha256": "adf9abcf59d410cc8a91f625fbc198353f0024b83bc429cf25c68e10b62b467b",
+    "bytes": 2309
+  },
+  "third_party/debian-sources/node-chokidar_3.6.0-3.dsc": {
+    "sha256": "9ed0784bbfe3bc4068d405ee11a1c7a6a00eeda12e7336d62d581917f958a6ca",
+    "bytes": 2804
+  },
+  "third_party/debian-sources/node-chownr_2.0.0-3.dsc": {
+    "sha256": "d05750d797e8500396356a019f6628e7683f48c6c3b72e08c2a8dc59e77aa7a1",
+    "bytes": 2084
+  },
+  "third_party/debian-sources/node-chrome-trace-event_1.0.3-2.dsc": {
+    "sha256": "81f9fd98a7c9bae7297293b5902c6e0c02650dc57ce4b33691d8f05fd732d762",
+    "bytes": 2195
+  },
+  "third_party/debian-sources/node-ci-info_4.0.0+~cs1.1.0-1.dsc": {
+    "sha256": "d7b84c4a76e88f1ec8b9a5d6b3fbb6453196aafbc7030501cd4c3ed52e963d4a",
+    "bytes": 2880
+  },
+  "third_party/debian-sources/node-cjs-module-lexer_1.2.3+dfsg-1.dsc": {
+    "sha256": "04886f8148a7c6b212078dac9501bb033489c125cd6d3c30b8fa5a95af9faadb",
+    "bytes": 2337
+  },
+  "third_party/debian-sources/node-cli-table_0.3.11+~cs0.13.4-3.dsc": {
+    "sha256": "dbd1c59c441fb9a83f5204aac6dc2b6a3a5d599c2e6d74ba4469a923104eb5c7",
+    "bytes": 3649
+  },
+  "third_party/debian-sources/node-cliui_7.0.4+repack+1+~cs1.4.2-2.dsc": {
+    "sha256": "c2b495c5405cdd97394932275549552fb1e6a1169c16c9d39004c417be0d8616",
+    "bytes": 2634
+  },
+  "third_party/debian-sources/node-clone-deep_4.0.1+~cs7.0.2-1.dsc": {
+    "sha256": "678abe3aa890f1e370f149c040a21b6798b6c54a7a4ebf88c3729a91b529230e",
+    "bytes": 2925
+  },
+  "third_party/debian-sources/node-clone_2.1.2+~2.1.2-1.dsc": {
+    "sha256": "77b1eba83fa9abd94cb945678e7f2e2523ffbc88f34b2d5cba197c2f09f04a8a",
+    "bytes": 2361
+  },
+  "third_party/debian-sources/node-color-convert_2.0.1+~cs2.0.0-2.dsc": {
+    "sha256": "149e9dddb62e384f9b8e7ec79e464830954b470763fa3b3d709ac6894e70543d",
+    "bytes": 2525
+  },
+  "third_party/debian-sources/node-color-name_1.1.4+~1.1.1-2.dsc": {
+    "sha256": "0479a3abbf02ce16644100915d228c741cb1898be2b83d0a2d587aa1a9be2bb6",
+    "bytes": 2447
+  },
+  "third_party/debian-sources/node-columnify_1.6.0+~1.5.1-1.dsc": {
+    "sha256": "e4d2467057e9405cab644053189f92d6fb7a1bd3814db1e61682c3c9858a3ebc",
+    "bytes": 2510
+  },
+  "third_party/debian-sources/node-commander_9.4.1-1.dsc": {
+    "sha256": "4f9768766748362fda3ca5d3aeafe0dfc5381a32c4a4340ed1c1fc23221cae99",
+    "bytes": 2080
+  },
+  "third_party/debian-sources/node-commondir_1.0.1+~1.0.0-1.dsc": {
+    "sha256": "b50f98506b9fd3c7473d54212d67c29003074deac91eb02867277f6507161b24",
+    "bytes": 2437
+  },
+  "third_party/debian-sources/node-concat-stream_2.0.0+~2.0.0-2.dsc": {
+    "sha256": "f7ec4490bc0b6e8cb9fe5ce640116889d4745c292330de0769bd1d2740540b89",
+    "bytes": 2587
+  },
+  "third_party/debian-sources/node-console-control-strings_1.1.0-3.dsc": {
+    "sha256": "0ccd198c989ec0bd08717d2fe0dc83f2bdce7ff0e1cd516ddfefb46315a25364",
+    "bytes": 2213
+  },
+  "third_party/debian-sources/node-convert-source-map_1.9.0+~1.5.2-1.dsc": {
+    "sha256": "e9cef5605c9e466b3f0a9f001661e86bc7181602af8fb613f80df4932033cb7d",
+    "bytes": 2665
+  },
+  "third_party/debian-sources/node-copy-concurrently_1.0.5-9.dsc": {
+    "sha256": "2fb977c892e8129a06a45fc2cf324fb49610282b802f62ade9e1e3755a24a822",
+    "bytes": 2362
+  },
+  "third_party/debian-sources/node-core-js_3.33.2-1.dsc": {
+    "sha256": "1ac1fe0d58ca42a12bf51f0ef08cc90ead98ef1ecd399ad3e3cc81698229daed",
+    "bytes": 2450
+  },
+  "third_party/debian-sources/node-core-util-is_1.0.3-1.dsc": {
+    "sha256": "2708191c69b403231c3b3c4ab5bb93956a364eea226404472997ddb0bbe5d470",
+    "bytes": 2116
+  },
+  "third_party/debian-sources/node-corepack_0.24.0-5.dsc": {
+    "sha256": "19f1750fbb4410db966c4c6f160249f05dd5857f744e1986dd6c1aba4ff8b269",
+    "bytes": 2463
+  },
+  "third_party/debian-sources/node-css-loader_6.8.1+~cs14.0.17-1.dsc": {
+    "sha256": "bebdeb9304fc135174b1e124ca8ff054ab689db142970803a4098f7317bc6b68",
+    "bytes": 3895
+  },
+  "third_party/debian-sources/node-css-selector-tokenizer_0.8.0+~cs4.8.3-1.dsc": {
+    "sha256": "7cd1c5c80dd321a3e74278eeaf911665bed52954aaf1b67df515946e817508da",
+    "bytes": 3380
+  },
+  "third_party/debian-sources/node-debbundle-es-to-primitive_1.2.1+~cs9.7.25-2.dsc": {
+    "sha256": "b7a0075ac2c1ff5aa216fcd444af10a6da5a921fb604ad1126b5c5e6b6a5d7ba",
+    "bytes": 5537
+  },
+  "third_party/debian-sources/node-debug_4.3.4+~cs4.1.7-1.dsc": {
+    "sha256": "6c6bb67f22710525d8fcfebab31d4d07b158ae68caba84870d0512bf88c14bc1",
+    "bytes": 2519
+  },
+  "third_party/debian-sources/node-decamelize_4.0.0-2.dsc": {
+    "sha256": "2c381d52f4a13f3ef48cdc8342ec92fb2269b49108451c9a68406a27c54a6e3c",
+    "bytes": 2077
+  },
+  "third_party/debian-sources/node-decompress-response_6.0.0-3.dsc": {
+    "sha256": "564e51a8f382f28828f5585694791eb82ba91eaf55bd630d63e5e83fbb87463d",
+    "bytes": 2268
+  },
+  "third_party/debian-sources/node-deep-equal_2.2.3+~cs43.15.94-1.dsc": {
+    "sha256": "6e212cf74845227c92501131e9d81d5d1157d97a70b9083868093f96abcdd69d",
+    "bytes": 13370
+  },
+  "third_party/debian-sources/node-deep-is_0.1.4-1.dsc": {
+    "sha256": "a3c898c9cc9b1d3a220b9bade59103d6cb233e0e86792ce2bf07dd007295e3d7",
+    "bytes": 2059
+  },
+  "third_party/debian-sources/node-defaults_1.0.4+~1.0.3-1.dsc": {
+    "sha256": "0b272b42d6ff33a5224ee52e8da22c96864a4976f9375a4497819966fbf0573b",
+    "bytes": 2428
+  },
+  "third_party/debian-sources/node-define-properties_1.2.1+~cs2.2.3-1.dsc": {
+    "sha256": "70f92929d2355d2d5527aa80c1026c09608a0d4ba5b07af964ca629c7c4f4d51",
+    "bytes": 3068
+  },
+  "third_party/debian-sources/node-define-property_2.0.2+really+2.0.2-3.dsc": {
+    "sha256": "24ce853b8dd9925c0cc0a70164d8cc27bfaeb92273f70eb136a3b3a13f575095",
+    "bytes": 2278
+  },
+  "third_party/debian-sources/node-defined_1.0.1+~1.0.0-1.dsc": {
+    "sha256": "a22ab6c73710c652baa752f75dc167bbee2ebd55e6fb20378c6fef9517a43f9d",
+    "bytes": 2395
+  },
+  "third_party/debian-sources/node-del_7.1.0-1.dsc": {
+    "sha256": "ed94151eeeff67063e449dc30100c24ed612affc1ba6d255baee957a7aba681c",
+    "bytes": 2307
+  },
+  "third_party/debian-sources/node-delegates_1.0.0-3.dsc": {
+    "sha256": "e8f5176382754006aee27d90007a269a8fbc2b03583e57edca98ddb2d9eb6e34",
+    "bytes": 2086
+  },
+  "third_party/debian-sources/node-depd_2.0.0-2.dsc": {
+    "sha256": "4dd18621e10f14c525623806d28da6a5e31741a49ce71bebe612a9c58dd3c6fd",
+    "bytes": 2050
+  },
+  "third_party/debian-sources/node-diff_5.0.0~dfsg+~5.0.1-4.dsc": {
+    "sha256": "4247dc3328b5bcdfa42429ba584607ac40072af0425c4d677dba558edcb43062",
+    "bytes": 2481
+  },
+  "third_party/debian-sources/node-doctrine_3.0.0-4.dsc": {
+    "sha256": "eaccf9087e45e623f728c45e09e83bfd2595bbf25b27bd0384b06dd3b9010d38",
+    "bytes": 2114
+  },
+  "third_party/debian-sources/node-electron-to-chromium_1.5.166-1.dsc": {
+    "sha256": "61c1e7245bd292c250ee4d56ae68249d2e5b1ba3f60ed32d22108eda4c7dac01",
+    "bytes": 2203
+  },
+  "third_party/debian-sources/node-encoding_0.1.13-2.dsc": {
+    "sha256": "38a2615492d35c3462443d042d64eb5a20631aa333c935cb0fa7cb039a520c2c",
+    "bytes": 2105
+  },
+  "third_party/debian-sources/node-enhanced-resolve_5.15.0-1.dsc": {
+    "sha256": "952b072ddc1c83b5986907dd73d6d27bdaa60128cbc6c98e59e2e253e4bd7643",
+    "bytes": 2254
+  },
+  "third_party/debian-sources/node-envinfo_7.11.0+~cs14.3.0-3.dsc": {
+    "sha256": "671a5e95ccb9f0d4b23924cf875c74f45ebd4baaf195941f6195b379c5afa734",
+    "bytes": 4047
+  },
+  "third_party/debian-sources/node-err-code_2.0.3+dfsg-3.dsc": {
+    "sha256": "7a2ba8e0be76402b5a99b5870bd03578ef7079274bf23f53852b75d1466d8ba3",
+    "bytes": 2142
+  },
+  "third_party/debian-sources/node-errno_1.0.0-3.dsc": {
+    "sha256": "6659f669595d6756dbc3ef71c29dd8918a5156871eb9a090eb5a74ad95a6bb0c",
+    "bytes": 2033
+  },
+  "third_party/debian-sources/node-error-ex_1.3.2-4.dsc": {
+    "sha256": "a3452aedcb9e43821099971ce36821f2ca11768bfe993ac81a0997fafc8e7843",
+    "bytes": 2128
+  },
+  "third_party/debian-sources/node-es-abstract_1.20.4+~cs26.27.47-2.dsc": {
+    "sha256": "fb1032f5e6c2759b97d2cb02325dceade86e9d67a7907351f3e82de11b8b6b46",
+    "bytes": 9486
+  },
+  "third_party/debian-sources/node-es-module-lexer_1.1.0+dfsg-3.dsc": {
+    "sha256": "d60ad6e0cf0231d115ccf8d25ccd20bfdb2420051affe6a35f9ab1435902dbe9",
+    "bytes": 2299
+  },
+  "third_party/debian-sources/node-es6-error_4.1.1-5.dsc": {
+    "sha256": "6ed8ea0360a8253ce59a7c4e40aaadec91e432c3cf2b8377f40ac6e2a5dd1316",
+    "bytes": 2129
+  },
+  "third_party/debian-sources/node-escape-string-regexp_4.0.0-2.dsc": {
+    "sha256": "2dd4e0eca6ec52605b27d632914eedb79bcb40c62d9a54fdf8d59c293d205738",
+    "bytes": 2194
+  },
+  "third_party/debian-sources/node-escodegen_2.1.0+dfsg+~0.0.8-1.dsc": {
+    "sha256": "78b46870a42e7afd5c086b359f6d8d2e876141fe69b923113286997eea316455",
+    "bytes": 2683
+  },
+  "third_party/debian-sources/node-eslint-scope_7.1.1+~3.7.4-1.dsc": {
+    "sha256": "66f399f1ffedec599c1cf6132c723a57fc3af7fb622574ac2bc0fdbb01ebc5eb",
+    "bytes": 2679
+  },
+  "third_party/debian-sources/node-eslint-utils_3.0.0-3.dsc": {
+    "sha256": "0671828eca33bf918ad846a14b67628775c2b62e93350701d7fbdce98e76ae8f",
+    "bytes": 2242
+  },
+  "third_party/debian-sources/node-eslint-visitor-keys_3.3.0+~1.0.0-1.dsc": {
+    "sha256": "c71c48954cff56747d1af4729102e12c2d3524abe06d8dc4d735becdff6edce5",
+    "bytes": 2705
+  },
+  "third_party/debian-sources/node-espree_9.4.1~dfsg-2.dsc": {
+    "sha256": "d2a32c09b12f5e3bd71813b4de26b107022743f5a5902b248140e3bd9019dbcc",
+    "bytes": 2426
+  },
+  "third_party/debian-sources/node-esprima_4.0.1+ds+~4.0.3-2.dsc": {
+    "sha256": "40bff5db5df372e7240157487b679b692a8f287d33d9ba533283e1910628ede3",
+    "bytes": 2491
+  },
+  "third_party/debian-sources/node-esquery_1.4.2~ds-1.dsc": {
+    "sha256": "3ece9802f8d5499f0c8d775b14d9f7db42a5bc74711c21b6f527914c48dca251",
+    "bytes": 2312
+  },
+  "third_party/debian-sources/node-esrecurse_4.3.0-2.dsc": {
+    "sha256": "7737c20a508f8c876a31bb94817a34a51200a2b56b0c18478754631a1b393ffb",
+    "bytes": 2098
+  },
+  "third_party/debian-sources/node-estraverse_5.3.0+ds+~5.1.1-1.dsc": {
+    "sha256": "ef8ca11300bd5c0f645a1252629677006805845df88aaaef81a572fe3d36d0a5",
+    "bytes": 2568
+  },
+  "third_party/debian-sources/node-esutils_2.0.3+~2.0.0-1.dsc": {
+    "sha256": "83567be7de83201c88c1a078fbfe336084ec77f9e48481a99eae3a82b3269b58",
+    "bytes": 2474
+  },
+  "third_party/debian-sources/node-events_3.3.0+~3.0.0-3.dsc": {
+    "sha256": "98e1ab5f12cb6a109998315045f29720a3c21a922f75ccdc5b655b7b458588a9",
+    "bytes": 2478
+  },
+  "third_party/debian-sources/node-execa_8.0.1+dfsg1+~cs12.0.0-1.dsc": {
+    "sha256": "71bb0f80c68ddd81d6576626093f9c912112166ad6f37c5b5f1bd5bb2d1afb4b",
+    "bytes": 3204
+  },
+  "third_party/debian-sources/node-fancy-log_1.3.3+~cs1.3.1-2.dsc": {
+    "sha256": "a0211ed99c06178f585ac34f08eb9b04411e767500fbc4f3221838ee1d845856",
+    "bytes": 3746
+  },
+  "third_party/debian-sources/node-fast-deep-equal_3.1.3-3.dsc": {
+    "sha256": "426cfbf98057eb48a3add6793ad84cb30faf43389867ec8e4425f9acaa25fa84",
+    "bytes": 2223
+  },
+  "third_party/debian-sources/node-fast-levenshtein_2.0.6+ds-3.dsc": {
+    "sha256": "be60ffa1542131df70743bf0922c85448cc87eeb8fd6bc0f2462d180592d33c3",
+    "bytes": 2236
+  },
+  "third_party/debian-sources/node-fetch_3.3.2+~cs11.4.11-3.dsc": {
+    "sha256": "92340a37450515f8267cb4b85d82bf7589433d0a6a12467ece66eebb90db5288",
+    "bytes": 3834
+  },
+  "third_party/debian-sources/node-file-entry-cache_6.0.1+~3.0.4+~2.0.0+~1.0.0+~2.0.1-1.dsc": {
+    "sha256": "d4bfeb87ce6507c0aaa52290581c7f40ff55e663c829ebf17a2cb3325243ba4d",
+    "bytes": 4108
+  },
+  "third_party/debian-sources/node-fill-range_7.1.1+~7.0.3-1.dsc": {
+    "sha256": "747b44cabc1c0b25825725a6807fff8f67e462b213c08887a8a64818a0ff4bdb",
+    "bytes": 2497
+  },
+  "third_party/debian-sources/node-find-cache-dir_3.3.2+~3.2.1-1.dsc": {
+    "sha256": "5bfaec23d12a5ab24c812f72a78c9f25b8d00a4bfff7632ab3a1cc04fd48ebf6",
+    "bytes": 2647
+  },
+  "third_party/debian-sources/node-find-up_6.3.0-7.dsc": {
+    "sha256": "bb72921853e7325cf190f41df12a3eb2fc0e03aeaa5512dc5cb1fed45ebd4b24",
+    "bytes": 2250
+  },
+  "third_party/debian-sources/node-flatted_3.2.7~ds-1+deb13u1.dsc": {
+    "sha256": "b3ee9b51c843f477ba62b724abf94ee0078a3256b8367f84d9362f300cd4b621",
+    "bytes": 2364
+  },
+  "third_party/debian-sources/node-for-in_1.0.2-4.dsc": {
+    "sha256": "8a76dc597f7163ac88b7a0fb411adad9e1f7f66732cb6fe720208d9bedc9d3da",
+    "bytes": 2028
+  },
+  "third_party/debian-sources/node-for-own_1.0.0-3.dsc": {
+    "sha256": "8d822e7ec1be623bf58a6700b632df0ef778c0be97c92b18ad9aec7eb1e43ffa",
+    "bytes": 2058
+  },
+  "third_party/debian-sources/node-foreground-child_3.1.1-2.dsc": {
+    "sha256": "a860097645cfba5c583a1c2a38907589d9be214e585f10ab31959cf5c15b07c3",
+    "bytes": 2164
+  },
+  "third_party/debian-sources/node-fs-readdir-recursive_1.1.0+~1.1.0-1.dsc": {
+    "sha256": "295cec57652488b728ee76bab9422754c82f3acf9c7cf9b560b1322f4916182c",
+    "bytes": 2650
+  },
+  "third_party/debian-sources/node-fs-write-stream-atomic_1.0.10-6.dsc": {
+    "sha256": "3dae497826af319e70b7edbb8c6d8fba994342fc4cbd064e861a8f3e9e608fef",
+    "bytes": 2353
+  },
+  "third_party/debian-sources/node-fs.realpath_1.0.0-3.dsc": {
+    "sha256": "ea4d193717d8f1a52806b071081ed6e0a925a6948b95d4e646b68f94ae524c24",
+    "bytes": 2078
+  },
+  "third_party/debian-sources/node-function-bind_1.1.2+~cs2.1.14-1.dsc": {
+    "sha256": "ad2911bb04c9dec79a491392a69b6186c04280c375e2e1f580385bbddccb7dd6",
+    "bytes": 2910
+  },
+  "third_party/debian-sources/node-functional-red-black-tree_1.0.1+20181105-7.dsc": {
+    "sha256": "f030d5699ee154f7495ea0f6238bb06c6a241ef195382a51c3bf8bfa5621f34f",
+    "bytes": 2472
+  },
+  "third_party/debian-sources/node-gauge_4.0.4-2.dsc": {
+    "sha256": "369e4e515e4583f16a1f84cc5aa56bccdb1f52fdd24ec613db9627a3f8176478",
+    "bytes": 2318
+  },
+  "third_party/debian-sources/node-get-caller-file_2.0.5+~cs1.1.1-4.dsc": {
+    "sha256": "3a26747768ec14d50083e95dca469056d4c59f7b90c816e6bf26f2f40cb7cd58",
+    "bytes": 2560
+  },
+  "third_party/debian-sources/node-get-stream_8.0.1-11.dsc": {
+    "sha256": "809e0bc48defc18e0483f80406b6569cf9186f59c67efcb2b8a451dab41915d1",
+    "bytes": 2144
+  },
+  "third_party/debian-sources/node-glob-parent_6.0.2+~5.1.1-2.dsc": {
+    "sha256": "fc50a6e2f0ae4b502f78ee398f30c55b0e6f49fa1702b4145ff797ceee8c415c",
+    "bytes": 2559
+  },
+  "third_party/debian-sources/node-glob_8.1.0+~cs8.5.15-1.dsc": {
+    "sha256": "db434dfde618d739a0c24b76d1e8dcf52911ed27b9c9cfa41a65d2a95e2cdffb",
+    "bytes": 3587
+  },
+  "third_party/debian-sources/node-globals_13.23.0-1.dsc": {
+    "sha256": "af2871db73d921fecf21ae33189992216192a79418df6e68ecda8f2bc628ee63",
+    "bytes": 2099
+  },
+  "third_party/debian-sources/node-globby_13.1.3+~cs16.25.40-3.dsc": {
+    "sha256": "de659f53a222e80fd1cfc9c0be817b1a3d88cfe0f794027e61ccf5c405cfd451",
+    "bytes": 5682
+  },
+  "third_party/debian-sources/node-got_11.8.5+~cs58.13.36-5.dsc": {
+    "sha256": "f2a836b1e7f158837236c5c53c2745e8fe0f616cbb0f9dbef26e4d73f0fd4949",
+    "bytes": 7571
+  },
+  "third_party/debian-sources/node-graceful-fs_4.2.10-1.dsc": {
+    "sha256": "a9a9b87d613bfcb5d2281807d889185ce49d89e70b35e744cbc49957fd92698a",
+    "bytes": 2470
+  },
+  "third_party/debian-sources/node-gyp_11.1.0+~5.0.0-1.dsc": {
+    "sha256": "41f5f75e40cf7fe093901afab24301a6819cd761800b8419d0168928dfa594f2",
+    "bytes": 2353
+  },
+  "third_party/debian-sources/node-handlebars_4.7.7+~4.1.0-1.dsc": {
+    "sha256": "cd598b072976ce227da701acded7e7cca7fde71921115c03486d0a6cf28884cc",
+    "bytes": 3071
+  },
+  "third_party/debian-sources/node-has-flag_5.0.1-1.dsc": {
+    "sha256": "98a4a07b453712ed3fcc240dbb377207737bdb96956648c6ea0a378217e3294a",
+    "bytes": 2080
+  },
+  "third_party/debian-sources/node-has-unicode_2.0.1-5.dsc": {
+    "sha256": "82737372f217ab95dfddc6e5f248ba138e00ab6d6cc68a75bc05d6efc69d59f5",
+    "bytes": 2123
+  },
+  "third_party/debian-sources/node-hosted-git-info_6.1.1-2.dsc": {
+    "sha256": "8efdee8899b63375ad7580d37f52f40846776d314893f6623e4ab52efd085b22",
+    "bytes": 2220
+  },
+  "third_party/debian-sources/node-iconv-lite_0.6.3-3.dsc": {
+    "sha256": "30d6ba967f219c921aa99ac08ab9da21c632e3547a1363c54b550f16233a4b7c",
+    "bytes": 2192
+  },
+  "third_party/debian-sources/node-icss-utils_5.1.0+~5.1.0-1.dsc": {
+    "sha256": "39b3c8b636350d2277d4ea0662ec59241884a55f53233035c8ea0f77efc5c142",
+    "bytes": 2486
+  },
+  "third_party/debian-sources/node-ieee754_1.2.1-3.dsc": {
+    "sha256": "5fbb02c031738e645c26e7e39f4ecbdc84cd13675a3a791d356b6110a29a1324",
+    "bytes": 2061
+  },
+  "third_party/debian-sources/node-iferr_1.0.2+~1.0.2-1.dsc": {
+    "sha256": "af936bb32f2c39276f5fa54e3c0107761ca6c1636ec0fd31f2e8939efcb675dd",
+    "bytes": 2402
+  },
+  "third_party/debian-sources/node-ignore_5.2.1-1.dsc": {
+    "sha256": "e2c36b7f9350a0137ea08147874745e53713a0efb5ab004e0e04048105f5e221",
+    "bytes": 2103
+  },
+  "third_party/debian-sources/node-imurmurhash_0.1.4+dfsg+~0.1.1-2.dsc": {
+    "sha256": "225b09cfa00780a14709c664103975120cd1e710caf7162cc4b2179ceda43532",
+    "bytes": 2510
+  },
+  "third_party/debian-sources/node-indent-string_4.0.0-2.dsc": {
+    "sha256": "b22dd2f64d215d922239169a41b21c01cf7a8f933860db94eb843a17e9d93066",
+    "bytes": 2106
+  },
+  "third_party/debian-sources/node-inflight_1.0.6-2.dsc": {
+    "sha256": "9d1ce5ac3497098348955e01d5a375ac4a283ff296f71983f478b68845a91a2d",
+    "bytes": 2089
+  },
+  "third_party/debian-sources/node-inherits_2.0.4-6.dsc": {
+    "sha256": "8eb48daebcb5ca3088649a4a5c7cb95053fd28705111aea36ac028c2e89368a2",
+    "bytes": 2108
+  },
+  "third_party/debian-sources/node-ini_3.0.1-2.dsc": {
+    "sha256": "75042ff9d1e233b294f7bf08e02e2c1d3fbbc479b8f13bf6b37ce798c92a4d8c",
+    "bytes": 1983
+  },
+  "third_party/debian-sources/node-interpret_2.2.0-3.dsc": {
+    "sha256": "db5f01a53b840c262bdd77b8e02af7ce9fd061d975b7fcffe169ffecaf44d7ff",
+    "bytes": 2509
+  },
+  "third_party/debian-sources/node-ip-regex_4.3.0+~4.1.1-1.dsc": {
+    "sha256": "1ac17130e64a99b5b7677536e51c11031a555070dcf52d6dbae4951c2aba8e6f",
+    "bytes": 2425
+  },
+  "third_party/debian-sources/node-ip_2.0.1+~1.1.3-3.dsc": {
+    "sha256": "0270e47a70ec0f8d912a647f9c26d5124861a5aa13f02fe194cf2c7c2b7c1c47",
+    "bytes": 2302
+  },
+  "third_party/debian-sources/node-is-arrayish_0.3.2-3.dsc": {
+    "sha256": "b74e2c46b4e87901782ba763700d8b30fefea8922abcae9a92e738259095920e",
+    "bytes": 2159
+  },
+  "third_party/debian-sources/node-is-binary-path_2.1.0-5.dsc": {
+    "sha256": "b3d62b1d2fca4f1da737b691e56d70e54031efd76c716fb6ef6086bebe99c400",
+    "bytes": 2175
+  },
+  "third_party/debian-sources/node-is-buffer_2.0.5-2.dsc": {
+    "sha256": "c7b222182fd1e22404b91f989c62f85f561670847974c5cf7da01e69617b6630",
+    "bytes": 2080
+  },
+  "third_party/debian-sources/node-is-descriptor_3.0.0-2.dsc": {
+    "sha256": "a5bc232babc9020c1fb9af7760c07f451535e439b24753c3993deb971fe4c0eb",
+    "bytes": 2131
+  },
+  "third_party/debian-sources/node-is-extendable_1.0.1-3.dsc": {
+    "sha256": "66b3af59107ca2a617e2cde576e0e40ab552103aec11d84ec62565a07ee6f1e5",
+    "bytes": 2152
+  },
+  "third_party/debian-sources/node-is-extglob_2.1.1-5.dsc": {
+    "sha256": "c05b3de5464f60d21fa3855f58a5eede2c14791543befc2e7a59f6f4207b3bcf",
+    "bytes": 2061
+  },
+  "third_party/debian-sources/node-is-glob_4.0.3-2.dsc": {
+    "sha256": "047bfadca7ae16149b624c201eac6ac13553b9faa1f64d247642c96aa30ed5a1",
+    "bytes": 2053
+  },
+  "third_party/debian-sources/node-is-number_7.0.0-4.dsc": {
+    "sha256": "cb886dc6c7b688ccedd1ac0d6672e508fe18fa84685f630dd355daaab7deb385",
+    "bytes": 2062
+  },
+  "third_party/debian-sources/node-is-path-cwd_2.2.0-2.dsc": {
+    "sha256": "6e0888089c26f5fea1d9bcd6be23a25ebab5bd32185ac6fc0807255f54ccba56",
+    "bytes": 2087
+  },
+  "third_party/debian-sources/node-is-path-inside_3.0.3-2.dsc": {
+    "sha256": "819a27e99383b65939455086320711d831481454c7d2a9da4b077e21fdc43a49",
+    "bytes": 2158
+  },
+  "third_party/debian-sources/node-is-plain-obj_3.0.0-2.dsc": {
+    "sha256": "8e8a35adfc0bacfcc8187e164e37047e1b6fc372bcb8b443c6cb8cd827544155",
+    "bytes": 2123
+  },
+  "third_party/debian-sources/node-is-plain-object_5.0.0-7.dsc": {
+    "sha256": "a35a85c975d81b297c0ed8d07c78585b18171c9614ea5add3c1ec3973c235b9f",
+    "bytes": 2137
+  },
+  "third_party/debian-sources/node-is-stream_3.0.0-4.dsc": {
+    "sha256": "366b31ca26e87e06584dfab55f8b5a9f4f5a11b1d99cc28bacce9aab0c8f936a",
+    "bytes": 2155
+  },
+  "third_party/debian-sources/node-is-typedarray_1.0.0-4.dsc": {
+    "sha256": "16d6f448f6f65349533ecc08c18c9070c9eca5fc21f2f25593543387a2ed4063",
+    "bytes": 2176
+  },
+  "third_party/debian-sources/node-is-windows_1.0.2+~cs1.0.0-1.dsc": {
+    "sha256": "bc993ef8304ef55059e0f69788df5d5219a3792bf2c50730028c1d2456dc9534",
+    "bytes": 2470
+  },
+  "third_party/debian-sources/node-isarray_2.0.5-4.dsc": {
+    "sha256": "96beaa31f27bad0aa755cc4b6425947d85f817c0b8f97be4da0dbe7067677b58",
+    "bytes": 2061
+  },
+  "third_party/debian-sources/node-isexe_2.0.0+~2.0.1-5.dsc": {
+    "sha256": "7ed1c9718df81d4fa5a1f0a89f0a3fb51d41a5928d8c5797b99169b80cafe7ae",
+    "bytes": 2405
+  },
+  "third_party/debian-sources/node-isobject_4.0.0-2.dsc": {
+    "sha256": "c05c65e43b4189a0773692ed647c9818429cc9fa80aa28b9907f71bdbffbbb05",
+    "bytes": 2079
+  },
+  "third_party/debian-sources/node-istanbul_0.4.5+repack10+~cs98.25.59-3.dsc": {
+    "sha256": "4a4346fa322be6e033a3c61761ca2e961b9373b202a0b475446281662e2a0014",
+    "bytes": 14259
+  },
+  "third_party/debian-sources/node-jest_29.6.2~ds1+~cs73.45.28-5.dsc": {
+    "sha256": "60e1f69be8da6c28ff413e080a16cfff5c04108d3c06e0dd1c45656cd0e7da5c",
+    "bytes": 12574
+  },
+  "third_party/debian-sources/node-js-tokens_8.0.0-2.dsc": {
+    "sha256": "e118f2ed0a6920d6a561c6afc62506b9101d9c7f7601535659dc70f518acb7c0",
+    "bytes": 2120
+  },
+  "third_party/debian-sources/node-js-yaml_4.1.0+dfsg+~4.0.5-7.dsc": {
+    "sha256": "20ccba4d3ddfc8ab8b4b7d83ca54467444e4f0e066d44f5386977cc589a3c5c9",
+    "bytes": 2646
+  },
+  "third_party/debian-sources/node-jsesc_3.0.2+~3.0.1-1.dsc": {
+    "sha256": "72229054e2b0542ab0c81578e8bf3ecbb4bee952f856dd2759919a327299b5db",
+    "bytes": 2343
+  },
+  "third_party/debian-sources/node-json-buffer_3.0.1+~3.0.0-1.dsc": {
+    "sha256": "6d452edbd977ba00d362270d301476a8ff18ac7a34ea02d59f4905ab34c59469",
+    "bytes": 2478
+  },
+  "third_party/debian-sources/node-json-parse-better-errors_1.0.2+~cs3.3.1-3.dsc": {
+    "sha256": "7c66366514230e77222270874f44057e2553f9496c3226db8aaf4dff077ac3d0",
+    "bytes": 3145
+  },
+  "third_party/debian-sources/node-json-schema-traverse_1.0.0-3.dsc": {
+    "sha256": "7ff2f36e39745a4a3b46be544426055d1345602b572b0fd4c8f3de713a9c2ce4",
+    "bytes": 2186
+  },
+  "third_party/debian-sources/node-json-schema_0.4.0+~7.0.11-1.dsc": {
+    "sha256": "180266d9e3f35f0988e34d192611ce4fc8c8c9f2e2c4cc3ceaee43f786b2fe56",
+    "bytes": 2485
+  },
+  "third_party/debian-sources/node-json-stable-stringify_1.0.2+repack1+~cs1.0.34-2.dsc": {
+    "sha256": "d8dbadbe2ae63eb6e8faac835d91056d1ae4b12bde007ab4849ce1cd608d72c3",
+    "bytes": 2792
+  },
+  "third_party/debian-sources/node-json5_2.2.3+dfsg-1.dsc": {
+    "sha256": "2f77fc0a85852fe80f87461b6b27e29564658084f274f807494c7c6d1379735c",
+    "bytes": 2115
+  },
+  "third_party/debian-sources/node-jsonify_0.0.1-1.dsc": {
+    "sha256": "d451782abf54840829252b13c4f9c64644547bf24d90ec3c31e503a1c99be9d0",
+    "bytes": 2012
+  },
+  "third_party/debian-sources/node-jsonparse_1.3.1-10.dsc": {
+    "sha256": "af555522e4eeb25420e3a74617789f234cb6b4f6812eeb198c3f66963eb33edb",
+    "bytes": 2066
+  },
+  "third_party/debian-sources/node-kind-of_6.0.3+dfsg-2.dsc": {
+    "sha256": "e7395efc8f2be2049e58e83d3a039c96067a05664cee5e47b19c670999482f22",
+    "bytes": 2097
+  },
+  "third_party/debian-sources/node-levn_0.4.1+dfsg-2.dsc": {
+    "sha256": "de32ad3919677febdee385a34f5fa7dfc1ece69dfc0bdb7274c4b37c19a3d222",
+    "bytes": 2064
+  },
+  "third_party/debian-sources/node-loader-runner_4.3.0-1.dsc": {
+    "sha256": "25f767cabf0b0d06f34bfffedbbb1fb9a019faae24efb2c5f65f19ad97e982c3",
+    "bytes": 2128
+  },
+  "third_party/debian-sources/node-locate-path_7.1.1-2.dsc": {
+    "sha256": "76e0b0216bc1b90c348f9d12e73266759d1ae53c7d3bfcb7b834e9b24d1b9faf",
+    "bytes": 2155
+  },
+  "third_party/debian-sources/node-lodash_4.17.21+dfsg+~cs8.31.198.20210220-9+deb13u1.dsc": {
+    "sha256": "e5304901c4ccc61b8c2b498c9f3d12a70f2c6e4c56954714b91134d5dba3d52c",
+    "bytes": 116803
+  },
+  "third_party/debian-sources/node-lowercase-keys_2.0.0-2.dsc": {
+    "sha256": "6b9d5b17bff8f77181894a7cdd886c10c7a5f4ebe11c1133d5597b1e396d0e37",
+    "bytes": 2132
+  },
+  "third_party/debian-sources/node-lru-cache_10.0.1-3.dsc": {
+    "sha256": "656792b8fca241433549a37808012463a388f3cc439401a218e300b1a975f46e",
+    "bytes": 2154
+  },
+  "third_party/debian-sources/node-make-dir_3.1.0-3.dsc": {
+    "sha256": "7208513b2485434e2d12fe4d4d541cacd99f661d7daf367898b09f46bdbe9f90",
+    "bytes": 2216
+  },
+  "third_party/debian-sources/node-memfs_3.4.12+~cs1.0.3-1.dsc": {
+    "sha256": "484a5716e8bec469c67256eabf82cee64599e7b56330123ccdcc63d9e09a8d8b",
+    "bytes": 2464
+  },
+  "third_party/debian-sources/node-memory-fs_0.5.0+~0.3.3-2.dsc": {
+    "sha256": "96e203e4158314963514c0288b8fac029b054a26af61e9592054049183918ace",
+    "bytes": 2530
+  },
+  "third_party/debian-sources/node-merge-stream_2.0.0+~1.1.2-2.dsc": {
+    "sha256": "184f5f46d54165a078bff29a8872dc1fc0ffc074b1c39d9abde9aba8a6f858f4",
+    "bytes": 2480
+  },
+  "third_party/debian-sources/node-micromatch_4.0.7+~4.0.9-1.dsc": {
+    "sha256": "0f46edc84ae153377ded457e3c1c6be8a2fe74dde47c217d8f28f992c79e026e",
+    "bytes": 2532
+  },
+  "third_party/debian-sources/node-mime-types_2.1.35-2.dsc": {
+    "sha256": "937f7150b8c16d2473d4d97212c41b229023dced4d4086b04299f17ab58a7050",
+    "bytes": 2594
+  },
+  "third_party/debian-sources/node-mime_3.0.0+dfsg+~cs6.97.2-2.dsc": {
+    "sha256": "9597ab23efbb35a9a4c14e9a50ca746f7f810383db156c21f02d965fb3df03cd",
+    "bytes": 3567
+  },
+  "third_party/debian-sources/node-mimic-fn_4.0.0-5.dsc": {
+    "sha256": "6e4948eab7a29adf5ce35437133a3fc5a28dd3de7820e8cc8fb8dc58e6289604",
+    "bytes": 2072
+  },
+  "third_party/debian-sources/node-mimic-response_3.1.0-9.dsc": {
+    "sha256": "a9625a5495088c0164a1201188e8180d450f49ccb3a31d0be2547437b7e638c2",
+    "bytes": 2222
+  },
+  "third_party/debian-sources/node-minimatch_9.0.3-6.dsc": {
+    "sha256": "fd0d3e8ed5211b46c8e1ad66b1568c7045866d6597a74303f31e9f0660166e66",
+    "bytes": 2258
+  },
+  "third_party/debian-sources/node-minimist_1.2.8+~cs5.3.5-1.dsc": {
+    "sha256": "25c1868db4a92af0794654bf1db89338d91d9d878db59a39d12c88253459e378",
+    "bytes": 2867
+  },
+  "third_party/debian-sources/node-minipass_5.0.0+~cs10.3.21-3.dsc": {
+    "sha256": "427e00bfb5180c5c73d4ac2eaf8bac7186a18215095660f0f4cf310d6e3d298d",
+    "bytes": 4737
+  },
+  "third_party/debian-sources/node-mkdirp_2.1.6+~cs5.2.1-2.dsc": {
+    "sha256": "40d9f777c261f0a2ed0f16413fb37c30e9e7e74d8491e68fee3281bbb6c3d00a",
+    "bytes": 3287
+  },
+  "third_party/debian-sources/node-move-concurrently_1.0.1-5.dsc": {
+    "sha256": "1ed24bb3420537153346cb600a9b7a940732eeb5d5ad02334cde647fcc5b318d",
+    "bytes": 2352
+  },
+  "third_party/debian-sources/node-ms_2.1.3+~cs0.7.31-3.dsc": {
+    "sha256": "f0c24f00344437c7b6cfd5a7c27a77ce324def4cfab8570dd411fcafb9361e69",
+    "bytes": 2378
+  },
+  "third_party/debian-sources/node-mute-stream_0.0.8+~0.0.1-3.dsc": {
+    "sha256": "326f2916b04d6b0a293b18b53e8966d5fa0e176b8dadfaf88c7906a3dda5d927",
+    "bytes": 2465
+  },
+  "third_party/debian-sources/node-n3_1.16.3+~1.2.3+~1.10.4-1.dsc": {
+    "sha256": "a1d48f39931e9e013eee0e8d69aa86ecb8a970a0dbc6c6f6c05e13704489d15f",
+    "bytes": 2863
+  },
+  "third_party/debian-sources/node-negotiator_0.6.3+~0.6.1-1.dsc": {
+    "sha256": "532ef8fbf26a08858baf9f0e1079d1fc2b387b519aae3eab8f90c3e1cdf38cd9",
+    "bytes": 2448
+  },
+  "third_party/debian-sources/node-neo-async_2.6.2+~cs3.0.0-3.dsc": {
+    "sha256": "042653cf8e1e85b128eeb340682dac7b469152f7a21af920e71d54520a0c51a7",
+    "bytes": 2495
+  },
+  "third_party/debian-sources/node-nopt_5.0.0-4.dsc": {
+    "sha256": "d894dc5da1cfe0661e0e8df3205905f49fa54f9cc09cf14a1daec9a176f529cf",
+    "bytes": 2019
+  },
+  "third_party/debian-sources/node-normalize-package-data_4.0.1+~2.4.1-1.dsc": {
+    "sha256": "30cbe4e055ac9e86aa6a18975ea00a3c3bb1af600dc7b02a85ae198e5c12669a",
+    "bytes": 2861
+  },
+  "third_party/debian-sources/node-normalize-path_3.0.0+~3.0.0-1.dsc": {
+    "sha256": "246bdd76e96a72189b46fea948bf974fa669f1316cfb1a78f7304d0be0e6fdb2",
+    "bytes": 2534
+  },
+  "third_party/debian-sources/node-npm-bundled_2.0.1-2.dsc": {
+    "sha256": "27555785d002ad1b77c03823e026d9b07286162f3e9518c16c7d6f78132fe5dc",
+    "bytes": 2139
+  },
+  "third_party/debian-sources/node-npm-package-arg_10.0.0+~3.0.0-2.dsc": {
+    "sha256": "17c3b40e1f28967d7f040f58dc57d7fb80d6a02e960bf24158a7fe4ae5734bb7",
+    "bytes": 2654
+  },
+  "third_party/debian-sources/node-npm-run-path_5.1.0+~4.0.0-8.dsc": {
+    "sha256": "34d340b719f20a562dc8caf9b98526c201193b1b15689355f9a428eb7c0578e2",
+    "bytes": 2493
+  },
+  "third_party/debian-sources/node-npmlog_7.0.1+~4.1.4-1.dsc": {
+    "sha256": "875b50bc7ed8c6560c6d2e52bf107f6f4cd3bf081bad0c2af7aad44b6407f35e",
+    "bytes": 2507
+  },
+  "third_party/debian-sources/node-object-assign_4.1.1-7.dsc": {
+    "sha256": "14bba3ae1f5ade05d8672539866a6aaf84795efa4a2fbf50e1f675b75ad9e074",
+    "bytes": 2129
+  },
+  "third_party/debian-sources/node-object-inspect_1.12.2+~cs1.8.1-1.dsc": {
+    "sha256": "2f2e262697f54e9dcdfc9afe413adef660165159b48bdda16634c68281b887ad",
+    "bytes": 2640
+  },
+  "third_party/debian-sources/node-once_1.4.1-1.dsc": {
+    "sha256": "283a630e3debfc2fa4d8bdfc8fcce16ae08afb1aabf4743682c5f01a82aae81c",
+    "bytes": 2056
+  },
+  "third_party/debian-sources/node-optimist_0.6.1+~0.0.30-2.dsc": {
+    "sha256": "a57db8ca420a83e7d93275f225b790279030fad78a43a648a1f1926ace54a31c",
+    "bytes": 2573
+  },
+  "third_party/debian-sources/node-optionator_0.9.1+dfsg+~cs1.2.3-1.dsc": {
+    "sha256": "6dd222f70055c8d7c7f0725010168c2e21a72638163e87bb7c0e6e8e01610927",
+    "bytes": 2530
+  },
+  "third_party/debian-sources/node-osenv_0.1.5+~0.1.1-1.dsc": {
+    "sha256": "146df68a2fbe32c2661b59e9d7acd0c32e1812bb28dae6fa0bb647619c94b38d",
+    "bytes": 2357
+  },
+  "third_party/debian-sources/node-p-cancelable_2.1.1-1.dsc": {
+    "sha256": "16e95268ccb335b343f50e0b1d65c0aae3a7e2bdefc654072c2eef3282def159",
+    "bytes": 2162
+  },
+  "third_party/debian-sources/node-p-limit_4.0.0+~cs4.0.0-5.dsc": {
+    "sha256": "f476d74056219d77deb7c26af25445bd6dfcc7acc19e16205e7b1cf2c90f6ed4",
+    "bytes": 2796
+  },
+  "third_party/debian-sources/node-p-locate_6.0.0-12.dsc": {
+    "sha256": "e56e8955df9f2d37e999922763b37e1657a77f34a3be21c5ec8d6d0ef4cee2c7",
+    "bytes": 2138
+  },
+  "third_party/debian-sources/node-p-map_4.0.0+~3.1.0+~3.0.1-2.dsc": {
+    "sha256": "fca2d75e93537f661edde85b42c68f7010084e124ecb9484eb12b46d7caf6e49",
+    "bytes": 2869
+  },
+  "third_party/debian-sources/node-parse-json_5.2.0+~cs5.1.7-2.dsc": {
+    "sha256": "a594b8dc26741abffadd13357520e3a44ef43caccee53372f982978f9a460bd9",
+    "bytes": 3031
+  },
+  "third_party/debian-sources/node-path-dirname_1.0.2-2.dsc": {
+    "sha256": "fa7a28c1cbb0ffac1edd574d221e69f8e279eb5e2488ad4f09881c631e81c261",
+    "bytes": 2155
+  },
+  "third_party/debian-sources/node-path-exists_5.0.0-8.dsc": {
+    "sha256": "00068b84199dde9615ebfe4944567936aa61da903af493fe06781b47ed82ca0a",
+    "bytes": 2114
+  },
+  "third_party/debian-sources/node-path-is-absolute_2.0.0-2.dsc": {
+    "sha256": "22eed1713bb795ab385dbc953fb35ed85bcbf166dac8db08a65dfddd8b4b43aa",
+    "bytes": 2123
+  },
+  "third_party/debian-sources/node-path-is-inside_1.0.2+~1.0.0-1.dsc": {
+    "sha256": "62bdab3af70528261f759e43e28af047e2e72c0fd2d97fb461eae7b98db5cb80",
+    "bytes": 2519
+  },
+  "third_party/debian-sources/node-path-type_4.0.0-3.dsc": {
+    "sha256": "25238fac4406d2eff725fa5c90bf888117dd73cb56dadc041cdb90e9875bf061",
+    "bytes": 2069
+  },
+  "third_party/debian-sources/node-picocolors_1.0.0-4.dsc": {
+    "sha256": "8d08f3cda33676eb85543c17839407152868a544096962bbbde69e3082a09774",
+    "bytes": 2051
+  },
+  "third_party/debian-sources/node-pify_5.0.0+~cs5.0.1-1.dsc": {
+    "sha256": "66727a602a69b9d42cdb064fd6314ce9c03e45308c512d7e9bd4d2f42cc1de03",
+    "bytes": 2398
+  },
+  "third_party/debian-sources/node-pkg-dir_5.0.0-2.dsc": {
+    "sha256": "489f7b5e2225546757a4c61eaf84a3768135941afb91e165e6f74e9ed48be277",
+    "bytes": 2104
+  },
+  "third_party/debian-sources/node-postcss-modules-extract-imports_3.0.0-2.dsc": {
+    "sha256": "b0cd676a1e29de327cf53c70ffa5847d937ab500b52e1281101fef9be53730d0",
+    "bytes": 2332
+  },
+  "third_party/debian-sources/node-postcss-modules-values_4.0.0+~4.0.0-1.dsc": {
+    "sha256": "34d4956807db8ed69d08d44ec58a2f0fd445b118be7479cc02a1d62282e24399",
+    "bytes": 2740
+  },
+  "third_party/debian-sources/node-postcss-value-parser_4.2.0-1.dsc": {
+    "sha256": "220a00dc5aa6901b3f6641683015cbdf16bba4a206205ac2dbedecac468dc9ba",
+    "bytes": 2193
+  },
+  "third_party/debian-sources/node-postcss_8.4.49+~cs9.2.32-1.dsc": {
+    "sha256": "5bc8ab5b0dc42740672d1551ec2f5c43d48978c2bffcdab6a97e7bb64e5f876a",
+    "bytes": 3665
+  },
+  "third_party/debian-sources/node-prelude-ls_1.2.1+dfsg-3.dsc": {
+    "sha256": "82a7dc41dab76428da5716469f849fefe28f87b10d1aa0c4bff05bb92461cb9c",
+    "bytes": 2184
+  },
+  "third_party/debian-sources/node-process-nextick-args_2.0.1-3.dsc": {
+    "sha256": "9c7994a3bc854644fcb3f3a00c650ac79e3c6db238d17a1f13cf95a90acb0414",
+    "bytes": 2191
+  },
+  "third_party/debian-sources/node-progress_2.0.3-2.dsc": {
+    "sha256": "e0821de8e15f68c896786b0d8e91fb0e289cc479bddd5c70e3a22d34a94e00dd",
+    "bytes": 2034
+  },
+  "third_party/debian-sources/node-promise-inflight_1.0.1+~1.0.0-1.dsc": {
+    "sha256": "824231ed2b1f299004f539cd326b66b6bc0759238205c945bb1f72eaaf46e7d2",
+    "bytes": 2528
+  },
+  "third_party/debian-sources/node-promise-retry_2.0.1-4.dsc": {
+    "sha256": "da6aa155231d6a5399a0812aa47187c9e839e863b31a52857ffba88258f6a8df",
+    "bytes": 2219
+  },
+  "third_party/debian-sources/node-promzard_0.3.0-2.dsc": {
+    "sha256": "71a7d65af31f615a1154f64849fcfd6a3e1c86f7d05b1857332c526c3927c09d",
+    "bytes": 2075
+  },
+  "third_party/debian-sources/node-proxy-agents_0~2024040606-6+deb13u1.dsc": {
+    "sha256": "3f22e9e2e4cf76f06064b609290ef7add38f424afee75f15de460c4321d8d86d",
+    "bytes": 4230
+  },
+  "third_party/debian-sources/node-prr_1.0.1-3.dsc": {
+    "sha256": "95e5bfd9aee7bc8fd223ae6329209a84aa5e547928ac61333a338de8b54fc205",
+    "bytes": 1982
+  },
+  "third_party/debian-sources/node-punycode_2.3.1+~2.1.4-1.dsc": {
+    "sha256": "34bdcf1d0440a33297c5852182219cbfa78a55efa44c16925f503363e9729603",
+    "bytes": 2427
+  },
+  "third_party/debian-sources/node-quick-lru_6.1.1-4.dsc": {
+    "sha256": "5b6f68e705c74e2b9a92ba5d9a3f5c9d78ff856575159fd0c1859c9e0808fe1c",
+    "bytes": 2096
+  },
+  "third_party/debian-sources/node-randombytes_2.1.0+~2.0.0-2.dsc": {
+    "sha256": "d854ad203c4ffe42b897aee76c21bc4bdff5f9fbe60454f831121f685df0c003",
+    "bytes": 2555
+  },
+  "third_party/debian-sources/node-read-package-json_5.0.2+~2.0.0-2.dsc": {
+    "sha256": "e8643024e3508a65d95241b9b347dc65ff2b4bde189721b712f00ccff9cc13a3",
+    "bytes": 2713
+  },
+  "third_party/debian-sources/node-read-pkg_5.2.0-2.dsc": {
+    "sha256": "27616cf2013a7d29b5ac131c86b695df682d8fa07077964e7abde49cbdbf85f2",
+    "bytes": 2417
+  },
+  "third_party/debian-sources/node-read_1.0.7-5.dsc": {
+    "sha256": "b7e6055416b365b8326dd148bd576107779dee532adda3f6624679dbfb928cf7",
+    "bytes": 2021
+  },
+  "third_party/debian-sources/node-readable-stream_3.6.0+~cs3.0.0-4.dsc": {
+    "sha256": "c726acf5462f3f015bd41fddd4f7ae2376e09b25bd77d3dee312f7b379858e0d",
+    "bytes": 3151
+  },
+  "third_party/debian-sources/node-readdirp_3.6.0-1.dsc": {
+    "sha256": "3347b5ac0b124c2e620e60a476f8c3639768d190dd2d8b2d20f2823b8e4d8e93",
+    "bytes": 2177
+  },
+  "third_party/debian-sources/node-rechoir_0.8.0+~0.6.1-2.dsc": {
+    "sha256": "58849194dd59d086ff6f7c8595354b925c402b1c135f3407b64d1911f22b25a3",
+    "bytes": 2572
+  },
+  "third_party/debian-sources/node-regenerate-unicode-properties_10.1.0+ds-1.dsc": {
+    "sha256": "cc12e1da10e0047cb88b19d65f70096212137986a7a0fa89ce62fd04836879a5",
+    "bytes": 2446
+  },
+  "third_party/debian-sources/node-regenerate_1.4.2-3.dsc": {
+    "sha256": "e78178e8733c3081023022b667733b03ce8cfffb4eb493fb88be1f042ead8e5f",
+    "bytes": 2102
+  },
+  "third_party/debian-sources/node-regenerator_0.15.2+~0.10.8-1.dsc": {
+    "sha256": "2f0f101bf238d11ff007c132b0e9107abf35add111f1cd7fbfefa11703623111",
+    "bytes": 3189
+  },
+  "third_party/debian-sources/node-regexpp_3.2.0-5.dsc": {
+    "sha256": "5bf0c2f2c38a8419e871d08a2adb81b086c8f608b0cc785169927d59ee564d93",
+    "bytes": 2249
+  },
+  "third_party/debian-sources/node-regexpu-core_5.2.2-3.dsc": {
+    "sha256": "8a93fe895c2d2ea285b67ef8238b90eb11e89703835cf0a4f71f632107476921",
+    "bytes": 2323
+  },
+  "third_party/debian-sources/node-regjsgen_0.7.1+ds-1.dsc": {
+    "sha256": "5c26d5b17d52e9aba7c0374eadfc08672fbff0bcee32063300a7ae17d4a2d939",
+    "bytes": 2075
+  },
+  "third_party/debian-sources/node-regjsparser_0.9.1+ds-2.dsc": {
+    "sha256": "fffa982846264991f956093e43b5417f2c5b1ce0629473573cd00cfccf6435a4",
+    "bytes": 2119
+  },
+  "third_party/debian-sources/node-repeat-string_1.6.1+repack-1.dsc": {
+    "sha256": "18e8988591c6a7993f30d82f07a0e9f6caab066e84ba067f8d476c33051fb09c",
+    "bytes": 2156
+  },
+  "third_party/debian-sources/node-require-directory_2.1.1+~2.1.2-1.dsc": {
+    "sha256": "199c8ad0992bf5091b003bcb9a7cc668eef2e0d6a6d1740fc5f716e3a3912323",
+    "bytes": 2561
+  },
+  "third_party/debian-sources/node-resolve-cwd_3.0.0-2.dsc": {
+    "sha256": "ce09a5e2023074ba0c04694a6d46a4701f4c8d0e674c7a6687fa8b9388c1e719",
+    "bytes": 2115
+  },
+  "third_party/debian-sources/node-resolve-from_5.0.0+~3.1.0+~3.3.0+~2.0.0-1.dsc": {
+    "sha256": "ae19102c58cd9630443b24b33cb782bbc278900c7eaf592869afe889832849df",
+    "bytes": 3371
+  },
+  "third_party/debian-sources/node-resolve_1.22.8+~cs5.34.15-2.dsc": {
+    "sha256": "a55e0f250c1b4adda2fb58978c1b30896e81342a2adc5f6ce037a0996ebc6a44",
+    "bytes": 3688
+  },
+  "third_party/debian-sources/node-resumer_0.0.0-6.dsc": {
+    "sha256": "ef9f1f20da83a2c0bec729e3419244eafb4f3a511b7f0f251837d8cb9ca18462",
+    "bytes": 2086
+  },
+  "third_party/debian-sources/node-retry_0.13.1.+~cs2.19.16-1.dsc": {
+    "sha256": "2b9e1ed26cda96af097a822cd3475ccbcada429c2d0fcf761a0e0f01ccc87d0a",
+    "bytes": 3195
+  },
+  "third_party/debian-sources/node-rimraf_3.0.2-2.dsc": {
+    "sha256": "669d9c6ee970ce551ba204cc905d5ba372978fc3eb1882a78026013df962d57f",
+    "bytes": 2351
+  },
+  "third_party/debian-sources/node-run-queue_2.0.0-3.dsc": {
+    "sha256": "a64372061b651e4a8dc5dfccadd9484dc9d1876c930a4eb2effbfa13a71107c2",
+    "bytes": 2080
+  },
+  "third_party/debian-sources/node-safe-buffer_5.2.1+~cs2.1.2-3.dsc": {
+    "sha256": "a9e782bab53b7e074670643eb18399a9035fe1d0b11f81a2c7bbb6d0e2029939",
+    "bytes": 2516
+  },
+  "third_party/debian-sources/node-schema-utils_4.2.0~ds-3.dsc": {
+    "sha256": "d6a155eed83eea284e247596ed6a8af39ef070a6d0db8bb528c9bc1c7fe03ce0",
+    "bytes": 2335
+  },
+  "third_party/debian-sources/node-semver_7.6.1+~7.5.8-2.dsc": {
+    "sha256": "67de1db672243fa6329f0a5145526f6d7f5ab302ebaec1a52cd7fedc19cc91f1",
+    "bytes": 2456
+  },
+  "third_party/debian-sources/node-serialize-javascript_6.0.2-1.dsc": {
+    "sha256": "ba6bdbac0944ea9ca3f2352955f8dea9f26654fd5fe0df78e3853b1529f7b072",
+    "bytes": 2246
+  },
+  "third_party/debian-sources/node-set-blocking_2.0.0-2.dsc": {
+    "sha256": "3f113019644b15d85c0ad2a0daa4e4db52babda39355d68218e3d9b32775811b",
+    "bytes": 2104
+  },
+  "third_party/debian-sources/node-set-immediate-shim_2.0.0-2.dsc": {
+    "sha256": "3ae9014254efa6a9fa2d09ecfa3b99c65d42155b039d67f2ee2d6755aaacf39d",
+    "bytes": 2200
+  },
+  "third_party/debian-sources/node-shebang-command_2.0.0-1.dsc": {
+    "sha256": "dc1dbe8192aa0aebd00fbcb01be8cb51f263d9ee4c43b58c41ea5d02c7637749",
+    "bytes": 2158
+  },
+  "third_party/debian-sources/node-shebang-regex_3.0.0-2.dsc": {
+    "sha256": "9fe97b3b6baec84cf8c6459525b42f1528d8d7f1dc71a30fa679c035be37c954",
+    "bytes": 2110
+  },
+  "third_party/debian-sources/node-signal-exit_4.1.0-7.dsc": {
+    "sha256": "e46f392e4489e1bca91bd14fa92e1556cdd54cb613802bebe8a03f390a8e127e",
+    "bytes": 2147
+  },
+  "third_party/debian-sources/node-slash_4.0.0-3.dsc": {
+    "sha256": "4b2720005ff75728aff3299168c55033c0347321d85fcd23997f707231f042c6",
+    "bytes": 2055
+  },
+  "third_party/debian-sources/node-slice-ansi_5.0.0+~cs9.0.0-5.dsc": {
+    "sha256": "8942cc1928b3bd826e088adbe66d20bbb228b2419629f51768f8c869f2a166ea",
+    "bytes": 2960
+  },
+  "third_party/debian-sources/node-source-list-map_2.0.1+dfsg+~0.1.2-1.dsc": {
+    "sha256": "5b019f72d63139b6c4dc4133a65155cd37328aecdb0e9a8eada3940b36eb4b0c",
+    "bytes": 2567
+  },
+  "third_party/debian-sources/node-source-map-support_0.5.21+ds+~0.5.10-1.dsc": {
+    "sha256": "45ea926c6b858d3c95669a76d4830e9e74aca6fd66b33ffa26fd3e8a6f5e1d7a",
+    "bytes": 2728
+  },
+  "third_party/debian-sources/node-source-map_0.7.0++dfsg2+really.0.6.1-15.dsc": {
+    "sha256": "a16be6edc91d2466a34633724b96771081d48d76b30df8ebd98b07717289c850",
+    "bytes": 2303
+  },
+  "third_party/debian-sources/node-spdx-correct_3.1.1-2.dsc": {
+    "sha256": "5a7c833a9a86a0dcd3443375b5129f5665445bb754107f41ea106f5e893f418a",
+    "bytes": 2193
+  },
+  "third_party/debian-sources/node-spdx-exceptions_2.3.0-2.dsc": {
+    "sha256": "73186a5ceddfaff4d19fc74ccf68febd41ef08dd265a54e8747963f94e4fb297",
+    "bytes": 2115
+  },
+  "third_party/debian-sources/node-spdx-expression-parse_3.0.1+~3.0.1-1.dsc": {
+    "sha256": "0e5df95d3bf7536a437dc15ff685ae806f49d55c1e5973027d354da05acddef3",
+    "bytes": 2744
+  },
+  "third_party/debian-sources/node-spdx-license-ids_3.0.12-1.dsc": {
+    "sha256": "5d8537f3f8d205fb41486e0bbabb79e6d22a47ea1034788fe027fb28cfaf7ad4",
+    "bytes": 2149
+  },
+  "third_party/debian-sources/node-sprintf-js_1.1.2+ds1+~1.1.2-1.dsc": {
+    "sha256": "02f176ea1c136de7ceaba2ec76c49cbdcab8e0fba342b2404c768fdec21988bf",
+    "bytes": 2585
+  },
+  "third_party/debian-sources/node-ssri_9.0.1-3.dsc": {
+    "sha256": "0d5dcdd8c378de579ef020adc9382f2a912aa0937d5acd177680c2cc8ef212e8",
+    "bytes": 2106
+  },
+  "third_party/debian-sources/node-string-decoder_1.3.0-6.dsc": {
+    "sha256": "aba926baa8f0149a0a355c68d3596786b660913787666072055b118f0b63787e",
+    "bytes": 2277
+  },
+  "third_party/debian-sources/node-string-width_4.2.3+~cs13.2.3-1.dsc": {
+    "sha256": "a620e2a8d4b1aec4c10e3f024a2fa560e67aa9f097054e8a3a4beed6966ea011",
+    "bytes": 3004
+  },
+  "third_party/debian-sources/node-strip-ansi_6.0.1-2.dsc": {
+    "sha256": "87af06247c6f1bd1542751ec3048193c7257086e7a55f23eb22b8de2e247b646",
+    "bytes": 2124
+  },
+  "third_party/debian-sources/node-strip-bom_4.0.0-2.dsc": {
+    "sha256": "c5e58c229a309f94f68f74ae59bd60ccc382366da58487c9c94ba6f81f2825e1",
+    "bytes": 2061
+  },
+  "third_party/debian-sources/node-strip-eof_3.0.0-5.dsc": {
+    "sha256": "e3cc5eb59188d841781f206103e3cf285c4b097eb55d4a1f6a56ae8d2c070071",
+    "bytes": 2070
+  },
+  "third_party/debian-sources/node-strip-json-comments_4.0.0-4.dsc": {
+    "sha256": "67b4a0c2ac9e1c183a56ccd518c235489256eade9eb0cc976a024932007edd99",
+    "bytes": 2202
+  },
+  "third_party/debian-sources/node-supports-color_8.1.1+~8.1.1-1.dsc": {
+    "sha256": "84cafbad27f98183e77770c0b9f431edd82ebe292fdde09d2128b75bb8a2a2be",
+    "bytes": 2574
+  },
+  "third_party/debian-sources/node-tapable_2.2.1-3.dsc": {
+    "sha256": "efae64a4fac62d23340bffb2692d2588ec2a7a9ee254beff62c3f41de632c0be",
+    "bytes": 2034
+  },
+  "third_party/debian-sources/node-tape_5.6.1+~cs8.20.19-3.dsc": {
+    "sha256": "31cb055ccb4a609fe094afbd1dde6bbfb165349cb831efe3aa15dc0c7d957245",
+    "bytes": 4601
+  },
+  "third_party/debian-sources/node-tar_6.2.1+~cs7.0.8-1+deb13u1.dsc": {
+    "sha256": "ad80e7dc3304f173d956af544ea0f98d71922178bb0fc168f89a96eb4bf23953",
+    "bytes": 2965
+  },
+  "third_party/debian-sources/node-terser_5.38.0-1.dsc": {
+    "sha256": "86e187f3105351e61ac44ea1ede73a8e95892f1585540ebcbdbe905dda92e82f",
+    "bytes": 2477
+  },
+  "third_party/debian-sources/node-text-table_0.2.0-4.dsc": {
+    "sha256": "697ec991cbcb5c18e25393f04b2c35ad05530d6e8cdcfc8bbeefec1f5b3b00ba",
+    "bytes": 2064
+  },
+  "third_party/debian-sources/node-through_2.3.8+~cs0.0.30-1.dsc": {
+    "sha256": "a71de359573f8b7c6291719530565ecf2bca0ce2645ec6c60efc0775ff65853b",
+    "bytes": 2432
+  },
+  "third_party/debian-sources/node-time-stamp_2.2.0-2.dsc": {
+    "sha256": "ec32756aac90987fcd31fedb0788dcbabb331ab176a1f8dacd15777f8d373e64",
+    "bytes": 2053
+  },
+  "third_party/debian-sources/node-to-fast-properties_3.0.1-3.dsc": {
+    "sha256": "bab605b3b4510b2fc9559314a2e68b5ad1b94dba544c0f290740a3f02daa6fce",
+    "bytes": 2214
+  },
+  "third_party/debian-sources/node-to-regex-range_5.0.1-4.dsc": {
+    "sha256": "ff4705e3e9906d607262d73f596acb554819264a9be372ac6f7f3695a0993170",
+    "bytes": 2172
+  },
+  "third_party/debian-sources/node-tslib_2.4.1-1.dsc": {
+    "sha256": "34758a35f712153a8bcd4553375cef4e45aeae83a7cae910d1110c180ef1c1d1",
+    "bytes": 2011
+  },
+  "third_party/debian-sources/node-type-check_0.4.0+dfsg-3.dsc": {
+    "sha256": "0845a517e2b821fece166cc09d839dd59eca3635270e3534f2fb890efe388258",
+    "bytes": 2222
+  },
+  "third_party/debian-sources/node-typedarray-to-buffer_4.0.0-2.dsc": {
+    "sha256": "5d1f0a26f77bb8d39e7fe6b499a3b00d82eb8e8cb284fdbfd4389d00073eeebf",
+    "bytes": 2284
+  },
+  "third_party/debian-sources/node-typedarray_0.0.7-1.dsc": {
+    "sha256": "79482cd96d9fd7af5e0704982c49bcbc8aa12afeb1dcbb365564a6cd6627462d",
+    "bytes": 2091
+  },
+  "third_party/debian-sources/node-undici_7.3.0+dfsg1+~cs24.12.11-1.dsc": {
+    "sha256": "b0b6b5419b74313a2e45d0c3a035f0508373be57bc01285ef93bb7149db1a3ae",
+    "bytes": 4706
+  },
+  "third_party/debian-sources/node-unicode-canonical-property-names-ecmascript_2.0.0-2.dsc": {
+    "sha256": "82f0d0534836bc4296d8caa24d4093fc547b8ffb14f589f1524a7efe93f46b7d",
+    "bytes": 2468
+  },
+  "third_party/debian-sources/node-unicode-match-property-ecmascript_2.0.0-2.dsc": {
+    "sha256": "98a8babe99bc777c46df7cb75801e862de2f14b2d93651153fb0d6a0269d6e2e",
+    "bytes": 2303
+  },
+  "third_party/debian-sources/node-unicode-match-property-value-ecmascript_2.1.0+ds-1.dsc": {
+    "sha256": "c0082b4048f300feaffe9440366b8ed57e276d6fb7f5da10433c515a1f11ca4b",
+    "bytes": 2577
+  },
+  "third_party/debian-sources/node-unicode-property-aliases-ecmascript_2.1.0+ds-1.dsc": {
+    "sha256": "0a5909a7135421290ac7bbc24a07edc640cb023482c328f2f328a6a2d21ef69c",
+    "bytes": 2482
+  },
+  "third_party/debian-sources/node-unique-filename_1.1.1+ds-2.dsc": {
+    "sha256": "da25c38854aaef00eed734732de09b1482abe116e3b9a10bfc89daa484765a7f",
+    "bytes": 2506
+  },
+  "third_party/debian-sources/node-uri-js_4.4.0+dfsg-8.dsc": {
+    "sha256": "7a530ee5735e299ce6dd8c0b4f0e9f71ab960b69c2cd124f4bc44847e21b063c",
+    "bytes": 2309
+  },
+  "third_party/debian-sources/node-util-deprecate_1.0.2-3.dsc": {
+    "sha256": "441e87c9bbf71553783d51dc6ebae2e766fb80a578d317e6cee6d66560479512",
+    "bytes": 2144
+  },
+  "third_party/debian-sources/node-util_0.12.5+~1.0.10-1.dsc": {
+    "sha256": "92d06aae242f87c37115d6d1ebcdc6ca7ac8698409352c1af68da8f0aa7fe666",
+    "bytes": 2576
+  },
+  "third_party/debian-sources/node-uuid_8.3.2+~8.3.4-1.dsc": {
+    "sha256": "f866f73c46b28e13b3740c446f30beca1a7e0837b3c59e7dc13aac337ef86596",
+    "bytes": 2489
+  },
+  "third_party/debian-sources/node-v8-compile-cache_2.4.0-2.dsc": {
+    "sha256": "73068374e0f4bff60400c058a452336f934b9050664f15e18d55c6e1876d7082",
+    "bytes": 2274
+  },
+  "third_party/debian-sources/node-v8flags_3.2.0+~3.1.1-1.dsc": {
+    "sha256": "2e343567a35d402b0413c9dbfabec8013f54e8fde5a96d074c1fd52d8f0fd896",
+    "bytes": 2447
+  },
+  "third_party/debian-sources/node-validate-npm-package-license_3.0.4-2.dsc": {
+    "sha256": "b8245573507db9855710b5527f6d95b3297a41e2490beb2cb132c7acd59d8cae",
+    "bytes": 2337
+  },
+  "third_party/debian-sources/node-validate-npm-package-name_5.0.0+~4.0.0-1.dsc": {
+    "sha256": "55c54c19caa95b51615c0198f8df0438557d0d066e1ea9dcc41cdc1e896e9f22",
+    "bytes": 2749
+  },
+  "third_party/debian-sources/node-watchpack_2.4.0+~cs2.8.1-1.dsc": {
+    "sha256": "f2022674020813eb9e04f410bf251c05e0e5e307eef6f2b51fa1a53364406bae",
+    "bytes": 2955
+  },
+  "third_party/debian-sources/node-wcwidth.js_1.0.2-2.dsc": {
+    "sha256": "14ddd3d7c2239ce560920845978ff6b005c7eb452f5145bdaab4e1ab8613a3e6",
+    "bytes": 2087
+  },
+  "third_party/debian-sources/node-webassemblyjs_1.11.4+dfsg+~cs10.11.17-2.dsc": {
+    "sha256": "4e23aec7251512fe147e14b4c47a364dfcc8e6ce9708ab716e2b57ef5db518ae",
+    "bytes": 5337
+  },
+  "third_party/debian-sources/node-webpack-sources_3.2.3+~3.2.0-2.dsc": {
+    "sha256": "034996077d08ce86003c587af81183f77592fc5c1fc0575d7b313730a5780400",
+    "bytes": 2540
+  },
+  "third_party/debian-sources/node-webpack_5.97.1+dfsg1+~cs11.18.27-3.dsc": {
+    "sha256": "d8c45732214d8d39930c54370e028fe95faef9a67d9ca1115b723ac35509b801",
+    "bytes": 4870
+  },
+  "third_party/debian-sources/node-which_2.0.2+~cs1.3.2-3.dsc": {
+    "sha256": "dfa893f1cbf9ce1756347d6fc808da8631f04659cf03ba2c597a894bd2348c21",
+    "bytes": 2453
+  },
+  "third_party/debian-sources/node-wide-align_1.1.3-4.dsc": {
+    "sha256": "d8d790e49a2e2d786df259be8cc4d9199272f74aafbeee9964b83e99681acbd6",
+    "bytes": 2106
+  },
+  "third_party/debian-sources/node-wordwrap_1.0.0-4.dsc": {
+    "sha256": "a251f18bbcbbf2e3f3de1e951fb619b8c5c64b9d32d41ba10b4c9b240c1f5050",
+    "bytes": 2051
+  },
+  "third_party/debian-sources/node-wrap-ansi_8.0.1+~8.0.1-3.dsc": {
+    "sha256": "1689fcf8bf686dac49864bb4e4bf481298abf9b4e338800b638a03ac260e0078",
+    "bytes": 2689
+  },
+  "third_party/debian-sources/node-wrappy_1.0.2-3.dsc": {
+    "sha256": "f70d62146d7ff5c851bdcc018c5d7865dae0c37c34af9a38c5acbc4f3395c650",
+    "bytes": 2019
+  },
+  "third_party/debian-sources/node-write-file-atomic_4.0.2+~4.0.0-2.dsc": {
+    "sha256": "f8e661a6a07f0744ab85099964ec99bf5223a69916a2c0735df1cbf71d44403a",
+    "bytes": 2554
+  },
+  "third_party/debian-sources/node-xtend_4.0.2-3.dsc": {
+    "sha256": "9879c0fbc3e26c48c9e41f6051438e57ec8d7dfbfc16ea01b8a0e073b9647461",
+    "bytes": 2055
+  },
+  "third_party/debian-sources/node-y18n_5.0.8+~5.0.0-3.dsc": {
+    "sha256": "f3ebb17f4acc4baa066967f250ff8ecfb24ad77725570f18a2c6fce8a9f0ec04",
+    "bytes": 2525
+  },
+  "third_party/debian-sources/node-yallist_4.0.0+~4.0.1-1.dsc": {
+    "sha256": "e00f4c664696da8569cb1d22d0bc9e1bf46d4729b4955da8e1c02e526fc2792d",
+    "bytes": 2410
+  },
+  "third_party/debian-sources/node-yargs-parser_21.1.1+~21.0.0-4.dsc": {
+    "sha256": "d434a7a74c56e7dc6c7fe194a3e1ba37d8e1f50a9b8d7ae70129bd325dece59f",
+    "bytes": 2570
+  },
+  "third_party/debian-sources/node-yargs_16.2.0+~16.0.4-7.dsc": {
+    "sha256": "8b55d85d4dee7560036ccfeddf7bc27029144c8e4f0a26de1b22f9569c8433ac",
+    "bytes": 2612
+  },
+  "third_party/debian-sources/nodejs_20.19.2+dfsg-1+deb13u2.dsc": {
+    "sha256": "a3bff34eff175567f923f5936e03c06c416841d92a0597aed13a58e48ccb5ae7",
+    "bytes": 4410
+  },
+  "third_party/debian-sources/npm_9.2.0~ds1-3.dsc": {
+    "sha256": "eb3fa742fd4255c4f416fe72123a2273d719a8003f4042af0b1882acc4bba476",
+    "bytes": 2638
+  },
+  "third_party/debian-sources/nspr_4.36-1.dsc": {
+    "sha256": "0654be27e3cbe2ccc704b293effc12d05c6bbcb2c3da90de5c5ebf53734e6064",
+    "bytes": 2000
+  },
+  "third_party/debian-sources/nss_3.110-1+deb13u4.dsc": {
+    "sha256": "45c3eeae75c94da73f8f38630a73fc20673296cd3d689df416a8d4658c1a8d96",
+    "bytes": 2350
+  },
+  "third_party/debian-sources/openjdk-21_21.0.12.1+1-1~deb13u1.dsc": {
+    "sha256": "bf1593ec4a5cc809e445b6a456625328d358058353be86f1f36a08fc2110cedd",
+    "bytes": 5152
+  },
+  "third_party/debian-sources/openldap_2.6.10+dfsg-1.dsc": {
+    "sha256": "05cdd431ef995904f094f4464ca78d5d3b2abdbe4eefacd72446ff8443a2ffac",
+    "bytes": 3285
+  },
+  "third_party/debian-sources/openssl_3.5.7-1~deb13u2.dsc": {
+    "sha256": "25904642004d30c5c3da4642a72a7d09f8d9eb6e5ce62dab53c0371114faf8f2",
+    "bytes": 2707
+  },
+  "third_party/debian-sources/openssl_3.5.7.orig.tar.gz.asc": {
+    "sha256": "d3d082bee3f658c31db53af625eceecf29d777c7010394bed5787ebcc98abdf2",
+    "bytes": 833
+  },
+  "third_party/debian-sources/p11-kit_0.25.5-3.dsc": {
+    "sha256": "65e21a68dd942741bba82f5bf20901f616b64de91a976d92a54a0cb314896544",
+    "bytes": 2538
+  },
+  "third_party/debian-sources/p11-kit_0.25.5.orig.tar.xz.asc": {
+    "sha256": "066c92b9d2accb2fda6a2f71e676fb6526fcc153051b1f04ee7d7c8c96a09989",
+    "bytes": 228
+  },
+  "third_party/debian-sources/pam_1.7.0-5.dsc": {
+    "sha256": "5c127aa18c7cb52ec9ee91fa2099453b3a851bcc0088e79045384a2a508b341c",
+    "bytes": 2210
+  },
+  "third_party/debian-sources/pam_1.7.0.orig.tar.xz.asc": {
+    "sha256": "7a8ea18ec7d9dd1f8cbf9055c32128cbca8241aa63e9fea44d56ce6f0e15e441",
+    "bytes": 801
+  },
+  "third_party/debian-sources/patch_2.8-2.dsc": {
+    "sha256": "41fbd3f2c99f60dcbe02699ff01955a47711377b20987352b957bd55e02e2088",
+    "bytes": 1689
+  },
+  "third_party/debian-sources/pcre2_10.46-1~deb13u2.dsc": {
+    "sha256": "4eac7bfc4d11259da7d299f90b6c74b359d7cbb3be2f017e039b02524f30d2e6",
+    "bytes": 2380
+  },
+  "third_party/debian-sources/pcsc-lite_2.3.3-1.dsc": {
+    "sha256": "196b3a5967bb805c4382d8428a39f9c7df01846c4e42c906131baedef5bfa5ee",
+    "bytes": 2394
+  },
+  "third_party/debian-sources/pcsc-lite_2.3.3.orig.tar.xz.asc": {
+    "sha256": "725840eeaff8d69a0410e4fd16a5b715a409a9c76c65a288b7b5e6422812d83e",
+    "bytes": 833
+  },
+  "third_party/debian-sources/perl_5.40.1-6+deb13u1.dsc": {
+    "sha256": "92d1cfb32167d77fada7284f1c291de72f93eb896f5cfd58247d020182b403a8",
+    "bytes": 2404
+  },
+  "third_party/debian-sources/pkgconf_1.8.1-4.dsc": {
+    "sha256": "782a764448d1ecf39f80c7a1747c28fcbde1800b615eee6a46639a17e58b62f9",
+    "bytes": 2130
+  },
+  "third_party/debian-sources/prettify.js_2015.12.04+dfsg-1.1.dsc": {
+    "sha256": "ed2ade9f7fb179f8d24d6a7343f43c7a147ad9950cd77257654d529052898373",
+    "bytes": 2111
+  },
+  "third_party/debian-sources/procps_4.0.4-9.dsc": {
+    "sha256": "0ea43605b8d5d7ac4306af0dcd2d01e237cbaba6603b0cf248dd7cfd4364ac7a",
+    "bytes": 2124
+  },
+  "third_party/debian-sources/psmisc_23.7-2.dsc": {
+    "sha256": "1b17a803e533be2e0244f62fe73da1174e4e1fbdc5709c908c022fcb6be1d42a",
+    "bytes": 1892
+  },
+  "third_party/debian-sources/python-packaging_25.0-1.dsc": {
+    "sha256": "5653df16fc64e58ff8657e37e36f280929b741ed0cc715231834c605f4568a74",
+    "bytes": 1674
+  },
+  "third_party/debian-sources/python-pip_25.1.1+dfsg-1.dsc": {
+    "sha256": "a3f4c0a86d7c16c1a5f63d905a2b38edb961f89416a4be0eda5c2645a70abbdf",
+    "bytes": 1884
+  },
+  "third_party/debian-sources/python3-defaults_3.13.5-1.dsc": {
+    "sha256": "206e2f527ca126e46f007b3dd668ae9d35a03c7653bee137a03161df33063d2c",
+    "bytes": 2346
+  },
+  "third_party/debian-sources/python3.13_3.13.5-2+deb13u5.dsc": {
+    "sha256": "4be84e20fb902354fa86955e2fbea6e8bdbd158f54833423488308a9b3532662",
+    "bytes": 4298
+  },
+  "third_party/debian-sources/python3.13_3.13.5.orig.tar.xz.asc": {
+    "sha256": "da6e013d98dcf8fc6696cdb2872b0051fc8fdeb632f73ef9f54d7b5a68647401",
+    "bytes": 963
+  },
+  "third_party/debian-sources/readline_8.2-6.dsc": {
+    "sha256": "6f94c7144d6b6b1ff88aaebd81480e87f8773b7638031782aac12ef93ffd2e71",
+    "bytes": 2810
+  },
+  "third_party/debian-sources/rpcsvc-proto_1.4.3-1.dsc": {
+    "sha256": "7d8e122bd18b02fe0de6d467a0ecdafff74035b3e1ed0da1c0c792d9c015682f",
+    "bytes": 1999
+  },
+  "third_party/debian-sources/rtmpdump_2.4+20151223.gitfa8646d.1-2.dsc": {
+    "sha256": "a296819cd2ab5880b67ad963ef0867cb10e462f4403e52565aa863eb05bb1370",
+    "bytes": 2299
+  },
+  "third_party/debian-sources/rust-sequoia-sqv_1.3.0-3.dsc": {
+    "sha256": "98ad852ed30d42d3b0d6ce40d2f56a96fb443cc6fa2caeaa12516fe5bbe544af",
+    "bytes": 2704
+  },
+  "third_party/debian-sources/samba_4.22.11+dfsg-0+deb13u1.dsc": {
+    "sha256": "39774db3a5d14787f15ae1345764fbb3f37ea86f7c0cb9791808883a288e65fc",
+    "bytes": 5665
+  },
+  "third_party/debian-sources/sed_4.9-2+deb13u1.dsc": {
+    "sha256": "9fcc5dffe5e712b4631757c057228ae57919aec1cca1c91a80e76719167f443b",
+    "bytes": 2047
+  },
+  "third_party/debian-sources/setuptools_78.1.1-0.1.dsc": {
+    "sha256": "d0425d9385c8ad1cd5635b222dd90e1964c03de4ed3b1484317e912f0aac7e39",
+    "bytes": 2843
+  },
+  "third_party/debian-sources/shadow_4.17.4-2.dsc": {
+    "sha256": "920de0d3be5303f2c0511d5531c1815abc258b15af8f9c511c8aa6d8e1a91a86",
+    "bytes": 2851
+  },
+  "third_party/debian-sources/shadow_4.17.4.orig.tar.xz.asc": {
+    "sha256": "82437d2b54790b3a6734c526b757e693cd0c734ec6afd69f9a9cf0eb1dad8dc4",
+    "bytes": 488
+  },
+  "third_party/debian-sources/sqlite3_3.46.1-7+deb13u2.dsc": {
+    "sha256": "46e1eec171e11108fc436e45309b635b601029726b6ffd3bf435bb474e511638",
+    "bytes": 2673
+  },
+  "third_party/debian-sources/systemd_257.13-1~deb13u1.dsc": {
+    "sha256": "1b3405d671a82d1e20c9d99f52d4336aafe8543b28d04e91b7f1f586d3a667c7",
+    "bytes": 8696
+  },
+  "third_party/debian-sources/sysvinit_3.14-4.dsc": {
+    "sha256": "1cfe65682218077e6f76011f0c5caacc9f2ab214d55893307d4a54c93312ac92",
+    "bytes": 2375
+  },
+  "third_party/debian-sources/tar_1.35+dfsg-3.1.dsc": {
+    "sha256": "5bb58d4966d94c99a9f1b182676089ecc05058d62fdb927f5c07539d9cda4077",
+    "bytes": 2017
+  },
+  "third_party/debian-sources/tzdata_2026c-0+deb13u1.dsc": {
+    "sha256": "b18d6eddfb23971bacbf569a2641cda837002a813d8e8940d8792ea7ba8e2d4e",
+    "bytes": 2466
+  },
+  "third_party/debian-sources/tzdata_2026c.orig.tar.gz.asc": {
+    "sha256": "26cd02e034eed682aa911d224bca3247ff15914df317e3bb0b1a01dc557b46fe",
+    "bytes": 833
+  },
+  "third_party/debian-sources/unzip_6.0-29+deb13u1.dsc": {
+    "sha256": "b700df33b987c07f3d6435b175e0c2c924368d8c6e4efdcd2adf730ed69d4405",
+    "bytes": 1495
+  },
+  "third_party/debian-sources/util-linux_2.41.5-0+deb13u1.dsc": {
+    "sha256": "43e9b2cbebd10fdc598c4ad10217c8202c28de53af6eafc892c8e9b5cbf3a3a5",
+    "bytes": 4988
+  },
+  "third_party/debian-sources/vim_9.1.1230-2.dsc": {
+    "sha256": "10e96236a45dcf5b1fb3b6a3146072f89b7d4c0af79456b6bfa0688383b41d47",
+    "bytes": 3230
+  },
+  "third_party/debian-sources/wget_1.25.0-2.dsc": {
+    "sha256": "32caf133042db927360a8c35357e4b2877eb83ff0ca144ceb64508947d894f55",
+    "bytes": 2251
+  },
+  "third_party/debian-sources/wget_1.25.0.orig.tar.gz.asc": {
+    "sha256": "47f0989685931c3df6166061069659bc13a75b221a62041625007fa2dad7411b",
+    "bytes": 854
+  },
+  "third_party/debian-sources/wheel_0.46.1-2.dsc": {
+    "sha256": "9ee7764f509bc3590a2d99a9e3bab79b9baba61ff53b0cd253ac2a434411cc6a",
+    "bytes": 1853
+  },
+  "third_party/debian-sources/xxhash_0.8.3-2.dsc": {
+    "sha256": "9d1f7aaace7871fbdb8775d756c6eaca84e6ad5d8e9c6ac465b7e0adc06ff90c",
+    "bytes": 1969
+  },
+  "third_party/debian-sources/xz-utils_5.8.1-1+deb13u1.dsc": {
+    "sha256": "ddadd9d9f7c4bb80b08f9f17409e2701a29a4cf8fe25e15d19605e5281c1fc1b",
+    "bytes": 2736
+  },
+  "third_party/debian-sources/xz-utils_5.8.1.orig.tar.xz.asc": {
+    "sha256": "4138f4ceca1aa7fd2085fb15a23f6d495d27bca6d3c49c429a8520ea622c27ae",
+    "bytes": 833
+  },
+  "third_party/debian-sources/zip_3.0-15+deb13u1.dsc": {
+    "sha256": "29ec4bc09dc1c7ee5865a3dbf483a54638cecfc3dccd81eefe2b8c80b9063966",
+    "bytes": 1471
+  },
+  "third_party/debian-sources/zlib_1.3.dfsg+really1.3.1-1.dsc": {
+    "sha256": "ede2791e29c1d3b422f9208bdd7edf040c20445ea1e7453a72037576e64fa197",
+    "bytes": 2637
+  },
+  "third_party/licenses/libandroid-shmem-LICENSE": {
+    "sha256": "0dd43abe17196b0224cb0b159819af798cd508a82a21e5870126fff4e899a7eb",
+    "bytes": 1529
+  },
+  "third_party/licenses/proot-COPYING": {
+    "sha256": "0ffa6454acbe7e410ac6f0007df83b9b3161fe55484c1f4b87487c0f2d228a6d",
+    "bytes": 19106
+  },
+  "third_party/licenses/r2ghidra-COPYING": {
+    "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+    "bytes": 35149
+  },
+  "third_party/licenses/r2ghidra-LICENSE.md": {
+    "sha256": "99b202cd5e5c846717417e58f808d061d266fc7c2a11825bfc075dfecd06f390",
+    "bytes": 1166
+  },
+  "third_party/licenses/radare2-COPYING.md": {
+    "sha256": "c4154ac363318953bc18c8faf4b41dad3457ee51475d63e708db7b41570ffa79",
+    "bytes": 825
+  },
+  "third_party/licenses/talloc-LICENSE": {
+    "sha256": "da7eabb7bafdf7d3ae5e9f223aa5bdc1eece45ac569dc21b3b037520b4464768",
+    "bytes": 7651
+  },
+  "third_party/native-launchers.json": {
+    "sha256": "b31071c93e0c033a9a5174277111dccd3724e7bd32d1de6f7507ec8c8a1c2a10",
+    "bytes": 2105
+  },
+  "third_party/packages.tsv": {
+    "sha256": "53b3c832522cfd27b1ca9f1e165f98c44551128e34b268a4f9c370d45e2ba0fc",
+    "bytes": 35091
+  },
+  "third_party/sources/sources.json": {
+    "sha256": "d8deb8d419540cd03a7ed1feccab40c5d65180223f4a9e3d00f3af006dbf4410",
+    "bytes": 1164
+  },
+  "third_party/termux-build/.editorconfig": {
+    "sha256": "f9732de07772c641c4bb2faf767b97770d3d9df66ddbd35f96093f529ff0e07e",
+    "bytes": 704
+  },
+  "third_party/termux-build/.gitattributes": {
+    "sha256": "8b5d4913a80cd6e0d2f3028614cdb1c77c2cc67485d15038af5ad0d83b5b266c",
+    "bytes": 513
+  },
+  "third_party/termux-build/.gitignore": {
+    "sha256": "e6df5788a97963456017485ed43ff4937c5d1935391d9b233a16e4e47499252b",
+    "bytes": 653
+  },
+  "third_party/termux-build/CODEOWNERS": {
+    "sha256": "5e2d9130b448751754c0468ac449627c32f32e1802a2554444d97668008ee620",
+    "bytes": 5593
+  },
+  "third_party/termux-build/CONTRIBUTING.md": {
+    "sha256": "c2d545cabb882740a838c836978820919eba7bc893e98edb57a13dd52065dd86",
+    "bytes": 30837
+  },
+  "third_party/termux-build/LICENSE.md": {
+    "sha256": "e86f899e394c692ce10dff53614f93ce473f02cddb4d88c5d49cb0c728ba5f68",
+    "bytes": 565
+  },
+  "third_party/termux-build/README.md": {
+    "sha256": "1075c182a96572aaf8995cb9d1503bc8f27f3edb238483ad74605fd58de99d2a",
+    "bytes": 3800
+  },
+  "third_party/termux-build/SECURITY.md": {
+    "sha256": "55dba728aa962b10531c729c2095f54eeddbaef6bfc7b68d3878e93dc6ad332d",
+    "bytes": 3061
+  },
+  "third_party/termux-build/STUDIO_SNAPSHOT.json": {
+    "sha256": "e86e3d02a0e32bddb9f79c0cd66877ac55c01def4cf44288902721f045c982dc",
+    "bytes": 264
+  },
+  "third_party/termux-build/build-all.sh": {
+    "sha256": "606b52ae2c8f4f00c02047f995a188efdf9a57c8b16fb6b3a2668fe707d6efd0",
+    "bytes": 3452
+  },
+  "third_party/termux-build/build-package.sh": {
+    "sha256": "5a7e3c1b85a8ddd6b5c197c47d6d384de4b387fa5114a0f679f19d9925f02204",
+    "bytes": 37513
+  },
+  "third_party/termux-build/clean.sh": {
+    "sha256": "283894a84217af2e9eee2519d44f75eafdc0227201cb9308a56f097399f10fc4",
+    "bytes": 4011
+  },
+  "third_party/termux-build/packages/libandroid-shmem/build.sh": {
+    "sha256": "db55b10b90c54dd4d39b76b5b074835c09c7c7534a84a12bc29c6a63717ff2fd",
+    "bytes": 539
+  },
+  "third_party/termux-build/packages/libtalloc/build.sh": {
+    "sha256": "b722c5adb89e4d4ad4595dbba40be562d9894103a190777392c363b57b1a7201",
+    "bytes": 2224
+  },
+  "third_party/termux-build/packages/proot/build.sh": {
+    "sha256": "b05269630e16250f84f051f5ae53cd49b91a6b7c319782e0aad2e849716c80b3",
+    "bytes": 1267
+  },
+  "third_party/termux-build/packages/proot/termux-chroot": {
+    "sha256": "71f5d77e680a029d0c053699b407bd4a45068153f1ec545eb1cd00b26dd36008",
+    "bytes": 3106
+  },
+  "third_party/termux-build/repo.json": {
+    "sha256": "ca98924f4cd78e63dfb5c8dca10bfa34d407861cd864d97f1bf3f2ef63554271",
+    "bytes": 522
+  },
+  "third_party/termux-build/scripts/Dockerfile": {
+    "sha256": "672f96e142d0ecc6a96cdb80dfc11a5333f74555eeb6a2df024a30952ffcc694",
+    "bytes": 1827
+  },
+  "third_party/termux-build/scripts/Dockerfile.cgct": {
+    "sha256": "f68c0a4eab360d97f98e2aa53c1d7e761489574da8030bb64ada00bd0f03fedd",
+    "bytes": 548
+  },
+  "third_party/termux-build/scripts/aptly_api.sh": {
+    "sha256": "c8f3dd81d08e3e8df7f49b894161708d723c64784f7f8de2bfecd8d6b78346f6",
+    "bytes": 5685
+  },
+  "third_party/termux-build/scripts/big-pkgs.list": {
+    "sha256": "8c680fa1e09c3f6cab0eab7b3d4c5c0eaa66eaeb2195cabdd18998bb5977a0c7",
+    "bytes": 571
+  },
+  "third_party/termux-build/scripts/bin/add-to-path.sh": {
+    "sha256": "1bb2b92974530eb3897aa6b2616ee238ea2c991a04d9c0cca3ff27cb96369ce4",
+    "bytes": 399
+  },
+  "third_party/termux-build/scripts/bin/apt-compare-versions": {
+    "sha256": "13d68193db57406a1ab90b3ae9107dcd9172f75f81d60389b51c27d8f68d5392",
+    "bytes": 47
+  },
+  "third_party/termux-build/scripts/bin/build-package-dry-run-simulation.sh": {
+    "sha256": "0f69d8dd7923c604f363a52bada9883e0b794b3cd60a892f38d450824aec3ddd",
+    "bytes": 3065
+  },
+  "third_party/termux-build/scripts/bin/check-auto-update": {
+    "sha256": "77365b4cf6705e2594485e9568df4a47e33258289b306377c3467a349d14f548",
+    "bytes": 8472
+  },
+  "third_party/termux-build/scripts/bin/check-pie.sh": {
+    "sha256": "87acfe7abc30c0c8fc8a80933f94bedf3304744cc646e5844f42504dc0252f87",
+    "bytes": 290
+  },
+  "third_party/termux-build/scripts/bin/ldd": {
+    "sha256": "6d2a31285dbd2b591541e233c74da05a9a6eab2c8c72d68c0759473d572b0bc2",
+    "bytes": 59
+  },
+  "third_party/termux-build/scripts/bin/revbump": {
+    "sha256": "66e5a8fda36f6fc627c38e03447cca532700d6a04efd5803ac539161956e58e6",
+    "bytes": 5401
+  },
+  "third_party/termux-build/scripts/bin/test-buildorder-random": {
+    "sha256": "00857e5c3532447321e28c154c004086d87c772215b2cc62ea4b7e11e6dc5012",
+    "bytes": 1012
+  },
+  "third_party/termux-build/scripts/bin/update-checksum": {
+    "sha256": "3372fe8b4a24d31adacfc4aca94d9f4acc61af7535ff4d1304ed0a55870a34f2",
+    "bytes": 4603
+  },
+  "third_party/termux-build/scripts/bin/update-packages": {
+    "sha256": "1a0c1da3a53e4a8d1ef5e7a97c194d195081f06264e639145ba3b10ffc9ac1fe",
+    "bytes": 28709
+  },
+  "third_party/termux-build/scripts/bin/validation": {
+    "sha256": "215955cd121d9ce25e717c6add5e9c8d5fbedd793e292f7eb4962ee05621a237",
+    "bytes": 7853
+  },
+  "third_party/termux-build/scripts/bootstrap/01-termux-bootstrap-second-stage-fallback.sh": {
+    "sha256": "8ed5473984a80645465d63db3a6a1db163b07fe19b02a36d1f1645684891cc1d",
+    "bytes": 1613
+  },
+  "third_party/termux-build/scripts/bootstrap/termux-bootstrap-second-stage.sh": {
+    "sha256": "bdcfcb41e9368ed8c13a4b40540cbbce309a3cc5fbff478a95bbdd9892a65fbb",
+    "bytes": 17712
+  },
+  "third_party/termux-build/scripts/build-bootstraps.sh": {
+    "sha256": "3ac5ee9e94d84796f528f0f6afce9c4e82a54f0df95f8515b237ab8817c94877",
+    "bytes": 15663
+  },
+  "third_party/termux-build/scripts/buildorder.py": {
+    "sha256": "f4f7b235841ad0b1fe2e72ff46f8ff4b085896250e100b291cb48237f4619983",
+    "bytes": 17812
+  },
+  "third_party/termux-build/scripts/check-built-packages.py": {
+    "sha256": "433e45582443530509f5ee5673edd9a93b406b4330e8d47fc4ff1d8eb1fe2271",
+    "bytes": 1271
+  },
+  "third_party/termux-build/scripts/check-repository-health.js": {
+    "sha256": "576c51ea486b703232a06e9c13ee00c120ec89327a0eafc618e9aae4c489234d",
+    "bytes": 13304
+  },
+  "third_party/termux-build/scripts/check-versions.sh": {
+    "sha256": "ba259933cfabd06c28359526585324ef7a0c798f8b36a39ad09875bfcd3fd660",
+    "bytes": 472
+  },
+  "third_party/termux-build/scripts/config.guess": {
+    "sha256": "50205cf3ec5c7615b17f937a0a57babf4ec5cd0aade3d7b3cccbe5f1bf91a7ef",
+    "bytes": 50850
+  },
+  "third_party/termux-build/scripts/config.sub": {
+    "sha256": "26b852f75a637448360a956931439f7e818bf63150eaadb9b85484347628d1fd",
+    "bytes": 39943
+  },
+  "third_party/termux-build/scripts/free-space.sh": {
+    "sha256": "b90ab4bd873fdacb05c7267fd9349a4f44a1e98acb3f0df089f406af73fff6ea",
+    "bytes": 1729
+  },
+  "third_party/termux-build/scripts/generate-apt-packages-list.sh": {
+    "sha256": "a66210acad6f67aa5449514ca0776f62ccf9495e89492fe245f3e37afcdee77b",
+    "bytes": 3547
+  },
+  "third_party/termux-build/scripts/generate-bootstraps.sh": {
+    "sha256": "f573685ecbcb6eb62d109759fcebbcfc7bf18752f0cc45776625af0eaa65de2f",
+    "bytes": 17770
+  },
+  "third_party/termux-build/scripts/get_hash_from_file.py": {
+    "sha256": "b8d4d641179c88bd58a8fd268a0f22d0a51426febb3676be7034ba9a97cd1527",
+    "bytes": 2286
+  },
+  "third_party/termux-build/scripts/libc.map.txt": {
+    "sha256": "5831b40390f17a34536513c79735bc632aa3d3f4d81fc4ed5f5ea8ff6ed5107c",
+    "bytes": 38678
+  },
+  "third_party/termux-build/scripts/libdl.map.txt": {
+    "sha256": "066e6d3f7ea4a46134f53265fa29b1eaa78a2acdb8163c9d90f790e5544db80f",
+    "bytes": 1169
+  },
+  "third_party/termux-build/scripts/libm.map.txt": {
+    "sha256": "addb0e674222bb262646809f768328e27325266e122f569e80282216cf5c84c0",
+    "bytes": 4751
+  },
+  "third_party/termux-build/scripts/lint-packages.sh": {
+    "sha256": "9987d9428426d7ea0d27a6d57fa331b8eb3d366792f1c8c04d52ded618fee01e",
+    "bytes": 24969
+  },
+  "third_party/termux-build/scripts/linux-kernel-signing-keys.gpg": {
+    "sha256": "8f0fd12a76163507f3c1e5e3b51a6c1b5f439c1c41d7eab0e08b9cae6316aee2",
+    "bytes": 4881
+  },
+  "third_party/termux-build/scripts/list-packages.sh": {
+    "sha256": "0deb7fecc36de918fc91e92826028337e5a14d988a6a21d5bee3c653f9480ec7",
+    "bytes": 304
+  },
+  "third_party/termux-build/scripts/list-versions.sh": {
+    "sha256": "772eee6daced001f83a92c586c8b7e63f3b03c924f4f74e3e78d19e57e1733e5",
+    "bytes": 495
+  },
+  "third_party/termux-build/scripts/profile-relaxed.apparmor": {
+    "sha256": "e686ccebaa07443929a15af317b04763303f663255a3dc18ab9e899ca2df00c9",
+    "bytes": 1786
+  },
+  "third_party/termux-build/scripts/profile-restricted.apparmor": {
+    "sha256": "ec7680c466c03c9354b890e6860f9fb3e1b5512d380c9d05e426cb47548abbe8",
+    "bytes": 2434
+  },
+  "third_party/termux-build/scripts/profile.json": {
+    "sha256": "9b6629d61ebcbd551bbefc843a4c9a2745bc48858a33f6957b18c242008a2bb2",
+    "bytes": 20395
+  },
+  "third_party/termux-build/scripts/properties.sh": {
+    "sha256": "238a19b2f29ef5eed5806a21bee8f5a51bc5031e7db3fcc393d831292300b725",
+    "bytes": 92423
+  },
+  "third_party/termux-build/scripts/run-docker.ps1": {
+    "sha256": "5e2cbecc795f0e6ea9aefe77b0b4337ac84bb4cfcec58c6c2efa7bf2b3e9545a",
+    "bytes": 981
+  },
+  "third_party/termux-build/scripts/run-docker.sh": {
+    "sha256": "d67b37a9f1142b5f12b5818f312df7b33889158541e74f04524d1378cabf60b2",
+    "bytes": 9066
+  },
+  "third_party/termux-build/scripts/setup-android-sdk.sh": {
+    "sha256": "4db186be1604a6ff8730c629fbe9f8cee3e9fb99f6b72382e954182d4aece437",
+    "bytes": 2638
+  },
+  "third_party/termux-build/scripts/setup-archlinux.sh": {
+    "sha256": "2da60d343fa1c25fda9d729875f712f25809b54b3a017b9e3a56a4badd83f1c6",
+    "bytes": 2403
+  },
+  "third_party/termux-build/scripts/setup-cgct.sh": {
+    "sha256": "44bb92fc0e31634f52e106c60aba59e394070167144e21e90c11ac5a8db28560",
+    "bytes": 2596
+  },
+  "third_party/termux-build/scripts/setup-offline-bundle.sh": {
+    "sha256": "8c934c4f838d3647226ea1f7d8bef53c9f477f08cca9086b36c951f3d200747a",
+    "bytes": 4197
+  },
+  "third_party/termux-build/scripts/setup-termux-glibc.sh": {
+    "sha256": "d646c78f48d6fe0e7dde092495252860e746b623ea94f45c03352a7df73d88de",
+    "bytes": 534
+  },
+  "third_party/termux-build/scripts/setup-termux.sh": {
+    "sha256": "55a227b18dbde9a0d3abef2b1e3e6c15b55bbb07322271e25a36c15a3f085894",
+    "bytes": 3563
+  },
+  "third_party/termux-build/scripts/setup-ubuntu.sh": {
+    "sha256": "b5920702fb1341f36a3fcd79697c5b0ae782ee57b8a258e761889abe7968e7ef",
+    "bytes": 10241
+  },
+  "third_party/termux-build/scripts/test-runner.sh": {
+    "sha256": "7f113956fb565e1e34a8adbd25d5fb5295bca6639ffd9bd7f2c146642e1da305",
+    "bytes": 806
+  },
+  "third_party/termux-build/scripts/update-docker.ps1": {
+    "sha256": "ac060f76e622cfc9fcdd1f70f32043aa4b149d61a9bd05db8933e6906dd046a1",
+    "bytes": 752
+  },
+  "third_party/termux-build/scripts/update-docker.sh": {
+    "sha256": "46bf95071b95ab93f6b7160b6ffe54b5562a61883c7a8fae9be0ea438903d1ec",
+    "bytes": 502
+  },
+  "third_party/termux-build/scripts/updates/api/dump-repology-data": {
+    "sha256": "615e01e7efd7aed5e0b6701d8be1f9ae5fcea89c0ed9008de45318cec67b4892",
+    "bytes": 4927
+  },
+  "third_party/termux-build/scripts/updates/api/termux_github_api_get_tag.sh": {
+    "sha256": "92625ed85c557e8c0c27c2a61dceda3d0903b8c5acd84953cb0ab3b023edf5a8",
+    "bytes": 4173
+  },
+  "third_party/termux-build/scripts/updates/api/termux_gitlab_api_get_tag.sh": {
+    "sha256": "0732b8a0bca843fd9029943fc621935119b058a80188055d6202d9f684b1205f",
+    "bytes": 3732
+  },
+  "third_party/termux-build/scripts/updates/api/termux_repology_api_get_latest_version.sh": {
+    "sha256": "cf6d459dac01c385fbb6ce976991ddf173c8cbfdc6cacc6e2c8f508d7499dec4",
+    "bytes": 1372
+  },
+  "third_party/termux-build/scripts/updates/internal/termux_github_auto_update.sh": {
+    "sha256": "670a9fbab4a55089ddbb8c32d5a203467775f1d6c87a91dc30e67c4df403ce12",
+    "bytes": 328
+  },
+  "third_party/termux-build/scripts/updates/internal/termux_github_graphql.sh": {
+    "sha256": "08fa9bad0c9f53983dd67c6ffd04ba8f3a587da19a9ac2220695ea27917b5dde",
+    "bytes": 5005
+  },
+  "third_party/termux-build/scripts/updates/internal/termux_gitlab_auto_update.sh": {
+    "sha256": "05f63a1707e0abac105df06731f526dcf3609e765c55c1ea4a4c504a5e4b99a4",
+    "bytes": 335
+  },
+  "third_party/termux-build/scripts/updates/internal/termux_repology_auto_update.sh": {
+    "sha256": "4397185233ea84c0320d2ff3974bc0aec951e0cb42fba798a97429a923ce09ca",
+    "bytes": 534
+  },
+  "third_party/termux-build/scripts/updates/termux_pkg_auto_update.sh": {
+    "sha256": "cb37c7c5ca0606333360b5338c9f3cf5ed670cf2294d1b71084aae2ef57f47e9",
+    "bytes": 2226
+  },
+  "third_party/termux-build/scripts/updates/utils/termux_pkg_is_update_needed.sh": {
+    "sha256": "ea0bef06f7d4ed9437e45605302fdd07afad5b9a9ded2d2e6de8d193e6c7fa6a",
+    "bytes": 2539
+  },
+  "third_party/termux-build/scripts/updates/utils/termux_pkg_upgrade_version.sh": {
+    "sha256": "b4cba213897933c7db03a12ac9b192e5616ed4e1608cc76ef0546fce56a425c4",
+    "bytes": 7265
+  },
+  "third_party/termux-build/scripts/utils/docker/docker.sh": {
+    "sha256": "aa38b1284b000659b2ff284f84af1653bb45f9d7c5384b524862e56dabd78e7d",
+    "bytes": 3974
+  },
+  "third_party/termux-build/scripts/utils/termux/package/termux_package.sh": {
+    "sha256": "eb2a93559f542b8edd536bd07d3376b5aa17f25c03ba139496f79a127af37cd0",
+    "bytes": 3292
+  },
+  "third_party/termux-build/scripts/utils/termux_audit_published_conflicts.sh": {
+    "sha256": "941d5d15c17c69c6106bab52292ce28683de2e2c8d28919f958d8660a91dc759",
+    "bytes": 3791
+  },
+  "third_party/termux-build/scripts/utils/termux_check_file_conflicts.sh": {
+    "sha256": "7fe684b972ee7b5710e80eb986f959c814fbc6d61d67ec421b01a4df7628bd4c",
+    "bytes": 8448
+  },
+  "third_party/termux-build/scripts/utils/termux_report_published_conflicts.sh": {
+    "sha256": "49fa3eb40e5da6ca2a788b3064b2b5f0a796a20f091b557a235c130cf79038ee",
+    "bytes": 2748
+  },
+  "third_party/termux-build/scripts/utils/termux_reuse_pr_build_artifacts.sh": {
+    "sha256": "a29a40ed6078517bce930d59690a35ff932bc1645e5de7ebf7adb424d44a82d4",
+    "bytes": 12538
+  },
+  "third_party/termux-pty/LICENSE.txt": {
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "bytes": 11358
+  },
+  "third_party/termux-pty/README.md": {
+    "sha256": "5733de07cc0a7bd15992f62a44684001fc8a6657e51c72cb6312e595fb7d5659",
+    "bytes": 1420
+  },
+  "verification/android-runtime-2.0.2-results.json": {
+    "sha256": "3c550b5e93cdff53d6bd0c33db3e05bf1279f27882f4099b4fd95955b8b222f8",
+    "bytes": 2514
+  },
+  "verification/android-runtime-2.0.2.log": {
+    "sha256": "0c13ad061c1bfbb6826a44fb2b691bb54ef62f921ce346af3d3bd499af982080",
+    "bytes": 4226
+  },
+  "verification/android-runtime-2.0.3-results.json": {
+    "sha256": "4e0e7436f533907cb253b03dd617baf079558c703e7b71c371ee6ce6f3b4ce3c",
+    "bytes": 878
+  },
+  "verification/android-runtime-2.0.3.log": {
+    "sha256": "c0557e8651fd1f3c8227a591bbcbdd3b78415811a6a910e52cc77a152b9faf81",
+    "bytes": 5087
+  },
+  "verification/android-runtime-2.1.0-results.json": {
+    "sha256": "3e94cf1bfb9208c48851b729c36d3b00740bb1002a3ac276c3bf8806ac4138d6",
+    "bytes": 1044
+  },
+  "verification/android-runtime-2.1.0.log": {
+    "sha256": "000da4c5fabdacded2ff7543bf31c7d601e1c20da783315e1494dc361a15634e",
+    "bytes": 3894
+  },
+  "verification/android-runtime-2.2.0-results.json": {
+    "sha256": "f5f82dedb2e0fb21e88aa56a997f981f6806fb429828310bbdaf2c48d58672a0",
+    "bytes": 1641
+  },
+  "verification/android-runtime-2.2.0.log": {
+    "sha256": "28bd502b5d659437be736c025b473a0860174efa5000f7a86b12d981e9cc8f81",
+    "bytes": 4276
+  },
+  "verification/android-startup-2.0.1-results.json": {
+    "sha256": "80ce243af77589ceb5873573d4475b3902658764fa26af50a5c021b8c81a437d",
+    "bytes": 2232
+  },
+  "verification/android-startup-2.0.1.log": {
+    "sha256": "54f7a4bd646e4d3a8712087b21179187073493441e80f93d3d9c106105e8bc04",
+    "bytes": 3915
+  },
+  "verification/apk-build.log": {
+    "sha256": "12f1675a866f501ae8cb7b5e72b9dc02772341c523a8f460d35d421c8cf3ed7c",
+    "bytes": 2715
+  },
+  "verification/apk-payload.json": {
+    "sha256": "33d7a17418a58b759e86797046f81896489185be0fbd661d0620729f54009702",
+    "bytes": 1716
+  },
+  "verification/client-live-ui-2.2.0.log": {
+    "sha256": "9f1b2442a8e4eac2fd9faeda4917fc00cf673e7024280524a6a8dab8307cdd30",
+    "bytes": 241
+  },
+  "verification/debian-arm64-tools.log": {
+    "sha256": "33f10ba1aabf2e2bb1438e5e9ce67004e2cfb7a49e3b23e1b70130a61ce02c35",
+    "bytes": 3843
+  },
+  "verification/extracted-image-tools-linux-arm64.log": {
+    "sha256": "da3d3b010ea77b5e56b921e52fff7a9a0728ae4b095ee42ca21154c8eeb9ea91",
+    "bytes": 3931
+  },
+  "verification/harness-source-review.json": {
+    "sha256": "86bafafa0cf820509810260b8173c62ceb88fe93d47e14a306a787aa4827d867",
+    "bytes": 4733
+  },
+  "verification/harness-source-review.md": {
+    "sha256": "9cc9d8625e840c1aaf11c4b2ad87996a979a90cf4f473b6b7244c0cd5b1fab53",
+    "bytes": 3857
+  },
+  "verification/image-extraction-linux-arm64.log": {
+    "sha256": "b94ef34bd4b08b5fa405e25e6cfdfcfe687e478d7058a9b8f7fc5bf7bf9b7811",
+    "bytes": 198
+  },
+  "verification/image-stats.json": {
+    "sha256": "87f7e6ea41a55c6ec461eaff1fb3bef05cc39589da9f9fe2c072e03a3ed1be0e",
+    "bytes": 118
+  },
+  "verification/javascript-tests.log": {
+    "sha256": "7510b164d47be53c842d6159eb361fb5f1059afd014845b1b54d3b1950a12c99",
+    "bytes": 24345
+  },
+  "verification/journal-host-tests.log": {
+    "sha256": "e44fe1ae715b006c112f1e349b437aeefff1448b1d4ad3591a0b2b97851c76bb",
+    "bytes": 45
+  },
+  "verification/journal-tests-2.2.0.log": {
+    "sha256": "e44fe1ae715b006c112f1e349b437aeefff1448b1d4ad3591a0b2b97851c76bb",
+    "bytes": 45
+  },
+  "verification/native-execution-linux-arm64.log": {
+    "sha256": "bb402a4d59bb31d76e6a67a5d8db7d053e66fec2782d3554f30072ca367920fd",
+    "bytes": 925
+  },
+  "verification/native-host-2.0.3-results.json": {
+    "sha256": "550066781b823c7f55c7beab67488f0c1d900a998e93e3fcae8c6d662c34c9d4",
+    "bytes": 239
+  },
+  "verification/native-host-2.1.0-results.json": {
+    "sha256": "721c8b5c912151719a31135c8507e40046dd6760fc62345fba6193d973e874a0",
+    "bytes": 197
+  },
+  "verification/provider-chain-ui-2.2.0.log": {
+    "sha256": "e03e737a7a2ea716785acaebc39a19944e19691cf22c479fba684bfa19b48e6b",
+    "bytes": 457
+  },
+  "verification/provider-native-2.2.0.log": {
+    "sha256": "00d6c207b025257c83dd35b70afaacb1e407057705b531b0145f61b1d0b96a86",
+    "bytes": 4510
+  },
+  "verification/runtime-image.json": {
+    "sha256": "5a7e67ec1ff7dda18a63e000f7c637a707a739afc159d4f0d63f52379a2e939f",
+    "bytes": 971
+  },
+  "verification/storage-host-tests.log": {
+    "sha256": "0dd0679c5d487797ef0dca5729d8f3543ec28224534bd2acd17f3b182cdd12a5",
+    "bytes": 28
+  },
+  "verification/studio-ui-2.0.3.log": {
+    "sha256": "1b5615c3f3db2ccb8ed6cbb995f67a58c9407639b2b5636cb0fb2897d9633bca",
+    "bytes": 646
+  },
+  "verification/transport-host-tests.log": {
     "sha256": "1e419fc1044fb801263966e01fdb761aa83f3c3ef1a9cd3311385ffaae1eb846",
     "bytes": 1766
+  },
+  "verification/ui-performance-220.json": {
+    "sha256": "e7ad6df90589c74c40b2ad0052cf217d8db3ec3edd1517eb1c6c8b6710175da3",
+    "bytes": 1995
+  },
+  "verification/workspace-host-tests.log": {
+    "sha256": "562c6aaef3a56d2768aa07009845179a5140a7ae65e6b6bfbab96ddf4ab5e591",
+    "bytes": 42
+  },
+  "verification/workspace-tests-2.2.0.log": {
+    "sha256": "562c6aaef3a56d2768aa07009845179a5140a7ae65e6b6bfbab96ddf4ab5e591",
+    "bytes": 42
   }
 }

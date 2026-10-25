@@ -1,0 +1,20 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion><groupId>io.github.deepseekbridge</groupId><artifactId>android-startup-regression</artifactId><version>2.2.0</version>
+  <properties><maven.compiler.release>8</maven.compiler.release><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding></properties>
+  <dependencies>
+    <dependency><groupId>org.robolectric</groupId><artifactId>android-all</artifactId><version>13-robolectric-9030017</version><scope>provided</scope></dependency>
+    <dependency><groupId>org.robolectric</groupId><artifactId>robolectric</artifactId><version>4.16.1</version><scope>test</scope><exclusions>
+      <exclusion><groupId>androidx.test</groupId><artifactId>monitor</artifactId></exclusion><exclusion><groupId>androidx.test.espresso</groupId><artifactId>espresso-idling-resource</artifactId></exclusion>
+    </exclusions></dependency>
+    <dependency><groupId>junit</groupId><artifactId>junit</artifactId><version>4.13.2</version><scope>test</scope></dependency>
+    <dependency><groupId>local.androidx</groupId><artifactId>monitor-classes</artifactId><version>1.8.0</version><scope>system</scope><systemPath>${project.basedir}/lib/monitor.jar</systemPath></dependency>
+    <dependency><groupId>local.androidx</groupId><artifactId>espresso-idling-classes</artifactId><version>3.7.0</version><scope>system</scope><systemPath>${project.basedir}/lib/espresso.jar</systemPath></dependency>
+  </dependencies>
+  <build><sourceDirectory>${project.basedir}/../../app/src/main/java</sourceDirectory><directory>${project.basedir}/../../build/android-runtime</directory><plugins>
+    <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><version>3.14.0</version></plugin>
+    <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><version>3.5.3</version><configuration>
+      <systemPropertyVariables><robolectric.dependency.repo.url>https://repo.maven.apache.org/maven2</robolectric.dependency.repo.url></systemPropertyVariables>
+      <argLine>-Xmx1536m</argLine>
+    </configuration></plugin>
+  </plugins></build>
+</project>

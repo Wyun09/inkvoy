@@ -14,6 +14,8 @@ await build({
   } }],
 });
 await writeFile(new URL('engine.html', assets), await readFile(new URL('js/ui/app.html', root)));
-await writeFile(new URL('app.css', assets), (await readFile(new URL('js/ui/app.css', root), 'utf8')) + '\n' + (await readFile(new URL('js/ui/workbench.css', root), 'utf8')));
+await writeFile(new URL('app.css', assets), (await Promise.all(['node_modules/@xterm/xterm/css/xterm.css','js/ui/app.css','js/ui/workbench.css','js/ui/studio.css','js/ui/thread.css','js/ui/reply.css','js/ui/motion.css'].map(file=>readFile(new URL(file,root),'utf8')))).join('\n'));
 await writeFile(new URL('logo.png', assets), await readFile(new URL('js/ui/logo.png', root)));
 console.log('Built isolated Android engine assets.');
+
+await writeFile(new URL('companion.png', assets), await readFile(new URL('js/ui/companion-motion.png', root)));

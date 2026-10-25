@@ -1,0 +1,11 @@
+✔ model settings save encrypted credentials separately, fetch IDs and drive real client SSE routing (10604.6692ms)
+✔ model dialog closes through app back and cancellation addresses custom HTTP transport (8490.6146ms)
+✔ reply chain keeps each commentary beside its actual tool and final answer follows the chain (8620.0772ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 19484.0531

@@ -1,0 +1,49 @@
+{
+  "apk": "deepseek-android-bridge-v2.2.0.apk",
+  "bytes": 615794532,
+  "sha256": "fe554434e51af4a7efefc5dd19bcc0e463e5ee435bfe561e2618c61d66191a79",
+  "rawZipPathsPortable": true,
+  "sourcePayloadsMatched": [
+    "assets/app.css",
+    "assets/companion.png",
+    "assets/engine.bundle.js",
+    "assets/engine.html",
+    "assets/logo.png",
+    "assets/NOTICE.txt",
+    "assets/runtime/debian-arm64.tar.gz",
+    "assets/runtime/manifest.json",
+    "lib/arm64-v8a/libandroid-shmem.so",
+    "lib/arm64-v8a/libproot.so",
+    "lib/arm64-v8a/libproot_loader.so",
+    "lib/arm64-v8a/libtalloc.so",
+    "lib/arm64-v8a/libtermux.so"
+  ],
+  "nativeLibraries": {
+    "lib/arm64-v8a/libandroid-shmem.so": {
+      "sha256": "84475798e07c8174dbbfaec70a827fdb02f19ffa69a589380c13e7507fd0e731",
+      "minLoadAlignment": 16384
+    },
+    "lib/arm64-v8a/libproot.so": {
+      "sha256": "0df9240e08015aa7f5194c32b3fe5d9c8a8ea16dfb895ccafb65847a7f392c7d",
+      "minLoadAlignment": 16384
+    },
+    "lib/arm64-v8a/libproot_loader.so": {
+      "sha256": "cbdef0e652c2b78af25d867e1719fdebbb0915e25aae2dd35b3b5c1835f6b551",
+      "minLoadAlignment": 16384
+    },
+    "lib/arm64-v8a/libtalloc.so": {
+      "sha256": "160d39bc0d7ed946f22310d1d6f20addda21b02b0972dffe929fe49951543941",
+      "minLoadAlignment": 16384
+    },
+    "lib/arm64-v8a/libtermux.so": {
+      "sha256": "3bd5991c15635b71db2c51893095a75b4fe46a5e3c480d947bfd789c8920eb37",
+      "minLoadAlignment": 16384
+    }
+  },
+  "signerSha256": "cc8f15b569d5e813c68d49f4fa17d19afbe6f7526ef5dbdade88e317116c2b59",
+  "sameSignerAsV1": true,
+  "minSdk": 26,
+  "targetSdk": 35,
+  "versionCode": 13,
+  "androidDeviceVerified": false
+}

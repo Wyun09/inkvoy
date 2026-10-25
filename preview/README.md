@@ -1,3 +1,3 @@
-# UI preview
+# Studio UI previews
 
-These are the actual packaged HTML/CSS UI assets rendered in desktop Edge at 390x844 with a simulated native state. They are not Android-device screenshots or proof of a real logged-in session.
+Actual packaged HTML/CSS/JS rendered in desktop Edge. Native state, files and PTY output are deterministic test fixtures; these images do not establish Android device or real-account verification. No generated mockup is used.

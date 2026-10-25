@@ -3,6 +3,7 @@ import { MobileBuffer } from './platform.js';
 import { sendControl } from './send-control.js';
 import { reasoningControl } from './core/reasoning-control.js';
 import { conversationDom } from './conversation-dom.js';
+import { setTimeout } from './native-clock.js';
 
 // Runs in the DeepSeek WebView through evaluateJavascript, with no native
 // JavascriptInterface installed in that remote page.
@@ -94,7 +95,7 @@ export class MobilePage {
 
 export class MobileBrowser extends DeepSeekBrowser {
   constructor(rpc, config = {}) {
-    super({ profileDir: 'android-app-private-webview', timeoutMs: 600000, firstOutputTimeoutMs: 120000, pollMs: 100, ...config });
+    super({ profileDir: 'android-app-private-webview', timeoutMs: 600000, firstOutputTimeoutMs: 120000, pollMs: 180, ...config });
     this.rpc = rpc;
     this.sendControlTimeoutMs = Number.isFinite(config.sendControlTimeoutMs) ? Math.max(100, config.sendControlTimeoutMs) : 5000;
   }
@@ -118,8 +119,9 @@ export class MobileBrowser extends DeepSeekBrowser {
         this._checkState(current, undefined, { allowHistory: true });
         if (current.composerTextLength > 0) throw new BrowserBridgeError('conversation_has_draft', 409, '该网页会话中还有未发送的草稿，请先处理后重试。');
         const snapshot = await page.evaluate(conversationDom, { action: 'inspect' });
-        if (snapshot?.path === conversation.path && snapshot.answerCount === conversation.answerCount
-          && snapshot.lastAnswer === conversation.lastAnswer && current.composerCount === 1) return { ...current, reused: true };
+        if (snapshot?.path === conversation.path
+          && (snapshot.lastAnswer === conversation.lastAnswer || snapshot.lastAnswerLegacy === conversation.lastAnswer)
+          && current.composerCount === 1) return { ...current, reused: true };
         await new Promise(resolve => setTimeout(resolve, Math.min(this.config.pollMs, Math.max(1, restoreDeadline - Date.now()))));
       } while (Date.now() < restoreDeadline);
       if (signal?.aborted) throw new BrowserBridgeError('REQUEST_CANCELLED', 499, '请求已取消。');
@@ -132,8 +134,8 @@ export class MobileBrowser extends DeepSeekBrowser {
   async _beginTurn(page, _state, { conversation } = {}) {
     this._turnBoundary = await page.evaluate(conversationDom, { nonce: 'turn-' + crypto.randomUUID() });
     const snapshot = this._turnBoundary;
-    const valid = snapshot && (conversation ? snapshot.path === conversation.path && snapshot.answers.length === conversation.answerCount
-      && snapshot.answers.at(-1)?.signature === conversation.lastAnswer : snapshot.answers.length === 0);
+    const valid = snapshot && (conversation ? snapshot.path === conversation.path
+      && [snapshot.answers.at(-1)?.signature, snapshot.answers.at(-1)?.legacySignature].includes(conversation.lastAnswer) : snapshot.answers.length === 0);
     if (!valid) {
       this._turnBoundary = null;
       throw new BrowserBridgeError('conversation_changed', 409, '发送前网页会话发生变化，已停止以避免混入旧历史。');
@@ -142,6 +144,12 @@ export class MobileBrowser extends DeepSeekBrowser {
   async _completeTurn(page) {
     const snapshot = await page.evaluate(conversationDom, { action: 'inspect' });
     return /^\/(?:a\/)?chat\/(?:s\/)?[a-zA-Z0-9_-]+\/?$/.test(snapshot?.path || '') ? snapshot : undefined;
+  }
+  async _readState(page) {
+    const state = await super._readState(page);
+    if (this._turnBoundary && state.turnValid !== false && !this._turnBoundary.boundPath
+      && /^\/(?:a\/)?chat\/(?:s\/)?[a-zA-Z0-9_-]+\/?$/.test(state.chatPath || '')) this._turnBoundary.boundPath = state.chatPath;
+    return state;
   }
   async _beforeSubmit(page, { webSearch = true, reasoning, signal, deadline }) {
     await this._setPageToggle(page, 'search', webSearch, signal, deadline);

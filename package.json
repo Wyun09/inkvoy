@@ -1,13 +1,23 @@
 {
   "name": "deepseek-android-bridge",
-  "version": "1.0.0",
+  "version": "2.2.0",
   "private": true,
   "type": "module",
   "scripts": {
     "sync": "node scripts/sync-core.mjs",
     "build:assets": "node scripts/build-assets.mjs",
-    "test": "node --test test/*.test.mjs"
+    "test": "node --test --test-concurrency=3 test/*.test.mjs"
   },
-  "dependencies": { "ajv": "8.20.0" },
-  "devDependencies": { "esbuild": "0.25.12", "playwright": "1.64.1" }
+  "dependencies": {
+    "@xterm/addon-fit": "0.11.0",
+    "@xterm/xterm": "6.0.0",
+    "ajv": "8.20.0",
+    "dompurify": "3.4.17",
+    "highlight.js": "11.12.0",
+    "marked": "18.1.1"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.12",
+    "playwright": "1.64.1"
+  }
 }

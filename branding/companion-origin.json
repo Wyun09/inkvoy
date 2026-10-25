@@ -1,0 +1,28 @@
+{
+  "name": "小墨",
+  "tool": "built-in image_gen",
+  "mode": "generate",
+  "modelVersionVerified": false,
+  "asset": "js/ui/companion.png",
+  "sha256": "642e0481e4d1a784e6859b697f90c925122524602545170c423b9b5e2e8609b2",
+  "width": 1774,
+  "height": 887,
+  "color": "RGBA",
+  "transparentBackground": true,
+  "grid": [
+    4,
+    2
+  ],
+  "prompt": "branding/companion-prompt.txt",
+  "poses": [
+    "idle",
+    "thinking",
+    "reading",
+    "terminal",
+    "writing",
+    "done",
+    "error",
+    "waiting"
+  ],
+  "reusesExistingThirdPartyMascot": false
+}

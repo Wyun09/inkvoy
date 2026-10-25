@@ -1,0 +1,12 @@
+{
+  "source": "Production bundle and actual createClient tool transitions; Native tool results are explicit fixtures.",
+  "poses": [
+    "reading",
+    "terminal",
+    "writing",
+    "thinking"
+  ],
+  "animatedPosesChecked": 3,
+  "reducedMotionVerifiedBy": "test/studio-ui.test.mjs",
+  "physicalAndroidDevice": false
+}

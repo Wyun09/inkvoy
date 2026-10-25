@@ -1,0 +1,10 @@
+{
+  "workspaceAndTarAssertions": 23,
+  "journalSqlAssertions": 32,
+  "commands": [
+    "scripts/test-workspace.ps1",
+    "scripts/test-journal.ps1"
+  ],
+  "lastRunAfterHardLinkCopyPatch": true,
+  "physicalAndroidDevice": false
+}

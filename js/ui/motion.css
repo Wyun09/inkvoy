@@ -1,0 +1,104 @@
+/* Motion stays local: compositor transitions for navigation, four raster frames
+   per work state, and no activity animation when its page is not visible. */
+:root{--ease-out:cubic-bezier(.2,.8,.2,1);--ease-spring:cubic-bezier(.2,.9,.25,1.15)}
+button,a[role="link"],summary{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+button{transition:background-color .14s ease,color .14s ease,opacity .14s ease,transform .14s var(--ease-out)}
+button:active:not(:disabled){transform:scale(.96)}
+button[aria-busy="true"]{cursor:progress;opacity:.65}
+button:focus-visible,summary:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.page{animation:studio-page-enter .18s var(--ease-out)}
+.studio-chat{animation:none}
+.chat-heading{border-bottom:1px solid color-mix(in srgb,var(--line) 65%,transparent)}
+.chat-composer{transition:border-color .16s ease,box-shadow .16s ease;background:var(--surface)}
+.chat-composer:focus-within{border-color:color-mix(in srgb,var(--brand) 52%,var(--line));box-shadow:0 0 0 2px color-mix(in srgb,var(--brand) 7%,transparent)}
+.composer-modes:not([hidden]),.client-notice:not([hidden]){animation:studio-reveal .16s var(--ease-out)}
+.chat-messages{scroll-behavior:auto;overflow-anchor:none}
+.reply-turn{animation:studio-reveal .18s var(--ease-out)}
+.reply-body.is-streaming{white-space:pre-wrap;overflow-wrap:anywhere}
+.reply-body.is-streaming::after{content:'';display:inline-block;width:5px;height:14px;margin-left:4px;background:var(--brand);vertical-align:-2px;animation:reply-caret 1s steps(2,end) infinite}
+.reply-earlier{display:block;margin:0 auto 18px;min-height:44px;padding:0 14px;border:1px solid var(--line);border-radius:20px;color:var(--muted);font-size:11px;background:transparent}
+.reply-step-title>span{display:block}.reply-step-title>small{display:block}
+.reply-code,.reply-step,.tool-tile{contain:style}
+.reply-code pre,.reply-thought,.reply-step-body{overscroll-behavior:contain}
+.studio-chat .chat-welcome{gap:0;display:flex;align-items:flex-start;text-align:left}
+.chat-welcome .welcome-companion{display:block;width:70px;height:70px;margin:0 0 12px}
+.welcome-companion .companion-sprite{width:70px;height:70px}
+.chat-welcome h2{margin:0 0 11px;letter-spacing:-.7px;font-weight:450}
+.chat-welcome p{max-width:260px;font-size:12px;line-height:1.8;color:var(--muted)}
+.client-progress{gap:9px;min-height:66px;padding:4px 0 9px}
+.client-progress>div{position:relative;padding:0 1px 7px}
+.work-status-heading{display:flex;gap:8px;align-items:center;min-height:23px}
+.work-status-heading strong{font-size:12px;font-weight:550}
+#client-elapsed{margin-left:auto;font-size:10px;font-variant-numeric:tabular-nums;color:var(--muted);white-space:nowrap}
+.client-progress p{line-height:1.6;font-size:10px;max-width:100%;margin:0}
+.client-progress .work-activity-line{position:absolute;left:0;right:0;bottom:1px;height:2px;background:var(--line);overflow:hidden;border-radius:2px}
+.work-activity-line::after{content:'';display:block;width:33%;height:100%;background:var(--brand);transform:translateX(-110%)}
+.client-progress[data-active="true"] .work-activity-line::after{animation:work-travel 2s ease-in-out infinite}
+.client-progress.is-finished{min-height:48px;padding:1px 0 5px}
+.client-progress.is-finished>div{padding-bottom:0}
+.client-progress.is-finished .work-activity-line{display:none}
+.client-progress.is-finished p:not(:empty){display:block;font-size:10px}
+.client-progress #client-stop{border-radius:20px;padding:0 13px;font-size:11px}
+.task-companion,.client-progress .task-companion{flex:0 0 54px;width:54px;height:54px;border:0;background:none;border-radius:0;box-shadow:none;overflow:visible}
+.task-companion::before,body.dark .task-companion::before{content:none;display:none}
+.companion-sprite{width:54px;height:54px;position:relative;background-size:400% 800%;background-position:0 0;image-rendering:pixelated;transform-origin:50% 85%;animation:pet-frames 2.8s step-end infinite,pet-breathe 2.8s ease-in-out infinite}
+[data-pose="thinking"] .companion-sprite{background-position-y:14.285714%;animation:pet-frames 1.8s step-end infinite,pet-think 1.8s ease-in-out infinite}
+[data-pose="reading"] .companion-sprite{background-position-y:28.571429%;animation:pet-frames 1.6s step-end infinite,pet-read 1.6s ease-in-out infinite}
+[data-pose="terminal"] .companion-sprite{background-position-y:42.857143%;animation:pet-frames .8s step-end infinite,pet-type .8s ease-in-out infinite}
+[data-pose="writing"] .companion-sprite{background-position-y:57.142857%;animation:pet-frames 1.2s step-end infinite,pet-write 1.2s ease-in-out infinite}
+[data-pose="done"] .companion-sprite{background-position-y:71.428571%;animation:pet-frames 1.2s step-end 2,pet-done 1.2s var(--ease-spring) 2}
+[data-pose="error"] .companion-sprite{background-position-y:85.714286%;animation:pet-frames 2.4s step-end 2,pet-error 1.2s ease-in-out 2}
+[data-pose="waiting"] .companion-sprite{background-position-y:100%;animation:pet-frames 2.4s step-end infinite,pet-wait 2.4s ease-in-out infinite}
+.is-finished .task-companion,.is-finished .companion-sprite{width:40px;height:40px;flex-basis:44px}
+body.dark .companion-sprite{filter:brightness(1.45)}
+.task-companion.is-greeting .companion-sprite{animation:pet-frames .7s step-end 1,pet-greet .7s var(--ease-spring) 1}
+body:not([data-page="chat"]) .companion-sprite,body[data-ui-paused] .companion-sprite{animation-play-state:paused}
+body:not([data-page="chat"]) .work-activity-line::after,body[data-ui-paused] .work-activity-line::after{animation-play-state:paused}
+body[data-ui-paused] *,body[data-ui-paused] *::before,body[data-ui-paused] *::after{animation-play-state:paused!important}
+.studio-drawer{animation:drawer-slide .22s var(--ease-out)}
+.sheet,.change-dialog{animation:sheet-lift .2s var(--ease-out)}
+.file-entry,.tool-tile,.terminal-tabs button{transition:background-color .14s ease}
+#runtime-progress{accent-color:var(--brand)}
+@keyframes pet-frames{0%,100%{background-position-x:0}25%{background-position-x:33.333333%}50%{background-position-x:66.666667%}75%{background-position-x:100%}}
+@keyframes pet-breathe{50%{transform:translateY(-1px) scaleY(1.025)}}
+@keyframes pet-greet{30%{transform:translateY(-7px) rotate(-6deg)}65%{transform:rotate(4deg)}}
+@keyframes studio-page-enter{from{opacity:.65;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@keyframes studio-reveal{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@keyframes sheet-lift{from{transform:translateY(20px);opacity:.7}to{transform:translateY(0);opacity:1}}
+@keyframes work-travel{to{transform:translateX(410%)}}
+@keyframes reply-caret{50%{opacity:0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+.composer-model{max-width:48%;min-width:70px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 7px!important;border-radius:18px!important;font-size:11px!important;color:var(--muted)}
+.model-scrim{position:fixed;inset:0;z-index:75;background:#0005;display:flex;align-items:flex-end;animation:drawer-fade .16s ease-out}
+.model-dialog{width:100%;max-height:93%;background:var(--bg);border-radius:18px 18px 0 0;border:1px solid var(--line);overflow:auto;overscroll-behavior:contain;padding:16px 18px 20px;animation:sheet-lift .2s var(--ease-out)}
+.model-dialog>header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:15px}.model-dialog h2{font-size:19px;line-height:1.5;font-weight:550;margin:0}.model-dialog header p{font-size:11px;color:var(--muted);margin:4px 0 0}.model-dialog #model-close{font-size:25px;width:44px;height:44px;border-radius:10px}
+.model-dialog label{display:block;font-size:12px;line-height:1.7;color:var(--muted);margin-bottom:12px}.model-dialog input:not([type=checkbox]),.model-dialog select{display:block;width:100%;height:45px;min-width:0;margin-top:5px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink);font:inherit;font-size:14px;line-height:1.4;padding:0 10px}
+.model-dialog input:focus,.model-dialog select:focus{outline:1px solid var(--brand);outline-offset:0}.model-dialog footer{display:flex;gap:10px;padding-top:4px}.model-dialog footer button{flex:1;border:1px solid var(--line);border-radius:10px;font-size:12px;padding:0 12px}.model-dialog #provider-save{background:var(--brand);color:white;border-color:transparent}
+.provider-model-row{display:flex;gap:8px;align-items:flex-end}.provider-model-row label{flex:1;min-width:0}.provider-model-row button{white-space:nowrap;margin-bottom:12px;border:1px solid var(--line);border-radius:9px;padding:0 11px;font-size:11px}.provider-help,.provider-advanced p,#provider-web-note{font-size:11px;line-height:1.8;color:var(--muted);margin:4px 0 12px}.provider-advanced summary{font-size:11px;color:var(--muted);min-height:44px;display:flex;align-items:center}.model-dialog .provider-checkbox{display:flex;gap:8px;align-items:center;font-size:11px}.provider-checkbox input{accent-color:var(--brand)}#provider-feedback{font-size:12px;line-height:1.8;color:var(--brand);margin:8px 0}.provider-advanced{border-top:1px solid var(--line)}
+@media(min-width:700px){.model-dialog{max-width:560px;margin:0 auto}.model-scrim{align-items:center}.model-dialog{border-radius:18px}}
+
+/* Chronological execution chain. Each assistant note stays next to its calls. */
+.reply-process{border:0!important;border-radius:0!important;background:none!important;overflow:visible;margin:2px 0 15px}
+.reply-process>summary{padding:0 0 5px!important;min-height:34px!important;font-size:11px!important;color:var(--muted)}
+.reply-process>summary::before{content:'↳';font-size:16px}
+.reply-steps{position:relative;padding:0 0 0 16px!important}
+.reply-steps::before{content:'';position:absolute;top:12px;bottom:15px;left:6px;width:1px;background:var(--line)}
+.reply-chain-message{position:relative;margin:3px 0 13px;padding:2px 4px 2px 13px;min-width:0;animation:studio-reveal .16s var(--ease-out)}
+.reply-chain-message::before{content:'';position:absolute;left:-13px;top:8px;width:7px;height:7px;border-radius:50%;background:var(--bg);border:1px solid var(--line)}
+.reply-chain-caption{display:block;font-size:10px;color:var(--muted);margin-bottom:6px;letter-spacing:.3px}
+.reply-chain-preview{font-size:13px;line-height:1.85;color:var(--ink);white-space:pre-wrap;overflow-wrap:anywhere}
+.reply-chain-more>summary{font-size:10px;color:var(--muted);min-height:44px;list-style:none;display:flex;align-items:center}
+.reply-chain-more>.markdown{font-size:13px;line-height:1.8;max-height:340px;overflow:auto}
+.reply-step{position:relative;border:0!important;margin:0 0 9px;padding-left:12px;border-radius:0;overflow:visible}
+.reply-step>summary{padding:5px 4px!important;min-height:52px;gap:8px;border-radius:9px}
+.reply-step>summary:hover{background:var(--brand-soft)}
+.reply-step .reply-step-icon{position:absolute;left:-17px;top:17px;background:var(--bg);width:15px;height:15px;font-size:10px}
+.reply-step[data-state=running]>summary{background:color-mix(in srgb,var(--brand) 6%,transparent)}
+.reply-step[data-state=running] .reply-step-title{color:var(--brand)}
+.reply-step-body{padding:1px 4px 10px!important}
+.reply-step-title small{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.has-chain>.reply-body:not([hidden]){position:relative;border-top:1px solid var(--line);padding-top:19px;margin-top:8px}
+.has-chain>.reply-body:not([hidden])::before{content:'回复';display:block;font-size:10px;line-height:1.5;letter-spacing:.3px;color:var(--muted);margin-bottom:11px}
+
+.provider-checkbox{min-height:44px}.provider-checkbox input{width:18px;height:18px}.model-dialog input,.model-dialog select{font-size:16px!important}

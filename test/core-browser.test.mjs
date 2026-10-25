@@ -66,6 +66,28 @@ class FakeBrowser extends DeepSeekBrowser {
   }
 }
 
+test('stable output tolerates rewritten body and thought text until the final completed snapshot',async()=>{
+ const browser=new FakeBrowser([{},
+  {answerCount:1,text:'Old draft',reasoningCount:1,reasoningText:'Old thought'},
+  {answerCount:1,text:'Rewritten final',reasoningCount:1,reasoningText:'Rewritten thought'},
+  {answerCount:1,text:'Rewritten final',reasoningCount:1,reasoningText:'Rewritten thought',completed:true},
+ ]);
+ const frames=[];for await(const event of browser.generate({prompt:'Check',reasoning:true,stableOutput:true}))frames.push(event);
+ assert.equal(frames.filter(f=>f.type==='text').map(f=>f.delta).join(''),'Rewritten final');
+ assert.equal(frames.filter(f=>f.type==='reasoning').map(f=>f.delta).join(''),'Rewritten thought');
+ assert.equal(frames.filter(f=>f.type==='text').length,1);
+});
+
+test('temporary turn boundary reflow waits and never emits its unconfirmed text',async()=>{
+ const browser=new FakeBrowser([{},
+  {answerCount:1,text:'DO_NOT_EMIT',turnPending:true},
+  {answerCount:0,text:'',turnPending:true},
+  {answerCount:1,text:'CONFIRMED',turnPending:false,completed:true},
+ ]);
+ const events=[];for await(const event of browser.generate({prompt:'Check',stableOutput:true}))events.push(event);
+ assert.equal(events.filter(event=>event.type==='text').map(event=>event.delta).join(''),'CONFIRMED');
+ assert.equal(events.at(-1).type,'done');assert.equal(browser.pages[0].sent.length,1);
+});
 test('streams only new text and waits for an explicit completion control', async () => {
   const browser = new FakeBrowser([
     {},

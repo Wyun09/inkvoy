@@ -1,0 +1,11 @@
+{
+  "repository": "https://github.com/assistant-ui/assistant-ui",
+  "commit": "e97f7c61365ef0f73686c7b596751802f1a1ddd2",
+  "file": "apps/docs/components/examples/claude.tsx",
+  "adaptation": "Vanilla Android WebView adaptation of warm conversation canvas, floating composer and suggested actions; no React runtime or remote font dependency.",
+  "files": {
+    "LICENSE": "71fd4b7b76d27a09af2e8b2bedf14e51f4c229e32b59654d327cc24dc63e60d7",
+    "claude.tsx": "5f8eb5a456f14b5323a61adfa698a8435cc57ee516c13eb0459c0aa78e5640a5",
+    "clone-thread-shell.tsx": "eb1f9d80562360ef434cad79934951857e7a49ae930d3a999d4e62a77642977f"
+  }
+}

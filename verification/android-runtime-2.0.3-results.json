@@ -1,0 +1,36 @@
+{
+  "tests": 35,
+  "suites": [
+    {
+      "name": "io.github.deepseekbridge.AccessSettingsTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "io.github.deepseekbridge.RuntimeAssetsTest",
+      "tests": "10",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "io.github.deepseekbridge.RuntimeHardLinkTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "io.github.deepseekbridge.StartupRegressionTest",
+      "tests": "12",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ],
+  "physicalAndroidDevice": false,
+  "testApk": "deepseek-android-bridge-v2.0.3.apk",
+  "sha256": "157f0bd215b1533ad01de501109fae50407490a2031ba4da277688e4e4ac76bc"
+}

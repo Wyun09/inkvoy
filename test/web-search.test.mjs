@@ -4,6 +4,7 @@ import { chromium } from 'playwright';
 import { reasoningControl } from '../js/core/reasoning-control.js';
 import { MobileBrowser } from '../js/mobile-browser.js';
 import { createEngine } from '../js/engine.js';
+import {conversationDom} from '../js/conversation-dom.js';
 let browser;
 before(async () => { browser = await chromium.launch({ headless: true, ...(process.platform === 'win32' ? { channel: 'msedge' } : {}) }); });
 after(async () => { await browser?.close(); });
@@ -60,4 +61,25 @@ test('invalid web_search input is rejected without invoking the webpage backend'
   const engine = createEngine({ async *generate() { called = true; } }, (_id, kind, payload) => { if (kind === 'response') resolve(payload); });
   engine.receive({ path: '/v1/chat/completions', body: { model: 'deepseek-web', messages: [{ role: 'user', content: 'hi' }], web_search: 'true' } });
   const response = await done; assert.equal(response.status, 400); assert.equal(response.body.error.code, 'invalid_web_search'); assert.equal(called, false);
+});
+
+test('search source cards are excluded and copy/regenerate finish the current answer without read-aloud',async t=>{
+ const page=await fixture(t,'');await page.locator('form').evaluate(n=>n.insertAdjacentHTML('afterend','<main id="log"></main>'));
+ const adapter=new MobileBrowser(()=>{});adapter._turnBoundary=await page.evaluate(conversationDom,{nonce:'search-fixture'});
+ await page.locator('#log').evaluate(n=>n.innerHTML='<section><div class="ds-message"><div data-testid="search-results"><div class="ds-markdown ds-assistant-message-main-content">SEARCH SOURCE CARD</div></div><div role="status">正在搜索网页</div><div class="ds-markdown ds-assistant-message-main-content"><p>正在整理</p></div></div><button aria-label="复制">copy</button><button aria-label="重新生成">retry</button></section><button id="stop" aria-label="停止生成">stop</button>');
+ let s=await adapter._readState(page);assert.equal(s.answerCount,1);assert.equal(s.searching,true);assert.equal(s.completed,false);assert.ok(!s.text.includes('SOURCE CARD'));
+ await page.locator('[role="status"]').evaluate(n=>n.remove());await page.locator('#stop').evaluate(n=>n.remove());await page.locator('.ds-message>.ds-assistant-message-main-content').evaluate(n=>n.innerHTML='<p>SEARCH_FINAL_ANSWER</p>');
+ s=await adapter._readState(page);assert.equal(s.completed,true);assert.equal(s.text,'SEARCH_FINAL_ANSWER');assert.equal((await page.evaluate(conversationDom,{action:'inspect'})).answerCount,1);
+});
+
+test('full web search delivers current answer and live snapshots through the engine',async t=>{
+ const context=await browser.newContext();t.after(()=>context.close());const page=await context.newPage();
+ const html=`<!doctype html><meta charset="utf-8"><form><textarea placeholder="Message DeepSeek"></textarea><button type="button" aria-pressed="false" id="think">深度思考</button><button type="button" aria-pressed="false" id="search">智能搜索</button><button type="button" id="send" aria-label="发送消息">send</button></form><main id="log"></main><script>
+ for(const id of ['think','search'])document.getElementById(id).onclick=e=>e.currentTarget.setAttribute('aria-pressed',e.currentTarget.getAttribute('aria-pressed')!=='true');
+ send.onclick=()=>{document.querySelector('textarea').value='';history.pushState({},'','/a/chat/s/search-current');log.innerHTML='<section><div class="ds-message"><div data-testid="search-results"><div class="ds-markdown ds-assistant-message-main-content">search source card</div></div><div role="status">正在搜索网页</div><div class="ds-markdown ds-assistant-message-main-content"><pre></pre></div></div><button aria-label="复制">copy</button><button aria-label="重新生成">retry</button></section><button id="stop" aria-label="停止生成">stop</button>';setTimeout(()=>{document.querySelector('[role=status]').remove();document.querySelector('pre').textContent='SEARCH_PARTIAL';},200);setTimeout(()=>{document.querySelector('pre').textContent='SEARCH_FINAL_ANSWER';document.getElementById('stop').remove();},650);};</script>`;
+ await page.route('https://chat.deepseek.com/**',r=>r.fulfill({contentType:'text/html; charset=utf-8',body:html}));await page.goto('https://chat.deepseek.com/');
+ const rpc=async(op,arg)=>{if(op==='resetBrowser')return page.goto('https://chat.deepseek.com/');if(op==='navigate')return page.goto(arg.url);if(op==='evaluate')return page.evaluate(async({source,argument})=>(0,eval)('('+source+')')(argument),arg);throw new Error(op);};
+ const drafts=[];let finish;const done=new Promise(r=>finish=r);const engine=createEngine(new MobileBrowser(rpc,{pollMs:30}),(id,kind,p)=>{if(kind==='response')finish(p);},{onDraft:(id,d)=>drafts.push(d)});
+ engine.receive({id:'search-roundtrip',path:'/v1/chat/completions',body:{model:'deepseek-web',messages:[{role:'user',content:'SEARCH_REQUEST'}],web_search:true,bridge_output_mode:'stable'}});
+ const result=await done;assert.equal(result.status,200,JSON.stringify(result));assert.equal(result.body.choices[0].message.content,'SEARCH_FINAL_ANSWER');assert.ok(drafts.some(d=>d.content==='SEARCH_PARTIAL'));assert.ok(drafts.some(d=>d.phase==='searching'));assert.ok(!JSON.stringify(drafts).includes('source card'));
 });

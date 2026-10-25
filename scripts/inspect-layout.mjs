@@ -1,0 +1,4 @@
+import {chromium} from 'playwright';
+import {uiHarness,workbenchState,navigateLegacy} from '../test/ui-harness.mjs';
+const browser=await chromium.launch({headless:true,channel:process.platform==='win32'?'msedge':undefined});
+try{for(const width of [320,768]){const {page,context}=await uiHarness(browser,{width,height:844});await page.evaluate(s=>BridgeDashboard.render(s),workbenchState);for(const tab of ['home','tasks','web','connect']){await navigateLegacy(page,tab);console.log(JSON.stringify(await page.evaluate(()=>({page:document.body.dataset.page,width:innerWidth,scroll:document.documentElement.scrollWidth,overflow:[...document.querySelectorAll('body *')].filter(n=>n.getClientRects().length&&n.getBoundingClientRect().right>innerWidth+.5).map(n=>({tag:n.tagName,id:n.id,class:n.className,right:n.getBoundingClientRect().right,text:n.textContent.slice(0,60)})).slice(0,20)}))));}await context.close();}}finally{await browser.close();}

@@ -1,100 +1,106 @@
-# DeepSeek 安卓本机桥 v1.0.0
+# DeepSeek 工作室 v2.2.0
 
-在安卓手机上登录 DeepSeek 网页，并把网页操作转换成同一部手机可以调用的 OpenAI Chat Completions 和 Anthropic Messages 接口。两种协议共用端口、密钥、队列与网页登录状态。运行链路全部在手机上：
+在一个安卓 App 中聊天、操作项目文件、运行真实 Linux 终端，并让内置 Agent 执行工具后自动继续。手机独立运行，电脑可关机。默认模型复用应用内已登录的 DeepSeek 网页，无需外部 API。也可在输入框下方的模型按钮中添加自己的 OpenAI 兼容 API、模型 ID 与密钥。
 
-```text
-手机兼容客户端
-    ↓ http://127.0.0.1:8787/v1 + 手机生成的 Bearer 密钥
-本 APK 的本机 HTTP 服务 + 协议引擎
-    ↓ 安卓 WebView 的网页操作
-https://chat.deepseek.com/
-```
+完整离线 APK 包含 Debian 13 ARM64 用户空间和预装工具。首次初始化只检查空间、校验 SHA-256 和解压；不会在手机上逐个下载必需工具。模型聊天和 DeepSeek 网页搜索仍需联网。
 
-运行时不需要电脑、Termux、Root、ADB 或桌面 Harness。需要互联网连接 DeepSeek。安卓客户端若要执行工具，须具备它自己的工具执行能力；本桥只交出经过校验的工具请求。
+## 2.2.0 更新
 
-**v1.0.0 加入持久化任务工作台：会话重开后续接、真实阶段时间线、取消与有边界的重试、原协议结果重放、严格 Agent 完成协议，以及全新的米白墨绿 UI。** 保留两种协议、自动发送、内置智能搜索、思考检测和生成的 Logo。完整约定与边界见 [UPGRADE_1.0.0.md](UPGRADE_1.0.0.md)，证据见 [VERIFICATION.md](VERIFICATION.md)。安卓真机与真实账号仍需设备验证。
+回复改为按真实顺序呈现的执行链：一段说明 → 对应工具与结果 → 下一段说明 → 最终回复。当前工具高亮，长说明和日志独立展开；保留阅读位置、代码复制、高亮、表格、文件 Diff 与撤回。
 
-## 安装与使用
+内置客户端在网页生成期间逐段显示当前轮正文与思考，允许网页修订尚未提交的草稿。工具必须等完整协议和参数校验后执行。搜索卡片与正文分开识别，支持搜索后仅显示复制/重新生成按钮的完成形态，搜索未结束或仍在生成时不会提前完成。
 
-1. 将 `deepseek-android-bridge-v1.0.0.apk` 传到手机并覆盖安装，无需卸载。支持 Android 8.0 / API 26 及以上；要求 Android System WebView/Chrome 的 Chromium 版本达到 120。版本过低时应用会提示更新。
-2. 打开「DeepSeek 本机桥」。应用会启动本机接口并显示概览；底部有概览、任务、DeepSeek、连接四个入口。允许通知后可以从通知栏回到应用。
-3. 进入「DeepSeek」页，在应用内的网页手动登录 DeepSeek，手动完成短信与网站要求的人机验证。手机拥有独立登录状态，不会导入电脑会话。
-4. 回到「概览」，点「重新检测」，再点「接口自测」卡片。后者会真实发送“只回复 ANDROID_BRIDGE_OK”，必须看到成功结果才算手机首次基本验收通过。
-5. 进入「连接」页，点 API 密钥右侧的复制图标，在手机上支持自定义 OpenAI 兼容 Chat Completions 接口的客户端中填写：
+同步加密写入改为后台写入与异步确认；工具和模型的关键执行边界仍等待记录持久保存。界面状态读取不等待磁盘写入，重复布局和主题操作被合并。UI 保留浏览器原生计时器，后台任务使用 Android 计时器。聊天首次只挂载最近 20 轮，旧对话可逐页加载，折叠工具日志按需构建。
 
-| 项目 | 值 |
+小墨使用图像生成工具制作的 4 × 8、共 32 帧透明素材，包含待机、思考、阅读、终端、写入、完成、异常和等待。移除暗色主题垫板，增加状态耗时与轻量过渡；离开聊天、页面不可见或选择减少动态效果时暂停相应动画。
+
+新增「模型与连接」：最多保存 8 个 OpenAI 兼容接口，支持基础地址或完整 Chat Completions 地址、模型 ID、可选 Bearer 密钥、模型列表、真实 SSE、停止生成和本机 Agent 工具。密钥使用独立 Keystore 加密文件，不进入聊天保存或导出。默认网页搜索仍可直接使用；自定义 API 的思考参数可在兼容选项中启用。
+
+本轮 263 项 JS/协议/DOM/客户端/UI、69 项 Android 框架、23 项文件/TAR 和 32 项 SQLite 日志断言全部通过。桌面 Edge 四倍 CPU 限速的 60 轮夹具中，界面更新中位耗时 34.6 → 6.5 ms，重复刷新布局回调 100 → 0；这些数字不是手机实测帧率。见 `VERIFICATION.md` 与 `FIX_2.2.0.md`。
+
+## 安装和开始
+
+1. 安装 `deepseek-android-bridge-v2.2.0.apk`。包名 `io.github.deepseekbridge`，versionCode 13，与本项目 v1.0.0 使用同一签名，可覆盖升级。要求 ARM64 Android 8.0 / API 26+、Chromium 120+ 的系统 WebView。无需 Root、Termux、电脑或桌面 Harness。
+2. 默认网页连接：打开左上角侧栏的「DeepSeek 网页」，在应用内登录；验证码和人机验证由用户完成。自定义 API：点输入框下方的模型按钮 → 添加自定义 API → 填地址、模型 ID 和密钥 → 使用此连接。
+3. 回「对话」直接提问。点击输入框下方的选项按钮可切换 Agent、深度思考和搜索；默认 Agent 和搜索开启。回复在生成时逐段更新，工具在校验通过并保存记录后执行，等待时显示实际阶段和耗时。
+4. 使用终端或 Agent 的终端工具时，首次解压 Debian；也可到侧栏「工具与环境」手动初始化。保持应用前台，等待进度完成，再点「运行自检」。实际镜像大小和空间要求见 `app/src/main/assets/runtime/manifest.json`。
+5. 在「终端」运行 Bash、Python、Node、Git 等，或从「文件」导入 APK/DEX/JAR/SO，点文件旁的「分析」。产物保存到当前项目的 `analysis/`，可查看、编辑和导出；二进制文件也可直接导出。
+
+清除应用数据或卸载会删除应用私有项目、聊天、密钥和网页登录状态。覆盖升级时项目与版本化环境分开保留。旧版网页桥的关联记录仍使用原存储；v2 内置聊天使用独立的 Keystore 加密存储。v1 的内存聊天不会凭空迁移为内置聊天。
+
+侧栏「设置与权限」可分别开启所有文件访问、服务通知和后台电池豁免。Android 的其他应用私有目录仍不可访问。授权共享存储后请新开终端，在 `/shared` 查看；原项目仍在 `/workspace`。
+
+## 已实现的工作流
+
+- 内置聊天与 Agent：模型请求工具 → 本机真实执行 → SQLite 保存结果 → 回传模型 → 自动下一轮。每次运行最多 30 个模型轮次，达到预算后可明确继续；完成、等待补充、停止和失败分开显示。
+- 工具身份：调用 ID 和规范化参数建立持久记录。同 ID 已完成的结果重放；参数冲突和未知执行状态报错。重开应用不会自动重跑工具；恢复使用原 ID 检查日志，防止重复副作用。
+- 真实命令：分离 stdout/stderr、退出码、超时、取消、耗时与输出截断。终端工具最长 600 秒；每个输出流保留 128 KiB。取消使用 PRoot 的 SIGQUIT 清理机制，原生启动器解除 Java 继承的信号屏蔽。
+- 交互终端：原生 PTY、xterm.js、中文/Emoji 输入、窗口调整、Ctrl-C/Ctrl-D、Tab/方向键、键盘、粘贴、复制、清屏及最多 4 个终端。界面渲染器重建可重新附加仍存活的 PTY；进程被系统杀死后不宣称 shell 可以原地恢复。
+- 项目文件：应用内独立项目、文件树、UTF-8 编辑、原子保存、文字搜索、系统文件选择器导入/导出。文本编辑限 1 MiB，写入限 2 MiB；导入单文件限 512 MiB。更大或二进制内容使用终端处理。
+- 会话：最多 32 个内置会话，可命名、置顶、归档、导出 JSON 和删除。删除聊天保留项目文件和网页历史。同任务传递稳定 conversation_id，历史一致时复用网页对话；压缩或改写历史不强行拼接。
+- UI：紧凑聊天与侧栏、按时间排列的执行链、可修订流式草稿、独立展开的工具结果、按需高亮/复制/表格、真实文件 Diff 和冲突保护撤回、透明 32 帧小墨与减少动态效果支持。
+- 外接桥：保留 OpenAI Chat Completions、Anthropic Messages、工具协议、网页思考/搜索开关和自动发送。外接客户端的工具和任务循环仍由该客户端执行。
+
+内置网页客户端使用可修订的流式草稿；对外网页 API 的工具请求默认采用稳定输出策略：等待完整协议校验后再交付，容忍网页生成期间改写正文或思考。它会延后首段展示；不会加速 DeepSeek 生成。显式 `bridge_output_mode: "live"` 保留即时流模式。
+
+## 镜像内工具
+
+| 用途 | 已固定的版本 |
 | --- | --- |
-| Base URL | `http://127.0.0.1:8787/v1` |
-| Model | `deepseek-web` |
-| API Key | 「连接」页复制的手机密钥 |
-| 协议 | OpenAI Chat Completions |
+| Debian ARM64 | 13 / trixie，完整包清单 `third_party/packages.tsv` |
+| APK/DEX 到 Java | JADX 1.5.6 |
+| Manifest、资源和 Smali | Apktool 3.0.3 |
+| DEX 拆装 | smali / baksmali 2.5.2.git2771eae |
+| Java class/JAR | CFR 0.152 |
+| ELF/SO 反汇编和伪代码 | radare2 6.2.4 + r2ghidra 6.2.4 |
+| 开发环境 | Bash 5.2.37、Python 3.13.5、Node 20.19.2、npm 9.2.0、Git 2.47.3、OpenJDK 21.0.12.1 |
+| 基础分析/构建 | file、strings、readelf、objdump、xxd、cc/c++、make、curl、zip/unzip 等 |
 
-Claude Code 在「连接 → 复制 Claude Code 配置」中直接复制，使用根地址 `http://127.0.0.1:8787`（不加 `/v1`）。详细配置见 [CLAUDE_CODE.md](CLAUDE_CODE.md)。`127.0.0.1` 指调用程序所在设备；电脑 Claude Code 需要端口转发，不能直接用电脑本机地址访问手机。
+已验证样例覆盖 Java 源码、资源/Smali、DEX 回组装、JAR 反编译和 ELF 函数伪代码。Apktool 的 APK 完整重建仍需要单独验证 ARM64 aapt/aapt2 链路；本版不宣称已验收该功能。反编译本身也不保证恢复所有代码。
 
-电脑可以关机。手机需要保持网络；客户端须允许访问本机 HTTP 地址。不要填电脑版的密钥。接口不提供浏览器跨域访问；网页客户端需要自己的后端。
+## 外接客户端
 
-概览中的「停止服务」会停止接口并移除前台服务通知。重开应用可再次启动。应用不会开机自启。清除应用数据或卸载会移除手机密钥及 WebView 登录数据。
+本机桥端口为 8787，只监听手机回环地址；「工作台 → 连接配置」可复制本机生成的密钥和配置。
 
-## 能力与边界
+- OpenAI Base URL：`http://127.0.0.1:8787/v1`，模型 `deepseek-web`。
+- Claude Code / Anthropic 根地址：`http://127.0.0.1:8787`，不加 `/v1`；使用连接页的专用复制按钮，详见 `CLAUDE_CODE.md`。
+- 内置客户端直接调用本机引擎，不需要填写这些配置。
 
-- 文本、完整消息历史、OpenAI 形式的 `tools` / `tool_choice`、独立 `reasoning_content`、SSE 和估算 usage。工具 Schema 保留并执行 draft-07 / 2019-09 / 2020-12 校验。
-- Anthropic `/v1/messages`：system、content blocks、`tool_use` / `tool_result`、具名 SSE、thinking 开关和长 MCP 名称映射。`/v1/messages/count_tokens` 为本地估算，不生成网页请求。支持 `?beta=true` 路径及 Bearer / `x-api-key` 认证。两种认证同时发送时必须均有效。
-- Anthropic thinking/adaptive 映射为网页思考开关；没有 Anthropic 的签名状态，`usage_meta.thinking_signature` 为 `not_available`，不伪造签名。结构化输出、服务端执行工具等未实现能力明确报错。
-- 复用桌面桥 v0.2.2 的核心；两个文件保持原文，browser.js 加入安卓会话/开关/提交钩子，protocol.js 加入 Schema 方言与规范化消息，dom-text.js 加入本轮回答边界。哈希与修改说明在 `CORE_PROVENANCE.json`。没有修改或重启桌面桥 / Harness。
-- 一次只操作一个网页；最多等待 8 个请求。取消后等待旧页面清理，避免把旧回答混入下一轮。
-- 工具封装校验失败或完全无输出时最多再尝试一次，两种恢复共用最多两次的预算。完全无输出等待 120 秒，总请求时限 600 秒（含排队）。已出现正文或原始思考时不走空响应重试。
-- 手机请求体传输上限 **16 MiB**，超限返回 413；不截断历史。没有宣称手机实测过 1M token。
-- 图片实现支持 PNG/JPEG/WebP 的 base64 data URL，每张不超过 10 MiB、最多 8 张，受整体请求上限约束。远程 HTTP(S) 图片 URL 明确返回 400。手机端图片上传采用 WebView FileList/DataTransfer + DOM 就绪检查；尚未在真实手机的 DeepSeek 上传链路验收。
-- usage 按完整逻辑 API 历史进行字符启发式估算，图片 token 不计入；不是网页累计上下文或官方账单。物理提交可为增量，`usage_meta.conversation` 报告是否复用及发送消息数。网页没有暴露官方缓存统计，`usage_meta.cache.status` 为 `unknown`，不伪造命中数。
-- 仍保留网页渲染、验证码、登录失效、限流和改版导致失败的可能。手机号与验证码只在网页中由你输入，不由桥处理。
-- 自动发送会核对当前编辑器和待发正文，点击唯一可用发送按钮，再检查提交发生。同一提交最多点击一次；缺失、禁用、歧义或生成中明确报错。真实手机页面布局、文件上传与长期后台生命周期仍需设备验证。
-- 智能搜索默认开启，在「概览 → 智能搜索」可调整。每次发送前应用并确认网页开关，无需外部搜索模型/API。网页自行决定是否实际检索，请求可用 boolean `web_search` 覆盖本次策略。Anthropic `web_search_*` 声明映射为网页搜索，不提供其原生结果块、引用格式和高级过滤语义。
-- 默认自动复用：比对包含上次校验后 assistant 回复和工具 ID 的完整历史前缀；匹配时只发送新增消息、上传新增图片，工具定义未变时不重复发送。无需修改普通客户端配置。
-- 最多保留 16 个会话关联；交错调用或应用重开后恢复各自网页 URL 并核对最后回答。本机 Keystore / AES-GCM 加密保存关联和有界任务记录。之前版本的内存关联无法迁移，升级后的首次调用会建立新关联。
-- 相同首问不用于合并独立任务。客户端改写/压缩历史、会话丢失、关联被淘汰或出现歧义时，携带完整 API 历史开始新对话；不会把增量发进不匹配的旧会话。未发送草稿会保留并明确报错。
-- 概览中的「持久化会话 → 下次开始新会话」只清除本地关联，不删除网页历史。请求可传 `conversation_id` 隔离任务、`reset_conversation: true` 重置关联。没有 ID 时自动匹配；显式 ID 也需要历史前缀匹配，不会盲目拼接单条无历史请求。
-- 任务页显示真实阶段、工具等待与失败记录。运行中可取消；失败的纯文本任务可以桥内重试，工具任务需在原客户端继续。应用重开后旧的运行状态标为中断，不自动重新发送。
-- 带工具请求默认严格完成协议，内容型最终回复要求模型明确 `complete` 或 `needs_input`，缺失时最多修复一次。可在连接页切换兼容模式，或请求指定 `bridge_agent_mode`。该约束无法验证模型声明是否真实，也不替代客户端 Agent 循环。
-- 客户端显式发送 `Idempotency-Key` 时，已保存的同键同内容结果原样重放并保留工具 ID；冲突、无可用缓存或不安全的工具恢复明确报错。最多保留 32 个任务、64 个请求，输入与结果各最多 1 MiB，有容量淘汰；客户端仍负责防止重复执行工具。
-- `GET /v1/bridge/tasks`、单个任务、`/result`、`POST /cancel` 和 `POST /retry` 共用本机认证。结果读取不是实时 SSE 断点续传。详细请求路径、保留规则和恢复限制见 UPGRADE_1.0.0.md。
+网页没有提供官方 prompt cache 统计；usage 为估算，cache 保持 unknown，不伪造命中数。一次只驱动一个 DeepSeek 网页，多个请求排队。网站改版、登录失效、限流和验证仍可能影响调用，错误会保留具体状态。
 
-## 结构与构建
+## 验证范围
 
-`app/src/main/java` 是原生界面宿主、前台服务、WebView RPC 和 loopback HTTP 服务；`js/ui` 是应用自带的离线界面；`js/core` 是复用的核心；`js/mobile-browser.js` 与 `js/engine.js` 是安卓适配；`app/src/main/assets` 是实际打进 APK 的隔离引擎。
+详见 `VERIFICATION.md` 和 `verification/` 的日志。已通过协议/DOM/UI/客户端测试、Java TCP/存储/SQLite/文件归档测试，以及 Linux ARM64 QEMU 中的实际反编译和原生 PTY/取消测试。
 
-没有把 Native JavascriptInterface 注入 DeepSeek 网页。它只存在于应用自带、禁止导航和外部资源的本地引擎 WebView；远程页面只接受限于 DeepSeek 来源的 DOM 操作。手机端密钥只存应用私有设置，APK 不带电脑或手机密钥。
+本次没有连接安卓手机。Android 目标 SDK 35 的真实启动、Keystore、登录后的 DeepSeek 调用、首次离线解压、覆盖安装、锁屏与系统回收仍未完成真机验收。桌面界面预览使用生产 HTML/CSS/JS 和明确标注的 Native 测试数据，不代表手机截图。原生 ELF 已检查 16 KiB 对齐；这也不替代 16 KiB Android 真机测试。
 
-在 Windows 上复现（Node.js 22+、PowerShell、网络连接）：
+## 构建
+
+源码包含 APK 内的离线镜像、原生启动器、对应第三方源码和固定哈希；不含签名私钥、用户账号或构建 VM 密钥。
 
 ```powershell
-npm.cmd ci --ignore-scripts
-$phoneBuildTools = Join-Path $env:LOCALAPPDATA 'DeepSeekBridgeBuildTools'
-& .\scripts\provision-android.ps1 -ToolsDirectory $phoneBuildTools
-npm.cmd run build:assets
-npm.cmd test
-& .\scripts\test-transport.ps1 -Toolchain (Join-Path $phoneBuildTools 'toolchain.json')
-& .\scripts\test-storage.ps1 -Toolchain (Join-Path $phoneBuildTools 'toolchain.json')
-& .\scripts\build-apk.ps1 -Toolchain (Join-Path $phoneBuildTools 'toolchain.json') -SigningDirectory (Join-Path $phoneBuildTools 'signing')
+py --version # 构建需要 Python 3，使用它正规化 APK ZIP 原始条目路径
+npm ci
+npm run build:assets
+npm test
+.\scripts\provision-android.ps1 -ToolsDirectory C:\build\android-tools
+.\scripts\build-apk.ps1 -Toolchain C:\build\android-tools\toolchain.json -SigningDirectory C:\build\private-signing
 ```
 
-构建脚本直接使用 JDK 17、Android API 35 与 Build Tools 35.0.0，无需 Android Studio/Gradle。SDK 下载来自 Google，JDK 来自 Eclipse Adoptium，下载按官方元数据校验。构建依赖与 SDK 留在本地构建目录。签名密钥应保留在私有目录以便升级，不放入源码包。当前 APK 用本机测试签名签署，未发布到应用商店。
+构建和发行物可通过 `-BuildDirectory D:\build\studio -ArtifactDirectory D:\releases\studio` 放到有足够空间的磁盘。验包与源码打包脚本对应支持 `--artifact-directory`。
 
-发布源码包已经包含核心。`npm.cmd run sync` 会拒绝直接覆盖已修改的 browser.js / protocol.js；维护者需手动合并后同步。`scripts/sync-tests.mjs` 同理，只用于从相邻工程同步现有核心测试。
+签名目录缺失时脚本生成本地测试签名；只有使用原签名才能覆盖原安装。`-CompileOnly` 仅检查 Java/DEX，不产出可分发 APK。缺少镜像、大小或 SHA-256 不符时，正式构建会拒绝。
 
-已安装 Claude Code 的主机可运行 `node scripts/smoke-claude.mjs <隔离测试目录>`，或通过 `CLAUDE_TEST_BINARY` 指定可执行文件。该测试使用生产 JS 协议引擎与确定性模型夹具，实际调用 Write、检查文件及结果回传，并验证两次调用只使用一个夹具会话；不使用真实账号、不读写用户 Claude 设置。证据见 `claude-smoke-results.json`。
+更新原生 PTY：安装 NDK r28c 后运行 `scripts/build-native.ps1 -NdkDirectory ...`。复现 Termux 启动器运行 `py scripts/runtime/prepare-native.py <缓存目录>`；它验证固定包哈希并完成 talloc 名称补丁。
 
-Android 的 WebView 是应用内网页组件，后台服务需遵循系统生命周期规则；前台通知不等于保证网页永不暂停。本版加入失效 WebView 的清理和重建，不会自动重发中断的请求。参考 [WebView 官方文档](https://developer.android.com/develop/ui/views/layout/webapps/webview)、[前台服务类型](https://developer.android.com/develop/background-work/services/fgs/service-types)。
+重建 Debian：在专用 Debian ARM64 构建机/QEMU 中准备样例，再执行 `scripts/runtime/build-image.sh`、工具自检与 `finalize-image.sh`。包版本记录在清单中；滚动的 Debian trixie 仓库可能产生不同版本，随附离线镜像是本次发行物的精确基准。`fetch-debian-sources.py` 可取得 `packages.tsv` 对应的完整 Debian 源码文件并验证哈希。
 
-第三方组件许可证见 `THIRD_PARTY_NOTICES.md`，也包含在 APK 的 `assets/NOTICE.txt` 中。
+PRoot 是共享 Android 内核的用户空间环境，不提供独立内核、完整 systemd 或安全沙箱。Agent 模式可执行真实命令，文件工具路径限制也不是命令沙箱。新项目需要的额外依赖按项目需求安装，不影响本次预装工具离线可用。
 
-## v0.2.1 界面与思考开关
+## 自定义 API 连接
 
-概览中的“深度思考”卡片会显示已开启、已关闭、待登录或未识别；点开可重新检测或“开启并测试”。连接页提供不含密钥与正文的诊断复制。新版沿用 v0.1.0 包名和签名，可直接覆盖安装，无需卸载；原有密钥与登录数据保存在同一应用数据目录。
+协议为 OpenAI 兼容 Chat Completions。地址可填 `https://example.com/v1` 或 `https://example.com/v1/chat/completions`；也可使用本机模型服务的 HTTP 地址。`获取模型` 请求同一 API 基础地址的 `/models`，没有模型列表的服务仍可手填模型 ID。可在 [DeepSeek 官方协议说明](https://api-docs.deepseek.com/api/create-chat-completion/) 查看这种请求与 SSE 数据结构。
 
-预览见 preview/，为打包资源的桌面浏览器渲染，使用模拟状态。详细变更和测试边界见 UI_UPGRADE.md 与 VERIFICATION.md。
+上游密钥只发给所填端点，HTTP 重定向不会自动跟随。设置与聊天使用不同的 Keystore 加密文件；配置不会写进提示词、聊天导出、项目文件或公开源码。思考参数使用 `high` / `none`，须在该连接的兼容选项明确启用。Agent 工具还要求上游支持标准 `tool_calls`；接收完整参数并通过本机 schema 校验后才执行。
 
-## v0.2.1 按钮修复与新 Logo
-
-已修复本地 WebView 的 DOM Storage 未启用和界面主题读取异常导致按钮未绑定的问题。即使存储被关闭、拒绝或写满，主要界面操作仍可用。新增原生启动错误提示与重新载入入口。新 Logo 使用内置图像工具生成，已接入桌面图标和应用内标识；图像模型版本未核实，原图与提示词见 branding/。
-
-源码包中已包含图标；需要从生成原图重新导出 Android 密度资源时运行 scripts/build-icons.ps1。新版本沿用旧包名和签名，无需卸载。
+此连接选择用于内置客户端。应用对外的本机网页桥端点继续提供原有 DeepSeek 网页服务。

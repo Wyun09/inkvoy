@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
-import { uiHarness, workbenchState } from './ui-harness.mjs';
+import { uiHarness, workbenchState, navigateLegacy } from './ui-harness.mjs';
 
 test('task workbench filters actual states, opens live timelines, cancels and recovers sessions', async t => {
   const browser = await chromium.launch({ headless: true, ...(process.platform === 'win32' ? { channel: 'msedge' } : {}) }); t.after(() => browser.close());
@@ -9,7 +9,7 @@ test('task workbench filters actual states, opens live timelines, cancels and re
   await page.evaluate(state => BridgeDashboard.render(state), workbenchState);
   assert.equal(await page.locator('#metric-requests').textContent(), '28'); assert.equal(await page.locator('#metric-first').textContent(), '3.8s');
   assert.match(await page.locator('#storage-label').textContent(), /加密保存/);
-  await page.locator('.bottom-nav [data-navigate="tasks"]').click();
+  await navigateLegacy(page, 'tasks');
   assert.equal(await page.locator('#task-list .task-card').count(), 4);
   await page.locator('[data-filter="attention"]').click(); assert.equal(await page.locator('#task-list .task-card').count(), 1);
   await page.locator('[data-task="task_retry"]').click();
@@ -35,7 +35,7 @@ test('tool task retry returns to its client, response display treats tool payloa
   const browser = await chromium.launch({ headless: true, ...(process.platform === 'win32' ? { channel: 'msedge' } : {}) }); t.after(() => browser.close());
   const { page, context } = await uiHarness(browser); t.after(() => context.close());
   await page.evaluate(state => { state.taskboard.tasks[2].localRetryAvailable = false; BridgeDashboard.render(state); }, workbenchState);
-  await page.locator('.bottom-nav [data-navigate="tasks"]').click(); await page.locator('[data-task="task_retry"]').click();
+  await navigateLegacy(page, 'tasks'); await page.locator('[data-task="task_retry"]').click();
   await page.getByRole('button', { name: '查看重试方式', exact: true }).click();
   assert.match(await page.locator('#sheet-body').innerText(), /原客户端/); assert.ok(!(await page.evaluate(() => nativeActions)).some(item => item.action === 'task-retry'));
   await page.locator('#close-sheet').click();
@@ -49,7 +49,7 @@ test('workbench navigation, mode buttons and touch targets fit 320px phones and 
     const { page, context } = await uiHarness(browser, { width, height: 844 });
     await page.evaluate(state => BridgeDashboard.render(state), workbenchState);
     for (const tab of ['home', 'tasks', 'web', 'connect']) {
-      await page.locator('.bottom-nav [data-navigate="' + tab + '"]').click();
+      await navigateLegacy(page, tab);
       const bad = await page.evaluate(() => [...document.querySelectorAll('button')].filter(node => node.getClientRects().length).filter(node => node.getBoundingClientRect().width < 43.5 || node.getBoundingClientRect().height < 43.5).map(node => node.textContent)); assert.deepEqual(bad, []);
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
     }

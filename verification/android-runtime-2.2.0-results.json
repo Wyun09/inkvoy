@@ -1,0 +1,71 @@
+{
+  "tests": 69,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "androidSdk": [
+    26,
+    33
+  ],
+  "physicalAndroidDevice": false,
+  "signedApk": "deepseek-android-bridge-v2.2.0.apk",
+  "apkSha256": "fe554434e51af4a7efefc5dd19bcc0e463e5ee435bfe561e2618c61d66191a79",
+  "suites": [
+    {
+      "name": "io.github.deepseekbridge.AccessSettingsTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "4.81"
+    },
+    {
+      "name": "io.github.deepseekbridge.FileRevisionsTest",
+      "tests": "20",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "9.05"
+    },
+    {
+      "name": "io.github.deepseekbridge.ProviderGatewayTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.221"
+    },
+    {
+      "name": "io.github.deepseekbridge.ResponsivenessTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "3.676"
+    },
+    {
+      "name": "io.github.deepseekbridge.RuntimeAssetsTest",
+      "tests": "10",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "3.508"
+    },
+    {
+      "name": "io.github.deepseekbridge.RuntimeHardLinkTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.259"
+    },
+    {
+      "name": "io.github.deepseekbridge.StartupRegressionTest",
+      "tests": "12",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "3.653"
+    }
+  ]
+}

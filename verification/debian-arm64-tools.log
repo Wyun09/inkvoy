@@ -1,0 +1,133 @@
+
+>>> Bash
+GNU bash, version 5.2.37(1)-release (aarch64-unknown-linux-gnu)
+Copyright (C) 2022 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+
+This is free software; you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+PASS Bash
+
+>>> Python
+PYTHON_OK
+PASS Python
+
+>>> Node
+NODE_OK
+PASS Node
+
+>>> npm
+9.2.0
+PASS npm
+
+>>> Git
+git version 2.47.3
+PASS Git
+
+>>> Java
+Picked up JAVA_TOOL_OPTIONS: -XX:ActiveProcessorCount=2 -XX:+UseSerialGC
+openjdk version "21.0.12.1" 2026-08-18
+OpenJDK Runtime Environment (build 21.0.12.1+1-1-deb13u1-Debian)
+OpenJDK 64-Bit Server VM (build 21.0.12.1+1-1-deb13u1-Debian, mixed mode, sharing)
+PASS Java
+
+>>> JADX version
+Picked up JAVA_TOOL_OPTIONS: -XX:ActiveProcessorCount=2 -XX:+UseSerialGC
+1.5.6
+PASS JADX version
+
+>>> JADX APK to Java
+Picked up JAVA_TOOL_OPTIONS: -XX:ActiveProcessorCount=2 -XX:+UseSerialGC
+INFO  - loading ...
+INFO  - processing ...
+INFO  - progress: 0 of 2 (0%)INFO  - progress: 1 of 2 (50%)INFO  - progress: 1 of 2 (50%)                                                             INFO  - done
+PASS JADX APK to Java
+
+>>> JADX source verification
+PASS JADX source verification
+
+>>> Apktool resources and Smali
+Picked up JAVA_TOOL_OPTIONS: -XX:ActiveProcessorCount=2 -XX:+UseSerialGC
+I: Using Apktool 3.0.3 on sample.apk with 2 threads
+I: Loading resource table...
+I: Baksmaling classes.dex...
+I: Decoding value resources...
+I: Decoding file resources...
+I: Generating values XMLs...
+I: Decoding AndroidManifest.xml with resources...
+I: Loading resource table from file: /root/.local/share/apktool/framework/1.apk
+I: Copying original files...
+I: Copying unknown files...
+PASS Apktool resources and Smali
+
+>>> Decoded Android Manifest
+PASS Decoded Android Manifest
+
+>>> Baksmali DEX disassembly
+Picked up JAVA_TOOL_OPTIONS: -XX:ActiveProcessorCount=2 -XX:+UseSerialGC
+PASS Baksmali DEX disassembly
+
+>>> Smali round trip
+Picked up JAVA_TOOL_OPTIONS: -XX:ActiveProcessorCount=2 -XX:+UseSerialGC
+PASS Smali round trip
+
+>>> Reassembled DEX structure
+PASS Reassembled DEX structure
+
+>>> CFR JAR to Java
+Picked up JAVA_TOOL_OPTIONS: -XX:ActiveProcessorCount=2 -XX:+UseSerialGC
+Processing /opt/studio/selftest/sample.jar (use silent to silence)
+Processing studio.fixture.StudioFixture
+PASS CFR JAR to Java
+
+>>> CFR source verification
+PASS CFR source verification
+
+>>> C compiler and executable
+STUDIO_ELF_FIXTURE
+PASS C compiler and executable
+
+>>> file AArch64 identification
+PASS file AArch64 identification
+
+>>> readelf symbols
+PASS readelf symbols
+
+>>> objdump disassembly
+PASS objdump disassembly
+
+>>> strings inspection
+PASS strings inspection
+
+>>> xxd inspection
+PASS xxd inspection
+
+>>> radare2 version
+radare2 6.2.4 +1 abi:152 @ linux-arm_64
+birth: git.6.2.4 2026-10-05__19:20:00
+commit: 485e5e205b190fc297a2a95a6f982ff5d9f54039
+options: gpl -O1 cs:5 cl:0 make
+PASS radare2 version
+
+>>> r2ghidra actual pseudocode
+PASS r2ghidra actual pseudocode
+
+int dbg.studio_add(int left,int right)
+
+{
+    //int studio_add(int left,int right);
+    return left + right + 7;
+}
+
+
+>>> curl
+curl 8.14.1 (aarch64-unknown-linux-gnu) libcurl/8.14.1 OpenSSL/3.5.7 zlib/1.3.1 brotli/1.1.0 zstd/1.5.7 libidn2/2.3.8 libpsl/0.21.2 libssh2/1.11.1 nghttp2/1.64.0 nghttp3/1.8.0 librtmp/2.3 OpenLDAP/2.6.10
+Release-Date: 2025-06-04, security patched: 8.14.1-2+deb13u5
+Protocols: dict file ftp ftps gopher gophers http https imap imaps ipfs ipns ldap ldaps mqtt pop3 pop3s rtmp rtsp scp sftp smb smbs smtp smtps telnet tftp ws wss
+Features: alt-svc AsynchDNS brotli GSS-API HSTS HTTP2 HTTP3 HTTPS-proxy IDN IPv6 Kerberos Largefile libz NTLM PSL SPNEGO SSL threadsafe TLS-SRP UnixSockets zstd
+PASS curl
+
+>>> ZIP and unzip
+PASS ZIP and unzip
+
+STUDIO_SELFTEST passed=26 failed=0 output=/tmp/studio-selftest.Uw8JR0

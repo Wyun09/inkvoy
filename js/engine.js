@@ -5,6 +5,7 @@ import { MobileBuffer, randomUUID } from './platform.js';
 import { fromAnthropic, anthropicChannel, anthropicError } from './anthropic.js';
 import { ConversationPool } from './conversations.js';
 import { TaskLedger } from './tasks.js';
+import { setTimeout, clearTimeout } from './native-clock.js';
 
 function errorPayload(error) {
   const payload = { message: error.status || error.code ? error.message : 'Android bridge error.', type: 'bridge_error', code: error.code || 'internal_error', param: null };
@@ -86,6 +87,8 @@ export function createEngine(backend, emitNative, options = {}) {
       if (job.body.bridge_agent_mode !== undefined && !['strict', 'compatible'].includes(job.body.bridge_agent_mode)) throw new BridgeError(400, 'invalid_agent_mode', 'bridge_agent_mode 必须是 strict 或 compatible。');
       const policy = typeof config.strictAgent === 'function' ? config.strictAgent() : config.strictAgent;
       const prepared = prepareRequest(job.body, config.model, { strictAgent: job.body.bridge_agent_mode ? job.body.bridge_agent_mode === 'strict' : policy ?? true });
+      if (job.body.bridge_output_mode !== undefined && !['stable', 'live'].includes(job.body.bridge_output_mode)) throw new BridgeError(400, 'invalid_output_mode', 'bridge_output_mode 必须是 stable 或 live。');
+      const stableOutput = job.body.bridge_output_mode === 'stable' || (job.body.bridge_output_mode !== 'live' && prepared.toolsEnabled);
       if (job.countOnly) return respond(job, 200, { input_tokens: estimateUsage({ prompt: prepared.prompt }).prompt_tokens,
         usage_meta: { estimated: true, method: 'unicode_han_1.5_chars_per_token_other_4_chars_per_token', image_tokens_included: false, cache: { status: 'unknown' } } });
       const repeated = await ledger.idempotency(job, job.requestKey);
@@ -108,6 +111,14 @@ export function createEngine(backend, emitNative, options = {}) {
       let conversation = { ...(conversationPlan.record?.handle || {}), reuse: conversationPlan.reuse, fullPrompt: prepared.prompt, fullImages: images };
       let attemptImages = conversationPlan.reuse ? images.filter(image => prepared.images[image.sourceIndex].messageIndex >= conversationPlan.offset) : images;
       let formatRetries = 0, emptyRetries = 0, finishReason = 'stop', result;
+      const draftEnabled = config.onDraft && (!config.previewEnabled || config.previewEnabled(job.id));
+      const draft = value => {
+        if (!draftEnabled || signal.aborted) return;
+        let content=value.content||'';
+        if (prepared.toolsEnabled) { try { const decoder=new ContentEnvelopeDecoder();decoder.push(content);content=decoder.content; } catch { content=''; } }
+        config.onDraft(job.id,{content,reasoning:attemptDraftReasoning?value.reasoning||'':'',phase:value.phase||'generating'});
+      };
+      let attemptDraftReasoning=false;
       const prompts = [], outputs = [];
       const ready = () => {
         if (prepared.stream && !heartbeat) heartbeat = setInterval(() => {
@@ -119,10 +130,11 @@ export function createEngine(backend, emitNative, options = {}) {
         let generationError, decoderError;
         const decoder = prepared.toolsEnabled ? new ContentEnvelopeDecoder() : null;
         const attemptReasoning = prepared.reasoning && formatRetries === 0;
+        attemptDraftReasoning=attemptReasoning;
         output = '';
         prompts.push(currentPrompt);
         conversationHandle = undefined;
-        iterator = backend.generate({ prompt: currentPrompt, images: attemptImages, reasoning: attemptReasoning, webSearch, conversation, signal, onPhase: phase => ledger.phase(job, phase) })[Symbol.asyncIterator]();
+        iterator = backend.generate({ prompt: currentPrompt, images: attemptImages, reasoning: attemptReasoning, webSearch, conversation, signal, stableOutput, onPhase: phase => ledger.phase(job, phase), onSnapshot: draftEnabled ? draft : undefined })[Symbol.asyncIterator]();
         try {
           for (;;) {
             const next = await abortable(iterator.next(), signal);
@@ -134,15 +146,17 @@ export function createEngine(backend, emitNative, options = {}) {
               if (!attemptReasoning) continue;
               if (typeof event.delta !== 'string') throw new BridgeError(502, 'invalid_backend_response', 'Invalid reasoning event.');
               reasoning += event.delta;
+              if (draftEnabled) draft({content:output,reasoning});
               ledger.output(job, 'thinking');
-              if (prepared.stream && event.delta) chunk(envelope({ reasoning_content: event.delta }));
+              if (prepared.stream && event.delta && !stableOutput) chunk(envelope({ reasoning_content: event.delta }));
               continue;
             }
             const delta = typeof event === 'string' ? event : event.delta;
             if (typeof delta !== 'string') throw new BridgeError(502, 'invalid_backend_response', 'Invalid text event.');
             output += delta;
+            if (draftEnabled) draft({content:output,reasoning});
             if (delta) ledger.output(job, 'generating');
-            if (prepared.stream && delta) {
+            if (prepared.stream && delta && !stableOutput) {
               ready();
               if (decoder) {
                 try { decoder.push(delta); } catch (error) { if (error.code !== 'invalid_tool_response') throw error; decoderError = error; break; }
@@ -177,6 +191,7 @@ export function createEngine(backend, emitNative, options = {}) {
         } catch (error) {
           if (error.code === 'invalid_tool_response' && attempt === 0 && finishReason !== 'length' && !signal.aborted) {
             formatRetries++; ledger.phase(job, 'repairing');
+            if (draftEnabled) config.onDraft(job.id,{content:'',reasoning:'',phase:'repairing'});
             if (conversationHandle) {
               currentPrompt = buildToolRetryPrompt({ prompt: 'Repair the immediately preceding assistant turn in this SAME conversation. The external task, new messages and tool schemas above are unchanged.' }, output, published);
               conversation = { ...conversationHandle, reuse: true, fullPrompt: buildToolRetryPrompt(prepared, output, published), fullImages: images }; attemptImages = [];
@@ -199,6 +214,8 @@ export function createEngine(backend, emitNative, options = {}) {
       if (result.message.tool_calls?.length) { ledger.offerTools(job, result.message.tool_calls.length); save(); }
       ledger.finish(job, result, usageMeta);
       if (!prepared.stream) return respond(job, 200, { id, object: 'chat.completion', created, model: config.model, choices: [{ index: 0, message: result.message, finish_reason: result.finishReason }], usage, usage_meta: usageMeta });
+      if (stableOutput && reasoning) chunk(envelope({ reasoning_content: reasoning }));
+      if (stableOutput && !prepared.toolsEnabled && result.message.content) chunk(envelope({ content: result.message.content }));
       if (prepared.toolsEnabled) {
         const finalText = result.message.content || '';
         if (finalText.slice(published.length)) chunk(envelope({ content: finalText.slice(published.length) }));

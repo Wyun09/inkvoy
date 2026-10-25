@@ -25,7 +25,7 @@ test('packaged engine boots under its CSP and completes a round trip through the
   const assets = new URL('../app/src/main/assets/', import.meta.url);
   await engine.route('https://bridge.local/**', async route => {
     const name = new URL(route.request().url()).pathname.slice(1);
-    if (!['engine.html', 'engine.bundle.js', 'app.css', 'logo.png'].includes(name)) return route.abort();
+    if (!['engine.html', 'engine.bundle.js', 'app.css', 'logo.png', 'companion.png'].includes(name)) return route.abort();
     return route.fulfill({ contentType: name.endsWith('.png') ? 'image/png' : name.endsWith('.js') ? 'application/javascript' : name.endsWith('.css') ? 'text/css' : 'text/html; charset=utf-8', body: await readFile(new URL(name, assets)) });
   });
   await engine.exposeBinding('__nativeRequest', async (_source, id, operation, raw) => {

@@ -1,0 +1,2 @@
+Picked up JAVA_TOOL_OPTIONS: -Xms32m -Xmx512m -XX:ActiveProcessorCount=2 -XX:+UseSerialGC
+IMAGE_EXTRACT_PASS complete production tar reader, executable modes, usrmerge, sticky bit, bundled fixtures

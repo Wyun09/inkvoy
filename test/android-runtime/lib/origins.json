@@ -1,0 +1,14 @@
+[
+  {
+    "name": "monitor",
+    "url": "https://dl.google.com/dl/android/maven2/androidx/test/monitor/1.8.0/monitor-1.8.0.aar",
+    "aarSha256": "56cb7496a06d9f2dca7d3ff76c50a8a30bd18e00a24a3b267d5a31437b278e67",
+    "jarSha256": "343391452abb133d044d8e5665ef2e2e670412a5c8a0f0ee992db9ecea7c7896"
+  },
+  {
+    "name": "espresso",
+    "url": "https://dl.google.com/dl/android/maven2/androidx/test/espresso/espresso-idling-resource/3.7.0/espresso-idling-resource-3.7.0.aar",
+    "aarSha256": "5ff62326b49c308c1d060466ae3cf4aa0e3deaf9295f077a6886048dda3e9b14",
+    "jarSha256": "93c407fc96a558103d8033c28cbfe8a5ee14439929318b4e9cc426a2b4ffac8c"
+  }
+]

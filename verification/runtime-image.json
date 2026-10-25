@@ -1,0 +1,20 @@
+{
+  "sha256": "5076aaae48f952433e556f15939a24465cab6633a6a568d1c216a0b37c6efa24",
+  "compressedBytes": 613920380,
+  "regularFilePayloadBytes": 1340952995,
+  "filesystemEntries": 53474,
+  "allRequiredFilesPresent": true,
+  "noDeviceFiles": true,
+  "noBuilderSshOrHistory": true,
+  "nativeLibraries": {
+    "libandroid-shmem.so": "84475798e07c8174dbbfaec70a827fdb02f19ffa69a589380c13e7507fd0e731",
+    "libproot.so": "0df9240e08015aa7f5194c32b3fe5d9c8a8ea16dfb895ccafb65847a7f392c7d",
+    "libproot_loader.so": "cbdef0e652c2b78af25d867e1719fdebbb0915e25aae2dd35b3b5c1835f6b551",
+    "libtalloc.so": "160d39bc0d7ed946f22310d1d6f20addda21b02b0972dffe929fe49951543941",
+    "libtermux.so": "3bd5991c15635b71db2c51893095a75b4fe46a5e3c480d947bfd789c8920eb37"
+  },
+  "nativeSources": {
+    "studio.c": "e93be90a9039dcfcea2263f26b3743d7c8b271ed3657b8ef52a9d31c315998bc",
+    "termux.c": "778fee34326aaf6c8d9f5916d4667bb7d8f12af58a00e98c3c424c4e65d9debf"
+  }
+}

@@ -1,0 +1,21 @@
+studio.c:1:9: warning: "_GNU_SOURCE" redefined
+    1 | #define _GNU_SOURCE
+      |         ^~~~~~~~~~~
+<command-line>: note: this is the location of the previous definition
+Picked up JAVA_TOOL_OPTIONS: -Xms32m -Xmx512m -XX:ActiveProcessorCount=2 -XX:+UseSerialGC
+Picked up JAVA_TOOL_OPTIONS: -Xms32m -Xmx512m -XX:ActiveProcessorCount=2 -XX:+UseSerialGC
+PASS real PID and separate file descriptors
+PASS actual exit code 7
+PASS standard UTF-8 command arguments
+PASS separate stderr capture
+PASS environment process exit
+PASS standard UTF-8 environment values
+PASS NUL arguments rejected before execution
+PASS interactive PTY created
+PASS PTY shell executed input and exited 9
+PASS PTY window resize reached stty
+PASS PTY Unicode input and output
+PASS PRoot descendant actually started
+PASS SIGQUIT cancels the PRoot operation promptly
+PASS cancelled PRoot leaves no running sleep descendant
+NATIVE_EXECUTION_PASS assertions=14

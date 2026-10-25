@@ -1,0 +1,46 @@
+{
+  "productionBundle": true,
+  "toolAndApiResponses": "explicit fixtures",
+  "physicalAndroidDevice": false,
+  "animationSamples": [
+    {
+      "transform": "matrix(0.999391, -0.0348995, 0.0348995, 0.999391, 0, 0)",
+      "frame": "0%"
+    },
+    {
+      "transform": "matrix(0.999693, -0.0247875, 0.0247875, 0.999693, 0.193152, -0.00478923)",
+      "frame": "0%"
+    },
+    {
+      "transform": "matrix(0.999999, -0.00138705, 0.00138705, 0.999999, 0.640175, -0.000887958)",
+      "frame": "33.3333%"
+    },
+    {
+      "transform": "matrix(0.99987, 0.0161446, -0.0161446, 0.99987, 0.974891, 0.0157412)",
+      "frame": "33.3333%"
+    },
+    {
+      "transform": "matrix(0.999909, 0.0134628, -0.0134628, 0.999909, 0.923711, 0.0124368)",
+      "frame": "66.6667%"
+    },
+    {
+      "transform": "matrix(0.999981, -0.00613425, 0.00613425, 0.999981, 0.5495, -0.00337084)",
+      "frame": "66.6667%"
+    },
+    {
+      "transform": "matrix(0.999563, -0.0295731, 0.0295731, 0.999563, 0.101735, -0.00300993)",
+      "frame": "100%"
+    },
+    {
+      "transform": "matrix(0.999415, -0.0342096, 0.0342096, 0.999415, 0.0131765, -0.000451027)",
+      "frame": "0%"
+    }
+  ],
+  "transparentBackground": true,
+  "previews": [
+    "upgrade-220-chain.png",
+    "upgrade-220-chain-dark.png",
+    "upgrade-220-model-settings.png",
+    "upgrade-220-chain-working.png"
+  ]
+}

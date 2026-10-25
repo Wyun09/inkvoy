@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
-import { uiHarness, readyState } from './ui-harness.mjs';
+import { uiHarness, readyState, navigateLegacy } from './ui-harness.mjs';
 test('packaged UI routes, real state labels, private-key handling and touch sizes work on narrow phones', async t => {
   const browser = await chromium.launch({ headless: true, ...(process.platform === 'win32' ? { channel: 'msedge' } : {}) });
   t.after(() => browser.close());
@@ -28,7 +28,7 @@ test('packaged UI routes, real state labels, private-key handling and touch size
   assert.equal(await page.getByRole('button', { name: '下次开始新会话', exact: true }).isDisabled(), true);
   await page.locator('#close-sheet').click(); await page.evaluate(() => BridgeDashboard.render({ busy: false }));
   for (const tab of ['home', 'web', 'connect']) {
-    await page.locator('.bottom-nav [data-navigate="' + tab + '"]').click();
+    await navigateLegacy(page, tab);
     assert.equal(await page.locator('#page-' + tab).isVisible(), true);
     const sizes = await page.evaluate(() => [...document.querySelectorAll('button')].filter(node => node.getClientRects().length).map(node => ({ width: node.getBoundingClientRect().width, height: node.getBoundingClientRect().height })));
     assert.ok(sizes.every(item => item.width >= 43.5 && item.height >= 43.5));

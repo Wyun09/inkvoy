@@ -7,3 +7,14 @@ The first literal blue bridge proposal was rejected and is not used in this rele
 ## Generation prompt
 
 Use case: logo-brand. Create ONE final, premium Android app icon for an independent local AI connection utility named 本机桥. This is a complete redesign after a rejected cheap-looking literal blue bridge icon. Do not draw a bridge. No saturated blue background. Visual direction: understated contemporary product identity, warm porcelain / ivory background, one confident dark graphite abstract symbol formed from TWO offset softly squared open loops interlocking diagonally, with elegant negative space that suggests a continuous local connection and a subtle lower-case b. One small muted jade green section at the join, integrated into the geometry. It should feel precise, calm, distinctive and professionally art-directed, like a premium creative software identity. Bold enough to read clearly as a small launcher icon, but not chunky or cartoonish. Flat vector-like finished graphic, smooth curves with carefully balanced proportions and generous spacing. Center the entire symbol inside the central 56 percent of a square canvas for safe Android launcher masking. Full-bleed matte warm ivory background; no baked outer rounded-square silhouette, no sheet, no mockup, no labels, no typography, no text, no watermark. Avoid literal architecture, white bridge on blue, stock network nodes, circuit boards, gradients, glow, metallic effects, 3D, shadows and hand-drawn/sketched treatment. Output a single square 1024 by 1024 icon artwork, perfectly front-on.
+
+## Original task companion (2.0.3)
+
+小墨 is an original transparent pixel mascot, generated with the built-in
+image_gen tool. No model version was selected or verified. The existing launcher
+logo remains unchanged. `companion-origin.json` records the atlas hash, dimensions
+and eight poses; `companion-prompt.txt` contains the full final generation prompt.
+Production asset: `js/ui/companion.png`. `js/ui/companion.js` maps actual client
+task/tool states, and `js/ui/thread.css` clips the atlas and animates transforms.
+No replacement mascot was hand-drawn in SVG/canvas. CSS supplies motion and
+sprite framing. This app character is not a ChatGPT Pet or a copy of Clawd.

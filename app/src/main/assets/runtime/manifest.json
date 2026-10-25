@@ -1,0 +1,77 @@
+{
+  "id": "debian13-arm64-studio2-20261018",
+  "debian": "13",
+  "suite": "trixie",
+  "architecture": "arm64",
+  "abi": "arm64-v8a",
+  "sha256": "5076aaae48f952433e556f15939a24465cab6633a6a568d1c216a0b37c6efa24",
+  "compressedBytes": 613920380,
+  "files": 53474,
+  "unpackedBytes": 1340952995,
+  "allocatedBytes": 1499779072,
+  "requiredFreeBytes": 1987244032,
+  "maxArchiveEntries": 162422,
+  "tools": [
+    {
+      "name": "JADX",
+      "version": "1.5.6",
+      "kind": "APK / DEX → Java"
+    },
+    {
+      "name": "Apktool",
+      "version": "3.0.3",
+      "kind": "资源 / Smali"
+    },
+    {
+      "name": "smali / baksmali",
+      "version": "2.5.2.git2771eae",
+      "kind": "DEX 拆装"
+    },
+    {
+      "name": "CFR",
+      "version": "0.152",
+      "kind": "JAR / Class → Java"
+    },
+    {
+      "name": "radare2 + r2ghidra",
+      "version": "6.2.4",
+      "kind": "ELF / SO 伪代码"
+    },
+    {
+      "name": "Bash",
+      "version": "5.2.37",
+      "kind": "PTY / Shell"
+    },
+    {
+      "name": "Python",
+      "version": "3.13.5",
+      "kind": "脚本"
+    },
+    {
+      "name": "Node / npm",
+      "version": "20.19.2 / 9.2.0",
+      "kind": "JavaScript"
+    },
+    {
+      "name": "Git",
+      "version": "2.47.3",
+      "kind": "版本管理"
+    },
+    {
+      "name": "OpenJDK",
+      "version": "21.0.12.1",
+      "kind": "Java"
+    },
+    {
+      "name": "binutils / C++",
+      "version": "2.44 / GCC 14",
+      "kind": "分析 / 构建"
+    }
+  ],
+  "buildVerification": {
+    "platform": "QEMU system Linux ARM64 (not Android)",
+    "toolAssertions": 26,
+    "nativeExecutionAssertions": 14,
+    "androidDeviceVerified": false
+  }
+}

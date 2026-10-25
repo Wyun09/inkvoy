@@ -1,0 +1,24 @@
+{
+  "generator": "Built-in image generation tool, referenced-image edit",
+  "modelVersion": "not exposed by tool",
+  "transparentBackground": true,
+  "originalSource": "js/ui/companion.png",
+  "asset": "js/ui/companion-motion.png",
+  "sha256": "d0d98a789365205f95135ec91d5cf4049871c51d79913217333fe33ecf684d44",
+  "grid": {
+    "columns": 4,
+    "rows": 8,
+    "frames": 32
+  },
+  "rows": [
+    "idle",
+    "thinking",
+    "reading",
+    "terminal",
+    "writing",
+    "done",
+    "error",
+    "waiting"
+  ],
+  "promptFile": "branding/companion-motion-prompt.txt"
+}

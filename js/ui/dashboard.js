@@ -51,19 +51,31 @@ export function initDashboard() {
     try { window.localStorage?.setItem('bridge-theme', value); } catch { /* Theme still works for this session. */ }
     native('theme', { dark: value === 'dark' });
   }
+  let layoutFrame = 0, lastLayout = '';
   function layout() {
-    const slot = $('web-slot').getBoundingClientRect();
-    if (window.NativeBridge?.uiLayout) NativeBridge.uiLayout(JSON.stringify({ visible: tab === 'web' && !modal, top: slot.top, left: slot.left, width: slot.width, height: slot.height, viewportWidth: innerWidth }));
+    if (layoutFrame) return;
+    layoutFrame = requestAnimationFrame(() => {
+      layoutFrame = 0;
+      const visible = tab === 'web' && !modal;
+      const slot = visible ? $('web-slot').getBoundingClientRect() : null;
+      const rounded = value => Math.round(value * 2) / 2;
+      const raw = JSON.stringify(visible ? { visible, top: rounded(slot.top), left: rounded(slot.left), width: rounded(slot.width), height: rounded(slot.height), viewportWidth: innerWidth } : { visible: false });
+      if (raw === lastLayout) return;
+      lastLayout = raw; NativeBridge.uiLayout?.(raw);
+    });
   }
   function navigate(value) {
-    if (!['home', 'tasks', 'web', 'connect'].includes(value)) return;
+    if (!['home', 'tasks', 'web', 'connect', 'chat', 'files', 'terminal', 'tools'].includes(value) || !$('page-' + value)) return;
     tab = value;
-    for (const name of ['home', 'tasks', 'web', 'connect']) $('page-' + name).hidden = name !== value;
+    document.body.dataset.page=value;
+    window.StudioUI?.closeDrawer();
+    for (const name of ['home', 'tasks', 'web', 'connect', 'chat', 'files', 'terminal', 'tools']) if ($('page-' + name)) $('page-' + name).hidden = name !== value;
     document.querySelectorAll('.bottom-nav [data-navigate]').forEach(button => {
       button.classList.toggle('active', button.dataset.navigate === value);
       if (button.dataset.navigate === value) button.setAttribute('aria-current', 'page'); else button.removeAttribute('aria-current');
     });
     requestAnimationFrame(layout);
+    window.dispatchEvent(new CustomEvent('bridge:navigate', { detail: value }));
     if (value === 'home' && state.ready && !state.busy && !state.inspecting) native('inspect');
   }
   function toast(message) {
@@ -234,6 +246,7 @@ export function initDashboard() {
   }
   function render(next) {
     state = { ...state, ...next };
+    window.StudioUI?.platformState(state);
     const running = state.running, loggedIn = state.hasInspection && state.loggedIn;
     $('hero-dot').classList.toggle('running', running);
     $('service-label').textContent = !state.ready ? '正在准备本机服务' : running ? state.busy ? '本机服务正在处理请求' : '本机服务运行中' : '本机服务已停止';
@@ -296,8 +309,9 @@ export function initDashboard() {
   document.addEventListener('keydown', event => { if (event.key === 'Escape' && modal) closeSheet();
     if (event.key === 'Tab' && modal) { const nodes = [...$('sheet-scrim').querySelectorAll('button:not(:disabled)')]; const first = nodes[0], last = nodes.at(-1); if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); } else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); } }
   });
-  new ResizeObserver(() => requestAnimationFrame(layout)).observe($('app'));
+  new ResizeObserver(layout).observe($('app'));
+  $('app').addEventListener('animationend',event=>{if(event.target.classList.contains('page'))layout();});
   window.addEventListener('resize', layout);
-  window.BridgeDashboard = { render, navigate, toast, result, showResult, back() { if (modal) { closeSheet(); return true; } if (tab !== 'home') { navigate('home'); return true; } return false; }, setTheme };
+  window.BridgeDashboard = { render, navigate, toast, result, showResult, back() { if (window.StudioUI?.closeDrawer()) return true; if (modal) { closeSheet(); return true; } if (tab !== 'home') { navigate('home'); return true; } return false; }, setTheme };
   setTheme(theme); render(state);
 }

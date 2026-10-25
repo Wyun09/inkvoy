@@ -1,0 +1,73 @@
+{
+  "framework": "Robolectric 4.16.1 + AOSP native SQLite",
+  "apiLevels": [
+    26,
+    33
+  ],
+  "tests": 12,
+  "failures": 0,
+  "errors": 0,
+  "physicalAndroidDevice": false,
+  "cases": [
+    {
+      "name": "previousFailureShowsNativeRecoveryPageAndCopiesDiagnostic[26]",
+      "classname": "io.github.deepseekbridge.StartupRegressionTest",
+      "time": "3.583"
+    },
+    {
+      "name": "oldInitializerReproducesAndroidCrash[26]",
+      "classname": "io.github.deepseekbridge.StartupRegressionTest",
+      "time": "1.683"
+    },
+    {
+      "name": "journalOpensInWalAndRetainsCompletedFacts[26]",
+      "classname": "io.github.deepseekbridge.StartupRegressionTest",
+      "time": "0.12"
+    },
+    {
+      "name": "studioStartupDoesNotOpenDatabase[26]",
+      "classname": "io.github.deepseekbridge.StartupRegressionTest",
+      "time": "0.031"
+    },
+    {
+      "name": "serviceFailureIsRecordedAndCanBeDestroyed[26]",
+      "classname": "io.github.deepseekbridge.StartupRegressionTest",
+      "time": "0.095"
+    },
+    {
+      "name": "startupDiagnosticsRedactSecrets[26]",
+      "classname": "io.github.deepseekbridge.StartupRegressionTest",
+      "time": "0.027"
+    },
+    {
+      "name": "previousFailureShowsNativeRecoveryPageAndCopiesDiagnostic",
+      "classname": "io.github.deepseekbridge.StartupRegressionTest",
+      "time": "3.599"
+    },
+    {
+      "name": "oldInitializerReproducesAndroidCrash",
+      "classname": "io.github.deepseekbridge.StartupRegressionTest",
+      "time": "1.507"
+    },
+    {
+      "name": "journalOpensInWalAndRetainsCompletedFacts",
+      "classname": "io.github.deepseekbridge.StartupRegressionTest",
+      "time": "0.059"
+    },
+    {
+      "name": "studioStartupDoesNotOpenDatabase",
+      "classname": "io.github.deepseekbridge.StartupRegressionTest",
+      "time": "0.023"
+    },
+    {
+      "name": "serviceFailureIsRecordedAndCanBeDestroyed",
+      "classname": "io.github.deepseekbridge.StartupRegressionTest",
+      "time": "0.108"
+    },
+    {
+      "name": "startupDiagnosticsRedactSecrets",
+      "classname": "io.github.deepseekbridge.StartupRegressionTest",
+      "time": "0.025"
+    }
+  ]
+}

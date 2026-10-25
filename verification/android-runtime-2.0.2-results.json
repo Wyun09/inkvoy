@@ -1,0 +1,65 @@
+{
+  "framework": "Robolectric 4.16.1, Android API 26 and 33, AOSP native SQLite",
+  "tests": 27,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "testedApk": "deepseek-android-bridge-v2.0.2.apk",
+  "testedApkSha256": "96f7618ecfba9a5d754707988fc4d0493526ffb9add90d20ff7a904fe181135e",
+  "fullImageHashChecked": true,
+  "physicalAndroidDevice": false,
+  "chromiumRenderer": false,
+  "suites": [
+    {
+      "name": "io.github.deepseekbridge.AccessSettingsTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "cases": [
+        "sharedStorageStatusReflectsAppOpsGrant",
+        "permissionActionsTargetThisApplication",
+        "statusReportsActualGrantsInsteadOfAssumingDeclarationIsAuthorization",
+        "permissionActionsTargetThisApplication[26]",
+        "statusReportsActualGrantsInsteadOfAssumingDeclarationIsAuthorization[26]"
+      ]
+    },
+    {
+      "name": "io.github.deepseekbridge.RuntimeAssetsTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "cases": [
+        "failedObserverCannotDisableManifest[26]",
+        "errorsReplaceStaleProgressAndStatusDoesNotWaitForInstallMonitor[26]",
+        "realApkManifestLoadsAndArchiveOpens[26]",
+        "legacyWindowsEntryReproducesTheFailureAndRecovers[26]",
+        "sameInstallerReloadsManifestAfterRecoverableReadFailure[26]",
+        "failedObserverCannotDisableManifest",
+        "errorsReplaceStaleProgressAndStatusDoesNotWaitForInstallMonitor",
+        "realApkManifestLoadsAndArchiveOpens",
+        "legacyWindowsEntryReproducesTheFailureAndRecovers",
+        "sameInstallerReloadsManifestAfterRecoverableReadFailure"
+      ]
+    },
+    {
+      "name": "io.github.deepseekbridge.StartupRegressionTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "cases": [
+        "previousFailureShowsNativeRecoveryPageAndCopiesDiagnostic[26]",
+        "oldInitializerReproducesAndroidCrash[26]",
+        "journalOpensInWalAndRetainsCompletedFacts[26]",
+        "studioStartupDoesNotOpenDatabase[26]",
+        "serviceFailureIsRecordedAndCanBeDestroyed[26]",
+        "startupDiagnosticsRedactSecrets[26]",
+        "previousFailureShowsNativeRecoveryPageAndCopiesDiagnostic",
+        "oldInitializerReproducesAndroidCrash",
+        "journalOpensInWalAndRetainsCompletedFacts",
+        "studioStartupDoesNotOpenDatabase",
+        "serviceFailureIsRecordedAndCanBeDestroyed",
+        "startupDiagnosticsRedactSecrets"
+      ]
+    }
+  ]
+}

@@ -2,7 +2,7 @@ import { randomUUID } from './platform.js';
 export const PHASES = {
   queued: '等待处理', preparing: '校验请求', opening_browser: '连接网页', new_conversation: '准备新会话', resuming_conversation: '恢复原会话',
   setting_reasoning: '确认思考模式', decoding_images: '检查图片', uploading_images: '上传附件', filling_prompt: '准备消息', ready: '网页已就绪',
-  submitting: '发送消息', generating: '正在生成', thinking: '正在思考', repairing: '修复回复格式', waiting_tools: '等待客户端工具结果',
+  submitting: '发送消息', searching: '搜索网页', generating: '正在生成', thinking: '正在思考', repairing: '修复回复格式', waiting_tools: '等待客户端工具结果',
   waiting_user: '等待你的补充', completed: '已完成', failed: '处理失败', blocked: '需要处理网页登录', cancelled: '已取消', interrupted: '上次运行中断', replayed: '已返回缓存结果',
 };
 const ACTIVE = new Set(['queued', 'preparing', 'running']);

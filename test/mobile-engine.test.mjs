@@ -22,6 +22,12 @@ function harness(generate, options) {
   const chunks = frames => frames.flatMap(event => event.kind === 'data' ? event.payload.text.split('\n').filter(line => line.startsWith('data: {')).map(line => JSON.parse(line.slice(6))) : []);
   return { engine, events, submit, chunks };
 }
+test('stable tool streams keep heartbeats but never publish an invalid draft before repair',async()=>{
+ let attempt=0;
+ const h=harness(async function*({stableOutput}){assert.equal(stableOutput,true);yield {type:'ready'};await delay(25);if(++attempt===1)yield {type:'text',delta:'{"content":"Invalid draft","tool_calls":[{"name":"unknown","arguments":{}}]}'};else yield {type:'text',delta:'{"status":"complete","content":"Validated final"}'};},{heartbeatMs:5});
+ const frames=await h.submit({tools,stream:true}).promise;assert.equal(attempt,2);assert.ok(frames.some(f=>f.payload.text===': keep-alive\n\n'));const body=h.chunks(frames).flatMap(c=>c.choices||[]).map(c=>c.delta.content||'').join('');assert.equal(body,'Validated final');assert.ok(!JSON.stringify(frames).includes('Invalid draft'));
+});
+test('invalid output policy is rejected before the webpage is touched',async()=>{let calls=0;const h=harness(async function*(){calls++;yield {type:'text',delta:'unused'};});const frames=await h.submit({bridge_output_mode:'invalid'}).promise;assert.equal(frames.at(-1).payload.status,400);assert.equal(calls,0);});
 test('mobile nonstream response preserves reasoning, usage and unknown cache provenance', async () => {
   const h = harness(async function* () { yield { type: 'reasoning', delta: 'Actual thought' }; yield { type: 'text', delta: 'Actual answer' }; });
   const frames = await h.submit({ reasoning_effort: 'high' }).promise;

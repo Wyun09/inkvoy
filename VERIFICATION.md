@@ -1,23 +1,62 @@
-# 安卓本机桥 v1.0.0 验证记录
+# v2.2.0 验收记录
 
-| 检查 | 结果 | 证据 |
-| --- | --- | --- |
-| JS / DOM / UI / 协议 | 200 项通过，0 失败、0 跳过 | test-results.log |
-| 会话与任务恢复 | 新引擎加载序列化状态，再校验真实 DOM；交错任务复用及完整历史回退 | test/conversation-dom.test.mjs、test/tasks.test.mjs |
-| 严格 Agent 协议 | 进度回复不直接结束；修复预算与 needs_input / tool 校验 | test/tasks.test.mjs |
-| 幂等重放 | JSON / SSE / Anthropic 原帧、工具 ID、请求冲突、旧响应不覆盖新状态 | test/tasks.test.mjs |
-| 任务 UI | 筛选、取消、重试、原客户端引导、会话管理、320px 和宽屏触控 | test/workbench-ui.test.mjs |
-| 原生 HTTP | 35 项通过，主机真实 TCP，含任务认证与中断错误 | transport-results.log |
-| 加密文件 | 11 项通过，主机 AES-GCM，含错误密钥、篡改、随机 IV、原子写入与大小上限 | storage-results.log |
-| 已安装 Claude Code | 2.1.285，实际 Write、真实 tool_result、退出 0，两次调用一个夹具会话 | claude-smoke-results.json |
-| APK 编译签名 | API 26+ / target 35 / versionCode 7，与 v0.4.0 同签名 | build-apk.log、signature-comparison.json |
-| 界面预览 | 打包后 HTML/CSS，模拟原生状态；已查看明暗主题、任务与时间线等截图 | preview/ |
-| 安卓真机 / 真实账号 / Keystore / 锁屏后台 | 未验证，当前设备列表为空 | 以下边界 |
+日期：2026-10-19。ARM64 完整离线测试版。本轮 adb 没有连接实体 Android 手机。
 
-APK 大小：447765 字节。SHA-256：`7fd8fb2b3593aa5a64742d9f2149796f4546835f6062f552e183ec57d54be309`。
+## 最终 APK
 
-网页操作与协议测试使用本地可控页面；加密、TCP 测试在主机 JDK 上运行生产 Java 类；Claude Code 工具由已安装客户端实际执行，但模型返回是确定性夹具。这些证据不能替代安卓 Keystore、真实 DeepSeek 账号、手机文件上传、渲染进程恢复与长期后台验收。
+- deepseek-android-bridge-v2.2.0.apk：615,794,532 bytes。
+- SHA-256：fe554434e51af4a7efefc5dd19bcc0e463e5ee435bfe561e2618c61d66191a79。
+- io.github.deepseekbridge；versionCode 13；minSdk 26；targetSdk 35。
+- v2/v3 签名通过，与先前版本证书一致。
+- 8 项 assets 和 5 个 ARM64 原生库 SHA 与源码一致；原始 ZIP 路径无 Windows 分隔符，ELF 至少 16 KiB 对齐。
+- Debian 工具镜像保持原哈希。Android AssetManager 读取最终签名包并校验完整镜像长度和 SHA。
 
-任务快照与会话文件有容量上限；存储失败时显示内存运行状态。客户端必须防止工具重复执行。任务结果读取不等于部分 SSE 自动续传；网页不提供官方缓存统计，usage 为估算、cache 为 unknown。详细约定见 UPGRADE_1.0.0.md。
+## 自动化结果
 
-交付前另核对 APK 与已测试资源哈希、原生 DEX、生成的图标、源码来源和私有材料。v0.4.0 安装包与源码保留；不改动或重启桌面 Harness / 桌面桥。
+- 263 项 JS/协议/DOM/客户端/UI，0 失败、0 跳过。
+- 69 项 Android 框架（API 26/33）：启动与 SQLite 12、权限 5、安装包资源 10、硬链接 8、文件快照 20、响应速度 6、原生 API HTTP 8。全部通过。
+- 23 项文件/TAR 主机断言、32 项工具日志 SQLite 断言通过。
+- 写入锁被占用时，UI 状态/读取仍返回；同内容不重复加密；100 次相同槽位更新不重复布局/抬升 WebView。
+- Java HttpURLConnection 连接本机 HTTP 夹具，验证 SSE 首段早于响应完成、UTF-8、GET 模型列表、错误密钥隐藏和重定向拒绝；收到 `[DONE]` 后即使上游连接仍打开也能结束本轮。
+- JS/API 验证 CRLF SSE、分段工具参数、schema 拒绝、停止、固定端点、独立密钥保存、缺失用量时不伪造缓存。
+- 打包界面与远端网页夹具联动，验证完成前显示首段、草稿修订、最终 SSE 提交、搜索过渡与新完成控件。
+- 执行链验证每段说明与其工具的 DOM 顺序、独立展开、最终回复在链尾和阅读位置。
+
+## 性能对照
+
+桌面 Edge，390×844 CSS 像素，4 倍 CPU 限速，60 轮合成聊天。旧资源从此前签名的 2.1.0 APK 提取。
+
+| 指标 | 2.1.0 | 2.2.0 |
+| --- | ---: | ---: |
+| 100 次重复刷新额外原生布局通知 | 100 | 0 |
+| UI 更新中位耗时 | 34.6 ms | 6.5 ms |
+| UI 更新 P95 | 38.9 ms | 8.4 ms |
+| 首次挂载的回复轮次 | 60 | 20 |
+| 提前构建的隐藏日志代码块 | 120 | 0 |
+| 聊天区域元素 | 63,840 | 805 |
+
+这是受控夹具中的界面工作量和渲染调用耗时，不是实体 Android 帧率或端到端点击延迟。完整样本见 verification/ui-performance-220.json。
+
+## 视觉与素材
+
+本轮 22 张生产 UI 桌面预览，另保留 5 张先前版本历史图片。新预览覆盖执行链工作中/完成、亮暗主题、320px、文件、终端、Diff、模型设置和小墨状态。
+
+新小墨素材 887×1774，4 列×8 行，32 帧。内置图像生成工具参照原图编辑，模型版本未公开。透明通道及无主题垫板已检查。实际动画采样含至少 3 个不同栅格帧；页面暂停与减少动态效果有测试。出处见 branding/companion-motion-origin.json，帧采样见 preview/upgrade-220-preview.json。
+
+## 边界
+
+本轮未验证实体 Android 13 覆盖安装、长期锁屏、厂商省电、真实 DeepSeek 搜索会话或真实付费 API。HTTP、页面、模型内容与截图使用明确的测试夹具。
+
+正文和实际思考是流式展示。命令工具 stdout/stderr 仍随执行结果返回，交互终端保持原有 PTY。终端任意文件改动不自动保存快照。文件快照大小、保留数量和后续修改冲突保护不变。
+
+自定义接口使用 OpenAI 兼容 Chat Completions，模型 ID 可手填；参数能力由上游决定。内置连接选择不替代对外网页桥服务。
+
+## 日志和源码
+
+verification/javascript-tests.log、android-runtime-2.2.0.log、android-runtime-2.2.0-results.json、apk-build.log、apk-payload.json、ui-performance-220.json、provider-chain-ui-2.2.0.log。
+
+DeepSeek Harness 官方上游的固定提交、实际审阅文件和手机端差距记录见 verification/harness-source-review.md、harness-source-review.json。此项是源码审阅；本轮没有引入完整 Cordis/Node 运行时或复制其源码。
+
+先前 Linux ARM64 QEMU 的 26 项工具、14 项原生执行/PTY/取消、完整镜像提取与提取后工具检查证据保留；不作为本轮手机验证。
+
+源码包含完整离线镜像、对应 Debian/GPL 来源、MIT UI 参考、第三方许可与素材来源。ZIP 按条目核对 SHA，附 SOURCE_MANIFEST.json，排除签名私钥、用户登录、私有密钥与 node_modules。

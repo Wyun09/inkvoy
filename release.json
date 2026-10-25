@@ -1,70 +1,276 @@
 {
-  "version": "1.0.0",
-  "versionCode": 7,
+  "version": "2.2.0",
+  "versionCode": 13,
+  "buildDate": "2026-10-19",
   "package": "io.github.deepseekbridge",
-  "apk": "deepseek-android-bridge-v1.0.0.apk",
-  "bytes": 447765,
-  "sha256": "7fd8fb2b3593aa5a64742d9f2149796f4546835f6062f552e183ec57d54be309",
-  "protocols": [
-    "OpenAI Chat Completions",
-    "Anthropic Messages",
-    "estimated count_tokens",
-    "authenticated task control"
-  ],
-  "unitTests": {
-    "pass": 200,
-    "fail": 0,
-    "skipped": 0,
-    "cancelled": 0
-  },
-  "nativeHttpAssertions": 35,
-  "nativeStorageAssertions": 11,
-  "claudeCode": {
-    "version": "2.1.285",
-    "realClient": true,
-    "actualFileWrite": true,
-    "actualToolResultReturned": true,
-    "singleConversation": true,
-    "reusedCalls": 1,
-    "modelBackend": "deterministic fixture",
-    "engine": "production JS protocol engine",
-    "evidence": "claude-smoke-results.json"
-  },
-  "sameSignerAs040": true,
+  "apk": "deepseek-android-bridge-v2.2.0.apk",
+  "bytes": 615794532,
+  "sha256": "fe554434e51af4a7efefc5dd19bcc0e463e5ee435bfe561e2618c61d66191a79",
+  "signerSha256": "cc8f15b569d5e813c68d49f4fa17d19afbe6f7526ef5dbdade88e317116c2b59",
   "minSdk": 26,
   "targetSdk": 35,
-  "defaultWebSearch": true,
-  "strictAgentDefault": true,
-  "conversationReuse": {
-    "enabled": true,
-    "maxTracked": 16,
-    "persistent": true,
-    "persistence": "private AES-GCM file with Android Keystore key",
-    "automaticPrefixMatching": true,
-    "incrementalMessages": true,
-    "changedToolsOnly": true,
-    "resetPreservesWebsiteHistory": true,
-    "realDomSavedStateRestartVerified": true
+  "abi": "arm64-v8a",
+  "distribution": "offline test build",
+  "runtime": {
+    "id": "debian13-arm64-studio2-20261018",
+    "debian": "13",
+    "suite": "trixie",
+    "architecture": "arm64",
+    "abi": "arm64-v8a",
+    "sha256": "5076aaae48f952433e556f15939a24465cab6633a6a568d1c216a0b37c6efa24",
+    "compressedBytes": 613920380,
+    "files": 53474,
+    "unpackedBytes": 1340952995,
+    "allocatedBytes": 1499779072,
+    "requiredFreeBytes": 1987244032,
+    "maxArchiveEntries": 162422,
+    "tools": [
+      {
+        "name": "JADX",
+        "version": "1.5.6",
+        "kind": "APK / DEX → Java"
+      },
+      {
+        "name": "Apktool",
+        "version": "3.0.3",
+        "kind": "资源 / Smali"
+      },
+      {
+        "name": "smali / baksmali",
+        "version": "2.5.2.git2771eae",
+        "kind": "DEX 拆装"
+      },
+      {
+        "name": "CFR",
+        "version": "0.152",
+        "kind": "JAR / Class → Java"
+      },
+      {
+        "name": "radare2 + r2ghidra",
+        "version": "6.2.4",
+        "kind": "ELF / SO 伪代码"
+      },
+      {
+        "name": "Bash",
+        "version": "5.2.37",
+        "kind": "PTY / Shell"
+      },
+      {
+        "name": "Python",
+        "version": "3.13.5",
+        "kind": "脚本"
+      },
+      {
+        "name": "Node / npm",
+        "version": "20.19.2 / 9.2.0",
+        "kind": "JavaScript"
+      },
+      {
+        "name": "Git",
+        "version": "2.47.3",
+        "kind": "版本管理"
+      },
+      {
+        "name": "OpenJDK",
+        "version": "21.0.12.1",
+        "kind": "Java"
+      },
+      {
+        "name": "binutils / C++",
+        "version": "2.44 / GCC 14",
+        "kind": "分析 / 构建"
+      }
+    ],
+    "buildVerification": {
+      "platform": "QEMU system Linux ARM64 (not Android)",
+      "toolAssertions": 26,
+      "nativeExecutionAssertions": 14,
+      "androidDeviceVerified": false
+    }
   },
-  "taskWorkbench": {
-    "taskLimit": 32,
-    "requestLimit": 64,
-    "phaseLimit": 48,
-    "inputLimitBytes": 1048576,
-    "resultLimitBytes": 1048576,
-    "automaticInterruptedRetry": false,
-    "toolExecutionOwner": "calling client",
-    "idempotency": "explicit header; bounded saved results; same tool IDs; client must deduplicate execution",
-    "realtimeSseByteResume": false
+  "verification": {
+    "javascript": 263,
+    "transportHost": 35,
+    "storageHost": 11,
+    "workspaceHost": 23,
+    "journalSqliteHost": 32,
+    "linuxArm64ToolChecks": 26,
+    "linuxArm64NativeExecutionChecks": 14,
+    "fullProductionInstallerExtraction": true,
+    "extractedImageToolChecks": 26,
+    "androidDevice": false,
+    "realDeepseekAccount": false,
+    "lockScreenBackground": false,
+    "androidFrameworkNativeSqlite": 12,
+    "physicalAndroidDevice": false,
+    "androidFrameworkRegression": 69,
+    "androidRuntimeAssets": 10,
+    "androidPermissions": 5,
+    "rawZipPathsPortable": true,
+    "signedApkReadByAndroidAssetManager": true,
+    "fullInstalledApkImageHashChecked": true,
+    "androidHardLinkCompatibility": 8,
+    "androidFileRevisions": 20,
+    "androidResponsiveness": 6,
+    "androidProviderHttp": 8
   },
-  "logo": {
-    "method": "existing built-in image_gen artwork preserved",
-    "modelVersionVerified": false,
-    "source": "branding/logo-source.png"
+  "debianSources": {
+    "packages": 465,
+    "files": 2145,
+    "bytes": 1134408545
   },
-  "androidDeviceVerified": false,
-  "realAccountMobileVerified": false,
-  "androidKeystoreRuntimeVerified": false,
-  "longBackgroundVerified": false,
-  "uiScreenshots": "packaged assets rendered in desktop Edge with simulated native state; 11 previews visually inspected"
+  "fix": "Nonblocking encrypted persistence, deduplicated native layout, revisable live replies, search completion recovery, chronological execution chain, transparent 32-frame companion and encrypted custom OpenAI-compatible providers.",
+  "ui": {
+    "reference": "https://github.com/assistant-ui/assistant-ui",
+    "commit": "e97f7c61365ef0f73686c7b596751802f1a1ddd2",
+    "license": "MIT",
+    "adaptation": "Compact chronological execution chain, lazy tool output, paged history, revisable streaming drafts, transparent raster animations and private API connection settings",
+    "desktopRenderedPreviews": 22,
+    "physicalAndroidDevice": false,
+    "originalGeneratedCompanion": true,
+    "companionPoses": 8,
+    "liveToolAnimationsChecked": 3,
+    "responseComponentModules": [
+      "reply-model.js",
+      "replies.js",
+      "changes.js",
+      "model-settings.js"
+    ],
+    "companionFrames": 32,
+    "companionGrid": [
+      4,
+      8
+    ],
+    "companionBackground": "transparent"
+  },
+  "hardLinks": {
+    "deniedErrnos": [
+      "EACCES",
+      "EPERM",
+      "EXDEV",
+      "EOPNOTSUPP",
+      "EMLINK"
+    ],
+    "fallback": "Bounded regular copy with TAR executable mode",
+    "imageHardLinks": 3,
+    "maxAdditionalImageBytes": 4058713,
+    "androidDeviceVerified": false
+  },
+  "fileRevisions": {
+    "writes": [
+      "write_file",
+      "file.write"
+    ],
+    "maxPerProject": 64,
+    "approxMaxBytesPerProject": 67108864,
+    "maxWriteBytes": 2097152,
+    "maxPreviewBytesPerSide": 262144,
+    "maxRenderedDiffRows": 800,
+    "checksCurrentHashBeforeRevert": true,
+    "tracksTerminalChanges": false,
+    "fullHistoryListUi": false
+  },
+  "customProviders": {
+    "maximum": 8,
+    "protocol": "OpenAI-compatible Chat Completions",
+    "baseAndFullCompletionUrls": true,
+    "modelsList": true,
+    "sse": true,
+    "cancel": true,
+    "keys": "Separate Android Keystore AES-GCM store; excluded from chat exports",
+    "redirects": "rejected",
+    "nativeHttpFrameworkTests": 8,
+    "livePaidProviderVerified": false
+  },
+  "streaming": {
+    "builtInWebClient": "Revisable current-turn draft snapshots, final validated SSE completion",
+    "nativeApiClient": "Actual upstream SSE deltas",
+    "tools": "Full validated call and durable checkpoint required before execution",
+    "commandStdoutLive": false
+  },
+  "performance": {
+    "environment": "Desktop Edge, 390 x 844 CSS pixels, 4x CPU throttle. Synthetic 60-turn history. This is not a physical Android frame-rate measurement.",
+    "date": "2026-10-19T15:03:34.629Z",
+    "results": [
+      {
+        "name": "2.1.0 signed APK",
+        "repeatedLayouts": 100,
+        "renderMedianMs": 34.60000000009313,
+        "renderP95Ms": 38.89999999990687,
+        "mountedTurns": 60,
+        "hiddenLogCodeBlocks": 120,
+        "chatElements": 63840,
+        "samples": [
+          31.200000000186265,
+          31.600000000093132,
+          32.1999999997206,
+          32.39999999990687,
+          32.60000000009313,
+          33.5,
+          33.59999999962747,
+          33.60000000009313,
+          33.60000000009313,
+          33.60000000009313,
+          33.799999999813735,
+          34.5,
+          34.60000000009313,
+          35.10000000009313,
+          35.1999999997206,
+          35.5,
+          35.700000000186265,
+          36.200000000186265,
+          36.39999999990687,
+          36.5,
+          36.60000000009313,
+          37.10000000009313,
+          37.299999999813735,
+          38.89999999990687,
+          42.10000000009313
+        ]
+      },
+      {
+        "name": "2.2.0 current bundle",
+        "repeatedLayouts": 0,
+        "renderMedianMs": 6.5,
+        "renderP95Ms": 8.399999999906868,
+        "mountedTurns": 20,
+        "hiddenLogCodeBlocks": 0,
+        "chatElements": 805,
+        "samples": [
+          4.600000000093132,
+          4.899999999906868,
+          5.2000000001862645,
+          5.399999999906868,
+          5.400000000372529,
+          5.600000000093132,
+          5.600000000093132,
+          5.699999999720603,
+          5.800000000279397,
+          5.899999999906868,
+          6,
+          6,
+          6.5,
+          6.599999999627471,
+          6.699999999720603,
+          6.7000000001862645,
+          6.7999999998137355,
+          6.800000000279397,
+          7.099999999627471,
+          7.399999999906868,
+          7.5,
+          7.7999999998137355,
+          7.899999999906868,
+          8.399999999906868,
+          9.100000000093132
+        ]
+      }
+    ]
+  },
+  "harnessSourceReview": {
+    "repository": "https://github.com/deepseek-ai/deepseek-harness",
+    "commit": "687f282e8625c6b8d11ff58211a90524be2e4317",
+    "filesReviewed": 13,
+    "upstreamCodeImported": false,
+    "notes": "verification/harness-source-review.md"
+  }
 }

@@ -11,31 +11,34 @@ import javax.crypto.SecretKey;
 /** Only the packaged engine has access to this private, Keystore-backed file. */
 public final class LocalState {
     private EncryptedStateStore store;
-    private boolean available;
-    private String reason = "unavailable";
+    private volatile boolean available;
+    private volatile String cached = "{}";
+    private volatile String diagnostic = "{\"available\":false,\"encrypted\":false,\"reason\":\"unavailable\"}";
     public LocalState(Context context) {
+        this(context, "bridge-state-v1", "deepseek-bridge-local-state-v1");
+    }
+    LocalState(EncryptedStateStore store) throws Exception { this.store = store; cached = store.load(); state(true, "ready"); }
+    public LocalState(Context context, String filename, String alias) {
         try {
             KeyStore keys = KeyStore.getInstance("AndroidKeyStore"); keys.load(null);
-            final String alias = "deepseek-bridge-local-state-v1";
             if (!keys.containsAlias(alias)) {
                 KeyGenerator generator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore");
                 generator.init(new KeyGenParameterSpec.Builder(alias, KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
                     .setBlockModes(KeyProperties.BLOCK_MODE_GCM).setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE).build());
                 generator.generateKey();
             }
-            store = new EncryptedStateStore(new File(context.getFilesDir(), "bridge-state-v1.enc"), (SecretKey) keys.getKey(alias, null));
-            store.load(); available = true; reason = "ready";
-        } catch (Exception error) { available = false; reason = "unreadable"; }
+            store = new EncryptedStateStore(new File(context.getFilesDir(), filename + ".enc"), (SecretKey) keys.getKey(alias, null));
+            cached = store.load(); state(true, "ready");
+        } catch (Exception error) { state(false, "unreadable"); }
     }
-    public synchronized String load() {
-        if (!available) return "{}";
-        try { return store.load(); }
-        catch (Exception error) { available = false; reason = "unreadable"; return "{}"; }
-    }
+    // Readers never wait on Keystore encryption or an fsync in the writer.
+    public String load() { return cached; }
     public synchronized boolean save(String value) {
         if (!available) return false;
-        try { store.save(value); return true; }
-        catch (Exception error) { available = false; reason = "write_failed"; return false; }
+        if (cached.equals(value)) return true;
+        try { store.save(value); cached = value; return true; }
+        catch (Exception error) { state(false, "write_failed"); return false; }
     }
-    public synchronized String status() { return "{\"available\":" + available + ",\"encrypted\":" + available + ",\"reason\":\"" + reason + "\"}"; }
+    private void state(boolean ok, String reason) { available = ok; diagnostic = "{\"available\":" + ok + ",\"encrypted\":" + ok + ",\"reason\":\"" + reason + "\"}"; }
+    public String status() { return diagnostic; }
 }

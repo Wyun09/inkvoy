@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
-import { uiHarness, readyState } from './ui-harness.mjs';
+import { uiHarness, readyState, navigateLegacy } from './ui-harness.mjs';
 
 for (const storage of ['disabled', 'blocked', 'read-only']) {
   test(`packaged app initializes and handles buttons when local storage is ${storage}`, async t => {
@@ -19,7 +19,7 @@ for (const storage of ['disabled', 'blocked', 'read-only']) {
     await page.locator('#close-sheet').click();
     await page.locator('.bottom-nav [data-navigate="web"]').click();
     assert.equal(await page.locator('#page-web').isVisible(), true);
-    await page.locator('.bottom-nav [data-navigate="connect"]').click();
+    await navigateLegacy(page, 'connect');
     await page.getByRole('button', { name: '复制本机 API 密钥', exact: true }).click();
     assert.ok((await page.evaluate(() => nativeActions)).some(item => item.action === 'copy' && item.payload.field === 'key'));
     await page.locator('.bottom-nav [data-navigate="home"]').click();

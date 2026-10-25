@@ -1,6 +1,7 @@
 {
+  "version": "2.2.0",
   "source": "deepseek-web-bridge v0.2.2",
-  "method": "two unchanged modules; browser.js has Android conversation/toggle/submission/phase hooks; protocol.js adds schema dialects, normalized history and strict Agent completion; dom-text.js isolates the current turn",
+  "method": "Supplied Android sources include mobile page hooks, validated tool protocol, current-turn DOM boundaries and stable output buffering. No desktop bridge or Harness was modified.",
   "modules": {
     "protocol.js": {
       "sourceSha256": "91ad4abd414a0839c061730b3c8f56b10f0c294f7c09bb04f4e324f95cbeedc5",
@@ -9,12 +10,12 @@
     },
     "browser.js": {
       "sourceSha256": "c254bc0651afeba881eee9fbd030b360f50ae355fb4ce270374305ceb6323640",
-      "localSha256": "1454a40661c593e9a246cd8b70371ecfb3b1bef2cd398b62dfac1868065b4ddc",
+      "localSha256": "6750295877ca060a776136c392433350c6e7020a1fbe1f32bd19b52c137c8927",
       "unchanged": false
     },
     "dom-text.js": {
       "sourceSha256": "d9775fe3bafb5d99726b9aeffb45f5f844bbae09c9ade63b9d526fe96a1358cd",
-      "localSha256": "9666221092c158de7937091886b8b9c46dc4e41c2d180efe561bb1845eb3816f",
+      "localSha256": "28793edd7d3a3a3e5b5f8d8bf77f2076b75c853fc8cee8a1eb3b16c2b1d8eb90",
       "unchanged": false
     },
     "streaming.js": {
@@ -32,15 +33,28 @@
     "reasoning-control.js": "6ac924148d674b08e44238053fc49d2841b18cd640a61c68dee598b93bb21e79"
   },
   "platformExtensions": {
+    "js/native-clock.js": "f1441294ae3ec55c3bba1b3a431bd3f36669e42d70f7548a0d41a543cd6dc6c4",
+    "js/client-stream.js": "fe612964032138291120d1a549947a724bfa6ed8242e3c3d5700e377fc6cff7b",
+    "js/providers.js": "3e29598848901912b808a5d1a3b61a628b82d52603c06b024aee442979d233af",
+    "js/ui/model-settings.js": "1a958e3c8a4df0d91a668d5e3de80477940d5097a9ae6a5339f1366522a850c5",
     "js/send-control.js": "a3650c214fde83974679d970cf34d6cdd1fd585fda5b483ee7bccf7580d57f54",
     "js/anthropic.js": "6e772d47571a674a4d96405dd1a7e91759cd8591b8e7c88bc1991b35398fd5ce",
     "js/conversations.js": "190ebc5cdc899b57366cbab8478609b56f9dca0c26a3267116896277966cce86",
-    "js/conversation-dom.js": "d62ab01b832c4ac9441cc83c85d6dfd7400c345740856e48b256bc22492631df",
-    "js/tasks.js": "c050e9f97b2074d042084b29fbe10db77ce532f6e774ca7b479fddcf6769b9a0"
+    "js/conversation-dom.js": "a898404f1372a7e39b02e14698c45e24219b5928dafc7eaa80808b2cf63c5ab8",
+    "js/tasks.js": "1567d992f13df107d3a260fd65e6fdc23af33fb72c6b10a3a74960647fa53892",
+    "js/engine.js": "5b2772972d7801148d7991f4da1cd4917acce5d66fd671895968ed49f4d4c5e7",
+    "js/client.js": "87c94d1d7a69afef4f0da0a6563f3a1e1eb4a0b8699739305f5fdbef6634a415",
+    "js/ui/studio.js": "325a9e1a43ba14fcf59870a1aa44e489054377756f9c1ddc0002c785c23d5706",
+    "js/ui/companion.js": "91721fb447fa0277beec1e93b35be335ee3829fcac030d53b1775e33118710b6",
+    "js/ui/reply-model.js": "677c127479b4753764ce1f15bc8178731ff6e23ff7b008837b576ca922f6cedc",
+    "js/ui/replies.js": "b9cff72fdb6b5e47b64fb32512afbed632a37750b962ce31fa2911fb2487a57d",
+    "js/ui/changes.js": "ad0fbb6f98e582ce81daf8eb83ec2eec59b7a9dbd2804357a40dac3bfae334a6"
   },
   "domTextPatch": [
-    "Exclude fingerprint-checked historical answers, old thinking and old completion controls from each new turn.",
-    "Restore markers after a matching DOM re-render; reject changed/missing history instead of mixing responses."
+    "Use canonical content identities excluding code toolbars and UI controls.",
+    "Prefer the current answer node or the last confirmed old answer, allowing hidden/virtualized older messages.",
+    "Suppress output during unresolved DOM reflow for up to 8 seconds; reject a foreign chat path or multiple candidate answers.",
+    "Persist both canonical and legacy-compatible conversation identities across upgrades."
   ],
   "timeoutPatch": [
     "Recheck wall time when a timer fires so a rounded/early tick cannot expire a request ahead of its deadline.",
@@ -54,7 +68,12 @@
   "persistencePatch": [
     "Restore bounded fingerprinted conversation associations after checking their paths and structure.",
     "Keep bounded task and request records with exact protocol result frames and hashed idempotency keys.",
-    "Never auto-run restored interrupted work; tool execution remains owned by the calling client."
+    "Never auto-run restored interrupted work. External clients own their tool execution; the built-in client owns the local SQLite-journaled Agent loop."
+  ],
+  "stableOutputPatch": [
+    "Buffer both body and thinking until the final webpage snapshot validates.",
+    "Keep heartbeats while waiting; do not expose invalid draft envelopes.",
+    "Preserve explicit live mode for clients that choose incremental text."
   ],
   "browserPatch": [
     "DOM reader supports mobile state attributes, component classes, tabs and native checkbox controls.",

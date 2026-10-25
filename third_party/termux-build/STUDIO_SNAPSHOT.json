@@ -1,0 +1,11 @@
+{
+  "url": "https://github.com/termux/termux-packages",
+  "commit": "c208d019879c2d790ca50fe30d144b9a5979dfbf",
+  "scope": [
+    "packages/proot",
+    "packages/libtalloc",
+    "packages/libandroid-shmem",
+    "scripts",
+    "top-level build files"
+  ]
+}

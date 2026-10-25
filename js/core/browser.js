@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { extractDomTexts, BoundedTextTail } from './dom-text.js';
 import { reasoningControl } from './reasoning-control.js';
+import { setTimeout, clearTimeout } from '../native-clock.js';
 
 const ORIGIN = 'https://chat.deepseek.com';
 const PROFILE_MARKER = '.deepseek-bridge-profile';
@@ -532,7 +533,7 @@ export class DeepSeekBrowser {
       '提交后 5 秒内网页未确认接收消息（输入未清空、没有新消息或新对话）。已停止，未重复提交。');
   }
 
-  async *generate({ prompt, images = [], reasoning = false, webSearch, conversation, signal, onPhase } = {}) {
+  async *generate({ prompt, images = [], reasoning = false, webSearch, conversation, signal, onPhase, onSnapshot, stableOutput = false } = {}) {
     if (typeof prompt !== 'string' || !prompt.trim()) {
       throw new BrowserBridgeError('INVALID_PROMPT', 400, '消息内容不能为空。');
     }
@@ -606,11 +607,20 @@ export class DeepSeekBrowser {
       let missingTextSince = null;
       let missingReasoningSince = null;
       let ambiguousSince = null;
+      let turnPendingSince = null;
       for (;;) {
         checkRequest(signal, deadline);
         const state = pendingState || await this._readStateBounded(page, signal, deadline);
         pendingState = null;
         this._checkState(state, prompt, { allowAmbiguous: true });
+        if (state.turnPending) {
+          turnPendingSince ??= Date.now();
+          if (Date.now() - turnPendingSince >= 8000) throw new BrowserBridgeError('conversation_boundary_unavailable', 409, '网页重排后持续无法定位本轮回答。已保留本机记录，请在网页中检查当前回答后继续。');
+          stableSince = Date.now();
+          await pause(this.config.pollMs, signal, deadline);
+          continue;
+        }
+        turnPendingSince = null;
         if (state.answerCount > 1 || state.reasoningCount > 1) {
           ambiguousSince ??= Date.now();
           if (Date.now() - ambiguousSince >= 1000) throw this._ambiguousStateError(state);
@@ -619,6 +629,7 @@ export class DeepSeekBrowser {
           continue;
         }
         ambiguousSince = null;
+        if(state.searching){this._phase('searching');onSnapshot?.({content:previous,reasoning:latestReasoningRaw,phase:'searching'});}
         // Observe raw text too: the last thought paragraph may intentionally be
         // buffered for Markdown stability while the model is already working.
         if (state.text || state.reasoningText) sawOutput = true;
@@ -632,7 +643,7 @@ export class DeepSeekBrowser {
           || (state.textSource === 'single_code_block' && state.text.length < emitted.length && emitted.startsWith(state.text));
         if (textUncertain) {
           missingTextSince ??= Date.now();
-          if ((previous || state.completed) && Date.now() - missingTextSince > 500) {
+          if ((previous || state.completed) && Date.now() - missingTextSince > (webSearch || state.generating ? 8000 : 500)) {
             throw new BrowserBridgeError('ANSWER_UNAVAILABLE', 502, '网页回答正文持续不可读取，已停止传输。');
           }
           stableSince = Date.now();
@@ -661,10 +672,13 @@ export class DeepSeekBrowser {
           : typeof state.reasoningStableText === 'string' ? state.reasoningStableText
           : latestReasoningRaw;
         if (text !== previous || thinking !== previousReasoning) stableSince = Date.now();
-        if (!thinking.startsWith(emittedReasoning)) {
+        // An in-app preview can replace a draft when Markdown changes. It is
+        // separate from committed SSE/tool output and uses the same turn checks.
+        if (onSnapshot && !textUncertain && !reasoningUncertain && (text !== previous || latestReasoningRaw !== previousReasoning)) onSnapshot({content:text,reasoning:latestReasoningRaw,phase:state.searching?'searching':'generating'});
+        if (!stableOutput && !thinking.startsWith(emittedReasoning)) {
           throw new BrowserBridgeError('reasoning_revised', 502, '网页改写了已输出的思考内容，无法继续可靠传输。');
         }
-        const reasoningDelta = reasoningUncertain ? '' : reasoningTail.push(thinking, {
+        const reasoningDelta = reasoningUncertain || stableOutput ? '' : reasoningTail.push(thinking, {
           protectedCode: state.reasoningSource === 'single_code_block',
           final: Boolean(text && !emitted),
         });
@@ -673,10 +687,10 @@ export class DeepSeekBrowser {
           emittedReasoning = reasoningTail.committed;
           yield { type: 'reasoning', delta };
         }
-        if (!text.startsWith(emitted)) {
+        if (!stableOutput && !text.startsWith(emitted)) {
           throw new BrowserBridgeError('ANSWER_REVISED', 502, '网页已改写输出过的正文，无法继续可靠流式传输，请重试。');
         }
-        const textDelta = textUncertain ? '' : textTail.push(text, { protectedCode: state.textSource === 'single_code_block' });
+        const textDelta = textUncertain || stableOutput ? '' : textTail.push(text, { protectedCode: state.textSource === 'single_code_block' });
         if (textDelta) {
           const delta = textDelta;
           emitted = textTail.committed;
@@ -686,7 +700,7 @@ export class DeepSeekBrowser {
           && Date.now() - stableSince >= Math.max(100, this.config.pollMs * 2)
           && Date.now() - rawReasoningChangedAt >= Math.max(150, this.config.pollMs * 2)) {
           if (!text.trim()) throw new BrowserBridgeError('EMPTY_RESPONSE', 502, '网页没有返回可识别的回答正文。');
-          if (!latestReasoningRaw.startsWith(emittedReasoning)) {
+          if (!stableOutput && !latestReasoningRaw.startsWith(emittedReasoning)) {
             throw new BrowserBridgeError('reasoning_revised', 502, '网页改写了已输出的思考内容，无法继续可靠传输。');
           }
           const finalReasoning = reasoningTail.push(latestReasoningRaw, { final: true });

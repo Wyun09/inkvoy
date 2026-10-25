@@ -1,6 +1,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 const root = new URL('../', import.meta.url);
+const version = JSON.parse(await readFile(new URL('package.json',root),'utf8')).version;
 const digest = bytes => createHash('sha256').update(bytes).digest('hex');
 const modules = {};
 for (const name of ['protocol.js', 'browser.js', 'dom-text.js', 'streaming.js', 'usage.js']) {
@@ -9,12 +10,13 @@ for (const name of ['protocol.js', 'browser.js', 'dom-text.js', 'streaming.js', 
   modules[name] = { sourceSha256: digest(source), localSha256: digest(local), unchanged: source.equals(local) };
 }
 const extension = 'reasoning-control.js';
-await writeFile(new URL('CORE_PROVENANCE.json', root), JSON.stringify({ source: 'deepseek-web-bridge v0.2.2', method: 'two unchanged modules; browser.js has Android conversation/toggle/submission/phase hooks; protocol.js adds schema dialects, normalized history and strict Agent completion; dom-text.js isolates the current turn', modules,
+await writeFile(new URL('CORE_PROVENANCE.json', root), JSON.stringify({ version, source: 'deepseek-web-bridge v0.2.2', method: 'Supplied Android sources include mobile page hooks, validated tool protocol, current-turn DOM boundaries and stable output buffering. No desktop bridge or Harness was modified.', modules,
   extensions: { [extension]: digest(await readFile(new URL('js/core/' + extension, root))) },
-  platformExtensions: Object.fromEntries(await Promise.all(['js/send-control.js', 'js/anthropic.js', 'js/conversations.js', 'js/conversation-dom.js', 'js/tasks.js'].map(async path => [path, digest(await readFile(new URL(path, root)))]))),
-  domTextPatch: ['Exclude fingerprint-checked historical answers, old thinking and old completion controls from each new turn.', 'Restore markers after a matching DOM re-render; reject changed/missing history instead of mixing responses.'],
+  platformExtensions: Object.fromEntries(await Promise.all(['js/native-clock.js','js/client-stream.js','js/providers.js','js/ui/model-settings.js','js/send-control.js', 'js/anthropic.js', 'js/conversations.js', 'js/conversation-dom.js', 'js/tasks.js','js/engine.js','js/client.js','js/ui/studio.js','js/ui/companion.js','js/ui/reply-model.js','js/ui/replies.js','js/ui/changes.js'].map(async path => [path, digest(await readFile(new URL(path, root)))]))),
+  domTextPatch: ['Use canonical content identities excluding code toolbars and UI controls.', 'Prefer the current answer node or the last confirmed old answer, allowing hidden/virtualized older messages.', 'Suppress output during unresolved DOM reflow for up to 8 seconds; reject a foreign chat path or multiple candidate answers.', 'Persist both canonical and legacy-compatible conversation identities across upgrades.'],
   timeoutPatch: ['Recheck wall time when a timer fires so a rounded/early tick cannot expire a request ahead of its deadline.', 'Classify total deadlines versus observation budgets from the selected budget, not an incidental clock read.'],
   protocolPatch: ['Select Ajv draft-07, draft-2019-09 or draft-2020-12 from the tool schema declaration.', 'Keep schema keywords and validate real tool arguments; do not strip the declared dialect.', 'Strict tool mode requires explicit complete/needs_input for content-only replies and rejects final statuses containing tool calls.'],
-  persistencePatch: ['Restore bounded fingerprinted conversation associations after checking their paths and structure.', 'Keep bounded task and request records with exact protocol result frames and hashed idempotency keys.', 'Never auto-run restored interrupted work; tool execution remains owned by the calling client.'],
+  persistencePatch: ['Restore bounded fingerprinted conversation associations after checking their paths and structure.', 'Keep bounded task and request records with exact protocol result frames and hashed idempotency keys.', 'Never auto-run restored interrupted work. External clients own their tool execution; the built-in client owns the local SQLite-journaled Agent loop.'],
+  stableOutputPatch:['Buffer both body and thinking until the final webpage snapshot validates.','Keep heartbeats while waiting; do not expose invalid draft envelopes.','Preserve explicit live mode for clients that choose incremental text.'],
   browserPatch: ['DOM reader supports mobile state attributes, component classes, tabs and native checkbox controls.', 'Thinking/search mode switches confirm the observed final state.', 'Android submission hook clicks one verified send control; default desktop Enter contract is retained in the shared class.', 'A state read ending at the submission deadline reports unconfirmed submission consistently, without resubmission.', 'Unknown, contradictory and ambiguous state remains an explicit error.'] }, null, 2) + '\n');
 console.log(JSON.stringify({ unchanged: Object.values(modules).filter(item => item.unchanged).length, adapted: Object.values(modules).filter(item => !item.unchanged).length, extensions: 6 }));

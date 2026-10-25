@@ -1,0 +1,7 @@
+[
+  {"name":"jadx.zip","version":"1.5.6","url":"https://github.com/skylot/jadx/releases/download/v1.5.6/jadx-1.5.6.zip","sha256":"545ea2be9c242511bc145755cf4bda2485ade42966e096f8b4d3da2a230e8974"},
+  {"name":"apktool.jar","version":"3.0.3","url":"https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar","sha256":"dbf930b076c6b9be08d57c449cacefc3bdd6b71ebd59b3066fc0e1f5b14f9423"},
+  {"name":"cfr.jar","version":"0.152","url":"https://www.benf.org/other/cfr/cfr-0.152.jar","sha256":"f686e8f3ded377d7bc87d216a90e9e9512df4156e75b06c655a16648ae8765b2"},
+  {"name":"radare2-arm64.deb","version":"6.2.4","url":"https://github.com/radareorg/radare2/releases/download/6.2.4/radare2_6.2.4_arm64.deb","sha256":"bbf48ee7bd5d8282f65a297dcabd34c9961a500e62d6b036679caab187b32ef1"},
+  {"name":"r2ghidra-arm64.zip","version":"6.2.4","url":"https://github.com/radareorg/r2ghidra/releases/download/6.2.4/r2ghidra-6.2.4-linux-arm-64.zip","sha256":"a8ac843c4e23e6cbf3c4e0975d84215f4706172109130fa0ee2229bc56faec26"}
+]

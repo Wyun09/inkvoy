@@ -1,0 +1,54 @@
+[
+  {
+    "package": "proot",
+    "version": "5.1.107.96",
+    "url": "https://packages.termux.dev/apt/termux-main/pool/main/p/proot/proot_5.1.107.96_aarch64.deb",
+    "sha256": "8199dca06dccb693ec09fb1759e3e1ad08b4863f0c11c612f89c20bd9ecdc1a0",
+    "outputs": [
+      {
+        "name": "libproot.so",
+        "originalSha256": "1545b85b312505db6eb6908ff8b2ded0a77a3bd689c50ae85aa7c1d8445dd717",
+        "sha256": "0df9240e08015aa7f5194c32b3fe5d9c8a8ea16dfb895ccafb65847a7f392c7d",
+        "tallocStringsReplaced": 1,
+        "loadAlignmentMin": 16384
+      },
+      {
+        "name": "libproot_loader.so",
+        "originalSha256": "cbdef0e652c2b78af25d867e1719fdebbb0915e25aae2dd35b3b5c1835f6b551",
+        "sha256": "cbdef0e652c2b78af25d867e1719fdebbb0915e25aae2dd35b3b5c1835f6b551",
+        "tallocStringsReplaced": 0,
+        "loadAlignmentMin": 16384
+      }
+    ]
+  },
+  {
+    "package": "libtalloc",
+    "version": "2.5.0",
+    "url": "https://packages.termux.dev/apt/termux-main/pool/main/libt/libtalloc/libtalloc_2.5.0_aarch64.deb",
+    "sha256": "556591f43bb773ad8777e1a29522640866a55f95dab71914418b94a8c58ad5a7",
+    "outputs": [
+      {
+        "name": "libtalloc.so",
+        "originalSha256": "742b438c4d09e276985a61d44164c9de207b6d8cc268f3018cb3001961bcb309",
+        "sha256": "160d39bc0d7ed946f22310d1d6f20addda21b02b0972dffe929fe49951543941",
+        "tallocStringsReplaced": 1,
+        "loadAlignmentMin": 16384
+      }
+    ]
+  },
+  {
+    "package": "libandroid-shmem",
+    "version": "0.7",
+    "url": "https://packages.termux.dev/apt/termux-main/pool/main/liba/libandroid-shmem/libandroid-shmem_0.7_aarch64.deb",
+    "sha256": "0da3a24d558b93c92bcf8d611e0826a99ff96e396b148e6cdf33b47c47c57ff6",
+    "outputs": [
+      {
+        "name": "libandroid-shmem.so",
+        "originalSha256": "84475798e07c8174dbbfaec70a827fdb02f19ffa69a589380c13e7507fd0e731",
+        "sha256": "84475798e07c8174dbbfaec70a827fdb02f19ffa69a589380c13e7507fd0e731",
+        "tallocStringsReplaced": 0,
+        "loadAlignmentMin": 16384
+      }
+    ]
+  }
+]

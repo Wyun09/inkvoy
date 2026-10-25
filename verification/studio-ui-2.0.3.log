@@ -1,0 +1,13 @@
+✔ Studio buttons change modes, create sessions, edit and save files, and drive PTY input (10148.2794ms)
+✔ Studio layout fits 320px, exposes controls, and renders model HTML inert (8549.414ms)
+✔ compact chat sidebar owns sessions and permissions, closes with Escape/back and restores focus (8705.8049ms)
+✔ compact thread has usable touch targets, animated sidebar and no promotional cards (8063.7729ms)
+✔ pet uses actual pending terminal tool, pauses away from chat, and respects reduced motion (8534.1598ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 44380.2262

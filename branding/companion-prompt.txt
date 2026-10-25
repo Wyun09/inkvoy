@@ -1,0 +1,15 @@
+Use case: logo-brand.
+Asset type: original compact pixel mascot sprite atlas for a restrained Android coding assistant UI.
+Create ONE transparent PNG sprite sheet, landscape exactly 2:1 aspect ratio, arranged in a precise 4-column by 2-row grid of EIGHT equal square cells, no gaps between cells. Each cell is a full independent pose of the SAME character, centered with ample transparent padding and an identical baseline and scale. No cell borders.
+Character: an original tiny charcoal ink-pebble creature, a soft squarish dark graphite body, two simple cream pixel eyes, two short feet and tiny hands, with one small terracotta folded-paper tab on the upper right corner of its head as its distinctive feature. Charming, quiet, competent. Original silhouette, not a crab, no claws, no bridge symbol, no resemblance to existing branded mascots.
+Medium: crisp deliberate low-resolution pixel art with a limited palette, square pixels, no smooth gradients, no text, no watermark, no ground shadow, genuine transparent background. Designed to remain readable at 36 CSS pixels.
+Grid order left to right, top row then bottom row:
+1 neutral standing, curious eyes;
+2 concentrating, eyes slightly narrowed, hand at chin;
+3 reading a tiny open cream document;
+4 typing at a tiny dark laptop with a terracotta terminal cursor;
+5 writing with a small terracotta pencil on a cream page;
+6 success, cheerful eyes, one hand raised, two tiny terracotta celebratory pixels;
+7 recoverable error, tilted head and puzzled eyes, hands slightly apart;
+8 waiting for user, holding a tiny cream speech bubble with three charcoal pixels.
+Keep each character within the central 65 percent of its cell, all eight recognizably identical in construction and palette. UI production asset, not a promotional illustration.

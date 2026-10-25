@@ -68,31 +68,56 @@ export function extractDomTexts({ selectors, inspectPage }) {
     const topLevel = selector => [...document.querySelectorAll(selector)]
       .filter(element => !element.parentElement?.closest(selector));
     const answerSelector = inspectPage.answerSelector;
-    const allAnswers = topLevel(answerSelector).filter(visible)
-      .filter(element => !element.closest('.ds-think-content, [data-message-role="reasoning"], [data-role="reasoning"]'));
+    const searchResult = '[data-role="search"],[data-message-role="search"],[data-search-result],[data-testid="search-results"],[data-testid="search-result"]';
     const turn = inspectPage.turn;
-    const fingerprint = node => {
-      const text = node.textContent || ''; let a = 2166136261, b = 5381;
+    const allAnswers = topLevel(answerSelector).filter(element => visible(element)
+      || turn && (element.hasAttribute('data-local-bridge-history') || element.getAttribute('data-local-bridge-current') === turn.nonce))
+      .filter(element => !element.closest('.ds-think-content, [data-message-role="reasoning"], [data-role="reasoning"]') && !element.closest(searchResult));
+    const fingerprint = (node, legacy = false) => {
+      const copy = node.cloneNode(true);
+      if (!legacy) copy.querySelectorAll('button,svg,script,style,noscript,[role="button"],[aria-hidden="true"],.md-code-block-banner-wrap,.md-code-block-banner,.code-info-button-text').forEach(n => n.remove());
+      const text = (legacy ? node.textContent || '' : copy.textContent || '').replace(/\r\n/g, '\n'); let a = 2166136261, b = 5381;
       for (let i = 0; i < text.length; i++) { a = Math.imul(a ^ text.charCodeAt(i), 16777619); b = Math.imul(b, 33) ^ text.charCodeAt(i); }
-      return text.length + ':' + (a >>> 0).toString(16) + ':' + (b >>> 0).toString(16);
+      return (legacy ? '' : 'v2:') + text.length + ':' + (a >>> 0).toString(16) + ':' + (b >>> 0).toString(16);
     };
-    const oldAnswers = turn ? allAnswers.slice(0, turn.answers.length) : [];
-    const turnValid = !turn || (turn.answers.length === 0 || location.pathname === turn.path)
-      && allAnswers.length >= turn.answers.length && turn.answers.every((old, index) => {
-        const node = allAnswers[index];
-        if (node.getAttribute('data-local-bridge-history') === old.marker) return true;
-        if (fingerprint(node) !== old.signature) return false;
-        node.setAttribute('data-local-bridge-history', old.marker); return true;
-      });
-    const answers = turn ? turnValid ? allAnswers.slice(turn.answers.length) : [] : allAnswers;
+    const pathKey = path => path.replace(/^\/a(?=\/chat\/)/, '').replace(/^\/chat\/s\//, '/chat/').replace(/\/$/, '');
+    const expectedPath = turn?.boundPath || (turn?.answers.length ? turn.path : null);
+    const turnValid = !expectedPath || pathKey(location.pathname) === pathKey(expectedPath);
+    const oldAnswers = [];
+    let answers = allAnswers, turnPending = false;
+    if (turn) {
+      // React remounts and virtualized old messages need not preserve a full prefix.
+      // A retained current node, or the last confirmed old answer, defines the boundary.
+      const oldMarkers = new Set(turn.answers.map(old => old.marker));
+      for (const node of allAnswers) if (oldMarkers.has(node.getAttribute('data-local-bridge-history'))) oldAnswers.push(node);
+      const current = allAnswers.findIndex(node => node.getAttribute('data-local-bridge-current') === turn.nonce);
+      let boundary = -1;
+      if (current < 0 && turn.answers.length) {
+        const last = turn.answers.at(-1);
+        boundary = allAnswers.findIndex(node => node.getAttribute('data-local-bridge-history') === last.marker);
+        if(boundary < 0 && allAnswers.length >= turn.answers.length && turn.answers.every((old,index) => fingerprint(allAnswers[index],!old.signature.startsWith('v2:')) === old.signature)) {
+          boundary=turn.answers.length-1;
+          for(let index=0;index<turn.answers.length;index++){allAnswers[index].setAttribute('data-local-bridge-history',turn.answers[index].marker);if(!oldAnswers.includes(allAnswers[index]))oldAnswers.push(allAnswers[index]);}
+        }
+        if (boundary < 0) {
+          const matches = allAnswers.map((node,index) => ({node,index})).filter(({node}) => fingerprint(node, !last.signature.startsWith('v2:')) === last.signature);
+          if (matches.length === 1) { boundary = matches[0].index; matches[0].node.setAttribute('data-local-bridge-history', last.marker); oldAnswers.push(matches[0].node); }
+        }
+      }
+      turnPending = turnValid && current < 0 && turn.answers.length > 0 && boundary < 0;
+      answers = !turnValid || turnPending ? [] : current >= 0 ? allAnswers.slice(current) : allAnswers.slice(boundary + 1);
+      if(current >= 0) for(const node of allAnswers.slice(0,current)) if(!oldAnswers.includes(node))oldAnswers.push(node);
+      answers = answers.filter(node => !oldMarkers.has(node.getAttribute('data-local-bridge-history')));
+      if (answers.length === 1) answers[0].setAttribute('data-local-bridge-current',turn.nonce);
+    }
     let thoughts = topLevel('.ds-think-content');
-    if (turn) thoughts = turnValid ? thoughts.filter(element => element.getAttribute('data-local-bridge-history') !== turn.nonce
+    if (turn) thoughts = turnValid && !turnPending ? thoughts.filter(element => element.getAttribute('data-local-bridge-history') !== turn.nonce
       && (!oldAnswers.length || !(oldAnswers.at(-1).compareDocumentPosition(element) & Node.DOCUMENT_POSITION_PRECEDING))) : [];
     const answer = answers.length === 1 ? answers[0] : null;
     const message = answer?.closest('.ds-message');
     const wrapper = message?.parentElement;
     const wrapperAnswers = wrapper ? [...wrapper.querySelectorAll(answerSelector)]
-      .filter(element => !element.parentElement?.closest(answerSelector) && !oldAnswers.includes(element)) : [];
+      .filter(element => !element.parentElement?.closest(answerSelector) && !oldAnswers.includes(element) && !element.closest(searchResult)) : [];
     if (message) {
       const currentThoughts = thoughts.filter(element => message.contains(element));
       thoughts = currentThoughts.length ? currentThoughts
@@ -104,10 +129,18 @@ export function extractDomTexts({ selectors, inspectPage }) {
     const namedComposers = allComposers.filter(element => /DeepSeek/i.test(element.getAttribute('placeholder') || ''));
     const composers = namedComposers.length === 1 ? namedComposers : allComposers;
     const completionScope = wrapperAnswers.length === 1 && wrapperAnswers[0] === answer ? wrapper : null;
+    const currentControl = element => !answer?.contains(element) && (!turn || element.getAttribute('data-local-bridge-history') !== turn.nonce
+      && Boolean(answer.compareDocumentPosition(element) & Node.DOCUMENT_POSITION_FOLLOWING));
     const readAloud = completionScope ? [...completionScope.querySelectorAll('[aria-label]')]
       .filter(element => /^(?:朗读|Read aloud|播放语音)$/i.test(element.getAttribute('aria-label')?.trim()))
       .filter(element => !turn || element.getAttribute('data-local-bridge-history') !== turn.nonce
         && Boolean(answer.compareDocumentPosition(element) & Node.DOCUMENT_POSITION_FOLLOWING)) : [];
+    const controls = completionScope ? [...completionScope.querySelectorAll('button,[role="button"]')].filter(element => visible(element) && currentControl(element)) : [];
+    const label = element => (element.getAttribute('aria-label') || element.getAttribute('title') || textOf(element)).trim();
+    const copyReady = controls.some(element => /^(?:复制(?:回复|回答)?|Copy(?: response| answer)?)$/i.test(label(element)));
+    const retryReady = controls.some(element => /^(?:重新生成|重新回答|再试一次|Regenerate(?: response| answer)?|Retry)$/i.test(label(element)));
+    const generating = allVisible('button[aria-label],[role="button"][aria-label]').some(element => /^(?:停止(?:生成|回答|响应|输出)?|Stop(?: generating| response| generation)?)$/i.test(label(element)));
+    const searchBusy = allVisible('[role="status"],[aria-busy="true"],[data-state="searching"],[data-testid="search-status"]').some(element => !oldAnswers.some(old => old.contains(element)) && /^(?:正在搜索|搜索中|正在检索|正在阅读|Searching|Reading (?:web|sources)|Browsing)/i.test(textOf(element).trim()));
     const alerts = allVisible('[role="alert"], .ds-toast, [data-testid="error-message"], [data-testid="input-error"]');
     const challenge = allVisible('[class*="captcha" i], [id*="captcha" i], [data-testid*="captcha" i], iframe[src*="captcha" i], iframe[title*="challenge" i], iframe[src*="challenges.cloudflare.com" i]');
     results.page = {
@@ -121,11 +154,13 @@ export function extractDomTexts({ selectors, inspectPage }) {
       composerTextLength: composers.length === 1 ? composers[0].value.length : 0,
       chatPath: location.pathname,
       turnValid,
+      turnPending,
       totalAnswerCount: allAnswers.length,
       messageCount: allVisible('.ds-message').length,
       answerCount: answers.length,
       reasoningCount: thoughts.length,
-      completed: readAloud.some(visible),
+      generating, searching: searchBusy,
+      completed: Boolean(answer) && !generating && !searchBusy && (readAloud.some(visible) || copyReady && retryReady),
       readAloudFound: readAloud.length > 0,
       readAloudRawCount: readAloud.length,
       readAloudVisibleCount: readAloud.filter(visible).length,

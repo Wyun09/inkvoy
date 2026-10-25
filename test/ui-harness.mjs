@@ -1,20 +1,22 @@
 import { readFile } from 'node:fs/promises';
-export async function uiHarness(browser, viewport = { width: 390, height: 844 }, { storage = 'enabled', failStartup = false } = {}) {
+export async function uiHarness(browser, viewport = { width: 390, height: 844 }, { storage = 'enabled', failStartup = false, initialPage = 'home', studio = false, holdTools=false, clientState = {}, providerState={}, fileChanges={}, saveDelay=0, assetsDirectory, runtimeTools = [{name:'JADX',version:'1.5.6',kind:'APK / DEX'},{name:'radare2',version:'6.2.4',kind:'ELF / SO'}] } = {}) {
   const context = await browser.newContext({ viewport, deviceScaleFactor: 1 });
   const page = await context.newPage();
-  const assets = new URL('../app/src/main/assets/', import.meta.url);
+  const assets = assetsDirectory || new URL('../app/src/main/assets/', import.meta.url);
   await page.route('https://bridge.local/**', async route => {
     const name = new URL(route.request().url()).pathname.slice(1);
-    if (!['engine.html', 'engine.bundle.js', 'app.css', 'logo.png'].includes(name)) return route.abort();
+    if (!['engine.html', 'engine.bundle.js', 'app.css', 'logo.png', 'companion.png'].includes(name)) return route.abort();
     return route.fulfill({ contentType: name.endsWith('.png') ? 'image/png' : name.endsWith('.js') ? 'application/javascript' : name.endsWith('.css') ? 'text/css' : 'text/html; charset=utf-8', body: await readFile(new URL(name, assets)) });
   });
-  await page.addInitScript(({ storage, failStartup }) => {
+  await page.addInitScript(({ storage, failStartup, studio, holdTools, clientState, providerState, fileChanges, runtimeTools, saveDelay }) => {
     if (failStartup) window.ResizeObserver = class { constructor() { throw new Error('ResizeObserver unavailable'); } };
     if (storage === 'disabled') Object.defineProperty(window, 'localStorage', { get: () => null });
     if (storage === 'blocked') Object.defineProperty(window, 'localStorage', { get: () => { throw new DOMException('Storage access denied', 'SecurityError'); } });
     if (storage === 'read-only') Object.defineProperty(window, 'localStorage', { get: () => ({ getItem: () => null, setItem: () => { throw new DOMException('Storage full', 'QuotaExceededError'); } }) });
     const set = window.setTimeout.bind(window), clear = window.clearTimeout.bind(window), timers = new Map();
     window.nativeActions = []; window.nativeLayouts = []; window.nativeStartupErrors = [];
+    const files = { 'hello.py': 'print("fixture")\n' };for(const change of Object.values(fileChanges))files[change.path]=change.current??change.after;let term=0;
+    window.workspaceCalls=[];window.clientSaved=[];window.providerSaved=[];window.providerCalls=[];window.providerCancels=[];
     window.NativeBridge = {
       ready() { window.nativeReady = true; },
       timer(id, ms) { timers.set(id, set(() => { timers.delete(id); AndroidEngine.timer(id); }, ms)); },
@@ -23,12 +25,52 @@ export async function uiHarness(browser, viewport = { width: 390, height: 844 },
       uiLayout(raw) { window.nativeLayouts.push(JSON.parse(raw)); },
       startupError(message) { window.nativeStartupErrors.push(message); },
       searchDefault() { return true; },
+      saveClientState(raw) {window.clientSaved.push(JSON.parse(raw));return true;},
+      saveLocalState(id,channel,raw){set(()=>{if(channel==='client')window.clientSaved.push(JSON.parse(raw));if(channel==='provider')window.providerSaved.push(JSON.parse(raw));AndroidEngine.stateSaved(id,true);},saveDelay);},
+      loadClientState(){return JSON.stringify(clientState);},
+      loadProviders(){return JSON.stringify(providerState);},
+      providerCancel(id){window.providerCancels.push(id);},
+      providerRequest(id,raw){const p=JSON.parse(raw);window.providerCalls.push({id,...p});if(p.operation==='models'){set(()=>AndroidEngine.providerEvent(id,{type:'response',body:{data:[{id:'fixture-custom-model'},{id:'fixture-model-2'}]}}),20);return;}const first='data: '+JSON.stringify({choices:[{delta:{content:'CUSTOM_STREAM_FIRST'}}]})+'\n\n';const last='data: '+JSON.stringify({choices:[{delta:{content:' + final'},finish_reason:'stop'}]})+'\n\ndata: [DONE]\n\n';set(()=>AndroidEngine.providerEvent(id,{type:'data',text:first}),40);set(()=>{AndroidEngine.providerEvent(id,{type:'data',text:last});AndroidEngine.providerEvent(id,{type:'end'});},1200);},
+      workspaceRequest(id,operation,raw) {window.workspaceCalls.push({id,operation,args:JSON.parse(raw)});if(!studio)return;const a=JSON.parse(raw);let value=true;
+        if(operation==='file.change'||operation==='file.revert'){
+          const change=fileChanges[a.id];if(!change){set(()=>AndroidEngine.workspaceRpc(id,{ok:false,error:{message:'快照已过期'}}),20);return;}
+          const canRevert=!change.reverted&&files[change.path]===change.after;
+          if(operation==='file.revert'){if(!canRevert){set(()=>AndroidEngine.workspaceRpc(id,{ok:false,error:{message:'文件已有后续修改'}}),20);return;}if(change.existed)files[change.path]=change.before;else delete files[change.path];change.reverted=true;value={ok:true};}
+          else value={...change,id:a.id,previewable:true,canRevert};
+          set(()=>AndroidEngine.workspaceRpc(id,{ok:true,value}),20);return;
+        }
+        if(operation==='tool.execute'&&holdTools)return;
+        if(operation==='runtime.status'||operation==='runtime.ensure')value={ready:true,verified:false,tools:runtimeTools};
+        else if(operation==='file.list')value={entries:Object.entries(files).map(([name,content])=>({name,bytes:content.length,directory:false}))};
+        else if(operation==='file.read')value={content:files[a.path]||'',truncated:false};
+        else if(operation==='file.write'){files[a.path]=a.content;value={ok:true};}
+        else if(operation==='file.search')value={matches:[]};
+        else if(operation==='terminal.open')value={id:'fixture-pty-'+(++term)};
+        else if(operation==='terminal.attach')value={buffer:btoa('Fixture PTY output\r\n$ '),exited:false};
+        else if(operation==='runtime.test')value={ok:true,stdout:'Fixture self-test',exitCode:0};
+        set(()=>window.AndroidEngine.workspaceRpc(id,{ok:true,value}),20);
+      },
       request() {}, response() {}, reportUi() {},
     };
-  }, { storage, failStartup });
+  }, { storage, failStartup, studio, holdTools, clientState, providerState, fileChanges, runtimeTools, saveDelay });
   await page.goto('https://bridge.local/engine.html');
   await page.waitForFunction(failStartup => failStartup ? window.nativeStartupErrors?.length > 0 : window.nativeReady && window.BridgeDashboard, failStartup, { timeout: 5000 });
+  if(!failStartup)await page.evaluate(tab=>BridgeDashboard.navigate(tab),initialPage);
   return { context, page };
+}
+export async function navigateLegacy(page, tab) {
+  if(await page.locator('#page-chat').isVisible())return navigateStudio(page,tab);
+  if(['tasks','connect'].includes(tab)) {
+    await page.locator('.bottom-nav [data-navigate="home"]').click();
+    await page.locator('#page-home [data-navigate="'+tab+'"]').first().click();
+  } else await page.locator('.bottom-nav [data-navigate="'+tab+'"]').click();
+}
+export async function navigateStudio(page,tab) {
+  if(await page.locator('#page-'+tab).isVisible())return;
+  if(await page.locator('#page-chat').isVisible()){
+    await page.locator('#session-menu').click();
+    await page.locator('[data-drawer-page="'+tab+'"]').click();
+  }else await navigateLegacy(page,tab);
 }
 export const readyState = { version: '1.0.0', ready: true, running: true, loggedIn: true, hasInspection: true, inspecting: false, needsVerification: false, reasoningMode: { count: 1, enabled: false, source: 'ds_toggle_component' }, webSearchDefault: true, webSearchMode: { count: 1, enabled: true, source: 'aria-pressed' }, requests: 0, busy: false, testStatus: 'passed', probeRunning: false, activities: [{ text: '本机服务已启动', time: '09:41' }, { text: '网页登录已确认', time: '09:42' }, { text: '接口自测通过', time: '09:42' }] };
 
