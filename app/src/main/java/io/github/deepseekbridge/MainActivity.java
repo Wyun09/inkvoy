@@ -37,6 +37,7 @@ public final class MainActivity extends Activity {
     };
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
+        DisplayMode.apply(this);
         if(state!=null){importProject=state.getString("importProject");exportProject=state.getString("exportProject");exportPath=state.getString("exportPath");exportSessionId=state.getString("exportSessionId");}
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
@@ -56,6 +57,7 @@ public final class MainActivity extends Activity {
         launchBridge();
     }
     private boolean available(){return service!=null&&service.runtime!=null;}
+    @Override public void onConfigurationChanged(android.content.res.Configuration configuration){super.onConfigurationChanged(configuration);if(root!=null)root.post(()->{if(available()){service.runtime.engine.evaluateJavascript("window.dispatchEvent(new Event('resize'))",null);applyBrowserLayout();service.runtime.publishUi();}});}
     private void launchBridge(){
         root.removeAllViews();
         int major = 0;
@@ -138,6 +140,7 @@ public final class MainActivity extends Activity {
     }
     private void handleAction(String action, JSONObject argument) {
         if (!available()) return;
+        if(action.equals("orientation")){try{DisplayMode.set(this,argument.optString("mode"));service.runtime.publishUi();}catch(IllegalArgumentException e){service.runtime.toast("不支持的屏幕方向");service.runtime.publishUi();}return;}
         if(action.equals("permission-files")||action.equals("permission-battery")||action.equals("permission-notifications")||action.equals("permission-app-settings")){AccessSettings.request(this,action);return;}
         if (action.equals("startupError")) {
             new AlertDialog.Builder(this).setTitle("界面初始化失败")

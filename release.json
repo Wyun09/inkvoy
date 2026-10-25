@@ -1,11 +1,11 @@
 {
-  "version": "2.3.1",
-  "versionCode": 15,
+  "version": "2.4.0",
+  "versionCode": 17,
   "buildDate": "2026-10-20",
   "package": "io.github.deepseekbridge",
-  "apk": "deepseek-android-bridge-v2.3.1.apk",
-  "bytes": 615831471,
-  "sha256": "4f67703fe6044d6dcaa7ec5e4079ebf3488d81ce2a3594332a2e37eba3dc7fa5",
+  "apk": "deepseek-android-bridge-v2.4.0.apk",
+  "bytes": 615843759,
+  "sha256": "1961cd6b16939fab07e3d3b1baa2b543aa5ef51d4f64c81c0a19bdd6df2a1b71",
   "signerSha256": "cc8f15b569d5e813c68d49f4fa17d19afbe6f7526ef5dbdade88e317116c2b59",
   "minSdk": 26,
   "targetSdk": 35,
@@ -89,7 +89,7 @@
     }
   },
   "verification": {
-    "javascript": 284,
+    "javascript": 290,
     "transportHost": 35,
     "storageHost": 11,
     "workspaceHost": 23,
@@ -103,7 +103,7 @@
     "lockScreenBackground": false,
     "androidFrameworkNativeSqlite": 12,
     "physicalAndroidDevice": false,
-    "androidFrameworkRegression": 105,
+    "androidFrameworkRegression": 121,
     "androidRuntimeAssets": 10,
     "androidPermissions": 5,
     "rawZipPathsPortable": true,
@@ -113,22 +113,29 @@
     "androidFileRevisions": 20,
     "androidResponsiveness": 6,
     "androidProviderHttp": 8,
-    "androidComputerUse": 16,
+    "androidComputerUse": 28,
     "androidChatMedia": 6,
-    "androidManagedProcesses": 14
+    "androidManagedProcesses": 14,
+    "androidDisplayModes": 4,
+    "postLayoutUiRegression": 3,
+    "currentRun": [
+      "Full JavaScript suite 290; post-layout browser UI rerun 3",
+      "Final APK Android API 26/33 suite 121",
+      "APK source payload, signing and archive checks"
+    ]
   },
   "debianSources": {
     "packages": 465,
     "files": 2145,
     "bytes": 1134408545
   },
-  "fix": "App-owned persistent PRoot tasks with process start/status/list/stop, terminal task controls and a tool-batch image-message ordering correction; includes 2.3.0 browser/search/questions/attachments.",
+  "fix": "Grounded browser target refs, verified native editing/deletion, cooperative human priority, committed navigation, visible cursor, zoom, persistent orientation, resizable split workspace, chunked verified image upload and direct API forms.",
   "ui": {
     "reference": "https://github.com/assistant-ui/assistant-ui",
     "commit": "e97f7c61365ef0f73686c7b596751802f1a1ddd2",
     "license": "MIT",
-    "adaptation": "Compact chronological execution chain, lazy output, revisable streaming drafts, private API settings, bounded user questions and attachment previews.",
-    "desktopRenderedPreviews": 29,
+    "adaptation": "Compact thread and model/API forms, live browser/chat split workspace, resizable divider, zoom and persistent orientation controls.",
+    "desktopRenderedPreviews": 39,
     "physicalAndroidDevice": false,
     "originalGeneratedCompanion": true,
     "companionPoses": 8,
@@ -149,8 +156,9 @@
       8
     ],
     "companionBackground": "transparent",
-    "currentVersionNewDesktopPreviews": 2,
-    "historicalDesktopPreviews": 27
+    "currentVersionNewDesktopPreviews": 3,
+    "historicalDesktopPreviews": 36,
+    "previewDisclosure": "Desktop UI; the new split previews use an explicit iframe fixture in place of the native Android surface."
   },
   "hardLinks": {
     "deniedErrnos": [
@@ -290,7 +298,10 @@
       "move",
       "click",
       "type",
+      "clear",
+      "delete",
       "key",
+      "zoom",
       "scroll",
       "back",
       "forward",
@@ -306,7 +317,24 @@
     "takeoverCancelsPendingActions": true,
     "journaled": true,
     "browserScreenshotVision": "Custom API only; explicit profile opt-in",
-    "physicalDeviceVerified": false
+    "physicalDeviceVerified": false,
+    "stableElementRefs": true,
+    "targetOnlyValidation": true,
+    "preClickRevalidation": true,
+    "navigationCommitRequired": true,
+    "verifiedInputFocus": true,
+    "unicodeDeletion": true,
+    "cooperativeHumanPriority": true,
+    "manualTouchPreservesAiPermission": true,
+    "cursorInCaptures": true,
+    "pinchZoom": true,
+    "visualViewportCoordinates": true,
+    "splitWorkspace": true,
+    "resizableSplitRatio": [
+      30,
+      70
+    ],
+    "scrollImplementation": "Original whole-page scrollBy retained"
   },
   "webSearch": {
     "tool": "web_search",
@@ -340,7 +368,15 @@
     "chatExportBundlesPixels": false,
     "filesAreCards": true,
     "physicalDeviceVerified": false,
-    "toolBatchImageOrdering": "Every tool result precedes internal user image parts; old saved image anchors are reordered only for transport."
+    "toolBatchImageOrdering": "Every tool result precedes internal user image parts; old saved image anchors are reordered only for transport.",
+    "webUpload": {
+      "chunkChars": 49152,
+      "decodeBeforeInputEvent": true,
+      "anonymousComposerThumbnails": true,
+      "rejectExistingDrafts": true,
+      "explicitUploadErrors": true,
+      "realAccountVerified": false
+    }
   },
   "knownIssues": [
     "The one-shot terminal tool still cleans up its background children. Use the process tool to retain a foreground server.",
@@ -367,5 +403,27 @@
     "ui": "Terminal > managed tasks",
     "actualHostHttpRegression": true,
     "physicalAndroidDeviceVerified": false
+  },
+  "display": {
+    "modes": [
+      "auto",
+      "portrait",
+      "landscape"
+    ],
+    "persistent": true,
+    "activityRecreatedForRotation": false,
+    "landscapeSplit": "side by side",
+    "portraitSplit": "top and bottom",
+    "physicalAndroidDeviceVerified": false
+  },
+  "customApiForm": {
+    "visibleOnOpen": true,
+    "fields": [
+      "endpoint",
+      "key",
+      "model"
+    ],
+    "separateAddButton": true,
+    "activation": "explicit save only"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "version": "2.3.1",
+  "version": "2.4.0",
   "files": [
     {
       "path": "app/src/main/assets/runtime/debian-arm64.tar.gz",

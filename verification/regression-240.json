@@ -1,0 +1,104 @@
+{
+  "version": "2.4.0",
+  "javascript": {
+    "full": 290,
+    "failed": 0,
+    "skipped": 0,
+    "postLayoutUi": 3
+  },
+  "android": {
+    "total": 121,
+    "failed": 0,
+    "skipped": 0,
+    "reports": [
+      {
+        "class": "io.github.deepseekbridge.AccessSettingsTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.ChatMediaTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.ComputerBrowserTest",
+        "tests": 28,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.DisplayModeTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.FileRevisionsTest",
+        "tests": 20,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.ManagedTasksTest",
+        "tests": 14,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.ProviderGatewayTest",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.ResponsivenessTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.RuntimeAssetsTest",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.RuntimeHardLinkTest",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.StartupRegressionTest",
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  "apk": "deepseek-android-bridge-v2.4.0.apk",
+  "apkSha256": "1961cd6b16939fab07e3d3b1baa2b543aa5ef51d4f64c81c0a19bdd6df2a1b71",
+  "physicalAndroidDevice": false,
+  "realDeepseekAccount": false,
+  "previewFixtures": "Explicit local browser fixture, not native WebView",
+  "logs": {
+    "tests-240-final.log": "8ec43becb40238cce07ac1e55deae9e16abc1335759dc1c9b96dd82be68663ae",
+    "browser-ui-240-final.log": "229b32c19efba2090f1c8ffc7e97da14e2f6789d2dd7d127f5b34c9c093d5f88",
+    "android-240-final.log": "5c7791990e8ed42bf5e80897081a371ad17887e28b1e836edbad287d721f864a",
+    "verify-apk-240.log": "f298b9cc3e7600dc8b0ff688aac7ae91977c3404d21ad2538b901e16331035c8"
+  }
+}

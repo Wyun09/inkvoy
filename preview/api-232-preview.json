@@ -1,0 +1,15 @@
+{
+  "productionUi": true,
+  "physicalAndroidDevice": false,
+  "nativeState": "explicit fixtures",
+  "openingPath": "Sidebar > Models and API; no dropdown selection or prepared profiles",
+  "fieldsVisibleOnFirstOpen": [
+    "API address",
+    "API key",
+    "model ID"
+  ],
+  "previews": [
+    "api-232-direct-form.png",
+    "api-232-narrow-form.png"
+  ]
+}

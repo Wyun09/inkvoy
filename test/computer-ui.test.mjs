@@ -8,3 +8,22 @@ test('computer-use UI opens independently, sends manual navigation, stops the ag
 test('computer-use toolbar fits narrow screens and optional visual input is explicit in model settings',async t=>{
  const browser=await chromium.launch({headless:true,channel:process.platform==='win32'?'msedge':undefined});t.after(()=>browser.close());const {page,context}=await uiHarness(browser,{width:320,height:720},{studio:true,initialPage:'chat'});t.after(()=>context.close());await page.locator('#client-browser').click();const limits=await page.evaluate(()=>({width:innerWidth,right:document.querySelector('#computer-address-form').getBoundingClientRect().right,scroll:document.querySelector('#page-computer').scrollWidth}));assert.ok(limits.right<=limits.width);assert.ok(limits.scroll<=limits.width);await page.locator('#computer-chat').click();await page.locator('#model-picker').click();await page.locator('#provider-choice').selectOption('__new');await page.locator('.provider-advanced summary').click();assert.ok(await page.locator('#provider-vision').isVisible());assert.equal(await page.locator('#provider-vision').isChecked(),false);
 });
+
+test('split workspace keeps the same chat and browser on rotation, supports resizing, zoom and native overlay suspension',async t=>{
+ const browser=await chromium.launch({headless:true,channel:process.platform==='win32'?'msedge':undefined});t.after(()=>browser.close());
+ const {page,context}=await uiHarness(browser,{width:390,height:844},{studio:true,initialPage:'chat'});t.after(()=>context.close());
+ await page.locator('#chat-input').fill('旋转时保留草稿');await page.evaluate(()=>window.savedChat=document.querySelector('#page-chat'));
+ await page.locator('#client-browser').click();await page.locator('#computer-split').click();
+ assert.ok(await page.locator('#page-chat').isVisible());assert.ok(await page.locator('#page-computer').isVisible());
+ let web=await page.locator('#computer-slot').boundingBox(),chat=await page.locator('#page-chat').boundingBox();assert.ok(web.height>100);assert.ok(chat.y>=web.y+web.height);
+ await page.locator('#computer-divider').focus();await page.keyboard.press('ArrowUp');assert.equal(await page.locator('#computer-divider').getAttribute('aria-valuenow'),'52');
+ await page.locator('#computer-zoom-out').click();await page.waitForFunction(()=>workspaceCalls.some(c=>c.args.action==='zoom'&&c.args.factor<1));await page.waitForFunction(()=>document.querySelector('#computer-zoom-reset').textContent==='83%');
+ await page.locator('#computer-zoom-reset').click();await page.waitForFunction(()=>document.querySelector('#computer-zoom-reset').textContent==='100%');
+ await page.locator('#computer-orientation').selectOption('landscape');assert.ok(await page.evaluate(()=>nativeActions.some(a=>a.action==='orientation'&&a.payload.mode==='landscape')));
+ await page.setViewportSize({width:844,height:390});await page.waitForTimeout(100);web=await page.locator('#computer-slot').boundingBox();chat=await page.locator('#page-chat').boundingBox();assert.ok(chat.x>=web.x+web.width);assert.ok(chat.width>300);assert.ok(web.height>100);
+ assert.equal(await page.locator('#chat-input').inputValue(),'旋转时保留草稿');assert.ok(await page.evaluate(()=>savedChat===document.querySelector('#page-chat')));
+ const send=await page.locator('#chat-send').boundingBox(),bottom=await page.locator('.bottom-nav').boundingBox(),heading=await page.locator('.chat-heading').boundingBox(),pet=await page.locator('.welcome-companion').boundingBox();assert.ok(send.y+send.height<=bottom.y,'send button must remain fully visible');assert.ok(pet.y>=heading.y+heading.height,'welcome mascot must not overlap chat header');
+ await page.waitForFunction(()=>nativeLayouts.at(-1)?.surface==='computer'&&nativeLayouts.at(-1)?.visible);
+ await page.locator('#model-picker').click();await page.waitForFunction(()=>nativeLayouts.at(-1)?.visible===false);await page.keyboard.press('Escape');await page.waitForFunction(()=>nativeLayouts.at(-1)?.visible===true);
+ await page.locator('#session-menu').click();await page.waitForFunction(()=>nativeLayouts.at(-1)?.visible===false);await page.locator('#drawer-settings').evaluate(n=>n.open=true);await page.locator('#display-orientation').selectOption('portrait');assert.ok(await page.evaluate(()=>nativeActions.some(a=>a.action==='orientation'&&a.payload.mode==='portrait')));
+});

@@ -1,0 +1,11 @@
+{
+  "productionUi": true,
+  "nativeAndroidSurface": false,
+  "remoteWebpage": "explicit local iframe fixture for layout only",
+  "physicalAndroidDevice": false,
+  "images": [
+    "workspace-240-portrait.png",
+    "workspace-240-landscape.png",
+    "workspace-240-settings.png"
+  ]
+}

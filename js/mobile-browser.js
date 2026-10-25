@@ -1,3 +1,4 @@
+import {composerUploadState} from './upload-state.js';
 import { DeepSeekBrowser, BrowserBridgeError } from './core/browser.js';
 import { MobileBuffer } from './platform.js';
 import { sendControl } from './send-control.js';
@@ -39,6 +40,16 @@ export async function locatorAction({ spec, action, argument }, evaluator) {
     element.focus();
     return true;
   }
+  if (action.startsWith('files.')) {
+    if (!(element instanceof HTMLInputElement) || element.type !== 'file') throw new Error('上传入口无效。');
+    const key='__dshFileTransfer';
+    if(action==='files.begin'){if(argument.files.length>8)throw new Error('一次最多上传 8 张图片');element[key]={token:argument.token,validate:!!argument.validate,files:argument.files.map(f=>({...f,chunks:[],received:0}))};return true;}
+    const transfer=element[key];if(!transfer||transfer.token!==argument.token)throw new Error('图片传输已失效，请重新发送');
+    if(action==='files.abort'){delete element[key];return true;}
+    if(action==='files.chunk'){const file=transfer.files[argument.index];if(!file||file.received!==argument.offset||argument.data.length>49152||file.received+argument.data.length>file.length||!/^[A-Za-z0-9+/=]*$/.test(argument.data))throw new Error('图片数据分段不完整');file.chunks.push(argument.data);file.received+=argument.data.length;return file.received;}
+    if(action==='files.commit'){try{const data=new DataTransfer();for(const file of transfer.files){if(file.received!==file.length)throw new Error('图片传输尚未完整');const bytes=Uint8Array.from(atob(file.chunks.join('')),c=>c.charCodeAt(0));const imageFile=new File([bytes],file.name,{type:file.mimeType});if(transfer.validate){try{if(typeof createImageBitmap==='function'){const bitmap=await createImageBitmap(imageFile);const valid=bitmap.width>0&&bitmap.height>0;bitmap.close();if(!valid)throw new Error('empty');}else{const url=URL.createObjectURL(imageFile);try{const image=new Image();image.src=url;await image.decode();if(!image.naturalWidth)throw new Error('empty');}finally{URL.revokeObjectURL(url);}}}catch{throw new Error('图片无法解码，未上传或发送消息');}}data.items.add(imageFile);}element.files=data.files;element.dispatchEvent(new Event('input',{bubbles:true}));element.dispatchEvent(new Event('change',{bubbles:true}));return true;}finally{delete element[key];}}
+    throw new Error('未知图片传输操作');
+  }
   if (action === 'files') {
     if (!(element instanceof HTMLInputElement) || element.type !== 'file') throw new Error('上传入口无效。');
     const transfer = new DataTransfer();
@@ -75,7 +86,15 @@ class MobileLocator {
     await this.perform('focus');
     await this.page.rpc('enter', {});
   }
-  setInputFiles(files) { return this.perform('files', files.map(file => ({ name: file.name, mimeType: file.mimeType, base64: file.buffer.toString('base64') }))); }
+  async setInputFiles(files,{validateImages=false}={}) {
+    const encoded=files.map(file=>({name:file.name,mimeType:file.mimeType,base64:file.buffer.toString('base64')}));
+    if(!validateImages&&encoded.reduce((n,f)=>n+f.base64.length,0)<=49152)return this.perform('files',encoded);
+    const token='files-'+crypto.randomUUID();let committed=false;
+    try{await this.perform('files.begin',{token,validate:validateImages,files:encoded.map(({name,mimeType,base64})=>({name,mimeType,length:base64.length}))});
+      for(const [index,file]of encoded.entries())for(let offset=0;offset<file.base64.length;offset+=49152)await this.perform('files.chunk',{token,index,offset,data:file.base64.slice(offset,offset+49152)});
+      const result=await this.perform('files.commit',{token});committed=true;return result;
+    }finally{if(!committed)await this.perform('files.abort',{token}).catch(()=>{});}
+  }
 }
 
 export class MobilePage {
@@ -215,6 +234,31 @@ export class MobileBrowser extends DeepSeekBrowser {
     if (this._page) this._page.closed = true;
     this._page = null; this._context = null;
     await this.rpc('resetBrowser', {});
+  }
+  async _decodeImages(_page,images,signal) {
+    if(signal?.aborted)throw new BrowserBridgeError('REQUEST_CANCELLED',499,'图片上传已取消');
+    for(const image of images)if(!image.buffer?.length||image.buffer.length>10*1024*1024)throw new BrowserBridgeError('invalid_image_data',400,'图片为空或超过 10 MiB。');
+    // Pixel decoding occurs in the staged commit before any file change event.
+  }
+  async _readUploadState(page,images=[]) {return page.evaluate(composerUploadState,{names:images.map(i=>i.name),selector:this.uploadComposerSelector});}
+  async _uploadImages(page,images,signal,deadline) {
+    const stopAt=Math.min(deadline,Date.now()+this.config.uploadTimeoutMs);let last={count:0,readyCount:0},committedAt=0;
+    const check=()=>{if(signal?.aborted)throw new BrowserBridgeError('REQUEST_CANCELLED',499,'图片上传已取消');if(Date.now()>=stopAt)throw new BrowserBridgeError('image_upload_timeout',400,'图片上传未能全部就绪（'+last.readyCount+'/'+images.length+'），未发送消息。');};
+    const pause=()=>new Promise(resolve=>setTimeout(resolve,this.config.pollMs));
+    check();const state=await this._readStateBounded(page,signal,stopAt);this.uploadComposerSelector=state.composerSelector;
+    last=await this._readUploadState(page,images);if(!last.scopeVerified)throw new BrowserBridgeError('image_upload_scope',400,'无法识别本轮输入框的附件区域，未发送消息。');
+    if(last.count)throw new BrowserBridgeError('image_upload_existing_draft',409,'网页输入框还有未发送的附件，请先处理后重试。');
+    const locate=async()=>{check();const value=await page.evaluate(composerUploadState,{selector:this.uploadComposerSelector,mark:'upload-'+crypto.randomUUID()});if(!value.inputSelector)throw new BrowserBridgeError('image_upload_failed',400,value.error||'没有找到图片上传入口，未发送消息。');return page.locator(value.inputSelector);};
+    let input=await locate();const multiple=await input.evaluate(e=>e.multiple),groups=multiple?[images]:images.map(i=>[i]);let expected=0;
+    for(const group of groups){check();if(expected)input=await locate();await input.setInputFiles(group.map(i=>({name:i.name,mimeType:i.mimeType,buffer:i.buffer})),{validateImages:true});expected+=group.length;committedAt=Date.now();
+      for(;;){check();this._checkState(await this._readStateBounded(page,signal,stopAt));last=await this._readUploadState(page,images);
+        if(!last.scopeVerified||last.failed||last.count>expected)throw new BrowserBridgeError('image_upload_failed',400,'网页图片上传失败或附件区域已变化，未发送消息。');
+        const wanted=images.slice(0,expected).map(i=>i.name),identities=last.names||[];
+        if(last.count===expected&&last.readyCount===expected&&last.pendingCount===0&&identities.length+(last.anonymousCount||0)===expected&&identities.every(n=>wanted.includes(n))&&Date.now()-committedAt>=1200)break;
+        if(!last.count&&Date.now()-committedAt>8000)throw new BrowserBridgeError('image_upload_preview_missing',400,'网页没有出现本轮图片的附件预览，未点击发送；可打开 DeepSeek 网页查看。');
+        await pause();
+      }
+    }
   }
   _watchUploadNetwork() {
     // Android WebView exposes no Playwright request stream. Require a longer

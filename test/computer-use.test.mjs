@@ -32,3 +32,18 @@ test('vision-enabled connections attach only the current screenshot to requests,
  let round=0;const saved=[],requests=[];const client=createClient({saveState:raw=>{saved.push(raw);return true;},modelInfo:()=>({name:'Vision',model:'vision-model',source:'api',provider:{vision:true}}),cancel:()=>{},native:async(op,a)=>op==='tool.execute'?{ok:true,screenshot:{id:'capture-1'},observation:'visible'}:op==='browser.image'?'data:image/jpeg;base64,SCREENSHOT_ONLY_ON_WIRE':true,request:async(id,body)=>{requests.push(structuredClone(body));return {choices:[{message:++round===1?{role:'assistant',content:'观察',tool_calls:[{id:'capture-call',type:'function',function:{name:'browser',arguments:'{"action":"observe"}'}}]}:{role:'assistant',content:'已查看。'}}]};}});
  await client.send('查看页面');assert.equal(requests.length,2);assert.ok(requests[1].messages.some(m=>Array.isArray(m.content)&&m.content[1].image_url.url.includes('SCREENSHOT_ONLY_ON_WIRE')));assert.ok(!saved.join('').includes('SCREENSHOT_ONLY_ON_WIRE'));assert.ok(LOCAL_TOOLS.some(t=>t.function.name==='browser'));
 });
+
+test('stable control refs survive unrelated countdowns, exclude covered targets and track focused inputs without values',async t=>{
+ const browser=await launch();t.after(()=>browser.close());const page=await browser.newPage({viewport:{width:390,height:640}});
+ await page.setContent('<meta name="viewport" content="width=device-width"><button id="count">倒计时 10</button><input aria-label="帐号" value="PRIVATE_VALUE"><div style="position:relative"><button id="covered">不能点</button><div style="position:absolute;inset:0;background:white"></div></div>');
+ const first=await page.evaluate(OBSERVE_SCRIPT),ref=first.elements.find(e=>e.label==='帐号').ref;
+ await page.locator('#count').textContent();await page.evaluate(()=>document.querySelector('#count').textContent='倒计时 9');await page.locator('input').focus();
+ const second=await page.evaluate(OBSERVE_SCRIPT);assert.equal(second.elements.find(e=>e.label==='帐号').ref,ref);assert.equal(second.focused.ref,ref);assert.equal(second.focused.editable,true);assert.ok(!JSON.stringify(second).includes('PRIVATE_VALUE'));assert.ok(!second.elements.some(e=>e.label==='不能点'));
+ const cdp=await page.context().newCDPSession(page);await cdp.send('Emulation.setPageScaleFactor',{pageScaleFactor:2});const zoomed=await page.evaluate(OBSERVE_SCRIPT);assert.ok(zoomed.viewport.width<390);assert.equal(zoomed.viewport.scale,2);assert.ok(zoomed.elements.every(e=>e.x>=0&&e.x<zoomed.viewport.width));
+});
+
+test('browser tool schema exposes target refs, replace, clear, Unicode deletion and zoom',()=>{
+ const props=LOCAL_TOOLS.find(t=>t.function.name==='browser').function.parameters.properties;
+ for(const action of ['click','type','clear','delete','zoom'])assert.ok(props.action.enum.includes(action));
+ assert.equal(props.ref.type,'string');assert.equal(props.count.maximum,1000);assert.deepEqual(props.direction.enum,['backward','forward']);assert.equal(props.scale.minimum,.5);
+});

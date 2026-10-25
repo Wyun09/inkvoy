@@ -56,7 +56,8 @@ export function initDashboard() {
     if (layoutFrame) return;
     layoutFrame = requestAnimationFrame(() => {
       layoutFrame = 0;
-      const visible = (tab === 'web'||tab === 'computer') && !modal;
+      const page=$(tab==='computer'?'page-computer':'page-web');
+      const visible = (tab === 'web'||tab === 'computer') && !modal && !page?.inert && !page?.hidden && !document.querySelector('.computer-workspace.is-resizing,.media-viewer:not([hidden]),.model-scrim:not([hidden])');
       const slot = visible ? $(tab==='computer'?'computer-slot':'web-slot').getBoundingClientRect() : null;
       const rounded = value => Math.round(value * 2) / 2;
       const raw = JSON.stringify(visible ? { visible, ...(tab==='computer'?{surface:'computer'}:{}), top: rounded(slot.top), left: rounded(slot.left), width: rounded(slot.width), height: rounded(slot.height), viewportWidth: innerWidth } : { visible: false });
@@ -70,6 +71,7 @@ export function initDashboard() {
     document.body.dataset.page=value;
     window.StudioUI?.closeDrawer();
     for (const name of ['home', 'tasks', 'web', 'connect', 'chat', 'files', 'terminal', 'tools','computer']) if ($('page-' + name)) $('page-' + name).hidden = name !== value;
+    window.ComputerWorkspace?.navigate(value);
     document.querySelectorAll('.bottom-nav [data-navigate]').forEach(button => {
       button.classList.toggle('active', button.dataset.navigate === value);
       if (button.dataset.navigate === value) button.setAttribute('aria-current', 'page'); else button.removeAttribute('aria-current');
@@ -310,8 +312,9 @@ export function initDashboard() {
     if (event.key === 'Tab' && modal) { const nodes = [...$('sheet-scrim').querySelectorAll('button:not(:disabled)')]; const first = nodes[0], last = nodes.at(-1); if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); } else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); } }
   });
   new ResizeObserver(layout).observe($('app'));
+  new MutationObserver(layout).observe($('app'),{subtree:true,attributes:true,attributeFilter:['hidden','inert']});
   $('app').addEventListener('animationend',event=>{if(event.target.classList.contains('page'))layout();});
   window.addEventListener('resize', layout);
-  window.BridgeDashboard = { render, navigate, toast, result, showResult, back() { if (window.StudioUI?.closeDrawer()) return true; if (modal) { closeSheet(); return true; } if (tab !== 'home') { navigate('home'); return true; } return false; }, setTheme };
+  window.BridgeDashboard = { render, navigate, layout, toast, result, showResult, back() { if (window.StudioUI?.closeDrawer()) return true; if (modal) { closeSheet(); return true; } if (tab !== 'home') { navigate('home'); return true; } return false; }, setTheme };
   setTheme(theme); render(state);
 }
