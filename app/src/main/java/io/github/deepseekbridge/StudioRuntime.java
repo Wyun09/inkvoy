@@ -25,17 +25,24 @@ public final class StudioRuntime {
     private final Context context;
     private final Events events;
     private final ExecutorService workers=Executors.newFixedThreadPool(4);
+    private final ExecutorService extensionControl=Executors.newSingleThreadExecutor();
+    private final ScheduledExecutorService processCleanup=Executors.newSingleThreadScheduledExecutor();
     private final Map<String,Command> commands=new ConcurrentHashMap<>();
     private final Map<String,Pty> terminals=new ConcurrentHashMap<>();
     private final RuntimeInstaller installer;
     public final ProjectFiles files;
     public final ChatMedia media;
+    private volatile ExtensionHub extensions;
+    private volatile OpenAiAccounts accounts;
     private final ManagedTasks managed;
     private final FileRevisions revisions;
     private volatile ToolJournal journal;
     private volatile boolean closed,bootVerified;
     private final java.util.concurrent.atomic.AtomicInteger work=new java.util.concurrent.atomic.AtomicInteger();
     public StudioRuntime(Context context,Events events){this.context=context;this.events=events;media=new ChatMedia(context);files=new ProjectFiles(new File(context.getFilesDir(),"projects"));revisions=new FileRevisions(files,new File(context.getFilesDir(),"file-revisions"));installer=new RuntimeInstaller(context,s->emit("runtime",s));managed=new ManagedTasks(this::launchManaged,this::managedChanged);}
+    synchronized OpenAiAccounts accounts()throws IOException{if(closed)throw new IOException("运行时已关闭");if(accounts==null)accounts=new OpenAiAccounts(context,this::event);return accounts;}
+    private synchronized ExtensionHub extensions()throws IOException{if(closed)throw new IOException("运行时已关闭");if(extensions==null)extensions=new ExtensionHub(context,this::launchExtension,this::event);return extensions;}
+    String accountAuthUrl(){OpenAiAccounts value=accounts;return value==null?null:value.pendingUrl();}
     private synchronized ToolJournal journal()throws IOException{if(closed)throw new IOException("运行时已关闭");if(journal==null)journal=new ToolJournal(context);return journal;}
     private void emit(String type,Object value){try{events.event(new JSONObject().put("type",type).put("value",value));}catch(JSONException ignored){}}
     private void event(JSONObject value){events.event(value);}
@@ -44,12 +51,17 @@ public final class StudioRuntime {
         if(operation.equals("command.cancel")||operation.equals("runtime.status")) {
             try{reply.done(true,handle(operation,args));}catch(Exception e){reply.done(false,error(e.getMessage()));}return;
         }
+        if(operation.equals("extension.session")||operation.equals("extension.disconnect")||operation.equals("extension.cancel")){extensionControl.submit(()->{try{reply.done(true,extensions().handle(operation,args));}catch(Exception e){reply.done(false,error(e.getMessage()));}});return;}
         boolean tracked=operation.equals("runtime.ensure")||operation.equals("runtime.test")||operation.equals("tool.execute")||operation.equals("terminal.open");
         workers.submit(()->{if(tracked){work.incrementAndGet();emit("work",work.get()+managed.activeCount());}try{if(closed)throw new IOException("运行时已停止，排队操作未执行");reply.done(true,handle(operation,args));}catch(Throwable e){reply.done(false,error(e.getMessage()==null?e.getClass().getSimpleName():e.getMessage()));}finally{if(tracked){work.decrementAndGet();emit("work",work.get()+managed.activeCount());}}});
     }
     private static JSONObject error(String message){JSONObject j=new JSONObject();try{j.put("message",message);}catch(JSONException ignored){}return j;}
     private Object handle(String operation,JSONObject a)throws Exception{
         String project=a.optString("project");
+        if(operation.equals("extension.tool.begin")){extensions().server(a.getString("server"));files.project(project);JSONObject key=new JSONObject().put("server",a.getString("server")).put("project",project).put("name",a.getString("name")).put("args",a.getJSONObject("args"));JSONObject cached=journal().claim(a.getString("id"),canonical(key));if(cached!=null)return new JSONObject().put("cached",true).put("value",cached);journal().running(a.getString("id"));return new JSONObject().put("claimed",true);}
+        if(operation.equals("extension.tool.finish")){JSONObject result=a.getJSONObject("result");if(result.toString().length()>524288)throw new IOException("MCP 工具结果超过 512 KB");journal().finish(a.getString("id"),result);return result;}
+        if(operation.startsWith("account."))return accounts().handle(operation,a);
+        if(operation.startsWith("extension.")||operation.startsWith("plugin."))return extensions().handle(operation,a);
         switch(operation){
             case "project.ensure":files.project(project);return true;
             case "runtime.status":return installer.status();
@@ -59,6 +71,7 @@ public final class StudioRuntime {
             case "file.read":return files.read(project,a.getString("path"),a.optInt("offset"),a.optInt("limit",65536));
             case "file.attachment":return media.attach(files.resolve(project,a.getString("path")),project,a.getString("path"));
             case "media.data":return media.data(a.getString("id"));
+            case "media.mcp":{String raw=a.getString("data"),mime=a.getString("mime");if(raw.length()>2400000)throw new IOException("MCP 图片超过本次传输限制");String suffix=mime.equals("image/png")?".png":mime.equals("image/jpeg")?".jpg":mime.equals("image/webp")?".webp":null;if(suffix==null)throw new IOException("MCP 图片格式不受支持");byte[] bytes=Base64.decode(raw,Base64.DEFAULT);String path=".studio/mcp-images/"+UUID.randomUUID()+suffix;File target=files.resolve(project,path);if(!target.getParentFile().isDirectory()&&!target.getParentFile().mkdirs())throw new IOException("图片目录不可用");try{try(OutputStream out=new FileOutputStream(target)){out.write(bytes);}JSONObject value=media.attach(target,project,path);if(!value.optBoolean("image"))throw new IOException("MCP 返回的图片无法解码");return value;}catch(Exception e){target.delete();throw e;}}
             case "file.write":return revisions.write(project,a.getString("path"),a.getString("content"));
             case "file.change":return revisions.get(project,a.getString("id"));
             case "file.revert":return revisions.revert(project,a.getString("id"));
@@ -125,6 +138,14 @@ public final class StudioRuntime {
         final InputStream out=new ParcelFileDescriptor.AutoCloseInputStream(outFd),err=new ParcelFileDescriptor.AutoCloseInputStream(errFd);
         return new ManagedTasks.Child(){volatile boolean reaped;public InputStream stdout(){return out;}public InputStream stderr(){return err;}public int pid(){return pid;}public int await(){int code=JNI.waitFor(pid);reaped=true;return code;}public void stop(boolean force){if(reaped)return;int signal=force?OsConstants.SIGKILL:OsConstants.SIGQUIT;try{Os.kill(force?-pid:pid,signal);}catch(Exception ignored){}if(force)try{Os.kill(pid,signal);}catch(Exception ignored){}}};
     }
+    private static String quoteShell(String text){return "'"+text.replace("'","'\\''")+"'";}
+    private ExtensionHub.Child launchExtension(String project,JSONObject config)throws Exception{
+        if(!installer.status().optBoolean("installed"))throw new IOException("请先在工具与环境中初始化 Debian，再连接本机 MCP 服务");ensure(project);StringBuilder command=new StringBuilder("exec env");JSONObject variables=config.optJSONObject("env");if(variables!=null)for(Iterator<String> keys=variables.keys();keys.hasNext();){String key=keys.next();command.append(' ').append(quoteShell(key+"="+variables.getString(key)));}command.append(' ').append(quoteShell(config.getString("command")));JSONArray arguments=config.optJSONArray("args");if(arguments!=null)for(int i=0;i<arguments.length();i++)command.append(' ').append(quoteShell(arguments.getString(i)));
+        List<String> args=argv(project,"",false,command.toString());String[] env=environment().entrySet().stream().map(e->e.getKey()+"="+e.getValue()).toArray(String[]::new);int[] child=NativePty.spawnStdio(args.get(0),files.project(project).getPath(),args.toArray(new String[0]),env);
+        InputStream stdout=new ParcelFileDescriptor.AutoCloseInputStream(ParcelFileDescriptor.adoptFd(child[1])),stderr=new ParcelFileDescriptor.AutoCloseInputStream(ParcelFileDescriptor.adoptFd(child[2]));OutputStream stdin=new ParcelFileDescriptor.AutoCloseOutputStream(ParcelFileDescriptor.adoptFd(child[3]));
+        return new ExtensionHub.Child(){volatile boolean exited;public InputStream stdout(){return stdout;}public InputStream stderr(){return stderr;}public OutputStream stdin(){return stdin;}public int await(){int code=JNI.waitFor(child[0]);exited=true;return code;}public void stop(){if(!exited){try{Os.kill(child[0],OsConstants.SIGQUIT);}catch(Exception ignored){}processCleanup.schedule(()->{try{if(!exited){Os.kill(-child[0],OsConstants.SIGKILL);Os.kill(child[0],OsConstants.SIGKILL);}}catch(Exception ignored){}},250,TimeUnit.MILLISECONDS);}try{stdin.close();}catch(Exception ignored){}}};
+    }
+    public void importPlugin(Uri uri){workers.submit(()->{try{event(new JSONObject().put("type","plugin-import").put("value",extensions().install(uri)));}catch(Exception e){try{event(new JSONObject().put("type","plugin-import").put("error",e.getMessage()));}catch(JSONException ignored){}}});}
     private static String canonical(Object value)throws JSONException{if(value instanceof JSONObject){JSONObject object=(JSONObject)value;List<String> keys=new ArrayList<>();object.keys().forEachRemaining(keys::add);Collections.sort(keys);StringBuilder out=new StringBuilder("{");for(String key:keys){if(out.length()>1)out.append(',');out.append(JSONObject.quote(key)).append(':').append(canonical(object.get(key)));}return out.append('}').toString();}if(value instanceof JSONArray){JSONArray array=(JSONArray)value;StringBuilder out=new StringBuilder("[");for(int i=0;i<array.length();i++){if(i>0)out.append(',');out.append(canonical(array.get(i)));}return out.append(']').toString();}return value instanceof String?JSONObject.quote((String)value):String.valueOf(value);}
     private List<String> argv(String project,String cwd,boolean interactive,String command)throws Exception{
         File projectDir=files.project(project),work=files.resolve(project,cwd);if(!work.isDirectory())throw new IOException("Command working directory does not exist");
@@ -133,6 +154,7 @@ public final class StudioRuntime {
         List<String> args=new ArrayList<>(Arrays.asList(executable.getPath(),"-0","--link2symlink","--kill-on-exit","--sysvipc","-r",installer.root().getPath()));
         for(String mount:new String[]{"/dev","/proc","/sys","/system","/apex"})if(new File(mount).isDirectory()){args.add("-b");args.add(mount);}
         if(AccessSettings.sharedStorage(context)){File shared=android.os.Environment.getExternalStorageDirectory();if(shared.isDirectory()){File guestShared=new File(installer.root(),"shared");if(!guestShared.isDirectory()&&!guestShared.mkdirs())throw new IOException("无法创建 /shared 挂载目录");args.add("-b");args.add(shared.getAbsolutePath()+":/shared");}}
+        File plugins=new File(context.getFilesDir(),"studio-plugins");if(!plugins.isDirectory())plugins.mkdirs();File guest=new File(installer.root(),"studio-plugins");if(!guest.isDirectory())guest.mkdirs();args.addAll(Arrays.asList("-b",plugins.getPath()+":/studio-plugins"));
         args.addAll(Arrays.asList("-b",projectDir.getPath()+":/workspace","-w","/workspace"+(relative.isEmpty()?"":"/"+relative),"/usr/bin/env","-i","HOME=/root","USER=root","LOGNAME=root","SHELL=/bin/bash","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin","TERM=xterm-256color","LANG=C.UTF-8","COLORTERM=truecolor","TMPDIR=/tmp","/bin/bash"));
         if(interactive)args.add("--login");else{args.add("-lc");args.add(command);}return args;
     }
@@ -174,5 +196,5 @@ public final class StudioRuntime {
     public void exportFile(Uri uri,String project,String path){workers.submit(()->{try{File source=files.resolve(project,path);if(!source.isFile())throw new IOException("请先保存要导出的文件");try(InputStream in=new FileInputStream(source);OutputStream out=context.getContentResolver().openOutputStream(uri,"wt")){if(out==null)throw new IOException("无法写入目标");byte[] b=new byte[65536];int n;while((n=in.read(b))!=-1)out.write(b,0,n);}event(new JSONObject().put("type","import").put("path","导出完成"));}catch(Exception e){try{event(new JSONObject().put("type","import").put("error",e.getMessage()));}catch(JSONException ignored){}}});}
     public void cancelAll(){managed.close();for(Command c:commands.values())c.cancel();for(Pty t:terminals.values())t.close();terminals.clear();}
     public void detachTerminals(){for(Pty t:terminals.values())synchronized(t){t.attached=false;}}
-    public void close(){closed=true;cancelAll();workers.shutdownNow();Thread cleanup=new Thread(()->{try{while(!workers.awaitTermination(30,TimeUnit.SECONDS)){}if(journal!=null)journal.close();}catch(InterruptedException e){Thread.currentThread().interrupt();}},"studio-close-journal");cleanup.setDaemon(true);cleanup.start();}
+    public void close(){closed=true;if(accounts!=null)accounts.close();if(extensions!=null)extensions.close();cancelAll();extensionControl.shutdownNow();processCleanup.shutdown();workers.shutdownNow();Thread cleanup=new Thread(()->{try{while(!workers.awaitTermination(30,TimeUnit.SECONDS)){}if(journal!=null)journal.close();}catch(InterruptedException e){Thread.currentThread().interrupt();}},"studio-close-journal");cleanup.setDaemon(true);cleanup.start();}
 }

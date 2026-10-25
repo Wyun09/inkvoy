@@ -1,9 +1,12 @@
 import { readFile, writeFile, mkdir, readdir } from 'node:fs/promises';
 const project = new URL('../', import.meta.url);
 const parts = ['# Third party components included in the Android JavaScript engine\n'];
-for (const name of ['ajv', 'fast-deep-equal', 'fast-uri', 'json-schema-traverse', 'require-from-string', '@xterm/xterm', '@xterm/addon-fit', 'marked', 'dompurify', 'highlight.js']) {
+const manifest=JSON.parse(await readFile(new URL('package.json',project),'utf8'));
+const queue=Object.keys(manifest.dependencies||{}),included=new Set();
+while(queue.length){const name=queue.shift();if(included.has(name))continue;included.add(name);
   const root = new URL(`node_modules/${name}/`, project);
   const info = JSON.parse(await readFile(new URL('package.json', root), 'utf8'));
+  queue.push(...Object.keys(info.dependencies||{}));
   let license;
   for (const filename of ['LICENSE', 'LICENSE.txt', 'LICENSE.md', 'LICENSE-MIT.txt', 'license', 'license.txt', 'LICENSE-MIT']) {
     try { license = await readFile(new URL(filename, root), 'utf8'); break; } catch (error) { if (error.code !== 'ENOENT') throw error; }

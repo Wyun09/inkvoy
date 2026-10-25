@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="io.github.deepseekbridge" android:versionCode="19" android:versionName="2.4.2">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="io.github.deepseekbridge" android:versionCode="20" android:versionName="3.0.0">
     <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="35" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

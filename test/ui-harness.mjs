@@ -5,7 +5,7 @@ export async function uiHarness(browser, viewport = { width: 390, height: 844 },
   const assets = assetsDirectory || new URL('../app/src/main/assets/', import.meta.url);
   await page.route('https://bridge.local/**', async route => {
     const name = new URL(route.request().url()).pathname.slice(1);
-    if (!['engine.html', 'engine.bundle.js', 'app.css', 'logo.png', 'companion.png'].includes(name)) return route.abort();
+    if (!['engine.html', 'engine.bundle.js', 'compute.worker.js', 'mcp.worker.js', 'app.css', 'logo.png', 'companion.png'].includes(name)) return route.abort();
     return route.fulfill({ contentType: name.endsWith('.png') ? 'image/png' : name.endsWith('.js') ? 'application/javascript' : name.endsWith('.css') ? 'text/css' : 'text/html; charset=utf-8', body: await readFile(new URL(name, assets)) });
   });
   await page.addInitScript(({ storage, failStartup, studio, holdTools, clientState, providerState, mediaFiles, fileChanges, runtimeTools, saveDelay }) => {
@@ -46,7 +46,9 @@ export async function uiHarness(browser, viewport = { width: 390, height: 844 },
         if(operation==='process.stop'){const j=managedJobs.find(j=>j.id===a.id&&j.project===a.project);if(j){j.state='exited';j.exitCode=0;}value=j||{};set(()=>AndroidEngine.workspaceRpc(id,{ok:true,value}),20);return;}
         if(operation==='tool.execute'&&a.name==='process'&&a.args.action==='start'){value={id:a.id,project:a.project,title:a.args.title||'开发服务',command:a.args.command,cwd:a.args.cwd,previewUrl:a.args.preview_url,state:'running',stdout:'Serving HTTP on 127.0.0.1 port 8899',stderr:''};managedJobs.push(value);set(()=>AndroidEngine.workspaceRpc(id,{ok:true,value}),20);return;}
         if(operation==='tool.execute'&&holdTools)return;
-        if(operation==='runtime.status'||operation==='runtime.ensure')value={ready:true,verified:false,tools:runtimeTools};
+        if(operation==='account.list')value={accounts:[],authorizing:false,notice:''};
+        else if(operation==='extension.list')value={servers:[],plugins:[]};
+        else if(operation==='runtime.status'||operation==='runtime.ensure')value={ready:true,verified:false,tools:runtimeTools};
         else if(operation==='file.list')value={entries:Object.entries(files).map(([name,content])=>({name,bytes:content.length,directory:false}))};
         else if(operation==='file.read')value={content:files[a.path]||'',truncated:false};
         else if(operation==='file.write'){files[a.path]=a.content;value={ok:true};}

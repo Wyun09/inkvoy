@@ -129,6 +129,8 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
                 String asset;
                 if ("/engine.html".equals(uri.getPath())) asset = "engine.html";
                 else if ("/engine.bundle.js".equals(uri.getPath())) asset = "engine.bundle.js";
+                else if ("/compute.worker.js".equals(uri.getPath())) asset="compute.worker.js";
+                else if ("/mcp.worker.js".equals(uri.getPath())) asset="mcp.worker.js";
                 else if ("/app.css".equals(uri.getPath())) asset = "app.css";
                 else if ("/logo.png".equals(uri.getPath())) asset = "logo.png";
                 else if ("/companion.png".equals(uri.getPath())) asset = "companion.png";
@@ -183,7 +185,7 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
     public void resumeWebviews(){if(destroyed)return;browser.onResume();engine.onResume();}
     public void publishUi() { try { js("BridgeDashboard.render(" + snapshot() + ")"); } catch (JSONException ignored) {} }
     public JSONObject snapshot() throws JSONException {
-        return new JSONObject().put("version", "2.4.2").put("ready", ready).put("running", running)
+        return new JSONObject().put("version", "3.0.0").put("ready", ready).put("running", running)
             .put("loggedIn", loggedIn).put("hasInspection", hasInspection).put("needsVerification", needsVerification)
             .put("inspecting", inspecting).put("reasoningMode", reasoningMode).put("busy", !completions.isEmpty() || taskboard.optInt("active") > 0)
             .put("webSearchMode", webSearchMode).put("webSearchDefault", webSearchDefault)
@@ -202,7 +204,7 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
         js("AndroidEngine.resetConversations()");
     }
     public JSONObject diagnostics() throws JSONException {
-        return new JSONObject().put("version", "2.4.2").put("running", running).put("ready", ready).put("loggedIn", loggedIn)
+        return new JSONObject().put("version", "3.0.0").put("running", running).put("ready", ready).put("loggedIn", loggedIn)
             .put("storage", new JSONObject(localState.status())).put("agentStrict", agentStrict)
             .put("requests", taskboard.optInt("totalRequests")).put("active", taskboard.optInt("active"))
             .put("trackedSessions", conversations.optInt("tracked")).put("reused", conversations.optInt("reused"));
@@ -384,6 +386,7 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
         private final int epoch = engineEpoch;
         private boolean current() { return epoch == engineEpoch && !destroyed; }
         @JavascriptInterface public String loadState() { return current() ? localState.load() : "{}"; }
+        @JavascriptInterface public int uiScale(){return context.getSharedPreferences("studio-display",Context.MODE_PRIVATE).getInt("scale",90);}
         @JavascriptInterface public String loadClientState() { return current() ? clientState.load() : "{}"; }
         @JavascriptInterface public String loadProviders() { return current() ? providerState.load() : "{}"; }
         @JavascriptInterface public void providerCancel(String id) { if (current()) providers.cancel(id); }
@@ -395,7 +398,7 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
                 if (!current() || !trustedEngine()) return;
                 js("AndroidEngine.providerEvent("+JSONObject.quote(requestId)+","+value+")");
                 String type=value.optString("type");if(type.equals("end")||type.equals("response")||type.equals("error")){completions.remove(workId);if(completions.isEmpty()&&taskboard.optInt("active")==0&&studioWork==0&&wakeLock.isHeld())wakeLock.release();changed();}
-            }));
+            }),studio::accounts);
         }
         @JavascriptInterface public boolean saveClientState(String raw) { return current() && clientState.save(raw); }
         @JavascriptInterface public void saveLocalState(int id, String channel, String raw) {
@@ -422,6 +425,7 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
                 });
                 if(operation.equals("browser.ui")){computer.ui(argument,reply);return;}
                 if(operation.equals("browser.image")){stateWriter.execute(()->{try{reply.done(true,computer.image(argument.optString("id")));}catch(Exception e){reply.done(false,newEvent("error",new JSONObject()));}});return;}
+                if(operation.equals("account.logout"))providers.cancelAccount(argument.optString("id"));
                 studio.request(operation,argument,reply);
             });
         }

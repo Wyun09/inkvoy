@@ -1,17 +1,9 @@
 import {marked} from 'marked';
 import DOMPurify from 'dompurify';
-import hljs from 'highlight.js/lib/core';
-import javascript from 'highlight.js/lib/languages/javascript';
-import typescript from 'highlight.js/lib/languages/typescript';
-import python from 'highlight.js/lib/languages/python';
-import bash from 'highlight.js/lib/languages/bash';
-import json from 'highlight.js/lib/languages/json';
-import xml from 'highlight.js/lib/languages/xml';
-import css from 'highlight.js/lib/languages/css';
-import java from 'highlight.js/lib/languages/java';
+import {highlightCode} from '../background.js';
 import {replyTurns,TOOL_LABELS,STATUS_LABELS} from './reply-model.js';
 import {attachmentCards} from './attachments.js';
-for(const [name,definition]of Object.entries({javascript,typescript,python,bash,json,xml,css,java}))hljs.registerLanguage(name,definition);
+const languages=new Set(['javascript','typescript','python','bash','json','xml','css','java']);
 
 const el=(tag,className,text)=>{const n=document.createElement(tag);if(className)n.className=className;if(text!==undefined)n.textContent=text;return n;};
 const clock=ms=>ms>=60000?Math.floor(ms/60000)+'分'+Math.floor(ms%60000/1000)+'秒':Math.max(0,ms/1000).toFixed(ms<1000?1:0)+'秒';
@@ -19,7 +11,7 @@ export function createReplyView({container,copy,openFile,showChange,openImage=()
   let selected,previousUsers=0,startIndex=0,lastSession,lastActive,lastDraft;const nodes=new Map();
   const earlier=el('button','reply-earlier','加载更早的对话');earlier.type='button';
   earlier.onclick=()=>{const anchor=container.querySelector('[data-reply-key]'),oldY=anchor?.getBoundingClientRect().top;const users=(lastSession?.messages||[]).map((m,i)=>m.role==='user'&&!m.internal?i:-1).filter(i=>i>=0&&i<startIndex);startIndex=users.at(-20)??0;render(lastSession,lastActive,lastDraft,true);if(anchor?.isConnected)container.scrollTop+=anchor.getBoundingClientRect().top-oldY;};
-  const highlighter=new IntersectionObserver(entries=>{for(const entry of entries){if(!entry.isIntersecting)continue;const figure=entry.target;highlighter.unobserve(figure);const run=()=>{if(!figure.isConnected||!figure.getClientRects().length)return;const body=figure.querySelector('code');if(body)body.innerHTML=DOMPurify.sanitize(hljs.highlight(figure.source,{language:figure.language,ignoreIllegals:true}).value,{ALLOWED_TAGS:['span'],ALLOWED_ATTR:['class']});};if(window.requestIdleCallback)requestIdleCallback(run,{timeout:300});else setTimeout(run,0);}},{root:container,rootMargin:'120px'});
+  const highlighter=new IntersectionObserver(entries=>{for(const entry of entries){if(!entry.isIntersecting)continue;const figure=entry.target;highlighter.unobserve(figure);const run=async()=>{if(!figure.isConnected||!figure.getClientRects().length)return;const source=figure.source;try{const value=await highlightCode(source,figure.language);const body=figure.querySelector('code');if(body&&figure.isConnected&&figure.source===source)body.innerHTML=DOMPurify.sanitize(value,{ALLOWED_TAGS:['span'],ALLOWED_ATTR:['class']});}catch{/* Plain text remains usable if the worker was interrupted. */}};if(window.requestIdleCallback)requestIdleCallback(run,{timeout:300});else setTimeout(run,0);}},{root:container,rootMargin:'120px'});
   const jump=el('button','reply-jump','回到最新 ↓');jump.type='button';jump.hidden=true;container.after(jump);
   const bottom=()=>{container.scrollTop=container.scrollHeight;jump.hidden=true;};jump.onclick=bottom;
   container.addEventListener('scroll',()=>{jump.hidden=container.scrollHeight-container.scrollTop-container.clientHeight<120;},{passive:true});
@@ -28,7 +20,7 @@ export function createReplyView({container,copy,openFile,showChange,openImage=()
     const figure=el('figure','reply-code'),bar=el('figcaption','reply-code-toolbar'),title=el('span','',language),pre=el('pre'),body=el('code');
     body.textContent=text.length>80000?text.slice(0,80000)+'\n…内容较长，复制可取得完整内容':text;
     const aliases={js:'javascript',jsx:'javascript',ts:'typescript',tsx:'typescript',py:'python',sh:'bash',shell:'bash',html:'xml',vue:'xml'};const hint=language.split('.').at(-1).toLowerCase(),lang=aliases[hint]||hint;
-    if(text.length<=24000&&hljs.getLanguage(lang)){figure.source=text;figure.language=lang;highlighter.observe(figure);}
+    if(text.length<=24000&&languages.has(lang)){figure.source=text;figure.language=lang;highlighter.observe(figure);}
     pre.append(body);bar.append(title);
     if(allowWrap){const wrap=action('换行',b=>{const on=!figure.classList.contains('wrap-code');figure.classList.toggle('wrap-code',on);b.setAttribute('aria-pressed',String(on));});wrap.setAttribute('aria-pressed','false');bar.append(wrap);}
     const cp=action('复制',b=>{copy(text);b.textContent='已复制';});cp.setAttribute('aria-label','复制'+language+'内容');bar.append(cp);figure.append(bar,pre);return figure;
@@ -55,6 +47,7 @@ export function createReplyView({container,copy,openFile,showChange,openImage=()
     if(!r||typeof r!=='object'){node.append(code(String(tool.resultMessage.content||''),'返回内容'));return;}
     if(r.error)node.append(el('p','reply-error',String(r.error)));
     if(r.attachment)node.append(attachmentCards([r.attachment],{openImage,openFile}));
+    if(r.attachments?.length)node.append(attachmentCards(r.attachments,{openImage,openFile}));
     if(tool.call.function?.name==='web_search'){
       if(r.content){const answer=el('div','markdown');markdown(answer,r.content);node.append(answer);}
       if(r.notice)node.append(el('p','reply-result-meta',r.notice));
@@ -134,7 +127,7 @@ export function createReplyView({container,copy,openFile,showChange,openImage=()
     if(!items.length){if(!container.querySelector('.chat-welcome')){container.replaceChildren();const welcome=el('section','chat-welcome'),pet=el('span','welcome-companion');pet.dataset.pose='idle';pet.setAttribute('aria-hidden','true');pet.append(el('span','companion-sprite'));welcome.append(pet,el('h2','','有什么可以帮你？'),el('p','','从一个问题、一段想法，或当前项目开始。'));container.append(welcome);}jump.hidden=true;return;}
     container.querySelector('.chat-welcome')?.remove();if(startIndex>0){container.prepend(earlier);earlier.textContent='加载更早的对话 · '+userIndices.filter(i=>i<startIndex).length+' 轮';}else earlier.remove();const keep=new Set();let cursor=earlier.isConnected?earlier.nextSibling:container.firstChild;
     for(const item of items){keep.add(item.key);let view=nodes.get(item.key);if(!view){view=item.type==='assistant'?makeTurn():{root:el('article','chat-message user'),body:el('div','markdown')};if(item.type==='user')view.root.append(view.body);view.root.dataset.replyKey=item.key;nodes.set(item.key,view);}
-      if(item.type==='assistant')updateTurn(view,item,session);else {if(view.body.textContent!==String(item.message.content||''))view.body.textContent=String(item.message.content||'');const key=JSON.stringify(item.message.attachments||[]);if(view.attachmentKey!==key){view.attachmentKey=key;view.attachments?.remove();if(item.message.attachments?.length){view.attachments=attachmentCards(item.message.attachments,{openImage,openFile});view.root.append(view.attachments);}}}
+      if(item.type==='assistant'){const last=item.messages.at(-1)?.message,lastResult=item.tools.at(-1)?.resultMessage,stamp=[last,lastResult,item.messages.length,item.tools.length,item.status,item.draft,item.reasoning,session.tool?.id];if(!view.stamp||stamp.some((value,i)=>value!==view.stamp[i])){view.stamp=stamp;updateTurn(view,item,session);}}else {if(view.body.textContent!==String(item.message.content||''))view.body.textContent=String(item.message.content||'');const key=JSON.stringify(item.message.attachments||[]);if(view.attachmentKey!==key){view.attachmentKey=key;view.attachments?.remove();if(item.message.attachments?.length){view.attachments=attachmentCards(item.message.attachments,{openImage,openFile});view.root.append(view.attachments);}}}
       if(view.root!==cursor)container.insertBefore(view.root,cursor);cursor=view.root.nextSibling;
     }
     for(const [key,v]of nodes)if(!keep.has(key)){v.root.querySelectorAll('.reply-code').forEach(n=>highlighter.unobserve(n));v.root.remove();nodes.delete(key);}

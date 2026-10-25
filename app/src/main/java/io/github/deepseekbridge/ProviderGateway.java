@@ -14,7 +14,7 @@ final class ProviderGateway {
     interface Sink { void event(String id, JSONObject value); }
     private final ExecutorService workers=Executors.newFixedThreadPool(2,r->new Thread(r,"studio-model-api"));
     private final ConcurrentHashMap<String,Job> jobs=new ConcurrentHashMap<>();
-    private static final class Job { volatile HttpURLConnection connection; final AtomicBoolean cancelled=new AtomicBoolean(); }
+    private static final class Job { volatile HttpURLConnection connection; volatile String accountId; final AtomicBoolean cancelled=new AtomicBoolean(); }
     static URL endpoint(String raw,boolean models)throws Exception {
         URI uri=new URI(raw.trim());String scheme=uri.getScheme();
         if(!("https".equalsIgnoreCase(scheme)||"http".equalsIgnoreCase(scheme))||uri.getHost()==null||uri.getRawUserInfo()!=null||uri.getRawFragment()!=null||raw.length()>4096)throw new IOException("请输入完整的 HTTP(S) API 地址，地址中不能包含账号或片段。");
@@ -26,17 +26,21 @@ final class ProviderGateway {
     static String safe(String message,String key){String clean=message==null?"自定义接口请求失败":message;if(key!=null&&!key.isEmpty())clean=clean.replace(key,"[已隐藏]");clean=clean.replaceAll("(?i)Bearer\\s+[^\\s\"']+","Bearer [已隐藏]").replaceAll("[\\r\\n\\t]+"," ");return clean.substring(0,Math.min(clean.length(),500));}
     private void emit(Sink sink,String id,String type,String text)throws JSONException{JSONObject value=new JSONObject().put("type",type);if(text!=null)value.put(type.equals("error")?"message":"text",text);sink.event(id,value);}
     void request(String id,String raw,Sink sink){
+        request(id,raw,sink,null);
+    }
+    void request(String id,String raw,Sink sink,java.util.concurrent.Callable<OpenAiAccounts> accounts){
         if(id==null||id.length()>128||raw==null||raw.length()>4000000){try{emit(sink,id,"error","接口请求超过限制");}catch(JSONException ignored){}return;}
         Job job=new Job();if(jobs.size()>=8||jobs.putIfAbsent(id,job)!=null){try{emit(sink,id,"error","已有接口请求在处理，请稍后再试");}catch(JSONException ignored){}return;}
         workers.execute(()->{
             String key="";
             try{
-                JSONObject input=new JSONObject(raw);key=input.optString("key");if(key.length()>4096||key.indexOf('\r')>=0||key.indexOf('\n')>=0)throw new IOException("API 密钥格式不正确");
-                boolean models="models".equals(input.optString("operation"));URL url=endpoint(input.getString("endpoint"),models);
+                JSONObject input=new JSONObject(raw);boolean account="openai-account".equals(input.optString("kind"));boolean models="models".equals(input.optString("operation"));
+                if(account){if(accounts==null)throw new IOException("账号登录通道不可用");job.accountId=input.getString("accountId");key=accounts.call().access(job.accountId);}else key=input.optString("key");if(key.length()>16384||key.indexOf('\r')>=0||key.indexOf('\n')>=0)throw new IOException("API 凭据格式不正确");
+                URL url=account?new URL(OpenAiAccounts.RESOURCE+(models?"/models":"/responses")):endpoint(input.getString("endpoint"),models);
                 HttpURLConnection connection=(HttpURLConnection)url.openConnection();job.connection=connection;connection.setInstanceFollowRedirects(false);connection.setConnectTimeout(20000);connection.setReadTimeout(45000);
                 connection.setRequestProperty("Accept",models?"application/json":"text/event-stream, application/json");if(!key.isEmpty())connection.setRequestProperty("Authorization","Bearer "+key);
                 if(job.cancelled.get())throw new InterruptedIOException("请求已停止");
-                if(!models){byte[] body=input.getJSONObject("body").toString().getBytes(StandardCharsets.UTF_8);if(body.length>4000000)throw new IOException("API 请求超过 4 MB");connection.setRequestMethod("POST");connection.setRequestProperty("Content-Type","application/json; charset=utf-8");connection.setDoOutput(true);connection.setFixedLengthStreamingMode(body.length);try(OutputStream out=connection.getOutputStream()){out.write(body);}}
+                if(!models){JSONObject requestBody=input.getJSONObject("body");if(account){requestBody.put("store",false).put("stream",true);}byte[] body=requestBody.toString().getBytes(StandardCharsets.UTF_8);if(body.length>4000000)throw new IOException("API 请求超过 4 MB");connection.setRequestMethod("POST");connection.setRequestProperty("Content-Type","application/json; charset=utf-8");connection.setDoOutput(true);connection.setFixedLengthStreamingMode(body.length);try(OutputStream out=connection.getOutputStream()){out.write(body);}}
                 int status=connection.getResponseCode();
                 if(status>=300&&status<400)throw new IOException("接口返回重定向，请填写最终 API 地址后重试（HTTP "+status+"）");
                 if(status<200||status>=300){String detail="";try(InputStream error=connection.getErrorStream()){if(error!=null){String value=read(error,32768);try{detail=new JSONObject(value).optJSONObject("error").optString("message");}catch(Exception ignored){}}}throw new IOException("接口请求失败（HTTP "+status+"）"+(detail.isEmpty()?"":"："+detail));}
@@ -57,6 +61,7 @@ final class ProviderGateway {
     }
     private static String read(InputStream input,int limit)throws IOException{ByteArrayOutputStream out=new ByteArrayOutputStream();byte[] buffer=new byte[8192];int count;while((count=input.read(buffer))!=-1){if(out.size()+count>limit)throw new IOException("接口响应超过限制");out.write(buffer,0,count);}return new String(out.toByteArray(),StandardCharsets.UTF_8);}
     void cancel(String id){Job job=jobs.get(id);if(job==null)return;job.cancelled.set(true);HttpURLConnection connection=job.connection;if(connection!=null){Thread closer=new Thread(connection::disconnect,"studio-api-cancel");closer.setDaemon(true);closer.start();}}
+    void cancelAccount(String account){for(java.util.Map.Entry<String,Job> entry:jobs.entrySet())if(account.equals(entry.getValue().accountId))cancel(entry.getKey());}
     void cancelAll(){for(String id:jobs.keySet())cancel(id);}
     void close(){cancelAll();workers.shutdownNow();}
 }

@@ -66,11 +66,11 @@ export function initDashboard() {
     });
   }
   function navigate(value) {
-    if (!['home', 'tasks', 'web', 'connect', 'chat', 'files', 'terminal', 'tools','computer'].includes(value) || !$('page-' + value)) return;
+    if (!['home', 'tasks', 'web', 'connect', 'chat', 'files', 'terminal', 'tools','computer','accounts','extensions','settings'].includes(value) || !$('page-' + value)) return;
     tab = value;
     document.body.dataset.page=value;
     window.StudioUI?.closeDrawer();
-    for (const name of ['home', 'tasks', 'web', 'connect', 'chat', 'files', 'terminal', 'tools','computer']) if ($('page-' + name)) $('page-' + name).hidden = name !== value;
+    for (const name of ['home', 'tasks', 'web', 'connect', 'chat', 'files', 'terminal', 'tools','computer','accounts','extensions','settings']) if ($('page-' + name)) $('page-' + name).hidden = name !== value;
     window.ComputerWorkspace?.navigate(value);
     document.querySelectorAll('.bottom-nav [data-navigate]').forEach(button => {
       button.classList.toggle('active', button.dataset.navigate === value);

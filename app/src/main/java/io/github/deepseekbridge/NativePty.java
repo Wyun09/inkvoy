@@ -3,4 +3,5 @@ package io.github.deepseekbridge;
 public final class NativePty {
     static { System.loadLibrary("termux"); }
     public static native int[] spawnPiped(String command,String cwd,String[] argv,String[] environment) throws java.io.IOException;
+    public static native int[] spawnStdio(String command,String cwd,String[] argv,String[] environment) throws java.io.IOException;
 }

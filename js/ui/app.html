@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self'; connect-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self'; connect-src 'none'; worker-src 'self'; frame-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="color-scheme" content="light dark"><link rel="stylesheet" href="app.css"><title>DeepSeek Studio</title><script src="engine.bundle.js" defer></script></head>
 <body><div class="app" id="app">
-  <header class="topbar"><div class="brand"><span class="brand-mark"><img src="logo.png" alt="" width="40" height="40"></span><div><strong>本机桥 <small>2.0</small></strong><span>DEEPSEEK STUDIO</span></div></div><div class="top-actions"><button class="icon-button" id="theme" aria-label="切换明暗主题" data-icon="moon"></button><button class="icon-button" data-action="help" aria-label="使用帮助" data-icon="help"></button></div></header>
+  <header class="topbar"><div class="brand"><span class="brand-mark"><img src="logo.png" alt="" width="40" height="40"></span><div><strong>DeepSeek Studio</strong><span>DEEPSEEK STUDIO</span></div></div><div class="top-actions"><button class="icon-button" id="theme" aria-label="切换明暗主题" data-icon="moon"></button><button class="icon-button" data-action="help" aria-label="使用帮助" data-icon="help"></button></div></header>
   <main class="page home-page" id="page-home">
     <div class="page-heading"><p class="eyebrow">A QUIETER WAY TO WORK</p><h1>工作台</h1><p class="subtitle">本机服务、连接与请求记录</p></div>
     <section class="hero" aria-labelledby="hero-title"><div class="hero-decoration" aria-hidden="true"><i></i><i></i><i></i><span data-icon="layers"></span></div><div class="service-pill"><span class="status-dot" id="hero-dot"></span><span id="service-label">正在准备本机服务</span></div><h2 id="hero-title">准备连接</h2><p id="hero-detail">正在初始化运行环境</p><div class="hero-actions"><button class="hero-primary" id="service-toggle"><span data-icon="power"></span><span id="service-toggle-label">启动服务</span></button><button class="hero-secondary" data-navigate="web">打开 DeepSeek<span data-icon="arrow-up-right"></span></button></div></section>
@@ -51,7 +51,7 @@ Idempotency-Key: unique-operation-id
 
 GET /v1/bridge/tasks
 GET /v1/bridge/tasks/TASK_ID/result</pre><p class="quiet-note">相同重试键与请求会返回已保存结果；工具调用 ID 保持一致。记录有容量上限，客户端仍需防止重复执行工具。</p></details>
-    <button class="diagnostics-link" data-action="diagnostics"><span data-icon="activity"></span>查看连接诊断<span data-icon="arrow-right"></span></button><div class="page-footnote">DEEPSEEK STUDIO · <span id="app-version">2.0.2</span></div>
+    <button class="diagnostics-link" data-action="diagnostics"><span data-icon="activity"></span>查看连接诊断<span data-icon="arrow-right"></span></button><div class="page-footnote">DEEPSEEK STUDIO · <span id="app-version">3.0.0</span></div>
   </main>
   <nav class="bottom-nav" aria-label="主导航"><button data-navigate="home" class="active" aria-current="page"><span data-icon="grid"></span><span>概览</span></button><button data-navigate="tasks"><span data-icon="activity"></span><span>任务</span><i id="task-nav-dot" hidden></i></button><button data-navigate="web"><span data-icon="globe"></span><span>DeepSeek</span></button><button data-navigate="connect"><span data-icon="plug"></span><span>连接</span></button></nav>
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>

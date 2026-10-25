@@ -1,11 +1,11 @@
 {
-  "version": "2.4.2",
-  "versionCode": 19,
-  "buildDate": "2026-10-20",
+  "version": "3.0.0",
+  "versionCode": 20,
+  "buildDate": "2026-10-21",
   "package": "io.github.deepseekbridge",
-  "apk": "deepseek-android-bridge-v2.4.2.apk",
-  "bytes": 615847855,
-  "sha256": "cd23cae9fc8a35ee1060ac9a13d776df7a5103a1bf7f41cbe7952ed0e524cad6",
+  "apk": "deepseek-android-bridge-v3.0.0.apk",
+  "bytes": 616007806,
+  "sha256": "c0e385ecf49762334612da0c9711202cf158703b17526675a30eeae18a85a13d",
   "signerSha256": "cc8f15b569d5e813c68d49f4fa17d19afbe6f7526ef5dbdade88e317116c2b59",
   "minSdk": 26,
   "targetSdk": 35,
@@ -85,59 +85,49 @@
       "platform": "QEMU system Linux ARM64 (not Android)",
       "toolAssertions": 26,
       "nativeExecutionAssertions": 14,
-      "androidDeviceVerified": false
+      "androidDeviceVerified": false,
+      "historicalImageVerification": true,
+      "rerunFor300": false
     }
   },
   "verification": {
-    "javascript": 291,
-    "transportHost": 35,
-    "storageHost": 11,
-    "workspaceHost": 23,
-    "journalSqliteHost": 32,
-    "linuxArm64ToolChecks": 26,
-    "linuxArm64NativeExecutionChecks": 14,
-    "fullProductionInstallerExtraction": true,
-    "extractedImageToolChecks": 26,
-    "androidDevice": false,
-    "realDeepseekAccount": false,
-    "lockScreenBackground": false,
-    "androidFrameworkNativeSqlite": 12,
-    "physicalAndroidDevice": false,
-    "androidFrameworkRegression": 131,
-    "androidRuntimeAssets": 10,
-    "androidPermissions": 5,
+    "javascript": 309,
+    "androidFrameworkRegression": 161,
+    "androidImeThreads": 6,
+    "androidComputerUse": 34,
+    "androidChatMedia": 8,
+    "androidMcpPlugins": 12,
+    "androidOpenAiAccounts": 14,
     "rawZipPathsPortable": true,
     "signedApkReadByAndroidAssetManager": true,
     "fullInstalledApkImageHashChecked": true,
-    "androidHardLinkCompatibility": 8,
-    "androidFileRevisions": 20,
-    "androidResponsiveness": 6,
-    "androidProviderHttp": 8,
-    "androidComputerUse": 32,
-    "androidChatMedia": 6,
-    "androidManagedProcesses": 14,
-    "androidDisplayModes": 4,
-    "postLayoutUiRegression": 3,
+    "sourcePayloadsCompared": 17,
+    "physicalAndroidDevice": false,
+    "realDeepseekAccount": false,
+    "realOpenAiAccount": false,
+    "realAndroidMcpProcess": false,
+    "lockScreenBackground": false,
     "currentRun": [
-      "Full JavaScript suite 291",
-      "Final signed APK Android API 26/33 suite 131",
-      "Production InputConnection wrapper and expected-failure negative control",
-      "Signed APK payload, metadata and archive checks"
+      "309 full JavaScript tests",
+      "161 Android API 26/33 framework tests against final signed APK",
+      "Final signed APK source payloads, signing, paths and ELF alignment",
+      "Two runs per version of desktop UI benchmark after regression suites",
+      "Eight production-asset desktop previews inspected"
     ],
-    "androidImeThread": 6
+    "detailedRecord": "verification/regression-300.json"
   },
   "debianSources": {
     "packages": 465,
     "files": 2145,
     "bytes": 1134408545
   },
-  "fix": "Manual IME input notifications and browser state emission are dispatched to the UI thread; original Chromium input threading is preserved. Crash reports show the installed version. Default local Agent model rounds are unbounded.",
+  "fix": "Main-thread IME state publishing; compact scalable UI; Worker rendering/persistence and MCP; stable browser target editing; no default 30-round agent limit; official ChatGPT account OAuth and Responses.",
   "ui": {
     "reference": "https://github.com/assistant-ui/assistant-ui",
     "commit": "e97f7c61365ef0f73686c7b596751802f1a1ddd2",
     "license": "MIT",
-    "adaptation": "Compact thread and model/API forms, live browser/chat split workspace, resizable divider, zoom and persistent orientation controls.",
-    "desktopRenderedPreviews": 39,
+    "adaptation": "Compact paper/graphite/copper UI; direct model profile actions; first-level account, MCP/plugin and appearance routes; 80/90/100/110 scale; reduced motion and independent webpage zoom.",
+    "desktopRenderedPreviews": 8,
     "physicalAndroidDevice": false,
     "originalGeneratedCompanion": true,
     "companionPoses": 8,
@@ -150,7 +140,8 @@
       "attachments.js",
       "questions.js",
       "computer.js",
-      "processes.js"
+      "processes.js",
+      "settings-hub.js"
     ],
     "companionFrames": 32,
     "companionGrid": [
@@ -158,9 +149,18 @@
       8
     ],
     "companionBackground": "transparent",
-    "currentVersionNewDesktopPreviews": 3,
-    "historicalDesktopPreviews": 36,
-    "previewDisclosure": "Desktop UI; the new split previews use an explicit iframe fixture in place of the native Android surface."
+    "currentVersionNewDesktopPreviews": 8,
+    "historicalDesktopPreviews": 39,
+    "previewDisclosure": "Production resources in desktop Edge with explicit Native/model fixtures, not Android screenshots.",
+    "defaultScale": 90,
+    "scaleOptions": [
+      80,
+      90,
+      100,
+      110
+    ],
+    "minPhysicalButtonCssPixels": 45,
+    "motionReducedSetting": true
   },
   "hardLinks": {
     "deniedErrnos": [
@@ -209,82 +209,196 @@
   },
   "performance": {
     "environment": "Desktop Edge, 390 x 844 CSS pixels, 4x CPU throttle. Synthetic 60-turn history. This is not a physical Android frame-rate measurement.",
-    "date": "2026-10-19T15:03:34.629Z",
-    "results": [
+    "method": "Two runs per version with reversed second-run order; 25 samples per run. No concurrent regression suite.",
+    "date": "2026-10-21T14:33:23.522Z",
+    "combined": [
       {
-        "name": "2.1.0 signed APK",
-        "repeatedLayouts": 100,
-        "renderMedianMs": 34.60000000009313,
-        "renderP95Ms": 38.89999999990687,
-        "mountedTurns": 60,
-        "hiddenLogCodeBlocks": 120,
-        "chatElements": 63840,
-        "samples": [
-          31.200000000186265,
-          31.600000000093132,
-          32.1999999997206,
-          32.39999999990687,
-          32.60000000009313,
-          33.5,
-          33.59999999962747,
-          33.60000000009313,
-          33.60000000009313,
-          33.60000000009313,
-          33.799999999813735,
-          34.5,
-          34.60000000009313,
-          35.10000000009313,
-          35.1999999997206,
-          35.5,
-          35.700000000186265,
-          36.200000000186265,
-          36.39999999990687,
-          36.5,
-          36.60000000009313,
-          37.10000000009313,
-          37.299999999813735,
-          38.89999999990687,
-          42.10000000009313
+        "name": "2.4.1 signed APK",
+        "renderMedianMs": 11.300000000046566,
+        "renderP95Ms": 16.399999999906868,
+        "samples": 50,
+        "repeatedLayouts": [
+          0,
+          0
+        ],
+        "mountedTurns": [
+          20,
+          20
+        ],
+        "chatElements": [
+          805,
+          805
         ]
       },
       {
-        "name": "2.2.0 current bundle",
+        "name": "3.0.0 current bundle",
+        "renderMedianMs": 4.300000000046566,
+        "renderP95Ms": 6.899999999906868,
+        "samples": 50,
+        "repeatedLayouts": [
+          0,
+          0
+        ],
+        "mountedTurns": [
+          20,
+          20
+        ],
+        "chatElements": [
+          805,
+          805
+        ]
+      }
+    ],
+    "results": [
+      {
+        "name": "2.4.1 signed APK",
+        "repeat": 1,
         "repeatedLayouts": 0,
-        "renderMedianMs": 6.5,
-        "renderP95Ms": 8.399999999906868,
+        "renderMedianMs": 10.899999999906868,
+        "renderP95Ms": 14.699999999953434,
         "mountedTurns": 20,
         "hiddenLogCodeBlocks": 0,
         "chatElements": 805,
         "samples": [
-          4.600000000093132,
-          4.899999999906868,
-          5.2000000001862645,
-          5.399999999906868,
-          5.400000000372529,
-          5.600000000093132,
-          5.600000000093132,
-          5.699999999720603,
-          5.800000000279397,
-          5.899999999906868,
-          6,
-          6,
-          6.5,
-          6.599999999627471,
-          6.699999999720603,
+          6.2999999998137355,
+          6.600000000093132,
           6.7000000001862645,
-          6.7999999998137355,
-          6.800000000279397,
-          7.099999999627471,
-          7.399999999906868,
-          7.5,
-          7.7999999998137355,
           7.899999999906868,
-          8.399999999906868,
-          9.100000000093132
+          8.800000000046566,
+          9.300000000046566,
+          9.300000000046566,
+          9.5,
+          9.5,
+          10,
+          10,
+          10.099999999860302,
+          10.899999999906868,
+          11.199999999953434,
+          11.300000000046566,
+          11.400000000139698,
+          11.5,
+          11.899999999906868,
+          12,
+          12.300000000046566,
+          12.400000000139698,
+          12.699999999953434,
+          14.300000000046566,
+          14.699999999953434,
+          17.199999999953434
+        ]
+      },
+      {
+        "name": "3.0.0 current bundle",
+        "repeat": 1,
+        "repeatedLayouts": 0,
+        "renderMedianMs": 4.600000000093132,
+        "renderP95Ms": 7.100000000093132,
+        "mountedTurns": 20,
+        "hiddenLogCodeBlocks": 0,
+        "chatElements": 805,
+        "samples": [
+          3.3999999999068677,
+          3.5,
+          3.5999999998603016,
+          3.800000000046566,
+          3.9000000001396984,
+          4,
+          4.099999999860302,
+          4.099999999860302,
+          4.300000000046566,
+          4.300000000046566,
+          4.400000000139698,
+          4.5,
+          4.600000000093132,
+          4.7000000001862645,
+          4.900000000139698,
+          5.099999999860302,
+          5.300000000046566,
+          5.5,
+          5.600000000093132,
+          6,
+          6.100000000093132,
+          6.2000000001862645,
+          6.899999999906868,
+          7.100000000093132,
+          9.900000000139698
+        ]
+      },
+      {
+        "name": "3.0.0 current bundle",
+        "repeat": 2,
+        "repeatedLayouts": 0,
+        "renderMedianMs": 3.8999999999068677,
+        "renderP95Ms": 5.699999999953434,
+        "mountedTurns": 20,
+        "hiddenLogCodeBlocks": 0,
+        "chatElements": 805,
+        "samples": [
+          2.3999999999068677,
+          2.3999999999068677,
+          2.6000000000931323,
+          2.6000000000931323,
+          2.6000000000931323,
+          2.7999999998137355,
+          2.8999999999068677,
+          3.1000000000931323,
+          3.1000000000931323,
+          3.199999999953434,
+          3.5,
+          3.699999999953434,
+          3.8999999999068677,
+          3.9000000001396984,
+          4,
+          4.100000000093132,
+          4.199999999953434,
+          4.699999999953434,
+          4.699999999953434,
+          5.099999999860302,
+          5.2999999998137355,
+          5.300000000046566,
+          5.600000000093132,
+          5.699999999953434,
+          6.300000000046566
+        ]
+      },
+      {
+        "name": "2.4.1 signed APK",
+        "repeat": 2,
+        "repeatedLayouts": 0,
+        "renderMedianMs": 11.300000000046566,
+        "renderP95Ms": 16.399999999906868,
+        "mountedTurns": 20,
+        "hiddenLogCodeBlocks": 0,
+        "chatElements": 805,
+        "samples": [
+          7.300000000046566,
+          8.200000000186265,
+          8.5,
+          8.700000000186265,
+          9.299999999813735,
+          9.599999999860302,
+          9.800000000046566,
+          10.199999999953434,
+          10.300000000046566,
+          10.699999999953434,
+          11.199999999953434,
+          11.300000000046566,
+          11.300000000046566,
+          12.700000000186265,
+          12.800000000046566,
+          13,
+          13.299999999813735,
+          13.800000000046566,
+          14,
+          14.900000000139698,
+          15,
+          15.800000000046566,
+          16,
+          16.399999999906868,
+          18.4000000001397
         ]
       }
-    ],
-    "historicalMeasurementVersion": "2.2.0"
+    ]
   },
   "harnessSourceReview": {
     "repository": "https://github.com/deepseek-ai/deepseek-harness",
@@ -314,7 +428,7 @@
     "domGrounding": true,
     "captures": 8,
     "nativeJavascriptInterface": false,
-    "latestObservationRequired": true,
+    "latestObservationRequired": false,
     "nativeMouseEvents": true,
     "takeoverCancelsPendingActions": true,
     "journaled": true,
@@ -338,8 +452,12 @@
     ],
     "scrollImplementation": "Original whole-page scrollBy retained",
     "commitCallbackGate": "onPageCommitVisible or matching onPageFinished; onPageStarted remains pending",
-    "imeNotificationsOnMainThread": true,
-    "chromiumInputThreadPreserved": true
+    "currentViewportRequiredForCanvasCoordinates": true,
+    "documentScopedStableRefs": true,
+    "freshTargetRelocationBeforeActions": true,
+    "defaultDesktop": true,
+    "desktopPreferencePersistent": true,
+    "inputMethodStateOnMainThread": true
   },
   "webSearch": {
     "tool": "web_search",
@@ -431,10 +549,67 @@
     "separateAddButton": true,
     "activation": "explicit save only"
   },
-  "localAgent": {
+  "agent": {
     "defaultModelRoundLimit": null,
-    "explicitStop": true,
-    "durableToolJournal": true,
-    "invalidProgressGuard": true
+    "explicitFiniteBudgetsRetained": true,
+    "stopAndNeedsInputRetained": true,
+    "durableClaimsBeforeEffects": true,
+    "unknownToolStatusDoesNotAutoRetry": true
+  },
+  "mcp": {
+    "sdk": "@modelcontextprotocol/client 2.3.1",
+    "worker": true,
+    "transports": [
+      "Streamable HTTP",
+      "stdio"
+    ],
+    "maxServers": 16,
+    "maxStdioProcesses": 4,
+    "tools": true,
+    "resources": true,
+    "prompts": true,
+    "imageAttachments": true,
+    "nativeCredentialStore": "Android Keystore AES-GCM",
+    "realHostHttpAndStdioComponentTests": true,
+    "physicalAndroidDeviceVerified": false
+  },
+  "plugins": {
+    "formats": [
+      "studio-plugin.json",
+      ".claude-plugin/plugin.json",
+      ".codex-plugin/plugin.json"
+    ],
+    "features": [
+      "MCP configurations",
+      "skills/*/SKILL.md",
+      "enable",
+      "disable",
+      "remove"
+    ],
+    "hooks": false,
+    "hostUiComponents": false,
+    "maxPlugins": 16,
+    "zipExpandedLimitBytes": 33554432,
+    "zipEntryLimit": 1000,
+    "enabledOnImport": false
+  },
+  "openAiAccount": {
+    "authorization": "Official public-client OAuth with dynamic registration, loopback callback, PKCE, state, nonce and verified ID Token",
+    "browser": "System browser",
+    "nativeTokenStore": true,
+    "multipleRegistrations": true,
+    "refreshSerialized": true,
+    "models": "Authenticated official account catalog",
+    "inference": "https://api.openai.com/v1/responses",
+    "store": false,
+    "sse": true,
+    "encryptedReasoningItems": true,
+    "realAccountVerified": false,
+    "docs": [
+      "https://developers.openai.com/siwc/quickstart",
+      "https://developers.openai.com/siwc/token-sharing-open-source/sign-in",
+      "https://developers.openai.com/siwc/token-sharing-open-source/models-and-inference",
+      "https://developers.openai.com/siwc/token-sharing-open-source/profiles-and-sessions"
+    ]
   }
 }

@@ -1,0 +1,20 @@
+{
+  "version": "3.0.0",
+  "removed": [
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-3.0.0\\build\\aligned.apk",
+      "bytes": 615998470
+    },
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-3.0.0\\build\\resources.apk",
+      "bytes": 615734966
+    },
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-3.0.0\\build\\unsigned.apk",
+      "bytes": 615998457
+    }
+  ],
+  "freedBytes": 1847731893.0,
+  "finalDirectoryPreserved": "D:\\CodexBuild\\deepseek-studio-3.0.0\\final",
+  "previousReleasesPreserved": true
+}

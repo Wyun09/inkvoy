@@ -1,8 +1,10 @@
+import {encodeState,frameQueue} from './background.js';
 import { MobileBrowser } from './mobile-browser.js';
 import { createEngine } from './engine.js';
 import { MobileBuffer } from './platform.js';
 import { initDashboard } from './ui/dashboard.js';
-import { createClient } from './client.js';
+import { createClient,LOCAL_TOOLS } from './client.js';
+import {createExtensions} from './extensions.js';
 import { initStudio } from './ui/studio.js';
 import { setTimeout, clearTimeout, fireTimer } from './native-clock.js';
 import { createClientStream } from './client-stream.js';
@@ -24,7 +26,7 @@ const pending = new Map();
 const workspacePending = new Map(), clientRequests = new Map();
 const workspace = (operation, argument = {}) => new Promise((resolve, reject) => {
   const id = ++sequence;
-  const timer = setTimeout(() => { workspacePending.delete(id); reject(new Error('本机操作等待超时，请检查工具记录再重试。')); }, ['runtime.ensure', 'runtime.test', 'tool.execute'].includes(operation) ? 1200000 : 20000);
+  const timer = setTimeout(() => { workspacePending.delete(id); reject(new Error('本机操作等待超时，请检查工具记录再重试。')); }, ['runtime.ensure', 'runtime.test', 'tool.execute','extension.stdio.open'].includes(operation) ? 1200000 : operation.startsWith('account.')?120000:20000);
   workspacePending.set(id, {resolve,reject,timer});
   if (!NativeBridge.workspaceRequest) { clearTimeout(timer); workspacePending.delete(id); reject(new Error('此界面需要 v2 原生运行时')); return; }
   NativeBridge.workspaceRequest(id, operation, JSON.stringify(argument));
@@ -53,7 +55,7 @@ const engine = createEngine(backend, (id, kind, payload) => {
   previewEnabled:id=>clientRequests.has(id),
   onDraft:(id,draft)=>{try{clientRequests.get(id)?.onProgress?.(draft);}catch{}},
   saveState: NativeBridge.saveLocalState || NativeBridge.saveState ? value => {
-    void saveLocal('engine', JSON.stringify(value)).catch(() => false).then(ok => {
+    void encodeState(value).then(raw=>saveLocal('engine',raw)).catch(() => false).then(ok => {
       if (!ok && !stateSaveFailed) NativeBridge.reportUi?.('taskNotice', JSON.stringify({ message: '本机记录保存失败，当前任务仍可运行；请查看连接诊断。' }));
       stateSaveFailed = !ok;
     });
@@ -66,13 +68,17 @@ const engine = createEngine(backend, (id, kind, payload) => {
 let clientState = {};
 try { clientState = JSON.parse(NativeBridge.loadClientState?.() || '{}'); } catch {}
 const requestWeb=(id,body,onProgress,requestKey)=>new Promise((resolve,reject)=>{clientRequests.set(id,{resolve,reject,onProgress,stream:createClientStream()});engine.receive({id,path:'/v1/chat/completions',body,requestKey});});
-const agentTools=createAgentTools({search:createWebSearch({request:requestWeb,cancel:id=>engine.cancel(id,false),evidence:text=>backend.searchEvidence(text)}),onQuestion:value=>window.StudioUI?.questionState(value)});
+const interactions=createAgentTools({search:createWebSearch({request:requestWeb,cancel:id=>engine.cancel(id,false),evidence:text=>backend.searchEvidence(text)}),onQuestion:value=>window.StudioUI?.questionState(value)});
+const extensions=createExtensions({native:workspace,onChange:value=>window.StudioUI?.extensionState?.(value)});
+const agentTools={...interactions,cancelPreparation:()=>extensions.cancelPreparation(),supports:name=>extensions.supports(name)||interactions.supports(name),run:(id,name,args,context)=>extensions.supports(name)?extensions.run(id,name,args,context):interactions.run(id,name,args,context),cancel:id=>extensions.cancel(id)||interactions.cancel(id)};
+const renderClient=frameQueue(state=>window.StudioUI?.render(state));
 const client = createClient({
   modelInfo:()=>providers.current()?{name:providers.current().name,model:providers.current().model,source:'api',provider:{...providers.current()}}:{name:'DeepSeek',model:'deepseek-web',source:'web'},
   initialState:clientState, native:workspace,agentTools,
+  toolCatalog:async context=>[...LOCAL_TOOLS,...await extensions.listTools(context)],extensionInstructions:()=>extensions.skillHints(),
   request:(id,body,onProgress,connection)=>connection?.source==='api'?providers.request(id,body,onProgress,connection.provider):requestWeb(id,body,onProgress),
-  cancel:id=>{if(!providers.cancel(id))engine.cancel(id,false);},saveState:raw=>saveLocal('client', raw),
-  onChange:state=>window.StudioUI?.render(state),
+  cancel:id=>{if(!providers.cancel(id))engine.cancel(id,false);},serialize:encodeState,saveState:raw=>saveLocal('client', raw),
+  onChange:state=>state.active?renderClient(state):renderClient.flush(state),
 });
 let inspecting = false;
 globalThis.AndroidEngine = {
@@ -101,7 +107,7 @@ globalThis.AndroidEngine = {
   timer: fireTimer,
   stateSaved(id, ok) { const target = statePending.get(id); if (!target) return; clearTimeout(target.timer); statePending.delete(id); target.resolve(ok === true); },
   workspaceRpc(id, response) { const target=workspacePending.get(id);if(!target)return;clearTimeout(target.timer);workspacePending.delete(id);if(response.ok)target.resolve(response.value);else target.reject(new Error(response.error?.message||'本机操作失败')); },
-  nativeEvent:event=>window.StudioUI?.nativeEvent(event),
+  nativeEvent:event=>{extensions.event(event);window.StudioUI?.nativeEvent(event);},
   providerEvent:(id,value)=>providers.event(id,value),
   rpc(id, response) {
     const target = pending.get(id); if (!target) return;
@@ -111,7 +117,7 @@ globalThis.AndroidEngine = {
   },
 };
 try {
-  initStudio({client,native:workspace,providers,agentTools});
+  initStudio({client,native:workspace,providers,agentTools,extensions});
   initDashboard();
   BridgeDashboard.navigate('chat');
   NativeBridge.ready();

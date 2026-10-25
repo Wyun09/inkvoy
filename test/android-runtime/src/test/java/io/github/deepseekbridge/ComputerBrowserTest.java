@@ -33,11 +33,11 @@ public class ComputerBrowserTest {
         FrameLayout surface=browser.surface();WebView web=(WebView)field(browser,"web");assertSame(web,surface.getChildAt(0));assertEquals(2,surface.getChildCount());assertFalse(web.getSettings().getAllowFileAccess());assertFalse(web.getSettings().getAllowContentAccess());assertEquals(WebSettings.MIXED_CONTENT_NEVER_ALLOW,web.getSettings().getMixedContentMode());
         WebView modelPage=new WebView(context);try{assertNotSame(modelPage,web);browser.takeOver();assertFalse(browser.state().getBoolean("enabled"));assertNull(modelPage.getUrl());}finally{modelPage.destroy();}
     }
-    @Test public void coordinatesAndStaleObservationsCannotDispatchClicks()throws Exception{
+    @Test public void coordinatesRequireTheCurrentViewportAndExplicitTakeoverStopsActions()throws Exception{
         assertEquals(42,ComputerBrowser.coordinate(new JSONObject().put("x",42),"x",390),0);
         for(JSONObject a:new JSONObject[]{new JSONObject(),new JSONObject().put("x",-1),new JSONObject().put("x",390)})try{ComputerBrowser.coordinate(a,"x",390);fail("Invalid coordinates accepted");}catch(java.io.IOException expected){}
-        browser.surface();field(browser,"observation","current");final boolean[] rejected={false};Method perform=ComputerBrowser.class.getDeclaredMethod("perform",JSONObject.class,int.class,StudioRuntime.Reply.class);perform.setAccessible(true);
-        perform.invoke(browser,new JSONObject().put("action","click").put("observation","old").put("x",20).put("y",20),0,(StudioRuntime.Reply)(ok,value)->{assertFalse(ok);assertTrue(String.valueOf(value).contains("过期"));rejected[0]=true;});assertTrue(rejected[0]);
+        browser.surface();RecordingWebView web=new RecordingWebView(context);field(browser,"web",web);JSONObject old=page("old",40);field(browser,"lastPage",old);web.evaluation=new JSONObject(old.toString()).put("viewport",new JSONObject().put("width",800).put("height",600)).toString();field(browser,"observation","current");final boolean[] rejected={false};Method perform=ComputerBrowser.class.getDeclaredMethod("perform",JSONObject.class,int.class,StudioRuntime.Reply.class);perform.setAccessible(true);
+        perform.invoke(browser,new JSONObject().put("action","click").put("observation","old").put("x",20).put("y",20),0,(StudioRuntime.Reply)(ok,value)->{assertFalse(ok);assertTrue(String.valueOf(value).contains("视口"));rejected[0]=true;});assertTrue(rejected[0]);assertTrue(web.actions.isEmpty());
         browser.takeOver();rejected[0]=false;perform.invoke(browser,new JSONObject().put("action","click").put("observation","current").put("x",20).put("y",20),0,(StudioRuntime.Reply)(ok,value)->{assertFalse(ok);assertTrue(String.valueOf(value).contains("接管"));rejected[0]=true;});assertTrue(rejected[0]);
     }
     public static class RecordingWebView extends WebView {
@@ -55,7 +55,7 @@ public class ComputerBrowserTest {
         try{ComputerBrowser.applyEdit(new JSONObject().put("action","type").put("text","中文输入 OK").put("clear",true),web);assertEquals("中文输入 OK",web.committed);assertTrue(web.selected);assertEquals(KeyEvent.KEYCODE_ENTER,ComputerBrowser.keyCode("Enter"));assertEquals(-1,ComputerBrowser.keyCode("LAUNCH_NATIVE_APP"));}finally{web.destroy();}
     }
     @Test public void aFreshTokenStillRequiresTheCurrentViewportAndControlsToMatch()throws Exception{
-        browser.surface();RecordingWebView web=new RecordingWebView(context);field(browser,"web",web);field(browser,"observation","latest");JSONObject original=new JSONObject().put("url","https://example.com").put("viewport",new JSONObject().put("width",390)).put("elements",new JSONArray());field(browser,"signature",ComputerBrowser.signatureOf(original));field(browser,"lastPage",original);web.evaluation=new JSONObject(original.toString()).put("viewport",new JSONObject().put("width",800)).toString();
+        browser.surface();RecordingWebView web=new RecordingWebView(context);field(browser,"web",web);field(browser,"observation","latest");JSONObject original=new JSONObject().put("url","https://example.com").put("viewport",new JSONObject().put("width",390).put("height",600)).put("elements",new JSONArray());field(browser,"signature",ComputerBrowser.signatureOf(original));field(browser,"lastPage",original);web.evaluation=new JSONObject(original.toString()).put("viewport",new JSONObject().put("width",800).put("height",600)).toString();
         boolean[] rejected={false};Method perform=ComputerBrowser.class.getDeclaredMethod("perform",JSONObject.class,int.class,StudioRuntime.Reply.class);perform.setAccessible(true);try{perform.invoke(browser,new JSONObject().put("action","click").put("observation","latest").put("x",20).put("y",20),0,(StudioRuntime.Reply)(ok,value)->{assertFalse(ok);assertTrue(String.valueOf(value).contains("变化"));rejected[0]=true;});assertTrue(rejected[0]);assertTrue(web.actions.isEmpty());}finally{web.destroy();}
     }
     @Test public void browserActionsUseTheSameDurableDeduplicationAsOtherTools()throws Exception{
@@ -95,6 +95,13 @@ public class ComputerBrowserTest {
     }
     @Test public void pinchZoomIsEnabledWithoutFloatingNativeButtons()throws Exception{
         browser.surface();WebSettings settings=((WebView)field(browser,"web")).getSettings();assertTrue(settings.supportZoom());assertTrue(settings.getBuiltInZoomControls());assertFalse(settings.getDisplayZoomControls());
+    }
+    @Test public void browserStartsInDesktopModeWithoutResettingTheUserPreference()throws Exception {
+        browser.surface();WebView web=(WebView)field(browser,"web");assertTrue(browser.state().getBoolean("desktop"));
+        String ua=web.getSettings().getUserAgentString();assertTrue(ua,ua.contains("X11; Linux x86_64"));assertFalse(ua,ua.contains("Android"));assertFalse(ua,ua.contains("Mobile"));
+        browser.ui(new JSONObject().put("action","desktop").put("enabled",false),(ok,value)->assertTrue(ok));
+        browser.close();browser=new ComputerBrowser(context,new ComputerBrowser.Listener(){public void changed(JSONObject state){}public void reveal(){}});browser.surface();
+        assertFalse(browser.state().getBoolean("desktop"));assertEquals(WebSettings.getDefaultUserAgent(context),((WebView)field(browser,"web")).getSettings().getUserAgentString());
     }
     @Test public void anUncommittedNavigationCannotReturnThePreviousPageAsSuccess()throws Exception{
         browser.surface();field(browser,"navigationPending",true);boolean[] rejected={false};

@@ -1,15 +1,18 @@
 {
-  "apk": "deepseek-android-bridge-v2.4.2.apk",
-  "bytes": 615847855,
-  "sha256": "cd23cae9fc8a35ee1060ac9a13d776df7a5103a1bf7f41cbe7952ed0e524cad6",
+  "apk": "deepseek-android-bridge-v3.0.0.apk",
+  "bytes": 616007806,
+  "sha256": "c0e385ecf49762334612da0c9711202cf158703b17526675a30eeae18a85a13d",
   "rawZipPathsPortable": true,
   "sourcePayloadsMatched": [
     "assets/app.css",
+    "assets/browser-actions.js",
     "assets/browser-observation.js",
     "assets/companion.png",
+    "assets/compute.worker.js",
     "assets/engine.bundle.js",
     "assets/engine.html",
     "assets/logo.png",
+    "assets/mcp.worker.js",
     "assets/NOTICE.txt",
     "assets/runtime/debian-arm64.tar.gz",
     "assets/runtime/manifest.json",
@@ -37,7 +40,7 @@
       "minLoadAlignment": 16384
     },
     "lib/arm64-v8a/libtermux.so": {
-      "sha256": "3bd5991c15635b71db2c51893095a75b4fe46a5e3c480d947bfd789c8920eb37",
+      "sha256": "937c85da731e3a8b1b0bb66a3ccfaca8d66d48ef1cde3b1962e9d18b97072852",
       "minLoadAlignment": 16384
     }
   },
@@ -45,6 +48,6 @@
   "sameSignerAsV1": true,
   "minSdk": 26,
   "targetSdk": 35,
-  "versionCode": 19,
+  "versionCode": 20,
   "androidDeviceVerified": false
 }

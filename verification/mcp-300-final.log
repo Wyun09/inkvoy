@@ -1,0 +1,13 @@
+✔ durable MCP results replay once and uncertain persistence never silently executes again (4.8579ms)
+✔ cancellation during the durable claim cannot start the MCP effect later (2.7618ms)
+✔ MCP image blocks become real native attachments and base64 is removed before journaling (0.5243ms)
+✔ official MCP worker negotiates HTTP, discovers tools and resources, calls real server and cancels without replay (6756.521ms)
+✔ official MCP worker uses persistent real stdio pipes across multiple tool calls (6393.0673ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 13615.402

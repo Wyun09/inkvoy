@@ -1,0 +1,33 @@
+{
+  "version": "3.0.0",
+  "androidNdkCompiled": true,
+  "libraries": {
+    "lib/arm64-v8a/libandroid-shmem.so": {
+      "sha256": "84475798e07c8174dbbfaec70a827fdb02f19ffa69a589380c13e7507fd0e731",
+      "minLoadAlignment": 16384
+    },
+    "lib/arm64-v8a/libproot.so": {
+      "sha256": "0df9240e08015aa7f5194c32b3fe5d9c8a8ea16dfb895ccafb65847a7f392c7d",
+      "minLoadAlignment": 16384
+    },
+    "lib/arm64-v8a/libproot_loader.so": {
+      "sha256": "cbdef0e652c2b78af25d867e1719fdebbb0915e25aae2dd35b3b5c1835f6b551",
+      "minLoadAlignment": 16384
+    },
+    "lib/arm64-v8a/libtalloc.so": {
+      "sha256": "160d39bc0d7ed946f22310d1d6f20addda21b02b0972dffe929fe49951543941",
+      "minLoadAlignment": 16384
+    },
+    "lib/arm64-v8a/libtermux.so": {
+      "sha256": "937c85da731e3a8b1b0bb66a3ccfaca8d66d48ef1cde3b1962e9d18b97072852",
+      "minLoadAlignment": 16384
+    }
+  },
+  "sourceHashes": {
+    "app/src/main/cpp/studio.c": "a1d639a6d34dae0dd974a1165237c6b8f39ed542fe20d17bc928dabcbce1d3b4",
+    "app/src/main/cpp/termux.c": "778fee34326aaf6c8d9f5916d4667bb7d8f12af58a00e98c3c424c4e65d9debf"
+  },
+  "stdinPipeApi": "spawnStdio returns pid, stdout read fd, stderr read fd and stdin write fd; existing spawnPiped 3-value contract is retained",
+  "physicalAndroidExecutionVerified": false,
+  "historicalQemuTestsRerun": false
+}

@@ -1,0 +1,5 @@
+let worker,sequence=0;const pending=new Map();
+function run(operation,value){if(!worker){worker=new Worker('compute.worker.js');worker.onmessage=({data})=>{const p=pending.get(data.id);if(!p)return;pending.delete(data.id);data.ok?p.resolve(data.result):p.reject(new Error(data.error));};worker.onerror=()=>{for(const p of pending.values())p.reject(new Error('后台计算中断'));pending.clear();worker.terminate();worker=null;};}return new Promise((resolve,reject)=>{const id=++sequence;pending.set(id,{resolve,reject});try{worker.postMessage({id,operation,value});}catch(error){pending.delete(id);reject(error);}});}
+export const encodeState=value=>run('stringify',value);
+export const highlightCode=(text,language)=>run('highlight',{text,language});
+export function frameQueue(apply){let latest,frame=0;const queue=value=>{latest=value;if(frame)return;frame=requestAnimationFrame(()=>{frame=0;apply(latest);});};queue.flush=value=>{latest=value;if(frame)cancelAnimationFrame(frame);frame=0;apply(latest);};return queue;}

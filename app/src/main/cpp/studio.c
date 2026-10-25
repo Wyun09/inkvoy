@@ -31,18 +31,18 @@ static char *copy_string(JNIEnv *env,jstring value){
 static void free_array(char **array){if(array){for(char **p=array;*p;p++)free(*p);free(array);}}
 static char **copy_array(JNIEnv *env,jobjectArray input){jsize length=input?(*env)->GetArrayLength(env,input):0;if(length>256){failure(env,"Too many native arguments");return NULL;}char **values=calloc((size_t)length+1,sizeof(char*));if(!values){failure(env,"Native allocation failed");return NULL;}for(jsize i=0;i<length;i++){jstring s=(*env)->GetObjectArrayElement(env,input,i);values[i]=copy_string(env,s);if(s)(*env)->DeleteLocalRef(env,s);if(!values[i]){free_array(values);return NULL;}}return values;}
 
-JNIEXPORT jintArray JNICALL Java_io_github_deepseekbridge_NativePty_spawnPiped(JNIEnv *env,jclass ignored,jstring command,jstring cwd,jobjectArray arguments,jobjectArray environment){
-    (void)ignored;char *cmd=copy_string(env,command),*directory=NULL;char **argv=NULL,**envp=NULL;
-    int output[2]={-1,-1},error[2]={-1,-1};jintArray result=NULL;
+static jintArray spawn(JNIEnv *env,jstring command,jstring cwd,jobjectArray arguments,jobjectArray environment,int with_stdin){
+    char *cmd=copy_string(env,command),*directory=NULL;char **argv=NULL,**envp=NULL;
+    int output[2]={-1,-1},error[2]={-1,-1},input_pipe[2]={-1,-1};jintArray result=NULL;
     if(!cmd)goto done;directory=copy_string(env,cwd);if(!directory)goto done;
     argv=copy_array(env,arguments);if(!argv)goto done;envp=copy_array(env,environment);if(!envp)goto done;
-    if(pipe2(output,O_CLOEXEC)||pipe2(error,O_CLOEXEC)){failure(env,"Cannot create command pipes");goto done;}
+    if(pipe2(output,O_CLOEXEC)||pipe2(error,O_CLOEXEC)||(with_stdin&&pipe2(input_pipe,O_CLOEXEC))){failure(env,"Cannot create command pipes");goto done;}
     pid_t pid=fork();if(pid<0){failure(env,"Cannot fork command process");goto done;}
     if(pid==0){
         /* Java threads may block SIGQUIT. The PRoot cancellation handler must
          * receive it after exec; otherwise its descendants keep running. */
         sigset_t unblocked;sigfillset(&unblocked);sigprocmask(SIG_UNBLOCK,&unblocked,NULL);
-        setsid();int input=open("/dev/null",O_RDONLY);
+        setsid();int input=with_stdin?input_pipe[0]:open("/dev/null",O_RDONLY);
         if(input<0||dup2(input,STDIN_FILENO)<0||dup2(output[1],STDOUT_FILENO)<0||dup2(error[1],STDERR_FILENO)<0)_exit(126);
         /* Close inherited WebView and Java descriptors before exec. */
 #ifdef __NR_close_range
@@ -53,9 +53,12 @@ JNIEXPORT jintArray JNICALL Java_io_github_deepseekbridge_NativePty_spawnPiped(J
         execve(cmd,argv,envp);const char message[]="Cannot execute packaged native launcher\n";write(STDERR_FILENO,message,sizeof(message)-1);_exit(127);
     }
     close(output[1]);output[1]=-1;close(error[1]);error[1]=-1;
-    jint values[3]={(jint)pid,(jint)output[0],(jint)error[0]};result=(*env)->NewIntArray(env,3);
-    if(result){(*env)->SetIntArrayRegion(env,result,0,3,values);output[0]=error[0]=-1;}else{kill(pid,SIGQUIT);}
+    if(with_stdin){close(input_pipe[0]);input_pipe[0]=-1;}
+    jint values[4]={(jint)pid,(jint)output[0],(jint)error[0],(jint)input_pipe[1]};int count=with_stdin?4:3;result=(*env)->NewIntArray(env,count);
+    if(result){(*env)->SetIntArrayRegion(env,result,0,count,values);output[0]=error[0]=input_pipe[1]=-1;}else{kill(pid,SIGQUIT);}
 done:
-    for(int i=0;i<2;i++){if(output[i]>=0)close(output[i]);if(error[i]>=0)close(error[i]);}
+    for(int i=0;i<2;i++){if(output[i]>=0)close(output[i]);if(error[i]>=0)close(error[i]);if(input_pipe[i]>=0)close(input_pipe[i]);}
     free(cmd);free(directory);free_array(argv);free_array(envp);return result;
 }
+JNIEXPORT jintArray JNICALL Java_io_github_deepseekbridge_NativePty_spawnPiped(JNIEnv *env,jclass ignored,jstring command,jstring cwd,jobjectArray arguments,jobjectArray environment){(void)ignored;return spawn(env,command,cwd,arguments,environment,0);}
+JNIEXPORT jintArray JNICALL Java_io_github_deepseekbridge_NativePty_spawnStdio(JNIEnv *env,jclass ignored,jstring command,jstring cwd,jobjectArray arguments,jobjectArray environment){(void)ignored;return spawn(env,command,cwd,arguments,environment,1);}
