@@ -1,11 +1,39 @@
 {
   "source": "deepseek-web-bridge v0.2.2",
-  "method": "unchanged source copy; browser platform imports supplied by build-time shims",
-  "sha256": {
-    "protocol.js": "91ad4abd414a0839c061730b3c8f56b10f0c294f7c09bb04f4e324f95cbeedc5",
-    "browser.js": "c254bc0651afeba881eee9fbd030b360f50ae355fb4ce270374305ceb6323640",
-    "dom-text.js": "d9775fe3bafb5d99726b9aeffb45f5f844bbae09c9ade63b9d526fe96a1358cd",
-    "streaming.js": "4f147b44938b9c9d2b1067a6d8c7d462eb15ecb7f825ad7e4d0fad25e4caa7aa",
-    "usage.js": "6a68f11c1da18fe855fbc4c8ed1e6b102ce0cae44652350d457b98cd2daeaa43"
-  }
+  "method": "four unchanged modules; browser.js has the documented Android reasoning-control adaptation",
+  "modules": {
+    "protocol.js": {
+      "sourceSha256": "91ad4abd414a0839c061730b3c8f56b10f0c294f7c09bb04f4e324f95cbeedc5",
+      "localSha256": "91ad4abd414a0839c061730b3c8f56b10f0c294f7c09bb04f4e324f95cbeedc5",
+      "unchanged": true
+    },
+    "browser.js": {
+      "sourceSha256": "c254bc0651afeba881eee9fbd030b360f50ae355fb4ce270374305ceb6323640",
+      "localSha256": "34bb85151ab99ef179b731f4a1b952b1be49dce3a97b20c0bd0d7533825ac6ea",
+      "unchanged": false
+    },
+    "dom-text.js": {
+      "sourceSha256": "d9775fe3bafb5d99726b9aeffb45f5f844bbae09c9ade63b9d526fe96a1358cd",
+      "localSha256": "d9775fe3bafb5d99726b9aeffb45f5f844bbae09c9ade63b9d526fe96a1358cd",
+      "unchanged": true
+    },
+    "streaming.js": {
+      "sourceSha256": "4f147b44938b9c9d2b1067a6d8c7d462eb15ecb7f825ad7e4d0fad25e4caa7aa",
+      "localSha256": "4f147b44938b9c9d2b1067a6d8c7d462eb15ecb7f825ad7e4d0fad25e4caa7aa",
+      "unchanged": true
+    },
+    "usage.js": {
+      "sourceSha256": "6a68f11c1da18fe855fbc4c8ed1e6b102ce0cae44652350d457b98cd2daeaa43",
+      "localSha256": "6a68f11c1da18fe855fbc4c8ed1e6b102ce0cae44652350d457b98cd2daeaa43",
+      "unchanged": true
+    }
+  },
+  "extensions": {
+    "reasoning-control.js": "e9ed20427ea4ed996703b51d69fdb0018b366944c1567ade6c841aa4c477b16a"
+  },
+  "browserPatch": [
+    "DOM reader supports mobile state attributes, component classes, tabs and native checkbox controls.",
+    "Mode switch selects and clicks atomically, then confirms the observed final state.",
+    "Unknown, contradictory and ambiguous state remains an explicit error."
+  ]
 }

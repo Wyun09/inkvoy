@@ -2,6 +2,7 @@ param([string]$Toolchain, [string]$SigningDirectory)
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 $androidProject = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
+$releaseVersion = (Get-Content -LiteralPath (Join-Path $androidProject 'package.json') -Raw | ConvertFrom-Json).version
 if (-not $Toolchain) { $Toolchain = Join-Path $androidProject '..\..\work\android-toolchain\toolchain.json' }
 if (-not $SigningDirectory) { $SigningDirectory = Join-Path $androidProject '..\..\work\android-signing' }
 $toolchainConfig = Get-Content -LiteralPath $Toolchain -Raw | ConvertFrom-Json
@@ -41,10 +42,10 @@ try {
     if (-not (Test-Path -LiteralPath $keystore)) {
         & $keyTool -genkeypair -keystore $keystore -alias $signing.alias -storepass $signing.password -keypass $signing.password -keyalg RSA -keysize 3072 -validity 3650 -dname 'CN=DeepSeek Android Bridge Test Build'; Assert-AndroidExit 'test signing identity'
     }
-    $artifact = Join-Path $androidProject '..\deepseek-android-bridge-v0.1.0.apk'
+    $artifact = Join-Path $androidProject ('..\deepseek-android-bridge-v' + $releaseVersion + '.apk')
     & $javaTool -jar (Join-Path $toolchainConfig.buildTools 'lib\apksigner.jar') sign --ks $keystore --ks-key-alias $signing.alias --ks-pass ('pass:' + $signing.password) --key-pass ('pass:' + $signing.password) --out $artifact $aligned; Assert-AndroidExit 'APK signing'
     & $javaTool -jar (Join-Path $toolchainConfig.buildTools 'lib\apksigner.jar') verify --verbose --print-certs $artifact; Assert-AndroidExit 'signature verification'
     & $aapt dump badging $artifact | Select-Object -First 14; Assert-AndroidExit 'APK metadata'
-    [pscustomobject]@{apk=[IO.Path]::GetFullPath($artifact);bytes=(Get-Item -LiteralPath $artifact).Length;sha256=(Get-FileHash -LiteralPath $artifact -Algorithm SHA256).Hash;minSdk=26;targetSdk=35;version='0.1.0';signing='local test identity'} | ConvertTo-Json -Compress
+    [pscustomobject]@{apk=[IO.Path]::GetFullPath($artifact);bytes=(Get-Item -LiteralPath $artifact).Length;sha256=(Get-FileHash -LiteralPath $artifact -Algorithm SHA256).Hash;minSdk=26;targetSdk=35;version=$releaseVersion;signing='local test identity'} | ConvertTo-Json -Compress
 }
 finally { Pop-Location }

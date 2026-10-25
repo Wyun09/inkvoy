@@ -103,7 +103,10 @@ export class MobileBrowser extends DeepSeekBrowser {
   }
   async status() {
     await this._ensureBrowser();
-    return super.status();
+    const status = await super.status();
+    if (!status.loggedIn) return { ...status, reasoningMode: { count: 0, enabled: null, reason: status.needsVerification ? 'verification_required' : 'login_required' } };
+    try { return { ...status, reasoningMode: await this._readReasoningMode(this._page) }; }
+    catch { return { ...status, reasoningMode: { count: 0, enabled: null, reason: 'observation_failed' } }; }
   }
   async _discardPage(page) {
     page.closed = true;

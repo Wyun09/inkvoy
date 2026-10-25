@@ -513,13 +513,15 @@ test('real DOM: scoped completion, explicit mode, image decoding and transparent
   assert.equal(hiddenToolbar.readAloudRawCount, 1);
   assert.equal(hiddenToolbar.readAloudVisibleCount, 0);
 
+  await page.route('https://chat.deepseek.com/**', route => route.fulfill({ contentType: 'text/html', body: '' }));
+  await page.goto('https://chat.deepseek.com/');
   await page.setContent('<div tabindex="0" aria-pressed="true" class="ds-toggle-button ds-toggle-button--selected" onclick="this.setAttribute(\'aria-pressed\', this.getAttribute(\'aria-pressed\') === \'true\' ? \'false\' : \'true\')"><span>深度思考</span></div>');
-  assert.deepEqual(await adapter._readReasoningMode(page), { count: 1, enabled: true });
+  assert.equal((await adapter._readReasoningMode(page)).enabled, true);
   await adapter._setReasoning(page, false, undefined, Date.now() + 3000);
-  assert.deepEqual(await adapter._readReasoningMode(page), { count: 1, enabled: false });
+  assert.equal((await adapter._readReasoningMode(page)).enabled, false);
   await adapter._setReasoning(page, true, undefined, Date.now() + 3000);
-  assert.deepEqual(await adapter._readReasoningMode(page), { count: 1, enabled: true });
-  await page.locator('[aria-pressed]').evaluate(element => element.removeAttribute('aria-pressed'));
+  assert.equal((await adapter._readReasoningMode(page)).enabled, true);
+  await page.locator('[aria-pressed]').evaluate(element => { element.removeAttribute('aria-pressed'); element.className = ''; });
   await assert.rejects(adapter._setReasoning(page, false, undefined, Date.now() + 3000), error => error.status === 400 && error.code === 'reasoning_state_unknown');
 
   const pngBase64 = await page.evaluate(() => {

@@ -1,6 +1,7 @@
 import { MobileBrowser } from './mobile-browser.js';
 import { createEngine } from './engine.js';
 import { MobileBuffer } from './platform.js';
+import { initDashboard } from './ui/dashboard.js';
 globalThis.Buffer = MobileBuffer;
 // Native handler timers keep the trusted engine's deadlines/heartbeats working
 // when its tiny local WebView is not visually prominent. No timer privileges
@@ -25,9 +26,19 @@ const rpc = (operation, argument) => new Promise((resolve, reject) => {
   pending.set(id, { resolve, reject, timer });
   NativeBridge.request(id, operation, JSON.stringify(argument));
 });
-const engine = createEngine(new MobileBrowser(rpc), (id, kind, payload) => NativeBridge.response(id, kind, JSON.stringify(payload)));
+const backend = new MobileBrowser(rpc);
+const engine = createEngine(backend, (id, kind, payload) => NativeBridge.response(id, kind, JSON.stringify(payload)));
+let inspecting = false;
 globalThis.AndroidEngine = {
   receive: request => engine.receive(request), cancel: id => engine.cancel(id),
+  async inspect() {
+    if (inspecting) return;
+    inspecting = true;
+    NativeBridge.reportUi?.('inspectionStart', '{}');
+    try { NativeBridge.reportUi?.('inspection', JSON.stringify(await backend.status())); }
+    catch { NativeBridge.reportUi?.('inspectionError', '{}'); }
+    finally { inspecting = false; }
+  },
   timer(id) { const fn = pendingTimers.get(id); if (!fn) return; if (!fn.interval) pendingTimers.delete(id); fn(); },
   rpc(id, response) {
     const target = pending.get(id); if (!target) return;
@@ -36,4 +47,5 @@ globalThis.AndroidEngine = {
     else target.reject(Object.assign(new Error(response.error?.message || 'Android WebView 操作失败。'), { code: response.error?.code || 'PAGE_CHANGED', status: response.error?.status || 502 }));
   },
 };
+initDashboard();
 NativeBridge.ready();

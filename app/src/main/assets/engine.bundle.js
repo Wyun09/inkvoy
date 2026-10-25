@@ -7105,11 +7105,108 @@
     }
   };
 
+  // js/core/reasoning-control.js
+  async function reasoningControl({ action = "read", enabled, waitMs = 0 } = {}) {
+    const pattern = /^(?:深度思考(?:模式)?|思考模式|思考|Deep\s*Think|Thinking(?:\s*mode)?)(?:\s*[(（][^()（）]{1,32}[)）])?(?:\s*[:：]\s*(?:开|关|开启|关闭|on|off))?$/i;
+    const interactive = 'button,input[type="checkbox"],[role="button"],[role="switch"],[role="checkbox"],[role="tab"],[role="radio"],[aria-pressed],[aria-checked],[aria-selected],label,.ds-toggle-button,[data-state],[data-checked],[data-selected],[data-active],[tabindex]';
+    const visible = (element2) => {
+      if (!element2?.isConnected || !element2.getClientRects().length) return false;
+      for (let node = element2; node; node = node.parentElement) {
+        const style = getComputedStyle(node);
+        if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) return false;
+      }
+      return true;
+    };
+    const normalize = (text) => (text || "").replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
+    const primary = 'button,input[type="checkbox"],[role="button"],[role="switch"],[role="checkbox"],[role="tab"],[role="radio"],label,.ds-toggle-button,[aria-pressed],[aria-checked],[aria-selected]';
+    const labels = (element2) => [
+      element2.getAttribute("aria-label"),
+      element2.getAttribute("title"),
+      element2.innerText,
+      ...element2.matches(primary) ? [...element2.querySelectorAll("span")].filter((node) => node.children.length === 0).map((node) => node.textContent) : []
+    ].map(normalize).filter((text) => text && text.length < 80);
+    const boolean = (raw) => /^(?:true|on|checked|selected|active)$/i.test(raw || "") ? true : /^(?:false|off|unchecked|unselected|inactive)$/i.test(raw || "") ? false : null;
+    const readState = (element2) => {
+      const carriers = [element2, ...element2.querySelectorAll('[aria-pressed],[aria-checked],[aria-selected],input[type="checkbox"],[data-state],[data-checked],[data-selected],[data-active]')];
+      const ariaMarkers = carriers.flatMap((node) => ["aria-pressed", "aria-checked", "aria-selected"].filter((attribute) => node.hasAttribute(attribute)).map((attribute) => ({ raw: node.getAttribute(attribute), source: attribute })));
+      if (ariaMarkers.some((item) => !/^(?:true|false)$/i.test(item.raw))) return { enabled: null, source: "aria", reason: "indeterminate_state" };
+      const aria = ariaMarkers.map((item) => ({ value: item.raw.toLowerCase() === "true", source: item.source }));
+      if (aria.length) return aria.some((item) => item.value !== aria[0].value) ? { enabled: null, source: "aria", reason: "conflicting_state" } : { enabled: aria[0].value, source: aria[0].source };
+      for (const attribute of ["aria-pressed", "aria-checked", "data-state", "data-checked", "data-selected", "data-active"]) {
+        const values = carriers.map((node) => boolean(node.getAttribute(attribute))).filter((value) => value !== null);
+        if (values.length) {
+          if (values.some((value) => value !== values[0])) return { enabled: null, source: attribute, reason: "conflicting_state" };
+          return { enabled: values[0], source: attribute };
+        }
+      }
+      const input = element2.matches('input[type="checkbox"]') ? element2 : element2.querySelector('input[type="checkbox"]');
+      if (input && !input.indeterminate) return { enabled: input.checked, source: "native_checkbox" };
+      const stateNodes = [element2, ...element2.querySelectorAll(".ds-toggle-button")];
+      for (const node of stateNodes) {
+        if (node.classList.contains("ds-toggle-button")) return { enabled: node.classList.contains("ds-toggle-button--selected"), source: "ds_toggle_component" };
+        const names = [...node.classList];
+        if (names.some((name) => /^(?:is-)?(?:unselected|inactive|unchecked|off)$/.test(name))) return { enabled: false, source: "explicit_state_class" };
+        if (names.some((name) => /^(?:is-)?(?:selected|active|checked|on)$/.test(name))) return { enabled: true, source: "explicit_state_class" };
+      }
+      const label = labels(element2).find((text) => pattern.test(text)) || "";
+      if (/[:：]\s*(?:开|开启|on)$/i.test(label)) return { enabled: true, source: "explicit_label" };
+      if (/[:：]\s*(?:关|关闭|off)$/i.test(label)) return { enabled: false, source: "explicit_label" };
+      return { enabled: null, source: "none", reason: "state_not_exposed" };
+    };
+    const discover = () => {
+      if (location.origin !== "https://chat.deepseek.com") return { count: 0, enabled: null, reason: "unexpected_origin" };
+      let candidates = [...document.querySelectorAll(interactive)].filter(visible).filter((node) => !node.closest('.ds-message,.ds-think-content,[data-message-role="assistant"]')).filter((node) => labels(node).some((label) => pattern.test(label)));
+      candidates = candidates.filter((node) => !candidates.some((other) => other !== node && other.contains(node)));
+      const composers = [...document.querySelectorAll("textarea")].filter(visible);
+      const named = composers.filter((node) => /deepseek/i.test(node.getAttribute("placeholder") || ""));
+      const composer = named.length === 1 ? named[0] : composers.length === 1 ? composers[0] : null;
+      if (composer && candidates.length > 1) {
+        for (let parent = composer.parentElement; parent && parent !== document.body; parent = parent.parentElement) {
+          const local = candidates.filter((node) => parent.contains(node));
+          if (local.length) {
+            candidates = local;
+            break;
+          }
+        }
+      }
+      if (candidates.length !== 1) return { count: candidates.length, enabled: null, source: "none", reason: candidates.length ? "multiple_controls" : "control_missing" };
+      const element2 = candidates[0];
+      const state = readState(element2);
+      return {
+        count: 1,
+        ...state,
+        label: labels(element2).find((text) => pattern.test(text)) || "",
+        markers: String(element2.className || "").slice(0, 160),
+        disabled: element2.matches(":disabled") || element2.getAttribute("aria-disabled") === "true",
+        element: element2
+      };
+    };
+    let result = discover();
+    const deadline = Date.now() + Math.min(1500, Math.max(0, waitMs));
+    while (result.count === 0 && result.reason === "control_missing" && Date.now() < deadline) {
+      await new Promise((resolve) => setTimeout(resolve, 80));
+      result = discover();
+    }
+    const { element, ...publicResult } = result;
+    if (action === "read") return publicResult;
+    if (action !== "set" || typeof enabled !== "boolean") return { ...publicResult, clicked: false, reason: "invalid_action" };
+    if (result.count !== 1 || typeof result.enabled !== "boolean" || result.disabled) return { ...publicResult, clicked: false };
+    if (result.enabled === enabled) return { ...publicResult, clicked: false, alreadySet: true };
+    if (!enabled && ["tab", "radio"].includes(element.getAttribute("role"))) {
+      const group = element.closest('[role="tablist"],[role="radiogroup"]');
+      const normal = group ? [...group.querySelectorAll('[role="tab"],[role="radio"]')].filter((node) => node !== element && visible(node)).filter((node) => labels(node).some((label) => /^(?:普通|标准|快速|非思考|直接回答|normal|standard|fast|instant)$/i.test(label))) : [];
+      if (normal.length !== 1 || normal[0].matches(":disabled") || normal[0].getAttribute("aria-disabled") === "true") return { ...publicResult, clicked: false, reason: "normal_mode_missing" };
+      normal[0].click();
+      return { ...publicResult, clicked: true };
+    }
+    element.click();
+    return { ...publicResult, clicked: true };
+  }
+
   // js/core/browser.js
   var ORIGIN = "https://chat.deepseek.com";
   var PROFILE_MARKER = ".deepseek-bridge-profile";
   var ANSWER_SELECTOR = ".ds-markdown.ds-assistant-message-main-content";
-  var REASONING_NAME = /^(?:深度思考(?:\s*[（(][^）)]*[）)])?|DeepThink(?:\s*\([^)]*\))?)$/i;
   var UPLOAD_ITEM_SELECTOR = '[data-testid="attachment"], [data-testid="file-preview"], [data-attachment], .ds-file-list-item, .ds-file-upload-item, .ds-attachment, .d5fa3d1b._183e647';
   var BrowserBridgeError = class extends Error {
     constructor(code, status, message) {
@@ -7413,34 +7510,23 @@
       }
     }
     async _readReasoningMode(page) {
-      return page.evaluate(() => {
-        const pattern = /^(?:深度思考(?:\s*[（(][^）)]*[）)])?|DeepThink(?:\s*\([^)]*\))?)$/i;
-        const visible = (element) => {
-          if (!element.getClientRects().length) return false;
-          for (let node = element; node; node = node.parentElement) {
-            const style = getComputedStyle(node);
-            if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) return false;
-          }
-          return true;
-        };
-        const buttons = [...document.querySelectorAll("[aria-pressed]")].filter((element) => visible(element) && pattern.test((element.innerText || element.getAttribute("aria-label") || "").trim()));
-        if (buttons.length !== 1) return { count: buttons.length, enabled: null };
-        const pressed = buttons[0].getAttribute("aria-pressed");
-        return { count: 1, enabled: pressed === "true" ? true : pressed === "false" ? false : null };
-      });
+      return page.evaluate(reasoningControl, { action: "read" });
     }
     async _setReasoning(page, enabled, signal, deadline) {
-      let mode = await within(this._readReasoningMode(page), signal, deadline);
+      let mode = await within(page.evaluate(reasoningControl, { action: "read", waitMs: 1500 }), signal, deadline);
       if (mode.count !== 1 || typeof mode.enabled !== "boolean") {
-        throw new BrowserBridgeError("reasoning_state_unknown", 400, "\u65E0\u6CD5\u786E\u8BA4\u6DF1\u5EA6\u601D\u8003\u5F00\u5173\u7684\u72B6\u6001\uFF0C\u5DF2\u505C\u6B62\u53D1\u9001\u3002");
+        throw new BrowserBridgeError(
+          "reasoning_state_unknown",
+          400,
+          `\u65E0\u6CD5\u786E\u8BA4\u6DF1\u5EA6\u601D\u8003\u72B6\u6001\uFF08\u627E\u5230 ${mode.count} \u4E2A\u63A7\u4EF6\uFF0C${mode.reason || "\u72B6\u6001\u672A\u66B4\u9732"}\uFF09\u3002\u8BF7\u5728\u9996\u9875\u91CD\u65B0\u68C0\u6D4B\u3002`
+        );
       }
       if (mode.enabled === enabled) return;
-      const button = page.locator("[aria-pressed]").filter({ hasText: REASONING_NAME });
-      if (await button.count() !== 1 || !await button.isVisible()) {
-        throw new BrowserBridgeError("reasoning_state_unknown", 400, "\u6DF1\u5EA6\u601D\u8003\u5F00\u5173\u4E0D\u552F\u4E00\u6216\u4E0D\u53EF\u64CD\u4F5C\uFF0C\u5DF2\u505C\u6B62\u53D1\u9001\u3002");
-      }
       checkRequest(signal, deadline);
-      await within(button.click(), signal, deadline);
+      const changed = await within(page.evaluate(reasoningControl, { action: "set", enabled }), signal, deadline);
+      if (!changed.clicked && !changed.alreadySet) {
+        throw new BrowserBridgeError("reasoning_state_unknown", 400, "\u6DF1\u5EA6\u601D\u8003\u5F00\u5173\u4E0D\u53EF\u64CD\u4F5C\u6216\u72B6\u6001\u53D1\u751F\u53D8\u5316\uFF0C\u5DF2\u505C\u6B62\u53D1\u9001\u3002");
+      }
       const modeDeadline = Math.min(deadline, Date.now() + 3e3);
       while (Date.now() < modeDeadline) {
         mode = await within(this._readReasoningMode(page), signal, deadline);
@@ -7972,7 +8058,13 @@
     }
     async status() {
       await this._ensureBrowser();
-      return super.status();
+      const status = await super.status();
+      if (!status.loggedIn) return { ...status, reasoningMode: { count: 0, enabled: null, reason: status.needsVerification ? "verification_required" : "login_required" } };
+      try {
+        return { ...status, reasoningMode: await this._readReasoningMode(this._page) };
+      } catch {
+        return { ...status, reasoningMode: { count: 0, enabled: null, reason: "observation_failed" } };
+      }
     }
     async _discardPage(page) {
       page.closed = true;
@@ -8396,7 +8488,7 @@
       return { sourceIndex, buffer, mimeType: match[1], name: `${image.label}.${match[1] === "image/jpeg" ? "jpg" : match[1].split("/")[1]}` };
     });
   }
-  function createEngine(backend, emitNative, options = {}) {
+  function createEngine(backend2, emitNative, options = {}) {
     const config = { model: "deepseek-web", timeoutMs: 6e5, heartbeatMs: 1e4, maxQueue: 8, ...options };
     const jobs = /* @__PURE__ */ new Map();
     const waiting = [];
@@ -8450,8 +8542,8 @@
       };
       try {
         if (signal.aborted) throw signal.reason;
-        if (job.path === "/browser/status") return respond(job, 200, { ...await abortable(backend.status(), signal), busy: false, queued: waiting.length });
-        if (job.path === "/browser/open") return respond(job, 200, await abortable(backend.openLogin(), signal));
+        if (job.path === "/browser/status") return respond(job, 200, { ...await abortable(backend2.status(), signal), busy: false, queued: waiting.length });
+        if (job.path === "/browser/open") return respond(job, 200, await abortable(backend2.openLogin(), signal));
         const prepared = prepareRequest(job.body, config.model);
         const images = resolveDataImages(prepared.images);
         let output = "", reasoning = "", published = "", currentPrompt = prepared.prompt;
@@ -8470,7 +8562,7 @@
           const attemptReasoning = prepared.reasoning && formatRetries === 0;
           output = "";
           prompts.push(currentPrompt);
-          iterator = backend.generate({ prompt: currentPrompt, images, reasoning: attemptReasoning, signal })[Symbol.asyncIterator]();
+          iterator = backend2.generate({ prompt: currentPrompt, images, reasoning: attemptReasoning, signal })[Symbol.asyncIterator]();
           try {
             for (; ; ) {
               const next = await abortable(iterator.next(), signal);
@@ -8623,6 +8715,249 @@ data: [DONE]
 
   // js/entry.js
   init_platform();
+
+  // js/ui/dashboard.js
+  var paths = {
+    bridge: '<path d="M3 15h18M5 15v6M19 15v6M5 15C5 3 19 3 19 15M12 6v9"/>',
+    moon: '<path d="M20 14A8 8 0 0 1 10 4a8 8 0 1 0 10 10Z"/>',
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M5 19l1.5-1.5M17.5 6.5 19 5"/>',
+    help: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 4 2c-1 .7-1.5 1-1.5 2.5M12 17h.01"/>',
+    power: '<path d="M12 2v9M6 5a9 9 0 1 0 12 0"/>',
+    "arrow-up-right": '<path d="M6 18 18 6M6 6h12v12"/>',
+    "arrow-right": '<path d="M4 12h16M14 6l6 6-6 6"/>',
+    "chevron-right": '<path d="m9 5 7 7-7 7"/>',
+    shield: '<path d="m12 3 8 3v6c0 4-3.5 7-8 9-4.5-2-8-5-8-9V6l8-3Z"/><path d="m8 12 3 3 5-6"/>',
+    sparkles: '<path d="m12 3 2.6 6.4L21 12l-6.4 2.6L12 21l-2.6-6.4L3 12l6.4-2.6L12 3ZM20 2v4M18 4h4"/>',
+    pulse: '<path d="M2 12h5l3-8 4 16 3-8h5"/>',
+    refresh: '<path d="M20 7v5h-5M4 17v-5h5M20 12a8 8 0 0 0-14-5M4 12a8 8 0 0 0 14 5"/>',
+    copy: '<rect x="8" y="8" width="12" height="13" rx="3"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/>',
+    layers: '<path d="m12 3 10 6-10 6L2 9l10-6ZM2 13l10 6 10-6M2 17l10 6 10-6"/>',
+    grid: '<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/>',
+    globe: '<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/>',
+    plug: '<path d="m9 3 1 5M15 3l-1 5M6 8h12v3a6 6 0 0 1-12 0V8ZM12 17v5"/>',
+    lock: '<rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/>',
+    info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/>',
+    message: '<path d="M21 11a8 8 0 0 1-8 8H7l-5 3 1.5-6A8 8 0 1 1 21 11Z"/><path d="M7 10h9M7 14h5"/>',
+    code: '<path d="m8 6-6 6 6 6M16 6l6 6-6 6M14 3l-4 18"/>',
+    activity: '<rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 15v-3M12 15V8M17 15v-5"/>',
+    close: '<path d="m6 6 12 12M6 18 18 6"/>',
+    check: '<path d="m5 12 5 5L20 7"/>'
+  };
+  function icon(node, name) {
+    node.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${paths[name] || paths.info}</svg>`;
+  }
+  function initDashboard() {
+    if (!document.getElementById("app")) return;
+    const $ = (id) => document.getElementById(id);
+    document.querySelectorAll("[data-icon]").forEach((node) => icon(node, node.dataset.icon));
+    let state = { ready: false, running: false, loggedIn: false, hasInspection: false, inspecting: false, busy: false, testStatus: "untested", reasoningMode: { enabled: null }, activities: [], version: "0.2.0" };
+    let tab = "home", toastTimer, modal = false, previousFocus;
+    let theme = localStorage.getItem("bridge-theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    function native(action, payload = {}) {
+      if (window.NativeBridge?.uiAction) NativeBridge.uiAction(action, JSON.stringify(payload));
+      else toast("\u6B64\u64CD\u4F5C\u9700\u8981\u5728\u5B89\u5353\u5E94\u7528\u4E2D\u4F7F\u7528");
+    }
+    function setTheme(value) {
+      theme = value;
+      document.body.classList.toggle("dark", value === "dark");
+      icon($("theme"), value === "dark" ? "sun" : "moon");
+      $("theme").setAttribute("aria-label", value === "dark" ? "\u5207\u6362\u4E3A\u6D45\u8272\u4E3B\u9898" : "\u5207\u6362\u4E3A\u6DF1\u8272\u4E3B\u9898");
+      localStorage.setItem("bridge-theme", value);
+      native("theme", { dark: value === "dark" });
+    }
+    function layout() {
+      const slot = $("web-slot").getBoundingClientRect();
+      if (window.NativeBridge?.uiLayout) NativeBridge.uiLayout(JSON.stringify({ visible: tab === "web" && !modal, top: slot.top, left: slot.left, width: slot.width, height: slot.height, viewportWidth: innerWidth }));
+    }
+    function navigate(value) {
+      if (!["home", "web", "connect"].includes(value)) return;
+      tab = value;
+      for (const name of ["home", "web", "connect"]) $("page-" + name).hidden = name !== value;
+      document.querySelectorAll(".bottom-nav [data-navigate]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.navigate === value);
+        if (button.dataset.navigate === value) button.setAttribute("aria-current", "page");
+        else button.removeAttribute("aria-current");
+      });
+      requestAnimationFrame(layout);
+      if (value === "home" && state.ready && !state.busy && !state.inspecting) native("inspect");
+    }
+    function toast(message) {
+      $("toast").textContent = message;
+      $("toast").hidden = false;
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        $("toast").hidden = true;
+      }, 2500);
+    }
+    const paragraph = (text) => {
+      const node = document.createElement("p");
+      node.textContent = text;
+      return node;
+    };
+    const row = (label, value) => {
+      const node = document.createElement("div");
+      node.className = "detail-row";
+      const key = document.createElement("span"), detail = document.createElement("strong");
+      key.textContent = label;
+      detail.textContent = value;
+      node.append(key, detail);
+      return node;
+    };
+    function closeSheet() {
+      modal = false;
+      $("sheet-scrim").hidden = true;
+      previousFocus?.focus();
+      layout();
+    }
+    function sheet(title, nodes, actions = [], symbol = "info") {
+      previousFocus = document.activeElement;
+      modal = true;
+      $("sheet-title").textContent = title;
+      icon($("sheet-icon"), symbol);
+      $("sheet-body").replaceChildren(...nodes);
+      $("sheet-actions").replaceChildren();
+      for (const action of actions) {
+        const button = document.createElement("button");
+        button.textContent = action.label;
+        button.disabled = Boolean(action.disabled);
+        button.addEventListener("click", action.run);
+        $("sheet-actions").append(button);
+      }
+      $("sheet-scrim").hidden = false;
+      $("close-sheet").focus();
+      layout();
+    }
+    function reasoningSheet() {
+      const mode = state.reasoningMode || {};
+      const reason = { login_required: "\u5148\u5B8C\u6210\u7F51\u9875\u767B\u5F55\uFF0C\u518D\u68C0\u6D4B\u601D\u8003\u5F00\u5173\u3002", verification_required: "\u8BF7\u5148\u5728 DeepSeek \u7F51\u9875\u5B8C\u6210\u4EBA\u673A\u9A8C\u8BC1\u3002", control_missing: "\u9875\u9762\u8FD8\u6CA1\u6709\u663E\u793A\u601D\u8003\u5F00\u5173\uFF0C\u53EF\u4EE5\u7B49\u5F85\u7F51\u9875\u52A0\u8F7D\u540E\u91CD\u65B0\u68C0\u6D4B\u3002", multiple_controls: "\u9875\u9762\u51FA\u73B0\u591A\u4E2A\u601D\u8003\u5F00\u5173\uFF0C\u6682\u672A\u9009\u62E9\u5176\u4E2D\u4EFB\u4F55\u4E00\u4E2A\u3002", state_not_exposed: "\u5DF2\u627E\u5230\u6309\u94AE\uFF0C\u4F46\u5F53\u524D\u9875\u9762\u6CA1\u6709\u63D0\u4F9B\u53EF\u4FE1\u7684\u5F00\u5173\u72B6\u6001\u3002", conflicting_state: "\u9875\u9762\u91CC\u7684\u5F00\u5173\u72B6\u6001\u6807\u8BB0\u4E92\u76F8\u51B2\u7A81\uFF0C\u6682\u672A\u5207\u6362\u3002", observation_failed: "\u6682\u65F6\u65E0\u6CD5\u8BFB\u53D6\u7F51\u9875\uFF0C\u8BF7\u6253\u5F00 DeepSeek \u9875\u9762\u68C0\u67E5\u3002" };
+      const label = typeof mode.enabled === "boolean" ? mode.enabled ? "\u5DF2\u5F00\u542F" : "\u5DF2\u5173\u95ED" : "\u5C1A\u672A\u786E\u8BA4";
+      sheet("\u6DF1\u5EA6\u601D\u8003", [row("\u5F53\u524D\u7F51\u9875\u72B6\u6001", label), row("\u627E\u5230\u7684\u63A7\u4EF6", String(mode.count ?? 0) + " \u4E2A"), paragraph(reason[mode.reason] || "\u6865\u4F1A\u6309\u6BCF\u6B21\u8BF7\u6C42\u6307\u5B9A\u7684\u601D\u8003\u8BBE\u7F6E\u5207\u6362\uFF0C\u5E76\u518D\u6B21\u786E\u8BA4\u7F51\u9875\u72B6\u6001\u3002"), paragraph("\u201C\u5F00\u542F\u5E76\u6D4B\u8BD5\u201D\u4F1A\u53D1\u9001\u4E00\u6B21\u5E26\u601D\u8003\u6A21\u5F0F\u7684\u771F\u5B9E\u6D4B\u8BD5\u8BF7\u6C42\u3002")], [
+        { label: state.inspecting ? "\u68C0\u6D4B\u4E2D\u2026" : "\u91CD\u65B0\u68C0\u6D4B", disabled: state.inspecting, run: () => {
+          closeSheet();
+          native("inspect");
+          toast("\u6B63\u5728\u68C0\u6D4B\u601D\u8003\u5F00\u5173");
+        } },
+        { label: "\u5F00\u542F\u5E76\u6D4B\u8BD5", disabled: !state.running || state.busy || state.probeRunning, run: () => {
+          closeSheet();
+          native("test", { thinking: true });
+        } }
+      ], "sparkles");
+    }
+    function help() {
+      sheet("\u5728\u624B\u673A\u4E0A\uFF0C\u5B8C\u6210\u8FDE\u63A5", [paragraph("01  \u6253\u5F00 DeepSeek \u9875\u9762\uFF0C\u624B\u52A8\u767B\u5F55\u5E76\u5B8C\u6210\u7F51\u7AD9\u8981\u6C42\u7684\u9A8C\u8BC1\u3002"), paragraph("02  \u56DE\u5230\u6982\u89C8\uFF0C\u8FD0\u884C\u4E00\u6B21\u63A5\u53E3\u81EA\u6D4B\u3002\u901A\u8FC7\u540E\u5728\u8FDE\u63A5\u9875\u590D\u5236\u914D\u7F6E\u3002"), paragraph("03  \u5728\u540C\u4E00\u90E8\u624B\u673A\u7684\u517C\u5BB9\u5BA2\u6237\u7AEF\u586B\u5199\u672C\u673A\u5730\u5740\u3001\u6A21\u578B\u548C\u5BC6\u94A5\u3002\u7535\u8111\u65E0\u9700\u53C2\u4E0E\u8FD0\u884C\u3002"), paragraph("\u5EFA\u8BAE\u5206\u5C4F\u4FDD\u6301\u672C\u5E94\u7528\u53EF\u89C1\u3002\u9501\u5C4F\u4E0E\u957F\u671F\u540E\u53F0\u8FD0\u884C\u4ECD\u9700\u5728\u4F60\u7684\u8BBE\u5907\u4E0A\u9A8C\u8BC1\u3002"), paragraph("\u8FD9\u662F\u7B2C\u4E09\u65B9\u9002\u914D\u5E94\u7528\u3002\u8D26\u53F7\u767B\u5F55\u7531 DeepSeek \u7F51\u9875\u5904\u7406\u3002")], [{ label: "\u6253\u5F00 DeepSeek", run: () => {
+        closeSheet();
+        navigate("web");
+      } }, { label: "\u8FDE\u63A5\u914D\u7F6E", run: () => {
+        closeSheet();
+        navigate("connect");
+      } }], "bridge");
+    }
+    function diagnostics() {
+      sheet("\u8FDE\u63A5\u8BCA\u65AD", [row("\u5E94\u7528\u7248\u672C", state.version || "0.2.0"), row("\u672C\u673A\u670D\u52A1", state.running ? "\u5DF2\u542F\u52A8" : "\u672A\u542F\u52A8"), row("\u7F51\u9875\u767B\u5F55", state.hasInspection ? state.loggedIn ? "\u5DF2\u767B\u5F55" : "\u9700\u8981\u767B\u5F55\u6216\u9A8C\u8BC1" : "\u5C1A\u672A\u68C0\u6D4B"), row("\u601D\u8003\u5F00\u5173", state.reasoningMode?.source || "\u5F85\u68C0\u6D4B"), row("\u63A5\u53E3\u8BF7\u6C42", String(state.requests || 0) + " \u6B21"), row("\u5F53\u524D\u4EFB\u52A1", state.busy ? "\u5904\u7406\u4E2D" : "\u7A7A\u95F2"), paragraph(state.lastError || "\u8BCA\u65AD\u4E0D\u5305\u542B API \u5BC6\u94A5\u3001\u9A8C\u8BC1\u7801\u548C\u804A\u5929\u6B63\u6587\u3002")], [{ label: "\u590D\u5236\u8BCA\u65AD\u4FE1\u606F", run: () => native("copy", { field: "diagnostics" }) }, { label: "\u91CD\u65B0\u68C0\u6D4B", disabled: state.inspecting, run: () => {
+        closeSheet();
+        native("inspect");
+      } }], "activity");
+    }
+    function result(result2) {
+      const ok = result2.passed === true;
+      sheet(result2.thinking ? "\u6DF1\u5EA6\u601D\u8003\u6D4B\u8BD5" : "\u63A5\u53E3\u81EA\u6D4B", [row("\u7ED3\u679C", ok ? "\u6D4B\u8BD5\u901A\u8FC7" : "\u672A\u901A\u8FC7"), paragraph(result2.message || (ok ? "\u771F\u5B9E\u7F51\u9875\u8C03\u7528\u5DF2\u5B8C\u6210\u3002" : "\u8BF7\u68C0\u67E5\u7F51\u9875\u6216\u91CD\u65B0\u68C0\u6D4B\u8FDE\u63A5\u72B6\u6001\u3002")), ...result2.thinking && result2.reasoningChars ? [row("\u5DF2\u8BFB\u53D6\u601D\u8003\u5185\u5BB9", result2.reasoningChars + " \u5B57\u7B26")] : []], [{ label: ok ? "\u67E5\u770B\u8FDE\u63A5\u914D\u7F6E" : "\u6253\u5F00 DeepSeek", run: () => {
+        closeSheet();
+        navigate(ok ? "connect" : "web");
+      } }, { label: "\u5B8C\u6210", run: closeSheet }], ok ? "check" : "info");
+    }
+    function render(next) {
+      state = { ...state, ...next };
+      const running = state.running, loggedIn = state.hasInspection && state.loggedIn;
+      $("hero-dot").classList.toggle("running", running);
+      $("service-label").textContent = !state.ready ? "\u6B63\u5728\u51C6\u5907\u672C\u673A\u670D\u52A1" : running ? state.busy ? "\u672C\u673A\u670D\u52A1\u6B63\u5728\u5904\u7406\u8BF7\u6C42" : "\u672C\u673A\u670D\u52A1\u8FD0\u884C\u4E2D" : "\u672C\u673A\u670D\u52A1\u5DF2\u505C\u6B62";
+      $("hero-title").textContent = !state.ready ? "\u51C6\u5907\u8FDE\u63A5" : !running ? "\u8FDE\u63A5\u6682\u65F6\u4F11\u606F\u4E2D" : loggedIn ? "\u4F60\u7684\u8FDE\u63A5\uFF0C\u5DF2\u5C31\u7EEA" : "\u670D\u52A1\u5DF2\u542F\u52A8";
+      $("hero-detail").textContent = !state.ready ? "\u6B63\u5728\u521D\u59CB\u5316\u8FD0\u884C\u73AF\u5883" : !running ? "\u542F\u52A8\u670D\u52A1\uFF0C\u5373\u53EF\u7EE7\u7EED\u5728\u624B\u673A\u4E0A\u8C03\u7528" : loggedIn ? "DeepSeek \u7F51\u9875\u4E0E\u672C\u673A\u63A5\u53E3\u5DF2\u8FDE\u63A5" : state.needsVerification ? "\u8BF7\u6253\u5F00\u7F51\u9875\uFF0C\u5B8C\u6210\u7F51\u7AD9\u8981\u6C42\u7684\u9A8C\u8BC1" : "\u6253\u5F00 DeepSeek\uFF0C\u767B\u5F55\u540E\u5373\u53EF\u5F00\u59CB\u8C03\u7528";
+      $("service-toggle-label").textContent = running ? "\u505C\u6B62\u670D\u52A1" : "\u542F\u52A8\u670D\u52A1";
+      $("service-toggle").disabled = !state.ready;
+      $("login-value").textContent = state.inspecting ? "\u68C0\u6D4B\u4E2D" : state.hasInspection ? state.needsVerification ? "\u9700\u9A8C\u8BC1" : loggedIn ? "\u5DF2\u767B\u5F55" : "\u5F85\u767B\u5F55" : "\u5F85\u68C0\u6D4B";
+      const thought = state.reasoningMode || {};
+      $("reasoning-value").textContent = state.inspecting ? "\u68C0\u6D4B\u4E2D" : typeof thought.enabled === "boolean" ? thought.enabled ? "\u5DF2\u5F00\u542F" : "\u5DF2\u5173\u95ED" : !loggedIn ? "\u5F85\u767B\u5F55" : "\u672A\u8BC6\u522B";
+      $("test-value").textContent = state.probeRunning ? "\u6D4B\u8BD5\u4E2D" : state.testStatus === "passed" ? "\u5DF2\u901A\u8FC7" : state.testStatus === "failed" ? "\u672A\u901A\u8FC7" : "\u672A\u6D4B\u8BD5";
+      $("login-subtitle").textContent = loggedIn ? "\u7F51\u9875\u4F1A\u8BDD\u5DF2\u786E\u8BA4\uFF0C\u53EF\u4EE5\u7EE7\u7EED\u8C03\u7528" : state.needsVerification ? "\u6253\u5F00\u7F51\u9875\uFF0C\u624B\u52A8\u5B8C\u6210\u9A8C\u8BC1" : "\u5728\u5E94\u7528\u5185\u5B8C\u6210\u7F51\u9875\u767B\u5F55";
+      $("test-subtitle").textContent = state.probeRunning ? "\u6B63\u5728\u7B49\u5F85\u771F\u5B9E\u7F51\u9875\u54CD\u5E94\u2026" : state.testStatus === "passed" ? "\u771F\u5B9E\u7F51\u9875\u8C03\u7528\u5DF2\u9A8C\u8BC1\u901A\u8FC7" : state.testStatus === "failed" ? "\u4E0A\u6B21\u6D4B\u8BD5\u672A\u901A\u8FC7\uFF0C\u53EF\u67E5\u770B\u8FDE\u63A5\u8BCA\u65AD" : "\u786E\u8BA4\u7F51\u9875\u4E0E\u672C\u673A\u63A5\u53E3\u8FDE\u63A5\u6B63\u5E38";
+      for (const name of ["login", "test"]) {
+        const done = name === "login" ? loggedIn : state.testStatus === "passed";
+        $(name + "-step").classList.toggle("done", done);
+        $(name + "-check").classList.toggle("done", done);
+        icon($(name + "-check"), done ? "check" : "chevron-right");
+      }
+      $("inspect-all").disabled = state.inspecting || !state.ready;
+      $("inspect-all").classList.toggle("spinning", state.inspecting);
+      $("web-status").textContent = state.busy ? "\u6B63\u5728\u5904\u7406\u8BF7\u6C42\uFF0C\u8BF7\u4FDD\u6301\u7F51\u9875\u8FDE\u63A5" : "\u5728\u8FD9\u91CC\u767B\u5F55\u5E76\u7BA1\u7406\u4F60\u7684\u7F51\u9875\u4F1A\u8BDD";
+      $("web-login-chip").textContent = loggedIn ? "\u7F51\u9875\u767B\u5F55\u6709\u6548" : state.needsVerification ? "\u9700\u8981\u624B\u52A8\u9A8C\u8BC1" : "\u767B\u5F55\u72B6\u6001\u5F85\u786E\u8BA4";
+      $("web-think-chip").textContent = typeof thought.enabled === "boolean" ? thought.enabled ? "\u6DF1\u5EA6\u601D\u8003\u5DF2\u5F00\u542F" : "\u6DF1\u5EA6\u601D\u8003\u5DF2\u5173\u95ED" : "\u68C0\u6D4B\u6DF1\u5EA6\u601D\u8003";
+      $("app-version").textContent = state.version || "0.2.0";
+      const activities = (state.activities || []).slice(-4).reverse();
+      if (activities.length) {
+        $("activity-list").replaceChildren(...activities.map((item) => {
+          const node = document.createElement("div");
+          node.className = "activity-item";
+          const dot = document.createElement("i"), text = document.createElement("span"), time = document.createElement("time");
+          text.textContent = item.text;
+          time.textContent = item.time || "";
+          node.append(dot, text, time);
+          return node;
+        }));
+      }
+      requestAnimationFrame(layout);
+    }
+    document.querySelectorAll("[data-navigate]").forEach((button) => button.addEventListener("click", () => navigate(button.dataset.navigate)));
+    document.querySelectorAll("[data-copy]").forEach((button) => button.addEventListener("click", () => native("copy", { field: button.dataset.copy })));
+    document.querySelectorAll("[data-action]").forEach((button) => button.addEventListener("click", () => {
+      const action = button.dataset.action;
+      if (action === "help") help();
+      else if (action === "reasoning") reasoningSheet();
+      else if (action === "diagnostics") diagnostics();
+      else if (action === "test") {
+        if (!state.running) toast("\u8BF7\u5148\u542F\u52A8\u670D\u52A1");
+        else if (state.busy || state.probeRunning) toast("\u5F53\u524D\u8BF7\u6C42\u5904\u7406\u4E2D\uFF0C\u8BF7\u7A0D\u540E\u518D\u8BD5");
+        else native("test", { thinking: false });
+      } else native(action);
+    }));
+    $("inspect-all").addEventListener("click", () => native("inspect"));
+    $("service-toggle").addEventListener("click", () => native(state.running ? "stop" : "start"));
+    $("theme").addEventListener("click", () => setTheme(theme === "dark" ? "light" : "dark"));
+    $("close-sheet").addEventListener("click", closeSheet);
+    $("sheet-scrim").addEventListener("click", (event) => {
+      if (event.target === $("sheet-scrim")) closeSheet();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && modal) closeSheet();
+      if (event.key === "Tab" && modal) {
+        const nodes = [...$("sheet-scrim").querySelectorAll("button:not(:disabled)")];
+        const first = nodes[0], last = nodes.at(-1);
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    });
+    new ResizeObserver(() => requestAnimationFrame(layout)).observe($("app"));
+    window.addEventListener("resize", layout);
+    window.BridgeDashboard = { render, navigate, toast, result, back() {
+      if (modal) {
+        closeSheet();
+        return true;
+      }
+      if (tab !== "home") {
+        navigate("home");
+        return true;
+      }
+      return false;
+    }, setTheme };
+    setTheme(theme);
+    render(state);
+  }
+
+  // js/entry.js
   globalThis.Buffer = MobileBuffer;
   var pendingTimers = /* @__PURE__ */ new Map();
   var sequence = 0;
@@ -8658,10 +8993,24 @@ data: [DONE]
     pending.set(id, { resolve, reject, timer });
     NativeBridge.request(id, operation, JSON.stringify(argument));
   });
-  var engine = createEngine(new MobileBrowser(rpc), (id, kind, payload) => NativeBridge.response(id, kind, JSON.stringify(payload)));
+  var backend = new MobileBrowser(rpc);
+  var engine = createEngine(backend, (id, kind, payload) => NativeBridge.response(id, kind, JSON.stringify(payload)));
+  var inspecting = false;
   globalThis.AndroidEngine = {
     receive: (request) => engine.receive(request),
     cancel: (id) => engine.cancel(id),
+    async inspect() {
+      if (inspecting) return;
+      inspecting = true;
+      NativeBridge.reportUi?.("inspectionStart", "{}");
+      try {
+        NativeBridge.reportUi?.("inspection", JSON.stringify(await backend.status()));
+      } catch {
+        NativeBridge.reportUi?.("inspectionError", "{}");
+      } finally {
+        inspecting = false;
+      }
+    },
     timer(id) {
       const fn = pendingTimers.get(id);
       if (!fn) return;
@@ -8677,5 +9026,6 @@ data: [DONE]
       else target.reject(Object.assign(new Error(response.error?.message || "Android WebView \u64CD\u4F5C\u5931\u8D25\u3002"), { code: response.error?.code || "PAGE_CHANGED", status: response.error?.status || 502 }));
     }
   };
+  initDashboard();
   NativeBridge.ready();
 })();

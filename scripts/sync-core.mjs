@@ -2,6 +2,9 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 const destination = new URL('../js/core/', import.meta.url);
 const source = new URL('../../deepseek-web-bridge/src/', import.meta.url);
+try {
+  if ((await readFile(new URL('browser.js', destination), 'utf8')).includes("from './reasoning-control.js'")) throw new Error('The Android browser contains the v0.2.0 reasoning adaptation. Refusing to overwrite it; rebase this module explicitly before syncing.');
+} catch (error) { if (error.code !== 'ENOENT') throw error; }
 await mkdir(destination, { recursive: true });
 const hashes = {};
 for (const name of ['protocol.js', 'browser.js', 'dom-text.js', 'streaming.js', 'usage.js']) {

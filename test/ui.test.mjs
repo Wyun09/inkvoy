@@ -1,0 +1,44 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { chromium } from 'playwright';
+import { uiHarness, readyState } from './ui-harness.mjs';
+test('packaged UI routes, real state labels, private-key handling and touch sizes work on narrow phones', async t => {
+  const browser = await chromium.launch({ headless: true, ...(process.platform === 'win32' ? { channel: 'msedge' } : {}) });
+  t.after(() => browser.close());
+  const { context, page } = await uiHarness(browser, { width: 320, height: 700 }); t.after(() => context.close());
+  await page.evaluate(state => BridgeDashboard.render(state), readyState);
+  assert.equal(await page.locator('#login-value').textContent(), '已登录');
+  assert.equal(await page.locator('#reasoning-value').textContent(), '已关闭');
+  assert.equal(await page.locator('#test-value').textContent(), '已通过');
+  for (const tab of ['home', 'web', 'connect']) {
+    await page.locator('.bottom-nav [data-navigate="' + tab + '"]').click();
+    assert.equal(await page.locator('#page-' + tab).isVisible(), true);
+    const sizes = await page.evaluate(() => [...document.querySelectorAll('button')].filter(node => node.getClientRects().length).map(node => ({ width: node.getBoundingClientRect().width, height: node.getBoundingClientRect().height })));
+    assert.ok(sizes.every(item => item.width >= 43.5 && item.height >= 43.5));
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+  }
+  await page.getByRole('button', { name: '复制本机 API 密钥', exact: true }).click();
+  assert.ok((await page.evaluate(() => nativeActions)).some(item => item.action === 'copy' && item.payload.field === 'key'));
+  assert.ok(!(await page.locator('body').innerText()).includes('android-'));
+  await page.evaluate(() => BridgeDashboard.render({ loggedIn: false, hasInspection: true, needsVerification: true, reasoningMode: { enabled: null, reason: 'verification_required' } }));
+  await page.locator('.bottom-nav [data-navigate="home"]').click();
+  assert.equal(await page.locator('#login-value').textContent(), '需验证');
+  await page.locator('.health-strip [data-action="reasoning"]').click();
+  assert.ok((await page.locator('#sheet-body').innerText()).includes('人机验证'));
+  await page.locator('#close-sheet').click();
+  await page.locator('#theme').click(); assert.equal(await page.locator('body').getAttribute('class'), 'dark');
+});
+test('UI treats unknown state and test failures as such and renders report text without HTML execution', async t => {
+  const browser = await chromium.launch({ headless: true, ...(process.platform === 'win32' ? { channel: 'msedge' } : {}) }); t.after(() => browser.close());
+  const { context, page } = await uiHarness(browser); t.after(() => context.close());
+  await page.evaluate(state => BridgeDashboard.render({ ...state, testStatus: 'failed', reasoningMode: { count: 1, enabled: null, reason: 'state_not_exposed' }, lastError: '<img src=x onerror="window.injected=true">', activities: [{ text: '<script>window.injected=true</script>', time: '10:00' }] }), readyState);
+  assert.equal(await page.locator('#reasoning-value').textContent(), '未识别');
+  assert.equal(await page.locator('#test-value').textContent(), '未通过');
+  assert.equal(await page.evaluate(() => window.injected), undefined);
+  await page.locator('.bottom-nav [data-navigate="web"]').click();
+  await page.waitForFunction(() => nativeLayouts.some(item => item.visible && item.height > 80));
+  await page.locator('.web-chips button').click();
+  await page.waitForFunction(() => nativeLayouts.at(-1).visible === false);
+  assert.equal(await page.evaluate(() => BridgeDashboard.back()), true);
+  await page.waitForFunction(() => nativeLayouts.at(-1).visible === true);
+});

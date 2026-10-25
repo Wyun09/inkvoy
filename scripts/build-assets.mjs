@@ -1,5 +1,5 @@
 import { build } from 'esbuild';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, writeFile, readFile } from 'node:fs/promises';
 import './write-notices.mjs';
 const root = new URL('../', import.meta.url);
 const assets = new URL('app/src/main/assets/', root);
@@ -13,5 +13,6 @@ await build({
     build.onResolve({ filter: /^(?:node:crypto|node:fs\/promises|node:path|playwright)$/ }, () => ({ path: new URL('js/platform.js', root).pathname.replace(/^\/([A-Za-z]:)/, '$1') }));
   } }],
 });
-await writeFile(new URL('engine.html', assets), '<!doctype html><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src \'none\'; script-src \'self\' \'unsafe-eval\'; connect-src \'none\'; frame-src \'none\'"><script src="engine.bundle.js"></script>');
+await writeFile(new URL('engine.html', assets), await readFile(new URL('js/ui/app.html', root)));
+await writeFile(new URL('app.css', assets), await readFile(new URL('js/ui/app.css', root)));
 console.log('Built isolated Android engine assets.');

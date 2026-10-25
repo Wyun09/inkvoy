@@ -22,8 +22,8 @@ test('packaged engine boots under its CSP and completes a round trip through the
   const assets = new URL('../app/src/main/assets/', import.meta.url);
   await engine.route('https://bridge.local/**', async route => {
     const name = new URL(route.request().url()).pathname.slice(1);
-    if (!['engine.html', 'engine.bundle.js'].includes(name)) return route.abort();
-    return route.fulfill({ contentType: name.endsWith('.js') ? 'application/javascript' : 'text/html; charset=utf-8', body: await readFile(new URL(name, assets)) });
+    if (!['engine.html', 'engine.bundle.js', 'app.css'].includes(name)) return route.abort();
+    return route.fulfill({ contentType: name.endsWith('.js') ? 'application/javascript' : name.endsWith('.css') ? 'text/css' : 'text/html; charset=utf-8', body: await readFile(new URL(name, assets)) });
   });
   await engine.exposeBinding('__nativeRequest', async (_source, id, operation, raw) => {
     try {
@@ -44,6 +44,7 @@ test('packaged engine boots under its CSP and completes a round trip through the
       clearTimer(id) { nativeClear(timers.get(id)); timers.delete(id); },
       request(id, operation, raw) { void window.__nativeRequest(id, operation, raw); },
       response(id, kind, raw) { window.nativeFrames.push({ id, kind, payload: JSON.parse(raw) }); },
+      reportUi(kind, raw) { if (kind === 'inspection') window.nativeInspection = JSON.parse(raw); },
     };
   });
   await engine.goto('https://bridge.local/engine.html');
@@ -57,4 +58,7 @@ test('packaged engine boots under its CSP and completes a round trip through the
   assert.equal(chunks.flatMap(chunk => chunk.choices || []).map(choice => choice.delta.content || '').join(''), 'MOBILE_RUNTIME_OK');
   assert.equal(chunks.at(-1).usage_meta.cache.status, 'unknown');
   assert.ok(frames.some(frame => frame.payload.text === 'data: [DONE]\n\n'));
+  await engine.evaluate(() => AndroidEngine.inspect());
+  const inspection = await engine.evaluate(() => window.nativeInspection);
+  assert.equal(inspection.loggedIn, true); assert.equal(inspection.reasoningMode.enabled, false);
 });

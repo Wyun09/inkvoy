@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { extractDomTexts, BoundedTextTail } from './dom-text.js';
+import { reasoningControl } from './reasoning-control.js';
 
 const ORIGIN = 'https://chat.deepseek.com';
 const PROFILE_MARKER = '.deepseek-bridge-profile';
@@ -311,36 +312,21 @@ export class DeepSeekBrowser {
   }
 
   async _readReasoningMode(page) {
-    return page.evaluate(() => {
-      const pattern = /^(?:深度思考(?:\s*[（(][^）)]*[）)])?|DeepThink(?:\s*\([^)]*\))?)$/i;
-      const visible = element => {
-        if (!element.getClientRects().length) return false;
-        for (let node = element; node; node = node.parentElement) {
-          const style = getComputedStyle(node);
-          if (style.display === 'none' || style.visibility === 'hidden' || Number(style.opacity) === 0) return false;
-        }
-        return true;
-      };
-      const buttons = [...document.querySelectorAll('[aria-pressed]')].filter(element => visible(element)
-        && pattern.test((element.innerText || element.getAttribute('aria-label') || '').trim()));
-      if (buttons.length !== 1) return { count: buttons.length, enabled: null };
-      const pressed = buttons[0].getAttribute('aria-pressed');
-      return { count: 1, enabled: pressed === 'true' ? true : pressed === 'false' ? false : null };
-    });
+    return page.evaluate(reasoningControl, { action: 'read' });
   }
 
   async _setReasoning(page, enabled, signal, deadline) {
-    let mode = await within(this._readReasoningMode(page), signal, deadline);
+    let mode = await within(page.evaluate(reasoningControl, { action: 'read', waitMs: 1500 }), signal, deadline);
     if (mode.count !== 1 || typeof mode.enabled !== 'boolean') {
-      throw new BrowserBridgeError('reasoning_state_unknown', 400, '无法确认深度思考开关的状态，已停止发送。');
+      throw new BrowserBridgeError('reasoning_state_unknown', 400,
+        `无法确认深度思考状态（找到 ${mode.count} 个控件，${mode.reason || '状态未暴露'}）。请在首页重新检测。`);
     }
     if (mode.enabled === enabled) return;
-    const button = page.locator('[aria-pressed]').filter({ hasText: REASONING_NAME });
-    if (await button.count() !== 1 || !await button.isVisible()) {
-      throw new BrowserBridgeError('reasoning_state_unknown', 400, '深度思考开关不唯一或不可操作，已停止发送。');
-    }
     checkRequest(signal, deadline);
-    await within(button.click(), signal, deadline);
+    const changed = await within(page.evaluate(reasoningControl, { action: 'set', enabled }), signal, deadline);
+    if (!changed.clicked && !changed.alreadySet) {
+      throw new BrowserBridgeError('reasoning_state_unknown', 400, '深度思考开关不可操作或状态发生变化，已停止发送。');
+    }
     const modeDeadline = Math.min(deadline, Date.now() + 3000);
     while (Date.now() < modeDeadline) {
       mode = await within(this._readReasoningMode(page), signal, deadline);

@@ -9,6 +9,7 @@ import org.json.*;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.text.SimpleDateFormat;
 
 /** The local trusted engine and the remote page live in separate WebViews.
  * Only packaged, non-navigable assets have a native JavascriptInterface. */
@@ -23,6 +24,17 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
     private final Map<Integer, Runnable> evaluations = new HashMap<>();
     private final PowerManager.WakeLock wakeLock;
     public Runnable onChange;
+    public Runnable onLayout;
+    public interface UiHost { void action(String action, JSONObject argument); }
+    public UiHost uiHost;
+    public JSONObject uiLayout = new JSONObject();
+    public boolean uiDark, hasInspection, loggedIn, needsVerification, inspecting, probeRunning;
+    public String testStatus = "untested", lastError = "";
+    private JSONObject reasoningMode = new JSONObject();
+    private final List<JSONObject> activities = new ArrayList<>();
+    private final Set<String> completions = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
+    private int requests;
+    private long lastInspection;
     public String state = "准备中";
     public boolean ready, running;
     private boolean requestedStart, destroyed;
@@ -56,8 +68,9 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
                 String asset;
                 if ("/engine.html".equals(uri.getPath())) asset = "engine.html";
                 else if ("/engine.bundle.js".equals(uri.getPath())) asset = "engine.bundle.js";
+                else if ("/app.css".equals(uri.getPath())) asset = "app.css";
                 else return blocked();
-                try { return new WebResourceResponse(asset.endsWith(".js") ? "application/javascript" : "text/html", "UTF-8", context.getAssets().open(asset)); }
+                try { return new WebResourceResponse(asset.endsWith(".js") ? "application/javascript" : asset.endsWith(".css") ? "text/css" : "text/html", "UTF-8", context.getAssets().open(asset)); }
                 catch (IOException e) { return blocked(); }
             }
         });
@@ -69,6 +82,33 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
     private void changed() { if (onChange != null) onChange.run(); }
     public void attachContext(Context activity) { browserContext.setBaseContext(activity); }
     public void detachContext() { browserContext.setBaseContext(context); }
+    public void publishUi() { try { js("BridgeDashboard.render(" + snapshot() + ")"); } catch (JSONException ignored) {} }
+    public JSONObject snapshot() throws JSONException {
+        return new JSONObject().put("version", "0.2.0").put("ready", ready).put("running", running)
+            .put("loggedIn", loggedIn).put("hasInspection", hasInspection).put("needsVerification", needsVerification)
+            .put("inspecting", inspecting).put("reasoningMode", reasoningMode).put("busy", !completions.isEmpty())
+            .put("probeRunning", probeRunning).put("testStatus", testStatus).put("requests", requests)
+            .put("lastError", lastError).put("activities", new JSONArray(activities));
+    }
+    public void inspectPage() {
+        if (!ready || destroyed || inspecting || System.currentTimeMillis() - lastInspection < 1000) return;
+        inspecting = true; lastInspection = System.currentTimeMillis(); changed();
+        js("AndroidEngine.inspect()");
+    }
+    public void event(String text) {
+        try { activities.add(new JSONObject().put("text", text).put("time", new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date()))); }
+        catch (JSONException ignored) {}
+        while (activities.size() > 12) activities.remove(0);
+    }
+    public void beginProbe() { probeRunning = true; event("开始真实网页接口测试"); changed(); }
+    public void finishProbe(boolean thinking, boolean passed, String message, int reasoningChars) {
+        probeRunning = false; testStatus = passed ? "passed" : "failed";
+        if (!passed) lastError = message;
+        event((thinking ? "思考模式测试" : "接口自测") + (passed ? "通过" : "未通过")); changed();
+        try { js("BridgeDashboard.result(" + new JSONObject().put("thinking", thinking).put("passed", passed).put("message", message).put("reasoningChars", reasoningChars) + ")"); } catch (JSONException ignored) {}
+        main.postDelayed(() -> inspectPage(), 350);
+    }
+    public void toast(String message) { js("BridgeDashboard.toast(" + JSONObject.quote(message) + ")"); }
 
     private void createBrowser() {
         browser = new WebView(browserContext);
@@ -93,6 +133,7 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
                     if (deepseek(url)) rpc(id, true, JSONObject.NULL); else fail(id, "UNEXPECTED_PAGE", "网页离开了 DeepSeek。");
                 }
                 state = running ? "桥运行中 · 网页已载入" : "网页已载入"; changed();
+                if (completions.isEmpty()) main.postDelayed(() -> inspectPage(), 700);
             }
             @Override public boolean onRenderProcessGone(WebView view, RenderProcessGoneDetail detail) {
                 for (String id : new ArrayList<>(exchanges.keySet())) cancel(id);
@@ -118,7 +159,7 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
         if (!ready || running || destroyed) return;
         try { server = new LoopbackServer(8787, apiKey, this); running = true; state = "桥已启动 · 127.0.0.1:8787"; }
         catch (IOException e) { state = "启动失败：8787 端口被占用"; }
-        changed();
+        event(running ? "本机服务已启动" : "本机端口启动失败"); changed();
     }
     public void stop() {
         requestedStart = false; running = false;
@@ -126,8 +167,9 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
         server = null;
         for (String id : new ArrayList<>(exchanges.keySet())) cancel(id);
         exchanges.clear();
+        completions.clear();
         if (wakeLock.isHeld()) wakeLock.release();
-        state = "桥已停止"; changed();
+        state = "桥已停止"; event("本机服务已停止"); changed();
     }
     private void js(String source) { if (!destroyed && ready) engine.evaluateJavascript(source, null); }
     private void rpc(int id, boolean ok, Object value) {
@@ -146,13 +188,14 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
         exchanges.put(id, exchange);
         main.post(() -> {
             if (!ready || !running || destroyed) { exchanges.remove(id); exchange.response(503, "{\"error\":{\"code\":\"engine_unavailable\",\"message\":\"Open the Android bridge app.\"}}"); return; }
-            if (path.equals("/v1/chat/completions")) { wakeLock.acquire(11 * 60 * 1000L); state = "桥运行中 · 正在处理请求"; changed(); }
+            if (path.equals("/v1/chat/completions")) { completions.add(id); requests++; wakeLock.acquire(11 * 60 * 1000L); state = "桥运行中 · 正在处理请求"; event("收到客户端接口请求"); changed(); }
             js("AndroidEngine.receive(" + request + ")");
         });
     }
     @Override public void cancel(String id) {
         exchanges.remove(id);
-        main.post(() -> { js("AndroidEngine.cancel(" + JSONObject.quote(id) + ")"); if (exchanges.isEmpty() && wakeLock.isHeld()) wakeLock.release(); });
+        completions.remove(id);
+        main.post(() -> { js("AndroidEngine.cancel(" + JSONObject.quote(id) + ")"); if (exchanges.isEmpty() && wakeLock.isHeld()) wakeLock.release(); changed(); });
     }
 
     private void evaluate(int id, JSONObject argument) throws JSONException {
@@ -188,7 +231,32 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
 
     public final class NativeInterface {
         @JavascriptInterface public void ready() {
-            main.post(() -> { if (!trustedEngine()) return; ready = true; state = "引擎就绪"; if (requestedStart) start(); changed(); });
+            main.post(() -> { if (!trustedEngine()) return; ready = true; state = "引擎就绪"; if (requestedStart) start(); changed(); main.postDelayed(() -> inspectPage(), 1200); });
+        }
+        @JavascriptInterface public void uiAction(String action, String raw) {
+            main.post(() -> {
+                if (!trustedEngine() || destroyed) return;
+                try { JSONObject argument = new JSONObject(raw); if (action.equals("theme")) uiDark = argument.optBoolean("dark"); if (uiHost != null) uiHost.action(action, argument); }
+                catch (JSONException ignored) {}
+            });
+        }
+        @JavascriptInterface public void uiLayout(String raw) {
+            main.post(() -> { if (!trustedEngine() || destroyed) return; try { uiLayout = new JSONObject(raw); if (onLayout != null) onLayout.run(); } catch (JSONException ignored) {} });
+        }
+        @JavascriptInterface public void reportUi(String kind, String raw) {
+            main.post(() -> {
+                if (!trustedEngine() || destroyed) return;
+                try {
+                    if (kind.equals("inspectionStart")) inspecting = true;
+                    else if (kind.equals("inspection")) {
+                        JSONObject status = new JSONObject(raw); inspecting = false; hasInspection = true;
+                        loggedIn = status.optBoolean("loggedIn"); needsVerification = status.optBoolean("needsVerification");
+                        reasoningMode = status.optJSONObject("reasoningMode"); if (reasoningMode == null) reasoningMode = new JSONObject();
+                        event(loggedIn ? "网页登录已确认" : needsVerification ? "网页需要手动验证" : "网页登录待确认");
+                    } else { inspecting = false; lastError = "暂时无法读取网页状态"; }
+                    changed();
+                } catch (JSONException ignored) { inspecting = false; changed(); }
+            });
         }
         @JavascriptInterface public void timer(int id, long delay) {
             main.post(() -> {
@@ -215,7 +283,7 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
                         if (!deepseek(browser.getUrl())) { fail(id, "UNEXPECTED_PAGE", "网页来源不匹配。"); return; }
                         browser.requestFocus(); browser.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER)); browser.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_ENTER)); rpc(id, true, true);
                     } else if (operation.equals("resetBrowser")) { resetBrowser(); rpc(id, true, true); }
-                    else if (operation.equals("showBrowser")) { changed(); rpc(id, true, true); }
+                    else if (operation.equals("showBrowser")) { js("BridgeDashboard.navigate('web')"); changed(); rpc(id, true, true); }
                     else fail(id, "INVALID_OPERATION", "不支持的页面操作。");
                 } catch (Exception e) { fail(id, "PAGE_CHANGED", "无法完成页面操作。"); }
             });
@@ -226,8 +294,8 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
                 JSONObject payload = new JSONObject(raw);
                 if (kind.equals("stream")) exchange.stream();
                 else if (kind.equals("data")) exchange.data(payload.getString("text"));
-                else if (kind.equals("response")) { exchange.response(payload.getInt("status"), payload.getJSONObject("body").toString()); exchanges.remove(id); }
-                else if (kind.equals("end")) { exchange.end(); exchanges.remove(id); }
+                else if (kind.equals("response")) { exchange.response(payload.getInt("status"), payload.getJSONObject("body").toString()); exchanges.remove(id); completions.remove(id); }
+                else if (kind.equals("end")) { exchange.end(); exchanges.remove(id); completions.remove(id); }
                 main.post(() -> { if (exchanges.isEmpty()) { if (wakeLock.isHeld()) wakeLock.release(); state = running ? "桥运行中 · 等待请求" : "桥已停止"; changed(); } });
             } catch (JSONException e) { exchange.response(500, "{\"error\":{\"code\":\"native_transport_error\"}}"); exchanges.remove(id); }
         }
