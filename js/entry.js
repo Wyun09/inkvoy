@@ -47,5 +47,11 @@ globalThis.AndroidEngine = {
     else target.reject(Object.assign(new Error(response.error?.message || 'Android WebView 操作失败。'), { code: response.error?.code || 'PAGE_CHANGED', status: response.error?.status || 502 }));
   },
 };
-initDashboard();
-NativeBridge.ready();
+try {
+  initDashboard();
+  NativeBridge.ready();
+} catch (error) {
+  // Native fallback remains usable even if the packaged UI cannot boot.
+  NativeBridge.startupError?.(String(error?.message || '界面初始化失败').slice(0, 240));
+  throw error;
+}

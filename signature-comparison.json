@@ -1,6 +1,6 @@
 {
-  "oldVersion": "0.1.0",
-  "newVersion": "0.2.0",
+  "oldVersion": "0.2.0",
+  "newVersion": "0.2.1",
   "sameSigner": true,
   "certificateSha256": "cc8f15b569d5e813c68d49f4fa17d19afbe6f7526ef5dbdade88e317116c2b59"
 }

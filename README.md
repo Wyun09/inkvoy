@@ -1,4 +1,4 @@
-# DeepSeek 安卓本机桥 v0.2.0
+# DeepSeek 安卓本机桥 v0.2.1
 
 在安卓手机上登录 DeepSeek 网页，并把网页操作转换成同一部手机可以调用的 OpenAI Chat Completions 接口。运行链路全部在手机上：
 
@@ -12,11 +12,11 @@ https://chat.deepseek.com/
 
 运行时不需要电脑、Termux、Root、ADB 或桌面 Harness。需要互联网连接 DeepSeek。安卓客户端若要执行工具，须具备它自己的工具执行能力；本桥只交出经过校验的工具请求。
 
-**当前为界面与开关识别更新 v0.2.0。97 项 JS/DOM/UI 测试、15 项原生 HTTP 检查与 APK 签名校验通过。** 新版包含概览、DeepSeek、连接三个页面，以及明暗主题、真实状态、独立网页登录区域和诊断。尚未在用户手机实测；先分屏保持应用可见，后台与锁屏行为需设备验证。详见 UI_UPGRADE.md。
+**当前为按钮初始化修复与 Logo 更新 v0.2.1。101 项 JS/DOM/UI 测试、15 项原生 HTTP 检查与 APK 签名校验通过。** 新版包含概览、DeepSeek、连接三个页面，以及明暗主题、真实状态、独立网页登录区域和诊断。尚未在用户手机实测；先分屏保持应用可见，后台与锁屏行为需设备验证。按钮修复详见 FIX_0.2.1.md；此前界面升级见 UI_UPGRADE.md。
 
 ## 安装与使用
 
-1. 将 `deepseek-android-bridge-v0.2.0.apk` 传到手机并安装。支持 Android 8.0 / API 26 及以上；要求 Android System WebView/Chrome 的 Chromium 版本达到 120。版本过低时应用会提示更新。
+1. 将 `deepseek-android-bridge-v0.2.1.apk` 传到手机并安装。支持 Android 8.0 / API 26 及以上；要求 Android System WebView/Chrome 的 Chromium 版本达到 120。版本过低时应用会提示更新。
 2. 打开「DeepSeek 本机桥」。应用会启动本机接口并显示概览；底部导航可以进入 DeepSeek 网页和连接设置。允许通知后可以从通知栏回到应用。
 3. 进入「DeepSeek」页，在应用内的网页手动登录 DeepSeek，手动完成短信与网站要求的人机验证。手机拥有独立登录状态，不会导入电脑会话。
 4. 回到「概览」，点「重新检测」，再点「接口自测」卡片。后者会真实发送“只回复 ANDROID_BRIDGE_OK”，必须看到成功结果才算手机首次基本验收通过。
@@ -71,8 +71,14 @@ Android 的 WebView 是应用内网页组件，后台服务需遵循系统的前
 
 第三方组件许可证见 `THIRD_PARTY_NOTICES.md`，也包含在 APK 的 `assets/NOTICE.txt` 中。
 
-## v0.2.0 界面与思考开关
+## v0.2.1 界面与思考开关
 
 概览中的“深度思考”卡片会显示已开启、已关闭、待登录或未识别；点开可重新检测或“开启并测试”。连接页提供不含密钥与正文的诊断复制。新版沿用 v0.1.0 包名和签名，可直接覆盖安装，无需卸载；原有密钥与登录数据保存在同一应用数据目录。
 
 预览见 preview/，为打包资源的桌面浏览器渲染，使用模拟状态。详细变更和测试边界见 UI_UPGRADE.md 与 VERIFICATION.md。
+
+## v0.2.1 按钮修复与新 Logo
+
+已修复本地 WebView 的 DOM Storage 未启用和界面主题读取异常导致按钮未绑定的问题。即使存储被关闭、拒绝或写满，主要界面操作仍可用。新增原生启动错误提示与重新载入入口。新 Logo 使用内置图像工具生成，已接入桌面图标和应用内标识；图像模型版本未核实，原图与提示词见 branding/。
+
+源码包中已包含图标；需要从生成原图重新导出 Android 密度资源时运行 scripts/build-icons.ps1。新版本沿用旧包名和签名，无需卸载。

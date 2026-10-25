@@ -86,7 +86,7 @@ public final class LoopbackServer implements Closeable {
             String host = headers.getOrDefault("host", "");
             if (!host.matches("(?i)(127\\.0\\.0\\.1|localhost)(:" + port() + ")?")) { json(output, 403, error("invalid_host", "Only local hosts are accepted.")); return; }
             if (headers.containsKey("origin")) { json(output, 403, error("browser_origin_denied", "Use a native client or its backend.")); return; }
-            if (method.equals("GET") && path.equals("/health")) { json(output, 200, "{\"status\":\"ok\",\"version\":\"0.2.0-android\"}"); return; }
+            if (method.equals("GET") && path.equals("/health")) { json(output, 200, "{\"status\":\"ok\",\"version\":\"0.2.1-android\"}"); return; }
             if (method.equals("GET") && (path.equals("/") || path.equals("/v1") || path.equals("/v1/"))) { json(output, 200, "{\"status\":\"ok\",\"model\":\"deepseek-web\"}"); return; }
             String authorization = headers.getOrDefault("authorization", "");
             byte[] supplied = authorization.regionMatches(true, 0, "Bearer ", 0, 7) ? authorization.substring(7).getBytes(StandardCharsets.UTF_8) : new byte[0];

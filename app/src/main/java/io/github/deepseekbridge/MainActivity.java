@@ -97,6 +97,13 @@ public final class MainActivity extends Activity {
     }
     private void handleAction(String action, JSONObject argument) {
         if (service == null) return;
+        if (action.equals("startupError")) {
+            new AlertDialog.Builder(this).setTitle("界面初始化失败")
+                .setMessage(argument.optString("message", "请重新载入界面。"))
+                .setPositiveButton("重新载入", (dialog, which) -> { if (service != null) service.runtime.reloadUi(); })
+                .setNegativeButton("关闭提示", null).show();
+            return;
+        }
         if (action.equals("theme")) { applyTheme(argument.optBoolean("dark")); return; }
         if (action.equals("start")) startForegroundService(new Intent(this, BridgeService.class));
         else if (action.equals("stop")) service.stopBridge();

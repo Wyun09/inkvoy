@@ -56,11 +56,19 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
         createBrowser();
         engine = new WebView(context);
         engine.getSettings().setJavaScriptEnabled(true);
+        engine.getSettings().setDomStorageEnabled(true);
+        engine.getSettings().setUseWideViewPort(true);
         engine.getSettings().setAllowFileAccess(false);
         engine.getSettings().setAllowContentAccess(false);
         engine.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
         engine.addJavascriptInterface(new NativeInterface(), "NativeBridge");
         engine.setWebViewClient(new WebViewClient() {
+            @Override public void onPageFinished(WebView view, String url) {
+                if (!trustedEngine()) return;
+                main.postDelayed(() -> {
+                    if (!destroyed && !ready) reportStartupError("界面未完成初始化，请重新载入。若问题重复，请保留此提示文字。");
+                }, 10000);
+            }
             @Override public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) { return true; }
             @Override public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
                 Uri uri = request.getUrl();
@@ -69,14 +77,22 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
                 if ("/engine.html".equals(uri.getPath())) asset = "engine.html";
                 else if ("/engine.bundle.js".equals(uri.getPath())) asset = "engine.bundle.js";
                 else if ("/app.css".equals(uri.getPath())) asset = "app.css";
+                else if ("/logo.png".equals(uri.getPath())) asset = "logo.png";
                 else return blocked();
-                try { return new WebResourceResponse(asset.endsWith(".js") ? "application/javascript" : asset.endsWith(".css") ? "text/css" : "text/html", "UTF-8", context.getAssets().open(asset)); }
+                try { return new WebResourceResponse(asset.endsWith(".png") ? "image/png" : asset.endsWith(".js") ? "application/javascript" : asset.endsWith(".css") ? "text/css" : "text/html", asset.endsWith(".png") ? null : "UTF-8", context.getAssets().open(asset)); }
                 catch (IOException e) { return blocked(); }
             }
         });
         engine.loadUrl("https://bridge.local/engine.html");
     }
     private static WebResourceResponse blocked() { return new WebResourceResponse("text/plain", "UTF-8", 403, "Forbidden", Collections.emptyMap(), new ByteArrayInputStream(new byte[0])); }
+    private boolean startupErrorReported;
+    private void reportStartupError(String message) {
+        if (startupErrorReported || destroyed) return;
+        startupErrorReported = true; lastError = message;
+        if (uiHost != null) try { uiHost.action("startupError", new JSONObject().put("message", message)); } catch (JSONException ignored) {}
+    }
+    public void reloadUi() { if (!ready && !destroyed) { startupErrorReported = false; engine.reload(); } }
     private boolean trustedEngine() { return "https://bridge.local/engine.html".equals(engine.getUrl()); }
     private static boolean deepseek(String url) { if (url == null) return false; Uri uri = Uri.parse(url); return "https".equals(uri.getScheme()) && "chat.deepseek.com".equals(uri.getHost()) && (uri.getPort() == -1 || uri.getPort() == 443); }
     private void changed() { if (onChange != null) onChange.run(); }
@@ -84,7 +100,7 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
     public void detachContext() { browserContext.setBaseContext(context); }
     public void publishUi() { try { js("BridgeDashboard.render(" + snapshot() + ")"); } catch (JSONException ignored) {} }
     public JSONObject snapshot() throws JSONException {
-        return new JSONObject().put("version", "0.2.0").put("ready", ready).put("running", running)
+        return new JSONObject().put("version", "0.2.1").put("ready", ready).put("running", running)
             .put("loggedIn", loggedIn).put("hasInspection", hasInspection).put("needsVerification", needsVerification)
             .put("inspecting", inspecting).put("reasoningMode", reasoningMode).put("busy", !completions.isEmpty())
             .put("probeRunning", probeRunning).put("testStatus", testStatus).put("requests", requests)
@@ -230,6 +246,9 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
     }
 
     public final class NativeInterface {
+        @JavascriptInterface public void startupError(String message) {
+            main.post(() -> { if (trustedEngine()) reportStartupError(message); });
+        }
         @JavascriptInterface public void ready() {
             main.post(() -> { if (!trustedEngine()) return; ready = true; state = "引擎就绪"; if (requestedStart) start(); changed(); main.postDelayed(() -> inspectPage(), 1200); });
         }

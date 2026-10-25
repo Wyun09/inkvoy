@@ -30,9 +30,15 @@ export function initDashboard() {
   if (!document.getElementById('app')) return;
   const $ = id => document.getElementById(id);
   document.querySelectorAll('[data-icon]').forEach(node => icon(node, node.dataset.icon));
-  let state = { ready: false, running: false, loggedIn: false, hasInspection: false, inspecting: false, busy: false, testStatus: 'untested', reasoningMode: { enabled: null }, activities: [], version: '0.2.0' };
+  let state = { ready: false, running: false, loggedIn: false, hasInspection: false, inspecting: false, busy: false, testStatus: 'untested', reasoningMode: { enabled: null }, activities: [], version: '0.2.1' };
   let tab = 'home', toastTimer, modal = false, previousFocus;
-  let theme = localStorage.getItem('bridge-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  // Android WebView disables DOM storage by default. Preferences are optional:
+  // an unavailable, blocked or full store must never stop event binding/boot.
+  let theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  try {
+    const saved = window.localStorage?.getItem('bridge-theme');
+    if (saved === 'dark' || saved === 'light') theme = saved;
+  } catch { /* Use the system theme when persistent storage is unavailable. */ }
   function native(action, payload = {}) {
     if (window.NativeBridge?.uiAction) NativeBridge.uiAction(action, JSON.stringify(payload));
     else toast('此操作需要在安卓应用中使用');
@@ -41,7 +47,8 @@ export function initDashboard() {
     theme = value; document.body.classList.toggle('dark', value === 'dark');
     icon($('theme'), value === 'dark' ? 'sun' : 'moon');
     $('theme').setAttribute('aria-label', value === 'dark' ? '切换为浅色主题' : '切换为深色主题');
-    localStorage.setItem('bridge-theme', value); native('theme', { dark: value === 'dark' });
+    try { window.localStorage?.setItem('bridge-theme', value); } catch { /* Theme still works for this session. */ }
+    native('theme', { dark: value === 'dark' });
   }
   function layout() {
     const slot = $('web-slot').getBoundingClientRect();
@@ -92,7 +99,7 @@ export function initDashboard() {
     sheet('在手机上，完成连接', [paragraph('01  打开 DeepSeek 页面，手动登录并完成网站要求的验证。'), paragraph('02  回到概览，运行一次接口自测。通过后在连接页复制配置。'), paragraph('03  在同一部手机的兼容客户端填写本机地址、模型和密钥。电脑无需参与运行。'), paragraph('建议分屏保持本应用可见。锁屏与长期后台运行仍需在你的设备上验证。'), paragraph('这是第三方适配应用。账号登录由 DeepSeek 网页处理。')], [{ label: '打开 DeepSeek', run: () => { closeSheet(); navigate('web'); } }, { label: '连接配置', run: () => { closeSheet(); navigate('connect'); } }], 'bridge');
   }
   function diagnostics() {
-    sheet('连接诊断', [row('应用版本', state.version || '0.2.0'), row('本机服务', state.running ? '已启动' : '未启动'), row('网页登录', state.hasInspection ? state.loggedIn ? '已登录' : '需要登录或验证' : '尚未检测'), row('思考开关', state.reasoningMode?.source || '待检测'), row('接口请求', String(state.requests || 0) + ' 次'), row('当前任务', state.busy ? '处理中' : '空闲'), paragraph(state.lastError || '诊断不包含 API 密钥、验证码和聊天正文。')], [{ label: '复制诊断信息', run: () => native('copy', { field: 'diagnostics' }) }, { label: '重新检测', disabled: state.inspecting, run: () => { closeSheet(); native('inspect'); } }], 'activity');
+    sheet('连接诊断', [row('应用版本', state.version || '0.2.1'), row('本机服务', state.running ? '已启动' : '未启动'), row('网页登录', state.hasInspection ? state.loggedIn ? '已登录' : '需要登录或验证' : '尚未检测'), row('思考开关', state.reasoningMode?.source || '待检测'), row('接口请求', String(state.requests || 0) + ' 次'), row('当前任务', state.busy ? '处理中' : '空闲'), paragraph(state.lastError || '诊断不包含 API 密钥、验证码和聊天正文。')], [{ label: '复制诊断信息', run: () => native('copy', { field: 'diagnostics' }) }, { label: '重新检测', disabled: state.inspecting, run: () => { closeSheet(); native('inspect'); } }], 'activity');
   }
   function result(result) {
     const ok = result.passed === true;
@@ -123,7 +130,7 @@ export function initDashboard() {
     $('web-status').textContent = state.busy ? '正在处理请求，请保持网页连接' : '在这里登录并管理你的网页会话';
     $('web-login-chip').textContent = loggedIn ? '网页登录有效' : state.needsVerification ? '需要手动验证' : '登录状态待确认';
     $('web-think-chip').textContent = typeof thought.enabled === 'boolean' ? thought.enabled ? '深度思考已开启' : '深度思考已关闭' : '检测深度思考';
-    $('app-version').textContent = state.version || '0.2.0';
+    $('app-version').textContent = state.version || '0.2.1';
     const activities = (state.activities || []).slice(-4).reverse();
     if (activities.length) {
       $('activity-list').replaceChildren(...activities.map(item => {

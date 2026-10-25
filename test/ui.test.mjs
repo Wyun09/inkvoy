@@ -7,6 +7,8 @@ test('packaged UI routes, real state labels, private-key handling and touch size
   t.after(() => browser.close());
   const { context, page } = await uiHarness(browser, { width: 320, height: 700 }); t.after(() => context.close());
   await page.evaluate(state => BridgeDashboard.render(state), readyState);
+  await page.locator('.brand-mark img').evaluate(img => img.decode());
+  assert.ok(await page.locator('.brand-mark img').evaluate(img => img.naturalWidth >= 256));
   assert.equal(await page.locator('#login-value').textContent(), '已登录');
   assert.equal(await page.locator('#reasoning-value').textContent(), '已关闭');
   assert.equal(await page.locator('#test-value').textContent(), '已通过');

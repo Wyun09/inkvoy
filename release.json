@@ -1,22 +1,27 @@
 {
-  "version": "0.2.0",
-  "versionCode": 2,
+  "version": "0.2.1",
+  "versionCode": 3,
   "package": "io.github.deepseekbridge",
-  "apk": "deepseek-android-bridge-v0.2.0.apk",
-  "bytes": 131807,
-  "sha256": "ebd17544d028a5b2a075cf1eafca537b59b5884dda1a46777cf1bf55ebcb1a7c",
+  "apk": "deepseek-android-bridge-v0.2.1.apk",
+  "bytes": 414999,
+  "sha256": "01a5c20de42e953ddb2f87c6954645089dceb17c8e8fc978818aab96259a1416",
   "unitTests": {
-    "pass": 97,
+    "pass": 101,
     "fail": 0,
     "skipped": 0
   },
+  "startupRegressionTests": 4,
   "reasoningTests": 28,
-  "uiBehaviorTests": 2,
   "nativeHttpAssertions": 15,
-  "sameSignerAs010": true,
+  "sameSignerAs020": true,
   "minSdk": 26,
   "targetSdk": 35,
-  "uiScreenshots": "packaged assets rendered in desktop Edge with simulated native state",
+  "logo": {
+    "method": "built-in image_gen; no hand-drawn logo geometry",
+    "modelVersionVerified": false,
+    "source": "branding/logo-source.png"
+  },
   "androidDeviceVerified": false,
-  "realAccountMobileVerified": false
+  "realAccountMobileVerified": false,
+  "uiScreenshots": "packaged assets rendered in desktop Edge with simulated native state"
 }

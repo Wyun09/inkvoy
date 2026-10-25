@@ -2,3 +2,6 @@
 /* Keep labels readable and every interactive target at least 44 CSS pixels. */
 button{min-height:44px!important;min-width:44px!important}
 .subtitle{font-size:13px}.service-pill{font-size:11px}.hero>p{font-size:12px}.hero-actions button{font-size:12px}.health-strip strong{font-size:14px}.health-strip button>span:last-child{font-size:11px}.section-heading h2{font-size:16px}.text-button{font-size:12px}.action-row strong{font-size:14px}.action-row>div>span{font-size:12px}.endpoint-card code,.config-row code{font-size:12px}.endpoint-caption{font-size:11px}.tip strong{font-size:12px}.tip div>span{font-size:11px}.activity-list,.empty-activity{font-size:12px}.activity-item>time{font-size:10px}.bottom-nav button{font-size:11px}.config-label{font-size:12px}.config-row>p{font-size:11px}.quiet-note p{font-size:12px}.capabilities strong{font-size:13px}.capabilities p{font-size:11px}.web-toolbar p{font-size:12px}.web-chips>span,.web-chips>button{font-size:11px}.sheet p{font-size:13px}.sheet-actions button{font-size:13px}
+
+/* Generated application identity; the mark is a packaged raster asset. */
+.brand-mark{background:transparent;box-shadow:none;overflow:hidden}.brand-mark img{width:100%;height:100%;display:block;object-fit:cover;border-radius:12px}

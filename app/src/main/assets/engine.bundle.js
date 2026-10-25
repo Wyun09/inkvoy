@@ -8750,9 +8750,14 @@ data: [DONE]
     if (!document.getElementById("app")) return;
     const $ = (id) => document.getElementById(id);
     document.querySelectorAll("[data-icon]").forEach((node) => icon(node, node.dataset.icon));
-    let state = { ready: false, running: false, loggedIn: false, hasInspection: false, inspecting: false, busy: false, testStatus: "untested", reasoningMode: { enabled: null }, activities: [], version: "0.2.0" };
+    let state = { ready: false, running: false, loggedIn: false, hasInspection: false, inspecting: false, busy: false, testStatus: "untested", reasoningMode: { enabled: null }, activities: [], version: "0.2.1" };
     let tab = "home", toastTimer, modal = false, previousFocus;
-    let theme = localStorage.getItem("bridge-theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    let theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    try {
+      const saved = window.localStorage?.getItem("bridge-theme");
+      if (saved === "dark" || saved === "light") theme = saved;
+    } catch {
+    }
     function native(action, payload = {}) {
       if (window.NativeBridge?.uiAction) NativeBridge.uiAction(action, JSON.stringify(payload));
       else toast("\u6B64\u64CD\u4F5C\u9700\u8981\u5728\u5B89\u5353\u5E94\u7528\u4E2D\u4F7F\u7528");
@@ -8762,7 +8767,10 @@ data: [DONE]
       document.body.classList.toggle("dark", value === "dark");
       icon($("theme"), value === "dark" ? "sun" : "moon");
       $("theme").setAttribute("aria-label", value === "dark" ? "\u5207\u6362\u4E3A\u6D45\u8272\u4E3B\u9898" : "\u5207\u6362\u4E3A\u6DF1\u8272\u4E3B\u9898");
-      localStorage.setItem("bridge-theme", value);
+      try {
+        window.localStorage?.setItem("bridge-theme", value);
+      } catch {
+      }
       native("theme", { dark: value === "dark" });
     }
     function layout() {
@@ -8853,7 +8861,7 @@ data: [DONE]
       } }], "bridge");
     }
     function diagnostics() {
-      sheet("\u8FDE\u63A5\u8BCA\u65AD", [row("\u5E94\u7528\u7248\u672C", state.version || "0.2.0"), row("\u672C\u673A\u670D\u52A1", state.running ? "\u5DF2\u542F\u52A8" : "\u672A\u542F\u52A8"), row("\u7F51\u9875\u767B\u5F55", state.hasInspection ? state.loggedIn ? "\u5DF2\u767B\u5F55" : "\u9700\u8981\u767B\u5F55\u6216\u9A8C\u8BC1" : "\u5C1A\u672A\u68C0\u6D4B"), row("\u601D\u8003\u5F00\u5173", state.reasoningMode?.source || "\u5F85\u68C0\u6D4B"), row("\u63A5\u53E3\u8BF7\u6C42", String(state.requests || 0) + " \u6B21"), row("\u5F53\u524D\u4EFB\u52A1", state.busy ? "\u5904\u7406\u4E2D" : "\u7A7A\u95F2"), paragraph(state.lastError || "\u8BCA\u65AD\u4E0D\u5305\u542B API \u5BC6\u94A5\u3001\u9A8C\u8BC1\u7801\u548C\u804A\u5929\u6B63\u6587\u3002")], [{ label: "\u590D\u5236\u8BCA\u65AD\u4FE1\u606F", run: () => native("copy", { field: "diagnostics" }) }, { label: "\u91CD\u65B0\u68C0\u6D4B", disabled: state.inspecting, run: () => {
+      sheet("\u8FDE\u63A5\u8BCA\u65AD", [row("\u5E94\u7528\u7248\u672C", state.version || "0.2.1"), row("\u672C\u673A\u670D\u52A1", state.running ? "\u5DF2\u542F\u52A8" : "\u672A\u542F\u52A8"), row("\u7F51\u9875\u767B\u5F55", state.hasInspection ? state.loggedIn ? "\u5DF2\u767B\u5F55" : "\u9700\u8981\u767B\u5F55\u6216\u9A8C\u8BC1" : "\u5C1A\u672A\u68C0\u6D4B"), row("\u601D\u8003\u5F00\u5173", state.reasoningMode?.source || "\u5F85\u68C0\u6D4B"), row("\u63A5\u53E3\u8BF7\u6C42", String(state.requests || 0) + " \u6B21"), row("\u5F53\u524D\u4EFB\u52A1", state.busy ? "\u5904\u7406\u4E2D" : "\u7A7A\u95F2"), paragraph(state.lastError || "\u8BCA\u65AD\u4E0D\u5305\u542B API \u5BC6\u94A5\u3001\u9A8C\u8BC1\u7801\u548C\u804A\u5929\u6B63\u6587\u3002")], [{ label: "\u590D\u5236\u8BCA\u65AD\u4FE1\u606F", run: () => native("copy", { field: "diagnostics" }) }, { label: "\u91CD\u65B0\u68C0\u6D4B", disabled: state.inspecting, run: () => {
         closeSheet();
         native("inspect");
       } }], "activity");
@@ -8891,7 +8899,7 @@ data: [DONE]
       $("web-status").textContent = state.busy ? "\u6B63\u5728\u5904\u7406\u8BF7\u6C42\uFF0C\u8BF7\u4FDD\u6301\u7F51\u9875\u8FDE\u63A5" : "\u5728\u8FD9\u91CC\u767B\u5F55\u5E76\u7BA1\u7406\u4F60\u7684\u7F51\u9875\u4F1A\u8BDD";
       $("web-login-chip").textContent = loggedIn ? "\u7F51\u9875\u767B\u5F55\u6709\u6548" : state.needsVerification ? "\u9700\u8981\u624B\u52A8\u9A8C\u8BC1" : "\u767B\u5F55\u72B6\u6001\u5F85\u786E\u8BA4";
       $("web-think-chip").textContent = typeof thought.enabled === "boolean" ? thought.enabled ? "\u6DF1\u5EA6\u601D\u8003\u5DF2\u5F00\u542F" : "\u6DF1\u5EA6\u601D\u8003\u5DF2\u5173\u95ED" : "\u68C0\u6D4B\u6DF1\u5EA6\u601D\u8003";
-      $("app-version").textContent = state.version || "0.2.0";
+      $("app-version").textContent = state.version || "0.2.1";
       const activities = (state.activities || []).slice(-4).reverse();
       if (activities.length) {
         $("activity-list").replaceChildren(...activities.map((item) => {
@@ -9026,6 +9034,11 @@ data: [DONE]
       else target.reject(Object.assign(new Error(response.error?.message || "Android WebView \u64CD\u4F5C\u5931\u8D25\u3002"), { code: response.error?.code || "PAGE_CHANGED", status: response.error?.status || 502 }));
     }
   };
-  initDashboard();
-  NativeBridge.ready();
+  try {
+    initDashboard();
+    NativeBridge.ready();
+  } catch (error) {
+    NativeBridge.startupError?.(String(error?.message || "\u754C\u9762\u521D\u59CB\u5316\u5931\u8D25").slice(0, 240));
+    throw error;
+  }
 })();

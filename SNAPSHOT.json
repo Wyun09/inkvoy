@@ -1,9 +1,9 @@
 {
-  "version": "0.2.0",
+  "version": "0.2.1",
   "restoredAt": "2026-10-25T12:54:46.173796+08:00",
-  "source": "android-020-baseline/deepseek-android-bridge",
-  "sourceTreeSha256": "7811983e151e3ad0cf981dc97a97732e90d65df2a114f06a2cfe9bce14e823a8",
-  "sourceFiles": 65,
+  "source": "android-021-baseline/deepseek-android-bridge",
+  "sourceTreeSha256": "a8abcb7d4b5b6284555788df93ae9e31ed6ce9743cfb4bff104f29f001dd64c0",
+  "sourceFiles": 78,
   "license": "GPL-3.0-only for project-owned code; third-party notices retained",
   "history": "Recovered release snapshot, imported on the actual restoration date. These are not fabricated original development commits.",
   "privatePathsExcluded": [],
