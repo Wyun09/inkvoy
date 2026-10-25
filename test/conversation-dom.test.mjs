@@ -96,7 +96,7 @@ const website = `<!doctype html><meta charset="utf-8"><form><textarea placeholde
   };
 </script>`;
 
-test('real DOM engine round trips reuse a task, switch between tasks, and send only new messages', async t => {
+test('real DOM engine survives a saved-state restart, switches tasks and sends only new messages', async t => {
   const context = await browser.newContext(); t.after(() => context.close());
   const page = await context.newPage(); let navigations = 0;
   await page.route('https://chat.deepseek.com/**', route => { navigations++; return route.fulfill({ contentType: 'text/html; charset=utf-8', body: website }); });
@@ -108,14 +108,18 @@ test('real DOM engine round trips reuse a task, switch between tasks, and send o
     throw new Error('Unexpected operation: ' + operation);
   };
   const backend = new MobileBrowser(rpc, { pollMs: 30 });
-  let resolve, seq = 0;
-  const engine = createEngine(backend, (_id, kind, payload) => { if (kind === 'response') resolve(payload); });
+  let resolve, seq = 0, savedState;
+  const emit = (_id, kind, payload) => { if (kind === 'response') resolve(payload); };
+  let engine = createEngine(backend, emit, { saveState: value => { savedState = structuredClone(value); } });
   const submit = messages => new Promise(done => { resolve = done; engine.receive({ id: String(++seq), path: '/v1/chat/completions', body: { model: 'deepseek-web', messages } }); });
   const a = { role: 'user', content: 'TASK_A_INITIAL' };
   let result = await submit([a]); assert.equal(result.status, 200); const first = result.body.choices[0].message; assert.equal(first.content, 'A1');
   const navBefore = navigations;
   result = await submit([a, first, { role: 'user', content: 'RESULT_A' }]); assert.equal(result.status, 200); assert.equal(result.body.choices[0].message.content, 'A2'); assert.equal(navigations, navBefore, 'Continuation on the current page must not navigate or create a chat');
   const second = result.body.choices[0].message;
+  const savedTask = engine.snapshot().tasks[0].id; engine.saveState();
+  engine = createEngine(new MobileBrowser(rpc, { pollMs: 30 }), emit, { initialState: savedState });
+  assert.equal(engine.snapshot().sessions.length, 1, 'New engine restores the saved webpage handle');
   result = await submit([{ role: 'user', content: 'TASK_B' }]); assert.equal(result.status, 200); assert.equal(result.body.choices[0].message.content, 'B1');
   result = await submit([a, first, { role: 'user', content: 'RESULT_A' }, second, { role: 'user', content: 'NEXT_A' }]);
   assert.equal(result.status, 200); assert.equal(result.body.choices[0].message.content, 'A3');
@@ -123,6 +127,7 @@ test('real DOM engine round trips reuse a task, switch between tasks, and send o
   const prompts = await page.evaluate(() => JSON.parse(sessionStorage.getItem('prompts')));
   assert.ok(!prompts[1].includes('TASK_A_INITIAL')); assert.ok(!prompts[3].includes('TASK_A_INITIAL')); assert.ok(!prompts[3].includes('TASK_B'));
   assert.equal(engine.conversationState().reused, 2); assert.equal(engine.conversationState().created, 2);
+  assert.equal(engine.snapshot().tasks.find(task => task.id === savedTask).requestCount, 3, 'Continued requests stay in the same task across restart');
   const third = result.body.choices[0].message;
   await page.locator('#log').evaluate(node => { node.innerHTML = ''; });
   result = await submit([a, first, { role: 'user', content: 'RESULT_A' }, second, { role: 'user', content: 'NEXT_A' }, third, { role: 'user', content: 'AFTER_LOST_HISTORY' }]);

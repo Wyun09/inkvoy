@@ -1,4 +1,4 @@
-# DeepSeek 安卓本机桥 v0.4.0
+# DeepSeek 安卓本机桥 v1.0.0
 
 在安卓手机上登录 DeepSeek 网页，并把网页操作转换成同一部手机可以调用的 OpenAI Chat Completions 和 Anthropic Messages 接口。两种协议共用端口、密钥、队列与网页登录状态。运行链路全部在手机上：
 
@@ -12,12 +12,12 @@ https://chat.deepseek.com/
 
 运行时不需要电脑、Termux、Root、ADB 或桌面 Harness。需要互联网连接 DeepSeek。安卓客户端若要执行工具，须具备它自己的工具执行能力；本桥只交出经过校验的工具请求。
 
-**当前 v0.4.0 加入任务会话复用：同一任务的追问和工具往返沿用网页对话，只发送新增消息。** 保留 Anthropic 协议适配、自动发送、内置智能搜索、按钮启动修复和新 Logo。概览页可查看复用次数并选择下次开始新会话。验证记录见 VERIFICATION.md，变更见 FIX_0.4.0.md。安卓真机与真实账号仍需设备验证。
+**v1.0.0 加入持久化任务工作台：会话重开后续接、真实阶段时间线、取消与有边界的重试、原协议结果重放、严格 Agent 完成协议，以及全新的米白墨绿 UI。** 保留两种协议、自动发送、内置智能搜索、思考检测和生成的 Logo。完整约定与边界见 [UPGRADE_1.0.0.md](UPGRADE_1.0.0.md)，证据见 [VERIFICATION.md](VERIFICATION.md)。安卓真机与真实账号仍需设备验证。
 
 ## 安装与使用
 
-1. 将 `deepseek-android-bridge-v0.4.0.apk` 传到手机并安装。支持 Android 8.0 / API 26 及以上；要求 Android System WebView/Chrome 的 Chromium 版本达到 120。版本过低时应用会提示更新。
-2. 打开「DeepSeek 本机桥」。应用会启动本机接口并显示概览；底部导航可以进入 DeepSeek 网页和连接设置。允许通知后可以从通知栏回到应用。
+1. 将 `deepseek-android-bridge-v1.0.0.apk` 传到手机并覆盖安装，无需卸载。支持 Android 8.0 / API 26 及以上；要求 Android System WebView/Chrome 的 Chromium 版本达到 120。版本过低时应用会提示更新。
+2. 打开「DeepSeek 本机桥」。应用会启动本机接口并显示概览；底部有概览、任务、DeepSeek、连接四个入口。允许通知后可以从通知栏回到应用。
 3. 进入「DeepSeek」页，在应用内的网页手动登录 DeepSeek，手动完成短信与网站要求的人机验证。手机拥有独立登录状态，不会导入电脑会话。
 4. 回到「概览」，点「重新检测」，再点「接口自测」卡片。后者会真实发送“只回复 ANDROID_BRIDGE_OK”，必须看到成功结果才算手机首次基本验收通过。
 5. 进入「连接」页，点 API 密钥右侧的复制图标，在手机上支持自定义 OpenAI 兼容 Chat Completions 接口的客户端中填写：
@@ -50,9 +50,13 @@ Claude Code 在「连接 → 复制 Claude Code 配置」中直接复制，使�
 - 自动发送会核对当前编辑器和待发正文，点击唯一可用发送按钮，再检查提交发生。同一提交最多点击一次；缺失、禁用、歧义或生成中明确报错。真实手机页面布局、文件上传与长期后台生命周期仍需设备验证。
 - 智能搜索默认开启，在「概览 → 智能搜索」可调整。每次发送前应用并确认网页开关，无需外部搜索模型/API。网页自行决定是否实际检索，请求可用 boolean `web_search` 覆盖本次策略。Anthropic `web_search_*` 声明映射为网页搜索，不提供其原生结果块、引用格式和高级过滤语义。
 - 默认自动复用：比对包含上次校验后 assistant 回复和工具 ID 的完整历史前缀；匹配时只发送新增消息、上传新增图片，工具定义未变时不重复发送。无需修改普通客户端配置。
-- 最多保留 8 个任务关联；交错调用时恢复各自的网页 URL 并核对最后回答。只在内存保存历史指纹与页面锚点，进程结束后关联不保留。
+- 最多保留 16 个会话关联；交错调用或应用重开后恢复各自网页 URL 并核对最后回答。本机 Keystore / AES-GCM 加密保存关联和有界任务记录。之前版本的内存关联无法迁移，升级后的首次调用会建立新关联。
 - 相同首问不用于合并独立任务。客户端改写/压缩历史、会话丢失、关联被淘汰或出现歧义时，携带完整 API 历史开始新对话；不会把增量发进不匹配的旧会话。未发送草稿会保留并明确报错。
-- 概览中的「会话复用 → 下次开始新会话」只清除本地关联，不删除网页历史。请求可传 `conversation_id` 隔离任务、`reset_conversation: true` 重置关联。没有 ID 时自动匹配；显式 ID 也需要历史前缀匹配，不会盲目拼接单条无历史请求。详见 FIX_0.4.0.md。
+- 概览中的「持久化会话 → 下次开始新会话」只清除本地关联，不删除网页历史。请求可传 `conversation_id` 隔离任务、`reset_conversation: true` 重置关联。没有 ID 时自动匹配；显式 ID 也需要历史前缀匹配，不会盲目拼接单条无历史请求。
+- 任务页显示真实阶段、工具等待与失败记录。运行中可取消；失败的纯文本任务可以桥内重试，工具任务需在原客户端继续。应用重开后旧的运行状态标为中断，不自动重新发送。
+- 带工具请求默认严格完成协议，内容型最终回复要求模型明确 `complete` 或 `needs_input`，缺失时最多修复一次。可在连接页切换兼容模式，或请求指定 `bridge_agent_mode`。该约束无法验证模型声明是否真实，也不替代客户端 Agent 循环。
+- 客户端显式发送 `Idempotency-Key` 时，已保存的同键同内容结果原样重放并保留工具 ID；冲突、无可用缓存或不安全的工具恢复明确报错。最多保留 32 个任务、64 个请求，输入与结果各最多 1 MiB，有容量淘汰；客户端仍负责防止重复执行工具。
+- `GET /v1/bridge/tasks`、单个任务、`/result`、`POST /cancel` 和 `POST /retry` 共用本机认证。结果读取不是实时 SSE 断点续传。详细请求路径、保留规则和恢复限制见 UPGRADE_1.0.0.md。
 
 ## 结构与构建
 
@@ -69,6 +73,7 @@ $phoneBuildTools = Join-Path $env:LOCALAPPDATA 'DeepSeekBridgeBuildTools'
 npm.cmd run build:assets
 npm.cmd test
 & .\scripts\test-transport.ps1 -Toolchain (Join-Path $phoneBuildTools 'toolchain.json')
+& .\scripts\test-storage.ps1 -Toolchain (Join-Path $phoneBuildTools 'toolchain.json')
 & .\scripts\build-apk.ps1 -Toolchain (Join-Path $phoneBuildTools 'toolchain.json') -SigningDirectory (Join-Path $phoneBuildTools 'signing')
 ```
 
@@ -78,7 +83,7 @@ npm.cmd test
 
 已安装 Claude Code 的主机可运行 `node scripts/smoke-claude.mjs <隔离测试目录>`，或通过 `CLAUDE_TEST_BINARY` 指定可执行文件。该测试使用生产 JS 协议引擎与确定性模型夹具，实际调用 Write、检查文件及结果回传，并验证两次调用只使用一个夹具会话；不使用真实账号、不读写用户 Claude 设置。证据见 `claude-smoke-results.json`。
 
-Android 的 WebView 是应用内网页组件，后台服务需遵循系统的前台服务与生命周期规则；前台通知不等于保证网页永不暂停。参考 [WebView 官方文档](https://developer.android.com/develop/ui/views/layout/webapps/webview)、[前台服务类型](https://developer.android.com/develop/background-work/services/fgs/service-types)。
+Android 的 WebView 是应用内网页组件，后台服务需遵循系统生命周期规则；前台通知不等于保证网页永不暂停。本版加入失效 WebView 的清理和重建，不会自动重发中断的请求。参考 [WebView 官方文档](https://developer.android.com/develop/ui/views/layout/webapps/webview)、[前台服务类型](https://developer.android.com/develop/background-work/services/fgs/service-types)。
 
 第三方组件许可证见 `THIRD_PARTY_NOTICES.md`，也包含在 APK 的 `assets/NOTICE.txt` 中。
 

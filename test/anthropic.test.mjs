@@ -94,7 +94,7 @@ test('a two-request Anthropic tool loop consumes the actual tool_result and cont
   let sawResult = false;
   const second = (await run({ ...base, tools: [tool], messages: [base.messages[0], { role: 'assistant', content: first.content }, { role: 'user', content: [{ type: 'tool_result', tool_use_id: first.content[0].id, content: 'REAL_FILE_RESULT' }] }] }, async function* ({ prompt }) {
     sawResult = prompt.includes('REAL_FILE_RESULT') && /"role"\s*:\s*"tool"/.test(prompt);
-    yield { type: 'text', delta: JSON.stringify({ content: 'Finished from the file result.' }) };
+    yield { type: 'text', delta: JSON.stringify({ status: 'complete', content: 'Finished from the file result.' }) };
   }))[0].payload.body;
   assert.equal(sawResult, true); assert.equal(second.stop_reason, 'end_turn'); assert.equal(second.content[0].text, 'Finished from the file result.');
 });

@@ -1,22 +1,23 @@
-# 安卓本机桥 v0.4.0 验证记录
+# 安卓本机桥 v1.0.0 验证记录
 
 | 检查 | 结果 | 证据 |
 | --- | --- | --- |
-| JS / DOM / UI / 协议 | 179/179 通过，0 失败、0 跳过 | test-results.log |
-| 新增会话专项 | 24 项：16 项规划/引擎、8 项真实 DOM | test/conversations.test.mjs、test/conversation-dom.test.mjs |
-| 网页多轮切换 | 四次正常调用交错两个任务，仅创建两个网页夹具会话；另测完整历史回退 | test/conversation-dom.test.mjs |
-| 打包引擎 | 实际资源续接同一页面，验证增量消息、旧回答隔离、两种协议及不提交的计数 | test/mobile-bundle.test.mjs |
-| 界面 | 复用次数、重置按钮、忙时禁用及窄屏触控尺寸 | test/ui.test.mjs |
-| 启动/思考/发送/搜索/协议 | 既有回归继续通过 | test/ |
-| 原生 HTTP | 22 项通过，主机真实 TCP | transport-results.log |
-| 已安装 Claude Code | 2.1.285：实际 Write、文件匹配、tool_result 回传、退出 0，两个请求仅一个夹具会话 | claude-smoke-results.json |
-| APK 编译与签名 | API 26+ / target 35，versionCode 6 | build-apk.log |
-| 升级签名 | 与 v0.3.0 一致 | signature-comparison.json |
-| 界面预览 | 实际资源 + 模拟原生状态，新增会话管理面板 | preview/conversation-sheet.png |
-| 安卓真机 / 真实账号 | 未验证，未连接设备 | 下列边界 |
+| JS / DOM / UI / 协议 | 200 项通过，0 失败、0 跳过 | test-results.log |
+| 会话与任务恢复 | 新引擎加载序列化状态，再校验真实 DOM；交错任务复用及完整历史回退 | test/conversation-dom.test.mjs、test/tasks.test.mjs |
+| 严格 Agent 协议 | 进度回复不直接结束；修复预算与 needs_input / tool 校验 | test/tasks.test.mjs |
+| 幂等重放 | JSON / SSE / Anthropic 原帧、工具 ID、请求冲突、旧响应不覆盖新状态 | test/tasks.test.mjs |
+| 任务 UI | 筛选、取消、重试、原客户端引导、会话管理、320px 和宽屏触控 | test/workbench-ui.test.mjs |
+| 原生 HTTP | 35 项通过，主机真实 TCP，含任务认证与中断错误 | transport-results.log |
+| 加密文件 | 11 项通过，主机 AES-GCM，含错误密钥、篡改、随机 IV、原子写入与大小上限 | storage-results.log |
+| 已安装 Claude Code | 2.1.285，实际 Write、真实 tool_result、退出 0，两次调用一个夹具会话 | claude-smoke-results.json |
+| APK 编译签名 | API 26+ / target 35 / versionCode 7，与 v0.4.0 同签名 | build-apk.log、signature-comparison.json |
+| 界面预览 | 打包后 HTML/CSS，模拟原生状态；已查看明暗主题、任务与时间线等截图 | preview/ |
+| 安卓真机 / 真实账号 / Keystore / 锁屏后台 | 未验证，当前设备列表为空 | 以下边界 |
 
-APK 大小：431382 字节。SHA-256：`5f914d80cc2381ece87f1ca1147858b088ad90d61a7257a49cb5f09c0b67a95c`。
+APK 大小：447765 字节。SHA-256：`7fd8fb2b3593aa5a64742d9f2149796f4546835f6062f552e183ec57d54be309`。
 
-JS/DOM 使用本地可控网页夹具；HTTP 在主机 JDK 上运行实际 LoopbackServer.java；Claude Code 使用生产 JS 协议引擎和确定性模型夹具，工具由已安装客户端实际执行。测试覆盖会话选择、实际网页点击、回答边界及工具执行，不能替代安卓真机、真实 DeepSeek 账号或长期后台验证。
+网页操作与协议测试使用本地可控页面；加密、TCP 测试在主机 JDK 上运行生产 Java 类；Claude Code 工具由已安装客户端实际执行，但模型返回是确定性夹具。这些证据不能替代安卓 Keystore、真实 DeepSeek 账号、手机文件上传、渲染进程恢复与长期后台验收。
 
-APK 和源码在交付前检查资源哈希、核心来源哈希、原生 DEX、图标、签名、必需证据与私有材料。会话关联只驻留内存，最多 8 个；匹配失效时完整历史回退，重置不删除网页对话。usage 按逻辑 API 历史估算，缓存 unknown。详见 FIX_0.4.0.md。
+任务快照与会话文件有容量上限；存储失败时显示内存运行状态。客户端必须防止工具重复执行。任务结果读取不等于部分 SSE 自动续传；网页不提供官方缓存统计，usage 为估算、cache 为 unknown。详细约定见 UPGRADE_1.0.0.md。
+
+交付前另核对 APK 与已测试资源哈希、原生 DEX、生成的图标、源码来源和私有材料。v0.4.0 安装包与源码保留；不改动或重启桌面 Harness / 桌面桥。

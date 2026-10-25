@@ -1,21 +1,24 @@
 {
-  "version": "0.4.0",
-  "versionCode": 6,
+  "version": "1.0.0",
+  "versionCode": 7,
   "package": "io.github.deepseekbridge",
-  "apk": "deepseek-android-bridge-v0.4.0.apk",
-  "bytes": 431382,
-  "sha256": "5f914d80cc2381ece87f1ca1147858b088ad90d61a7257a49cb5f09c0b67a95c",
+  "apk": "deepseek-android-bridge-v1.0.0.apk",
+  "bytes": 447765,
+  "sha256": "7fd8fb2b3593aa5a64742d9f2149796f4546835f6062f552e183ec57d54be309",
   "protocols": [
     "OpenAI Chat Completions",
     "Anthropic Messages",
-    "estimated count_tokens"
+    "estimated count_tokens",
+    "authenticated task control"
   ],
   "unitTests": {
-    "pass": 179,
+    "pass": 200,
     "fail": 0,
-    "skipped": 0
+    "skipped": 0,
+    "cancelled": 0
   },
-  "nativeHttpAssertions": 22,
+  "nativeHttpAssertions": 35,
+  "nativeStorageAssertions": 11,
   "claudeCode": {
     "version": "2.1.285",
     "realClient": true,
@@ -27,33 +30,41 @@
     "engine": "production JS protocol engine",
     "evidence": "claude-smoke-results.json"
   },
-  "startupRegressionTests": 4,
-  "reasoningTests": 28,
-  "sendControlTests": 18,
-  "webSearchTests": 12,
-  "anthropicTests": 21,
-  "schemaDialectTests": 3,
-  "conversationTests": 24,
-  "sameSignerAs030": true,
+  "sameSignerAs040": true,
   "minSdk": 26,
   "targetSdk": 35,
   "defaultWebSearch": true,
+  "strictAgentDefault": true,
   "conversationReuse": {
     "enabled": true,
-    "maxTracked": 8,
-    "persistent": false,
+    "maxTracked": 16,
+    "persistent": true,
+    "persistence": "private AES-GCM file with Android Keystore key",
     "automaticPrefixMatching": true,
     "incrementalMessages": true,
     "changedToolsOnly": true,
     "resetPreservesWebsiteHistory": true,
-    "fourNormalCallsAcrossTwoTasksCreateTwoFixtureChats": true
+    "realDomSavedStateRestartVerified": true
+  },
+  "taskWorkbench": {
+    "taskLimit": 32,
+    "requestLimit": 64,
+    "phaseLimit": 48,
+    "inputLimitBytes": 1048576,
+    "resultLimitBytes": 1048576,
+    "automaticInterruptedRetry": false,
+    "toolExecutionOwner": "calling client",
+    "idempotency": "explicit header; bounded saved results; same tool IDs; client must deduplicate execution",
+    "realtimeSseByteResume": false
   },
   "logo": {
-    "method": "built-in image_gen; no hand-drawn logo geometry",
+    "method": "existing built-in image_gen artwork preserved",
     "modelVersionVerified": false,
     "source": "branding/logo-source.png"
   },
   "androidDeviceVerified": false,
   "realAccountMobileVerified": false,
-  "uiScreenshots": "packaged assets rendered in desktop Edge with simulated native state"
+  "androidKeystoreRuntimeVerified": false,
+  "longBackgroundVerified": false,
+  "uiScreenshots": "packaged assets rendered in desktop Edge with simulated native state; 11 previews visually inspected"
 }

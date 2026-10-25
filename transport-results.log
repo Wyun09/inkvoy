@@ -15,9 +15,22 @@ PASS JSON body reaches the dispatcher
 PASS oversized bodies rejected before reading or truncating
 PASS unsupported transfer encoding rejected
 PASS unsupported methods rejected
+PASS task history requires authentication
+PASS task list reaches the authenticated engine route
+PASS task detail route is accepted
+PASS saved result route is accepted
+PASS cancel does not require an invented JSON body
+PASS retry route reaches the engine
+PASS GET cannot cancel a task
+PASS unsupported task mutation is rejected
+PASS explicit idempotency key reaches dispatch separately from credentials
+PASS invalid idempotency key rejected before dispatch
+PASS oversized idempotency key is bounded
+PASS engine exit before streaming returns explicit 503
+PASS engine exit after partial SSE sends an error without claiming normal completion
 PASS unauthenticated bodies never reach the engine
 PASS first SSE content arrives before the final chunk
 PASS later SSE content and DONE are delivered
 PASS cancellation fixture is accepted
 PASS disconnect cancels work before any response exists
-TRANSPORT_PASS assertions=22
+TRANSPORT_PASS assertions=35

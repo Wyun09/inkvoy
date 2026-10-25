@@ -27,14 +27,36 @@ const rpc = (operation, argument) => new Promise((resolve, reject) => {
   NativeBridge.request(id, operation, JSON.stringify(argument));
 });
 const backend = new MobileBrowser(rpc);
+let initialState = {};
+let stateSaveFailed = false;
+try { initialState = JSON.parse(NativeBridge.loadState?.() || '{}'); } catch {}
 const engine = createEngine(backend, (id, kind, payload) => NativeBridge.response(id, kind, JSON.stringify(payload)), {
+  initialState,
+  saveState: NativeBridge.saveState ? value => {
+    const ok = NativeBridge.saveState(JSON.stringify(value));
+    if (!ok && !stateSaveFailed) NativeBridge.reportUi?.('taskNotice', JSON.stringify({ message: '本机记录保存失败，当前任务仍可运行；请查看连接诊断。' }));
+    stateSaveFailed = !ok;
+  } : undefined,
+  onTaskState: state => NativeBridge.reportUi?.('tasks', JSON.stringify(state)),
+  strictAgent: () => NativeBridge.agentStrict?.() ?? true,
   defaultWebSearch: () => NativeBridge.searchDefault?.() ?? true,
   onConversationState: state => NativeBridge.reportUi?.('conversations', JSON.stringify(state)),
 });
 let inspecting = false;
 globalThis.AndroidEngine = {
-  receive: request => engine.receive(request), cancel: id => engine.cancel(id),
+  receive: request => engine.receive(request), cancel: id => engine.cancel(id), cancelAll: () => engine.cancelAll(),
   resetConversations() { NativeBridge.reportUi?.('conversationReset', JSON.stringify({ ok: engine.resetConversations() })); },
+  async taskAction(action, id) {
+    let ok = false;
+    try {
+      if (action === 'task-cancel') ok = engine.cancelTask(id);
+      else if (action === 'task-retry') ok = engine.retryTask(id);
+      else if (action === 'session-open') ok = await engine.openSession(id);
+      else if (action === 'session-forget') ok = engine.forgetSession(id);
+      else if (action === 'task-result') { BridgeDashboard.showResult(engine.taskResult(id)); return; }
+    } catch {}
+    NativeBridge.reportUi?.('taskNotice', JSON.stringify({ message: ok ? action === 'task-retry' ? '已加入重试队列' : action === 'task-cancel' ? '正在取消请求' : action === 'session-forget' ? '已解除关联，网页历史保留' : '已打开会话' : '当前状态无法执行此操作，请查看任务详情' }));
+  },
   async inspect() {
     if (inspecting) return;
     inspecting = true;
@@ -54,6 +76,7 @@ globalThis.AndroidEngine = {
 try {
   initDashboard();
   NativeBridge.ready();
+  engine.publishState();
 } catch (error) {
   // Native fallback remains usable even if the packaged UI cannot boot.
   NativeBridge.startupError?.(String(error?.message || '界面初始化失败').slice(0, 240));

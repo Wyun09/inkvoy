@@ -34,10 +34,21 @@ export function conversationOptions(body) {
  * A matching prefix includes our validated assistant answer and real tool IDs.
  * Identical first questions alone are never enough to merge independent tasks. */
 export class ConversationPool {
-  constructor({ max = 8, onChange = () => {} } = {}) { this.max = max; this.records = new Map(); this.onChange = onChange; this.created = 0; this.reused = 0; this.sequence = 0; }
+  constructor({ max = 16, onChange = () => {}, saved = {} } = {}) {
+    this.max = max; this.records = new Map(); this.onChange = onChange; this.created = Number.isSafeInteger(saved.created) ? saved.created : 0; this.reused = Number.isSafeInteger(saved.reused) ? saved.reused : 0; this.sequence = 0;
+    for (const record of Array.isArray(saved.records) ? saved.records.slice(-max) : []) {
+      if (!record || !/^[a-f0-9]{64}$/.test(record.digest || '') || !/^[a-f0-9]{64}$/.test(record.toolsHash || '') || !Number.isSafeInteger(record.length) || record.length < 1
+        || !/^\/(?:a\/)?chat\/(?:s\/)?[a-zA-Z0-9_-]+\/?$/.test(record.handle?.path || '') || typeof record.handle.lastAnswer !== 'string' || record.handle.lastAnswer.length > 120) continue;
+      const id = ++this.sequence; this.records.set(id, { ...record, id });
+    }
+  }
   state() { return { enabled: true, tracked: this.records.size, created: this.created, reused: this.reused, lastAction: this.lastAction || 'ready' }; }
   publish() { this.onChange(this.state()); }
   reset() { this.records.clear(); this.lastAction = 'reset'; this.publish(); }
+  serialize() { return { created: this.created, reused: this.reused, records: [...this.records.values()] }; }
+  summaries() { return [...this.records.values()].reverse().map(record => ({ id: String(record.id), taskId: record.taskId, used: record.used, messages: record.length, turns: record.turns || 1 })); }
+  get(id) { return this.records.get(Number(id)); }
+  forget(id) { const result = this.records.delete(Number(id)); this.publish(); return result; }
   async plan(body) {
     const { key, reset } = conversationOptions(body);
     const messages = body.messages.map(canonical), toolsHash = await digest(body.tools || []);
@@ -73,7 +84,7 @@ export class ConversationPool {
     if (!handle || typeof handle.path !== 'string') { this.publish(); return; }
     const history = [...plan.messages, canonical(answer)];
     const id = ++this.sequence;
-    this.records.set(id, { id, key: plan.key, digest: await digest(history), length: history.length, toolsHash: plan.toolsHash, handle, used: Date.now() });
+    this.records.set(id, { id, key: plan.key, digest: await digest(history), length: history.length, toolsHash: plan.toolsHash, handle, used: Date.now(), taskId: plan.taskId || plan.record?.taskId, turns: (plan.record?.turns || 0) + 1 });
     const continued = reused && plan.record?.handle.path === handle.path;
     if (continued) this.reused++; else this.created++;
     this.lastAction = continued ? 'reused' : 'created';

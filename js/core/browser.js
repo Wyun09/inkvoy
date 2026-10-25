@@ -496,6 +496,7 @@ export class DeepSeekBrowser {
   }
 
   async _submitComposer(_page, composer, _options) { await composer.press('Enter'); }
+  _phase(phase) { if (this._activeRequest) this._activeRequest.phase = phase; this._phaseListener?.(phase); }
   async _beforeSubmit(_page, _options) {}
   async _openConversation(page, _conversation, signal, deadline) { return this._newConversation(page, signal, deadline); }
   async _beginTurn(_page, _state, _options) {}
@@ -514,7 +515,7 @@ export class DeepSeekBrowser {
         const newChatPath = typeof state.chatPath === 'string' && state.chatPath !== before.chatPath
           && /^\/(?:a\/)?chat(?:\/|$)/.test(state.chatPath);
         if (inputCleared || newMessage || newChatPath) {
-          this._activeRequest.phase = 'generating';
+          this._phase('generating');
           return state;
         }
         await pause(this.config.pollMs, signal, submissionDeadline);
@@ -531,7 +532,7 @@ export class DeepSeekBrowser {
       '提交后 5 秒内网页未确认接收消息（输入未清空、没有新消息或新对话）。已停止，未重复提交。');
   }
 
-  async *generate({ prompt, images = [], reasoning = false, webSearch, conversation, signal } = {}) {
+  async *generate({ prompt, images = [], reasoning = false, webSearch, conversation, signal, onPhase } = {}) {
     if (typeof prompt !== 'string' || !prompt.trim()) {
       throw new BrowserBridgeError('INVALID_PROMPT', 400, '消息内容不能为空。');
     }
@@ -546,6 +547,7 @@ export class DeepSeekBrowser {
     }
     if (this._active) throw new BrowserBridgeError('BROWSER_BUSY', 429, '浏览器已有请求正在生成。');
     this._active = true;
+    this._phaseListener = onPhase;
     this._activeRequest = { startedAtMs: Date.now(), phase: 'opening_browser',
       promptLength: Array.from(prompt).length, imageCount: images.length, reasoning,
       lastObservationMs: 0, responseChars: 0, reasoningChars: 0,
@@ -558,23 +560,23 @@ export class DeepSeekBrowser {
     try {
       checkRequest(signal, deadline);
       page = await within(this._ensureBrowser(), signal, deadline);
-      this._activeRequest.phase = 'new_conversation';
+      this._phase(conversation?.reuse ? 'resuming_conversation' : 'new_conversation');
       const blank = await this._openConversation(page, conversation, signal, deadline);
       if (!blank?.reused && conversation?.fullPrompt) { prompt = conversation.fullPrompt; images = conversation.fullImages || images; }
       this._activeRequest.promptLength = Array.from(prompt).length;
       this._activeRequest.imageCount = images.length;
-      this._activeRequest.phase = 'setting_reasoning';
+      this._phase('setting_reasoning');
       await this._setReasoning(page, reasoning, signal, deadline);
       if (images.length) {
-        this._activeRequest.phase = 'decoding_images';
+        this._phase('decoding_images');
         await this._decodeImages(page, images, signal, deadline);
-        this._activeRequest.phase = 'uploading_images';
+        this._phase('uploading_images');
         started = true;
         await this._uploadImages(page, images, signal, deadline);
       }
       const composer = page.locator(blank?.composerSelector || 'textarea:visible');
       checkRequest(signal, deadline);
-      this._activeRequest.phase = 'filling_prompt';
+      this._phase('filling_prompt');
       started = true;
       await within(composer.fill(prompt), signal, deadline);
       const accepted = await within(composer.inputValue(), signal, deadline);
@@ -584,10 +586,10 @@ export class DeepSeekBrowser {
       await this._setReasoning(page, reasoning, signal, deadline);
       await within(this._beforeSubmit(page, { reasoning, webSearch, signal, deadline }), signal, deadline);
       await within(this._beginTurn(page, beforeSubmission, { signal, deadline, conversation: blank?.reused ? conversation : undefined }), signal, deadline);
-      this._activeRequest.phase = 'ready';
+      this._phase('ready');
       yield { type: 'ready' };
       checkRequest(signal, deadline);
-      this._activeRequest.phase = 'submitting';
+      this._phase('submitting');
       await within(this._submitComposer(page, composer, { prompt, signal, deadline }), signal, deadline);
       let pendingState = await this._waitSubmission(page, beforeSubmission, prompt, signal, deadline);
       const firstOutputDeadline = Math.min(deadline, Date.now() + this.config.firstOutputTimeoutMs);
@@ -714,6 +716,7 @@ export class DeepSeekBrowser {
       if (started && !completed && page) await this._discardPage(page);
       this._active = false;
       this._activeRequest = null;
+      this._phaseListener = null;
     }
   }
 

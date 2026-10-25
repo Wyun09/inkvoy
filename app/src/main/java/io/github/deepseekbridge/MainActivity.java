@@ -35,7 +35,7 @@ public final class MainActivity extends Activity {
         super.onCreate(state);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        root = new FrameLayout(this); root.setBackgroundColor(Color.rgb(245, 247, 251));
+        root = new FrameLayout(this); root.setBackgroundColor(Color.rgb(246, 245, 240));
         if (Build.VERSION.SDK_INT >= 30) getWindow().setDecorFitsSystemWindows(false);
         root.setOnApplyWindowInsetsListener((view, insets) -> {
             if (Build.VERSION.SDK_INT >= 30) {
@@ -66,7 +66,7 @@ public final class MainActivity extends Activity {
         service.runtime.publishUi(); applyTheme(service.runtime.uiDark); applyBrowserLayout();
     }
     private void applyTheme(boolean dark) {
-        int colour = dark ? Color.rgb(16, 21, 31) : Color.rgb(245, 247, 251);
+        int colour = dark ? Color.rgb(20, 30, 26) : Color.rgb(246, 245, 240);
         root.setBackgroundColor(colour); getWindow().setStatusBarColor(colour); getWindow().setNavigationBarColor(colour);
         int flags = getWindow().getDecorView().getSystemUiVisibility();
         int light = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
@@ -107,6 +107,8 @@ public final class MainActivity extends Activity {
         if (action.equals("theme")) { applyTheme(argument.optBoolean("dark")); return; }
         if (action.equals("search-policy")) { service.runtime.setWebSearchDefault(argument.optBoolean("enabled")); return; }
         if (action.equals("reset-conversations")) { service.runtime.resetConversations(); return; }
+        if (action.equals("agent-policy")) { service.runtime.setAgentStrict(argument.optBoolean("enabled", true)); return; }
+        if (action.equals("task-cancel") || action.equals("task-retry") || action.equals("session-open") || action.equals("session-forget") || action.equals("task-result")) { service.runtime.taskAction(action, argument.optString("id")); return; }
         if (action.equals("start")) startForegroundService(new Intent(this, BridgeService.class));
         else if (action.equals("stop")) service.stopBridge();
         else if (action.equals("inspect")) service.runtime.inspectPage();
@@ -133,7 +135,7 @@ public final class MainActivity extends Activity {
             } catch (JSONException e) { return; }
             label = "Claude Code 配置"; sensitive = true;
         } else if (field.equals("diagnostics")) {
-            try { JSONObject data = service.runtime.snapshot(); data.remove("activities"); text = data.toString(2); }
+            try { text = service.runtime.diagnostics().toString(2); }
             catch (JSONException e) { return; }
             label = "诊断信息";
         } else return;

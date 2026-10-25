@@ -14,6 +14,6 @@ await build({
   } }],
 });
 await writeFile(new URL('engine.html', assets), await readFile(new URL('js/ui/app.html', root)));
-await writeFile(new URL('app.css', assets), await readFile(new URL('js/ui/app.css', root)));
+await writeFile(new URL('app.css', assets), (await readFile(new URL('js/ui/app.css', root), 'utf8')) + '\n' + (await readFile(new URL('js/ui/workbench.css', root), 'utf8')));
 await writeFile(new URL('logo.png', assets), await readFile(new URL('js/ui/logo.png', root)));
 console.log('Built isolated Android engine assets.');

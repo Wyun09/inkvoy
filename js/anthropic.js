@@ -101,7 +101,7 @@ export function fromAnthropic(input, { countOnly = false } = {}) {
   if (input.stop_sequences !== undefined) body.stop = input.stop_sequences;
   if (input.web_search !== undefined) body.web_search = input.web_search;
   else if (delegatedSearch) body.web_search = true;
-  for (const field of ['conversation_id', 'reset_conversation', 'metadata']) if (input[field] !== undefined) body[field] = input[field];
+  for (const field of ['conversation_id', 'reset_conversation', 'metadata', 'bridge_agent_mode']) if (input[field] !== undefined) body[field] = input[field];
   if (input.thinking !== undefined) {
     if (!object(input.thinking) || !['enabled', 'disabled', 'adaptive'].includes(input.thinking.type)) invalid('thinking.type must be enabled, disabled or adaptive.');
     body.thinking = { type: input.thinking.type === 'disabled' ? 'disabled' : 'enabled' };

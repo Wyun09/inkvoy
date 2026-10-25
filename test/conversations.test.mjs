@@ -99,7 +99,7 @@ test('production engine reuses a validated tool turn, sends only results, and ke
   const calls = [];
   const h = harness(async function* (request) {
     calls.push(request);
-    yield { type: 'text', delta: calls.length === 1 ? JSON.stringify({ tool_calls: [{ name: 'Read', arguments: { path: 'real.txt' } }] }) : JSON.stringify({ content: 'done' }) };
+    yield { type: 'text', delta: calls.length === 1 ? JSON.stringify({ tool_calls: [{ name: 'Read', arguments: { path: 'real.txt' } }] }) : JSON.stringify({ status: 'complete', content: 'done' }) };
     yield { type: 'done', conversation: handle(), reused: calls.length > 1 };
   });
   const first = (await h.submit(body([user('TASK_ONLY_ONCE')], { tools: [tool] })))[0].payload.body.choices[0].message;
@@ -125,7 +125,7 @@ test('only new images are uploaded on reuse and full history remains available f
 test('completed malformed envelopes repair in the same chat without dispatching rejected tools', async () => {
   const calls = [];
   const h = harness(async function* (request) {
-    calls.push(request); yield { type: 'text', delta: calls.length === 1 ? '{"bad":true}' : '{"content":"done"}' };
+    calls.push(request); yield { type: 'text', delta: calls.length === 1 ? '{"bad":true}' : '{"status":"complete","content":"done"}' };
     yield { type: 'done', conversation: handle(), reused: calls.length > 1 };
   });
   const response = (await h.submit(body([user('task')], { tools: [tool] })))[0];

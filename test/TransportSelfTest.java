@@ -22,13 +22,22 @@ public final class TransportSelfTest {
         String auth = "Authorization: Bearer test-key-local-only\r\n";
         AtomicInteger dispatched = new AtomicInteger();
         AtomicReference<String> lastPath = new AtomicReference<>();
+        AtomicReference<String> lastKey = new AtomicReference<>();
         CountDownLatch acceptedCancelled = new CountDownLatch(1), cancelled = new CountDownLatch(1);
         AtomicReference<String> cancelledId = new AtomicReference<>();
         LoopbackServer.Dispatcher dispatcher = new LoopbackServer.Dispatcher() {
+            public void dispatchRequest(String id, String path, String body, String key, LoopbackServer.Exchange response) {
+                lastKey.set(key); dispatch(id, path, body, response);
+            }
             public void dispatch(String id, String path, String body, LoopbackServer.Exchange response) {
                 dispatched.incrementAndGet();
                 lastPath.set(path);
                 if (body.contains("cancel-test")) { cancelledId.set(id); acceptedCancelled.countDown(); return; }
+                if (body.contains("abort-stream-test")) {
+                    response.stream(); response.data("data: {\"content\":\"partial\"}\n\n");
+                    new Thread(() -> { try { Thread.sleep(20); response.abort("{\"type\":\"error\",\"error\":{\"code\":\"engine_restarted\"}}"); } catch (Exception e) { throw new RuntimeException(e); } }).start(); return;
+                }
+                if (body.contains("abort-json-test")) { response.abort("{\"error\":{\"code\":\"engine_restarted\"}}"); return; }
                 if (body.contains("stream-test")) {
                     response.stream(); response.data("data: {\"content\":\"one\"}\n\n");
                     new Thread(() -> { try { Thread.sleep(80); response.data("data: {\"content\":\"two\"}\n\ndata: [DONE]\n\n"); response.end(); } catch (Exception e) { throw new RuntimeException(e); } }).start(); return;
@@ -57,6 +66,20 @@ public final class TransportSelfTest {
             check(call(port, "POST", "/v1/chat/completions", auth + "Content-Length: 16777217\r\n", null).contains("413 Error"), "oversized bodies rejected before reading or truncating");
             check(call(port, "POST", "/v1/chat/completions", auth + "Transfer-Encoding: chunked\r\n", null).contains("415 Error"), "unsupported transfer encoding rejected");
             check(call(port, "DELETE", "/v1/chat/completions", auth, null).contains("404 Error"), "unsupported methods rejected");
+            check(call(port, "GET", "/v1/bridge/tasks", "", null).contains("401 Error"), "task history requires authentication");
+            check(call(port, "GET", "/v1/bridge/tasks?limit=32", auth, null).contains("accepted") && lastPath.get().equals("/v1/bridge/tasks"), "task list reaches the authenticated engine route");
+            check(call(port, "GET", "/v1/bridge/tasks/task_fixture", auth, null).contains("accepted"), "task detail route is accepted");
+            check(call(port, "GET", "/v1/bridge/tasks/task_fixture/result", auth, null).contains("accepted"), "saved result route is accepted");
+            check(call(port, "POST", "/v1/bridge/tasks/task_fixture/cancel", auth, null).contains("accepted"), "cancel does not require an invented JSON body");
+            check(call(port, "POST", "/v1/bridge/tasks/task_fixture/retry", auth, "{}").contains("accepted"), "retry route reaches the engine");
+            check(call(port, "GET", "/v1/bridge/tasks/task_fixture/cancel", auth, null).contains("404 Error"), "GET cannot cancel a task");
+            check(call(port, "DELETE", "/v1/bridge/tasks/task_fixture", auth, null).contains("404 Error"), "unsupported task mutation is rejected");
+            check(call(port, "POST", "/v1/chat/completions", auth + "Idempotency-Key: operation-123\r\n", "{}").contains("accepted") && "operation-123".equals(lastKey.get()), "explicit idempotency key reaches dispatch separately from credentials");
+            check(call(port, "POST", "/v1/chat/completions", auth + "Idempotency-Key: has spaces\r\n", "{}").contains("invalid_idempotency_key"), "invalid idempotency key rejected before dispatch");
+            check(call(port, "POST", "/v1/chat/completions", auth + "Idempotency-Key: " + new String(new char[129]).replace('\0', 'a') + "\r\n", "{}").contains("invalid_idempotency_key"), "oversized idempotency key is bounded");
+            check(call(port, "POST", "/v1/chat/completions", auth, "{\"abort-json-test\":true}").contains("503 Error"), "engine exit before streaming returns explicit 503");
+            String interrupted = call(port, "POST", "/v1/chat/completions", auth, "{\"abort-stream-test\":true}");
+            check(interrupted.contains("partial") && interrupted.contains("event: error") && interrupted.contains("engine_restarted") && !interrupted.contains("[DONE]"), "engine exit after partial SSE sends an error without claiming normal completion");
             int before = dispatched.get();
             call(port, "POST", "/v1/chat/completions", "Authorization: Bearer wrong\r\n", "{}");
             check(dispatched.get() == before, "unauthenticated bodies never reach the engine");

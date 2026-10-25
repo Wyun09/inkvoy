@@ -188,6 +188,12 @@ export class MobileBrowser extends DeepSeekBrowser {
     catch { result.webSearchMode = { count: 0, enabled: null, reason: 'observation_failed' }; }
     return result;
   }
+  async openSavedSession(handle) {
+    if (this._active) throw new BrowserBridgeError('BROWSER_BUSY', 409, '当前请求处理中，请稍后打开会话。');
+    if (!/^\/(?:a\/)?chat\/(?:s\/)?[a-zA-Z0-9_-]+\/?$/.test(handle?.path || '')) throw new BrowserBridgeError('invalid_session', 400, '会话地址无效。');
+    this._turnBoundary = null; const page = await this._ensureBrowser();
+    await page.goto('https://chat.deepseek.com' + handle.path); await page.bringToFront();
+  }
   async _discardPage(page) {
     this._turnBoundary = null;
     page.closed = true;

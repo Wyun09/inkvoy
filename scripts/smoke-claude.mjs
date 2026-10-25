@@ -30,7 +30,7 @@ const backend = { async *generate({ prompt, conversation }) {
     yield { type: 'text', delta: JSON.stringify({ tool_calls: [{ name: 'Write', arguments: { file_path: target, content: expected } }] }) };
   } else {
     if (history.some(message => message.role === 'tool')) resultObserved = true;
-    yield { type: 'text', delta: tools.length ? JSON.stringify({ content: 'Verified the tool result. ' + expected }) : expected };
+    yield { type: 'text', delta: tools.length ? JSON.stringify({ status: 'complete', content: 'Verified the tool result. ' + expected }) : expected };
   }
   yield { type: 'done', conversation: { path, answerCount: state.turns, lastAnswer: 'fixture-' + state.turns }, reused };
 } };

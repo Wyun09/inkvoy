@@ -1,5 +1,5 @@
 
-> deepseek-android-bridge@0.4.0 build:assets
+> deepseek-android-bridge@1.0.0 build:assets
 > node scripts/build-assets.mjs
 
 Included dependency licenses in source and APK assets.
@@ -23,7 +23,7 @@ Signer #1 key size (bits): 3072
 Signer #1 public key SHA-256 digest: 9f772486ab47d3036ab3ed1338026f32028e9325a1822f3b7f468a15ac370795
 Signer #1 public key SHA-1 digest: 91560e538110a71758384bbd2d0a660d6dbc41a0
 Signer #1 public key MD5 digest: 3636784a83927af902e781c25c615171
-package: name='io.github.deepseekbridge' versionCode='6' versionName='0.4.0' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
+package: name='io.github.deepseekbridge' versionCode='7' versionName='1.0.0' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
 minSdkVersion:'26'
 targetSdkVersion:'35'
 uses-permission: name='android.permission.INTERNET'
@@ -37,4 +37,4 @@ application-icon-240:'res/mipmap-anydpi-v26/ic_launcher.xml'
 application-icon-320:'res/mipmap-anydpi-v26/ic_launcher.xml'
 application-icon-480:'res/mipmap-anydpi-v26/ic_launcher.xml'
 application-icon-640:'res/mipmap-anydpi-v26/ic_launcher.xml'
-{"apk":"C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v0.4.0.apk","bytes":431382,"sha256":"5F914D80CC2381ECE87F1CA1147858B088AD90D61A7257A49CB5F09C0B67A95C","minSdk":26,"targetSdk":35,"version":"0.4.0","signing":"local test identity"}
+{"apk":"C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v1.0.0.apk","bytes":447765,"sha256":"7FD8FB2B3593AA5A64742D9F2149796F4546835F6062F552E183EC57D54BE309","minSdk":26,"targetSdk":35,"version":"1.0.0","signing":"local test identity"}

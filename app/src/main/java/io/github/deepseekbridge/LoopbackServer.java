@@ -12,6 +12,7 @@ import java.util.concurrent.*;
 public final class LoopbackServer implements Closeable {
     public interface Dispatcher {
         void dispatch(String id, String path, String body, Exchange exchange);
+        default void dispatchRequest(String id, String path, String body, String requestKey, Exchange exchange) { dispatch(id, path, body, exchange); }
         void cancel(String id);
     }
     private final Dispatcher dispatcher;
@@ -88,7 +89,7 @@ public final class LoopbackServer implements Closeable {
             String host = headers.getOrDefault("host", "");
             if (!host.matches("(?i)(127\\.0\\.0\\.1|localhost)(:" + port() + ")?")) { json(output, 403, error("invalid_host", "Only local hosts are accepted.")); return; }
             if (headers.containsKey("origin")) { json(output, 403, error("browser_origin_denied", "Use a native client or its backend.")); return; }
-            if (method.equals("GET") && path.equals("/health")) { json(output, 200, "{\"status\":\"ok\",\"version\":\"0.4.0-android\"}"); return; }
+            if (method.equals("GET") && path.equals("/health")) { json(output, 200, "{\"status\":\"ok\",\"version\":\"1.0.0-android\"}"); return; }
             if (method.equals("GET") && (path.equals("/") || path.equals("/v1") || path.equals("/v1/"))) { json(output, 200, "{\"status\":\"ok\",\"model\":\"deepseek-web\"}"); return; }
             String authorization = headers.getOrDefault("authorization", "");
             byte[] supplied = authorization.regionMatches(true, 0, "Bearer ", 0, 7) ? authorization.substring(7).getBytes(StandardCharsets.UTF_8) : new byte[0];
@@ -100,7 +101,11 @@ public final class LoopbackServer implements Closeable {
             if (method.equals("GET") && path.equals("/v1/models")) { json(output, 200, "{\"object\":\"list\",\"data\":[{\"id\":\"deepseek-web\",\"object\":\"model\",\"owned_by\":\"android-webview-bridge\",\"capabilities\":{\"vision\":true,\"reasoning\":true,\"web_search\":true}}]}"); return; }
             boolean completion = method.equals("POST") && (path.equals("/v1/chat/completions") || path.equals("/v1/messages") || path.equals("/v1/messages/count_tokens"));
             boolean browser = method.equals("GET") && path.equals("/browser/status") || method.equals("POST") && path.equals("/browser/open");
-            if (!completion && !browser) { json(output, 404, error("not_found", "Unsupported API path.")); return; }
+            boolean tasks = method.equals("GET") && path.matches("/v1/bridge/tasks(?:/[a-zA-Z0-9_-]+(?:/result)?)?")
+                || method.equals("POST") && path.matches("/v1/bridge/tasks/[a-zA-Z0-9_-]+/(?:retry|cancel)");
+            if (!completion && !browser && !tasks) { json(output, 404, error("not_found", "Unsupported API path.")); return; }
+            String requestKey = headers.getOrDefault("idempotency-key", "");
+            if (!requestKey.isEmpty() && (!requestKey.matches("[!-~]{1,128}"))) { json(output, 400, error("invalid_idempotency_key", "Use 1-128 printable ASCII characters.")); return; }
             if (headers.containsKey("transfer-encoding") || headers.containsKey("content-encoding") && !headers.get("content-encoding").equalsIgnoreCase("identity")) { json(output, 415, error("unsupported_encoding", "Use an uncompressed Content-Length body.")); return; }
             long length;
             try { length = Long.parseLong(headers.getOrDefault("content-length", "0")); }
@@ -121,7 +126,7 @@ public final class LoopbackServer implements Closeable {
                     catch (IOException e) { if (!job.finished) job.disconnect(); break; }
                 }
             });
-            dispatcher.dispatch(id, path, new String(body, StandardCharsets.UTF_8), job);
+            dispatcher.dispatchRequest(id, path, new String(body, StandardCharsets.UTF_8), requestKey, job);
             long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(620);
             boolean streaming = false;
             while (!job.finished && System.nanoTime() < deadline) {
@@ -153,12 +158,14 @@ public final class LoopbackServer implements Closeable {
         private final Socket socket;
         private final BlockingQueue<Frame> frames = new ArrayBlockingQueue<>(128);
         private volatile boolean finished;
+        private volatile boolean streamIssued;
         Exchange(String id, Socket socket) { this.id = id; this.socket = socket; }
         private void post(Frame frame) { if (!finished && !frames.offer(frame)) disconnect(); }
         public void response(int status, String body) { post(new Frame("response", status, body)); }
-        public void stream() { post(new Frame("stream", 200, "")); }
+        public void stream() { streamIssued = true; post(new Frame("stream", 200, "")); }
         public void data(String text) { post(new Frame("data", 200, text)); }
         public void end() { post(new Frame("end", 200, "")); }
+        public void abort(String body) { if (streamIssued) { data("event: error\ndata: " + body + "\n\n"); end(); } else response(503, body); }
         void disconnect() { if (!finished) { finished = true; dispatcher.cancel(id); try { socket.close(); } catch (IOException ignored) {} } }
     }
     @Override public void close() throws IOException {
