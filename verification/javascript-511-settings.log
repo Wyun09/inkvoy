@@ -1,0 +1,20 @@
+✔ packaged engine boots under its CSP and completes a round trip through the native adapter contract (5875.2939ms)
+✔ first launch introduces real setup steps, supports skipping, and never sends an example task (6000.8551ms)
+✔ the connection guide opens the actual API editor and returns to the saved guide step (8885.2012ms)
+✔ network controls save a real native proxy configuration and show separate host results without auth calls (8641.3678ms)
+✔ app control requires the system service, selected apps and one explicit session grant, then pauses (4433.3668ms)
+✔ reading controls change actual text size and touch targets, modal focus is contained and back restores it (8684.7641ms)
+✔ journey tabs load their native data and retain entered device choices when returning from system settings (9016.1625ms)
+✔ phone guide fills the viewport at every supported density without a scaled letterbox (8457.8932ms)
+✔ packaged app initializes and handles buttons when local storage is disabled (6649.4664ms)
+✔ packaged app initializes and handles buttons when local storage is blocked (6018.0585ms)
+✔ packaged app initializes and handles buttons when local storage is read-only (6046.7853ms)
+✔ a fatal UI startup error is reported to the native fallback without claiming readiness (8052.3152ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 54508.9924

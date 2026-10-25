@@ -30729,6 +30729,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
         show("device");
       }));
       body.append(actions);
+      if (!device.connected) body.append(paragraph("\u6253\u5F00\u7CFB\u7EDF\u8BBE\u7F6E\u540E\uFF0C\u5728\u201C\u5DF2\u5B89\u88C5\u7684\u670D\u52A1\u201D\u6216\u201C\u5DF2\u4E0B\u8F7D\u7684\u5E94\u7528\u201D\u4E2D\u627E\u5230 Inkvoy App \u64CD\u63A7\uFF0C\u624B\u52A8\u542F\u7528\u540E\u8FD4\u56DE\u5E76\u70B9\u201C\u91CD\u65B0\u68C0\u6D4B\u201D\u3002", "journey-note"));
       body.append(el5("h3", "", "\u5141\u8BB8\u64CD\u63A7\u7684 App"), paragraph("\u53EA\u5217\u51FA\u53EF\u542F\u52A8\u7684 App\u3002\u7CFB\u7EDF\u6388\u6743\u754C\u9762\u7531\u4F60\u624B\u52A8\u64CD\u4F5C\uFF1B\u4FDD\u5B58\u9009\u62E9\u65F6\u4F1A\u6682\u505C\u5F53\u524D\u64CD\u63A7\u3002", "journey-note"));
       const search = el5("input");
       search.type = "search";

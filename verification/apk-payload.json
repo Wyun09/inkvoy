@@ -1,7 +1,7 @@
 {
-  "apk": "deepseek-android-bridge-v5.1.0.apk",
-  "bytes": 616114511,
-  "sha256": "de100ddec8bc9f6a993dab658330419cce6854489c8ef3ac156253239b273c7d",
+  "apk": "deepseek-android-bridge-v5.1.1.apk",
+  "bytes": 616126870,
+  "sha256": "b7c5314db1df61bf8760c3db497bf80b7a9d18baa97be4ff6e27830ca02ed7f5",
   "rawZipPathsPortable": true,
   "sourcePayloadsMatched": [
     "assets/app.css",
@@ -13,6 +13,7 @@
     "assets/engine.bundle.js",
     "assets/engine.html",
     "assets/Geist.ttf",
+    "assets/INKVOY-LICENSE.txt",
     "assets/logo.png",
     "assets/mcp.worker.js",
     "assets/NOTICE.txt",
@@ -50,6 +51,6 @@
   "sameSignerAsV1": true,
   "minSdk": 26,
   "targetSdk": 35,
-  "versionCode": 24,
+  "versionCode": 25,
   "androidDeviceVerified": false
 }

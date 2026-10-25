@@ -147,7 +147,7 @@ public final class MainActivity extends Activity {
     private void handleAction(String action, JSONObject argument) {
         if (!available()) return;
         if(action.equals("fullscreen")){DisplayMode.fullscreen(this,argument.optBoolean("enabled",true));service.runtime.publishUi();return;}
-        if(action.equals("accessibility-settings")){Intent intent=new Intent("android.settings.ACCESSIBILITY_DETAILS_SETTINGS").putExtra("android.intent.extra.COMPONENT_NAME",new ComponentName(this,AppControlService.class));try{startActivity(intent);}catch(ActivityNotFoundException e){startActivity(new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS));}return;}
+        if(action.equals("accessibility-settings")){AccessSettings.request(this,action);return;}
         if(action.equals("onboarding-finish")){getSharedPreferences("studio-first-use",MODE_PRIVATE).edit().putBoolean("done",true).apply();return;}
         if(action.equals("onboarding-step")){int step=argument.optInt("step");if(step>=0&&step<4)getSharedPreferences("studio-first-use",MODE_PRIVATE).edit().putInt("step",step).apply();return;}
         if(action.equals("orientation")){try{DisplayMode.set(this,argument.optString("mode"));service.runtime.publishUi();}catch(IllegalArgumentException e){service.runtime.toast("不支持的屏幕方向");service.runtime.publishUi();}return;}

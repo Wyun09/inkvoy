@@ -20,6 +20,7 @@ final class AccessSettings {
     }
     static Intent intent(Context context,String action){
         String packageName=context.getPackageName();Uri app=Uri.parse("package:"+packageName);
+        if(action.equals("accessibility-settings"))return new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
         if(action.equals("permission-files"))return new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,app);
         if(action.equals("permission-battery"))return new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,app);
         if(action.equals("permission-notifications"))return new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(Settings.EXTRA_APP_PACKAGE,packageName);
@@ -28,7 +29,14 @@ final class AccessSettings {
     static void request(Activity activity,String action){
         if(action.equals("permission-files")&&Build.VERSION.SDK_INT<30){activity.requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},31);return;}
         if(action.equals("permission-notifications")&&Build.VERSION.SDK_INT>=33&&activity.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)!=PackageManager.PERMISSION_GRANTED&&activity.shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)){activity.requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS},32);return;}
-        try{activity.startActivity(intent(activity,action));}
-        catch(ActivityNotFoundException e){activity.startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,Uri.parse("package:"+activity.getPackageName())));}
+        if(open(activity,intent(activity,action)))return;
+        Intent fallback=action.equals("accessibility-settings")?new Intent(Settings.ACTION_SETTINGS):new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,Uri.parse("package:"+activity.getPackageName()));
+        if(open(activity,fallback))return;
+        String help=action.equals("accessibility-settings")?"系统未允许打开设置，请手动进入设置 → 无障碍 → 已安装的服务 → Inkvoy。":"系统未允许打开设置，请在系统设置中找到 Inkvoy 的应用权限。";
+        android.widget.Toast.makeText(activity,help,android.widget.Toast.LENGTH_LONG).show();
+    }
+    private static boolean open(Activity activity,Intent intent){
+        try{activity.startActivity(intent);return true;}
+        catch(ActivityNotFoundException|SecurityException unavailable){return false;}
     }
 }

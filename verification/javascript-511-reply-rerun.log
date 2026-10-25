@@ -1,0 +1,13 @@
+✔ failure before any answer keeps an incomplete response and retry notice (8413.8896ms)
+✔ one response groups tool results, renders rich code/table, and copies exact code (9056.3893ms)
+✔ keyed replies keep expanded tools and code DOM while state changes, and preserve reading position (8677.1228ms)
+✔ file diff opens real snapshot contract, reverts via native operation, and closes with back/focus (8797.0023ms)
+✔ failed commands keep stderr visible in their own result and changed files cannot be reverted (8684.0936ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 44040.9013

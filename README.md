@@ -1,10 +1,15 @@
-# Inkvoy 5.1
+# Inkvoy 5.1.1
+
+修复 Android 13 打开无障碍设置时因受限详情页权限导致的闪退。改用公开设置入口，系统拒绝或页面缺失均安全回退；无可用入口时显示手动进入路径。沿用包名和签名，可覆盖安装。详见 FIX_5.1.1.md 和 VERIFICATION.md。
+
+自有代码采用 GPL-3.0-only；第三方组件保留原许可证。
+
 
 Android 手机上独立运行的 AI 工作台，面向编程、安全研究与逆向分析，集成 Debian 终端、文件、AI 浏览器、MCP、技能与多模型协作。
 
 An on-device Android AI workspace for coding, security research, and reverse engineering, with a terminal, AI browser, MCP, and multi-model agents.
 
-仓库：https://github.com/Wyun09/inkvoy 。完整版本历史迁移尚未执行。
+仓库：https://github.com/Wyun09/inkvoy 。版本历史正在从保存的源码快照导入。
 
 ## 5.1 更新
 

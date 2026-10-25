@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="io.github.deepseekbridge" android:versionCode="24" android:versionName="5.1.0">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="io.github.deepseekbridge" android:versionCode="25" android:versionName="5.1.1">
     <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="35" />
     <queries><intent><action android:name="android.intent.action.MAIN" /><category android:name="android.intent.category.LAUNCHER" /></intent></queries>
     <uses-permission android:name="android.permission.INTERNET" />
@@ -24,3 +24,4 @@
         </service>
     </application>
 </manifest>
+

@@ -1,5 +1,5 @@
 {
-  "version": "5.1.0",
+  "version": "5.1.1",
   "source": "deepseek-web-bridge v0.2.2",
   "method": "Supplied Android sources include mobile page hooks, validated tool protocol, current-turn DOM boundaries and stable output buffering. No desktop bridge or Harness was modified.",
   "modules": {
@@ -117,7 +117,7 @@
     "js/ui/reply-model.js": "c666baa3fd742bb2b317514112c9a725e1012f2e6e5dc6bc1b6c9f14bba53faf",
     "js/ui/reply.css": "0a423ba162fefdc01542a1c8dc1e18d2bd17463bf929a65511dae1c7b592599d",
     "js/ui/settings-hub.js": "8b8037a08b62369000bfe6c67082ede571ef7a460a03cc1fe8e1bc403d59ea02",
-    "js/ui/setup-journey.js": "bc61735ed7582f10ae4d04cefb111d739745f92ada4802896225fca9596ed022",
+    "js/ui/setup-journey.js": "f2af7659468995e8c498db04b047b6d7a11320d7b07bd95e350f29a38e00f6d8",
     "js/ui/stream-reveal.js": "60c227fee47726ca8247db38eb663da4488485235ab9adb6ac3170a70ca7b6b1",
     "js/ui/studio.css": "25c38a2212691739ae2de541ac3ff156213cf0912c7193b6f887d6d3c3e8d4ab",
     "js/ui/studio.js": "036f47db71a1184fa4fe50a55dd51306e97076b68451ba5e131f7eeeeb16ab3f",
@@ -147,7 +147,7 @@
     "js/upload-state.js": "92c249df5cf2c1c7468784ea17d12d3d37722b5f92e656c1a837fcf529a3d66c",
     "js/workflow.js": "66912ea52a8a88b70c6374325d8ee30363a885f4fc4e2335c3d895432529799f",
     "app/src/main/java/com/termux/terminal/JNI.java": "e57f7252a312c899a7c9ac09ef15b35e481d4d9e71a2f149f22e72c7c7c78c47",
-    "app/src/main/java/io/github/deepseekbridge/AccessSettings.java": "8bf56fe01572b5ddde8f5b9e20eaaf948e9e99549e1f8e2babf2c319124bda43",
+    "app/src/main/java/io/github/deepseekbridge/AccessSettings.java": "ee7eecc20d4682752d1cc5021b35a1a86aa9c1dded5e5d3ff98f90882761b260",
     "app/src/main/java/io/github/deepseekbridge/AppControlService.java": "d26792f23a907e7bcdb35368dd696b17adf90d66b1117277f7edd8aa20d8852e",
     "app/src/main/java/io/github/deepseekbridge/BridgeRuntime.java": "0682dad6cb26f212d3d71635ac5d7961806717a55563b3fb84af4acba8a10357",
     "app/src/main/java/io/github/deepseekbridge/BridgeService.java": "3f14eb7f88852588e1b3610d64e6960e53f49a09e5c11b28bc3667b44ece68ac",
@@ -163,7 +163,7 @@
     "app/src/main/java/io/github/deepseekbridge/FileRevisions.java": "414fc286a7095b0d847e8e249e2051dc5dcd29477354da53a3ca6ff2da56e260",
     "app/src/main/java/io/github/deepseekbridge/LocalState.java": "e2ff190c8763909102bee30cd853ae3639f82c51a7fa8201267a0b616a799d9f",
     "app/src/main/java/io/github/deepseekbridge/LoopbackServer.java": "873407f5430263ecfbce32832006b82a6dbc45580c082fd1a0d18b862845e9f5",
-    "app/src/main/java/io/github/deepseekbridge/MainActivity.java": "05d8abf59e8ff2a2549014911117e315459a181c1210fee9b178cc6aa9a15dbd",
+    "app/src/main/java/io/github/deepseekbridge/MainActivity.java": "4f081267a1b4f334a78360c3229a274ea536651b1cd8b64cf42f8b893766a9f0",
     "app/src/main/java/io/github/deepseekbridge/ManagedTasks.java": "b7b39d0497ee6e29b033fea35aee2970728e52f50ef532baf56e899380bde64d",
     "app/src/main/java/io/github/deepseekbridge/NativePty.java": "62c8e11714c0a33a4d5e884a755d11ce7ab837a382cdd02fc8fd61af21148b74",
     "app/src/main/java/io/github/deepseekbridge/NetworkErrors.java": "bfec39868ceca0d7ad618826c7ddefa651890f3ce382901e9a6e25950390cb65",
@@ -225,5 +225,14 @@
     "appControl": "app/src/main/java/io/github/deepseekbridge/AppControlService.java",
     "network": "app/src/main/java/io/github/deepseekbridge/NetworkSettings.java",
     "regression": "verification/regression-510.json"
+  },
+  "hotfix": {
+    "issue": "Android 13 OEM settings activity permission denial",
+    "files": {
+      "app/src/main/java/io/github/deepseekbridge/AccessSettings.java": "ee7eecc20d4682752d1cc5021b35a1a86aa9c1dded5e5d3ff98f90882761b260",
+      "app/src/main/java/io/github/deepseekbridge/MainActivity.java": "4f081267a1b4f334a78360c3229a274ea536651b1cd8b64cf42f8b893766a9f0",
+      "test/android-runtime/src/test/java/io/github/deepseekbridge/SettingsLaunchRegressionTest.java": "2566954634f8e1dc4e0ec8ca0c8217aef7c55e49aed052dc1587d62b76d75f35"
+    },
+    "verification": "verification/regression-511.json"
   }
 }

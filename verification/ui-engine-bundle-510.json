@@ -3086,7 +3086,7 @@
           "bytesInOutput": 15977
         },
         "js/ui/setup-journey.js": {
-          "bytesInOutput": 32377
+          "bytesInOutput": 32750
         },
         "js/ui/browser-scripts.js": {
           "bytesInOutput": 5410
@@ -3107,7 +3107,7 @@
           "bytesInOutput": 11570
         }
       },
-      "bytes": 1642291
+      "bytes": 1642664
     }
   }
 }

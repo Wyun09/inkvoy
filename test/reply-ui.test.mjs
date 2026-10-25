@@ -29,7 +29,7 @@ test('keyed replies keep expanded tools and code DOM while state changes, and pr
  assert.equal(await page.evaluate(()=>window.retainedCode===document.querySelector('.reply-step .reply-code')&&window.retainedTurn===document.querySelector('.reply-turn')),true);assert.equal(await page.locator('.reply-step').first().getAttribute('open'),'');
  await page.locator('#chat-messages').evaluate(n=>n.scrollTop=0);assert.ok(await page.locator('#chat-messages').evaluate(n=>n.scrollHeight-n.clientHeight>200));
  await page.evaluate(()=>{const pending=workspaceCalls.find(c=>c.operation==='tool.execute'&&c.args.name==='terminal');AndroidEngine.workspaceRpc(pending.id,{ok:true,value:{ok:true,stdout:'command done',exitCode:0}});});
- await page.waitForFunction(()=>document.querySelector('.reply-step[data-state="running"] .reply-step-title').textContent.includes('修改文件'));assert.equal(await page.locator('#chat-messages').evaluate(n=>n.scrollTop),0);assert.equal(await page.locator('.reply-jump').isVisible(),true);
+ await page.waitForFunction(()=>document.querySelector('.reply-step[data-state="running"] .reply-step-title')?.textContent.includes('修改文件'));assert.equal(await page.locator('#chat-messages').evaluate(n=>n.scrollTop),0);assert.equal(await page.locator('.reply-jump').isVisible(),true);
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
 });
 
