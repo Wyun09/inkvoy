@@ -22,6 +22,7 @@ export async function uiHarness(browser, viewport = { width: 390, height: 844 },
       uiAction(action, raw) { window.nativeActions.push({ action, payload: JSON.parse(raw) }); },
       uiLayout(raw) { window.nativeLayouts.push(JSON.parse(raw)); },
       startupError(message) { window.nativeStartupErrors.push(message); },
+      searchDefault() { return true; },
       request() {}, response() {}, reportUi() {},
     };
   }, { storage, failStartup });
@@ -29,4 +30,4 @@ export async function uiHarness(browser, viewport = { width: 390, height: 844 },
   await page.waitForFunction(failStartup => failStartup ? window.nativeStartupErrors?.length > 0 : window.nativeReady && window.BridgeDashboard, failStartup, { timeout: 5000 });
   return { context, page };
 }
-export const readyState = { version: '0.2.1', ready: true, running: true, loggedIn: true, hasInspection: true, inspecting: false, needsVerification: false, reasoningMode: { count: 1, enabled: false, source: 'ds_toggle_component' }, requests: 0, busy: false, testStatus: 'passed', probeRunning: false, activities: [{ text: '本机服务已启动', time: '09:41' }, { text: '网页登录已确认', time: '09:42' }, { text: '接口自测通过', time: '09:42' }] };
+export const readyState = { version: '0.3.0', ready: true, running: true, loggedIn: true, hasInspection: true, inspecting: false, needsVerification: false, reasoningMode: { count: 1, enabled: false, source: 'ds_toggle_component' }, webSearchDefault: true, webSearchMode: { count: 1, enabled: true, source: 'aria-pressed' }, requests: 0, busy: false, testStatus: 'passed', probeRunning: false, activities: [{ text: '本机服务已启动', time: '09:41' }, { text: '网页登录已确认', time: '09:42' }, { text: '接口自测通过', time: '09:42' }] };

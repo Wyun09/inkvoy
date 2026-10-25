@@ -59,7 +59,8 @@ public final class LoopbackServer implements Closeable {
         return new String(bytes.toByteArray(), StandardCharsets.ISO_8859_1);
     }
     private static String error(String code, String message) {
-        return "{\"error\":{\"type\":\"bridge_error\",\"code\":\"" + code + "\",\"message\":\"" + message + "\"}}";
+        String type = code.equals("invalid_api_key") ? "authentication_error" : code.equals("not_found") ? "not_found_error" : code.equals("body_too_large") ? "request_too_large" : code.equals("invalid_host") || code.equals("browser_origin_denied") ? "permission_error" : "invalid_request_error";
+        return "{\"type\":\"error\",\"error\":{\"type\":\"" + type + "\",\"code\":\"" + code + "\",\"message\":\"" + message + "\"}}";
     }
     private static void json(OutputStream output, int status, String body) throws IOException {
         byte[] bytes = body.getBytes(StandardCharsets.UTF_8);
@@ -75,6 +76,7 @@ public final class LoopbackServer implements Closeable {
             String[] requestLine = line(input, budget).split(" ");
             if (requestLine.length != 3 || !requestLine[2].equals("HTTP/1.1")) { json(output, 400, error("invalid_http", "Use HTTP/1.1.")); return; }
             String method = requestLine[0], path = requestLine[1];
+            int query = path.indexOf('?'); if (query >= 0) path = path.substring(0, query);
             Map<String, String> headers = new HashMap<>();
             for (;;) {
                 String value = line(input, budget); if (value.isEmpty()) break;
@@ -86,13 +88,17 @@ public final class LoopbackServer implements Closeable {
             String host = headers.getOrDefault("host", "");
             if (!host.matches("(?i)(127\\.0\\.0\\.1|localhost)(:" + port() + ")?")) { json(output, 403, error("invalid_host", "Only local hosts are accepted.")); return; }
             if (headers.containsKey("origin")) { json(output, 403, error("browser_origin_denied", "Use a native client or its backend.")); return; }
-            if (method.equals("GET") && path.equals("/health")) { json(output, 200, "{\"status\":\"ok\",\"version\":\"0.2.1-android\"}"); return; }
+            if (method.equals("GET") && path.equals("/health")) { json(output, 200, "{\"status\":\"ok\",\"version\":\"0.3.0-android\"}"); return; }
             if (method.equals("GET") && (path.equals("/") || path.equals("/v1") || path.equals("/v1/"))) { json(output, 200, "{\"status\":\"ok\",\"model\":\"deepseek-web\"}"); return; }
             String authorization = headers.getOrDefault("authorization", "");
             byte[] supplied = authorization.regionMatches(true, 0, "Bearer ", 0, 7) ? authorization.substring(7).getBytes(StandardCharsets.UTF_8) : new byte[0];
-            if (!MessageDigest.isEqual(key, supplied)) { json(output, 401, error("invalid_api_key", "A local Bearer key is required.")); return; }
-            if (method.equals("GET") && path.equals("/v1/models")) { json(output, 200, "{\"object\":\"list\",\"data\":[{\"id\":\"deepseek-web\",\"object\":\"model\",\"owned_by\":\"android-webview-bridge\",\"capabilities\":{\"vision\":true,\"reasoning\":true}}]}"); return; }
-            boolean completion = method.equals("POST") && path.equals("/v1/chat/completions");
+            String apiKey = headers.getOrDefault("x-api-key", "");
+            boolean hasBearer = !authorization.isEmpty(), hasApiKey = !apiKey.isEmpty();
+            boolean bearerMatches = MessageDigest.isEqual(key, supplied);
+            boolean apiKeyMatches = MessageDigest.isEqual(key, apiKey.getBytes(StandardCharsets.UTF_8));
+            if ((!hasBearer && !hasApiKey) || hasBearer && !bearerMatches || hasApiKey && !apiKeyMatches) { json(output, 401, error("invalid_api_key", "A valid local Bearer or x-api-key credential is required.")); return; }
+            if (method.equals("GET") && path.equals("/v1/models")) { json(output, 200, "{\"object\":\"list\",\"data\":[{\"id\":\"deepseek-web\",\"object\":\"model\",\"owned_by\":\"android-webview-bridge\",\"capabilities\":{\"vision\":true,\"reasoning\":true,\"web_search\":true}}]}"); return; }
+            boolean completion = method.equals("POST") && (path.equals("/v1/chat/completions") || path.equals("/v1/messages") || path.equals("/v1/messages/count_tokens"));
             boolean browser = method.equals("GET") && path.equals("/browser/status") || method.equals("POST") && path.equals("/browser/open");
             if (!completion && !browser) { json(output, 404, error("not_found", "Unsupported API path.")); return; }
             if (headers.containsKey("transfer-encoding") || headers.containsKey("content-encoding") && !headers.get("content-encoding").equalsIgnoreCase("identity")) { json(output, 415, error("unsupported_encoding", "Use an uncompressed Content-Length body.")); return; }

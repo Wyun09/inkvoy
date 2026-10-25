@@ -105,6 +105,7 @@ public final class MainActivity extends Activity {
             return;
         }
         if (action.equals("theme")) { applyTheme(argument.optBoolean("dark")); return; }
+        if (action.equals("search-policy")) { service.runtime.setWebSearchDefault(argument.optBoolean("enabled")); return; }
         if (action.equals("start")) startForegroundService(new Intent(this, BridgeService.class));
         else if (action.equals("stop")) service.stopBridge();
         else if (action.equals("inspect")) service.runtime.inspectPage();
@@ -121,6 +122,15 @@ public final class MainActivity extends Activity {
             try { text = new JSONObject().put("base_url", "http://127.0.0.1:8787/v1").put("model", "deepseek-web").put("api_key", service.runtime.apiKey).toString(2); }
             catch (JSONException e) { return; }
             label = "连接配置"; sensitive = true;
+        } else if (field.equals("claude")) {
+            try {
+                JSONObject env = new JSONObject().put("ANTHROPIC_BASE_URL", "http://127.0.0.1:8787").put("ANTHROPIC_AUTH_TOKEN", service.runtime.apiKey)
+                    .put("ANTHROPIC_MODEL", "deepseek-web").put("ANTHROPIC_DEFAULT_SONNET_MODEL", "deepseek-web")
+                    .put("ANTHROPIC_DEFAULT_OPUS_MODEL", "deepseek-web").put("ANTHROPIC_DEFAULT_HAIKU_MODEL", "deepseek-web")
+                    .put("CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS", "1");
+                text = new JSONObject().put("env", env).toString(2);
+            } catch (JSONException e) { return; }
+            label = "Claude Code 配置"; sensitive = true;
         } else if (field.equals("diagnostics")) {
             try { JSONObject data = service.runtime.snapshot(); data.remove("activities"); text = data.toString(2); }
             catch (JSONException e) { return; }
@@ -147,6 +157,7 @@ public final class MainActivity extends Activity {
                 http.setConnectTimeout(5000); http.setReadTimeout(610000); http.setRequestProperty("Authorization", "Bearer " + runtime.apiKey);
                 http.setRequestMethod("POST"); http.setDoOutput(true); http.setRequestProperty("Content-Type", "application/json");
                 JSONObject request = new JSONObject().put("model", "deepseek-web").put("stream", false).put("messages", new JSONArray().put(new JSONObject().put("role", "user").put("content", "只回复 " + marker)));
+                request.put("web_search", false);
                 if (thinking) request.put("thinking", new JSONObject().put("type", "enabled"));
                 byte[] body = request.toString().getBytes(StandardCharsets.UTF_8);
                 http.setFixedLengthStreamingMode(body.length); try (OutputStream out = http.getOutputStream()) { out.write(body); }

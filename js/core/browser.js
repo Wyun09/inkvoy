@@ -9,7 +9,7 @@ const ANSWER_SELECTOR = '.ds-markdown.ds-assistant-message-main-content';
 const REASONING_NAME = /^(?:深度思考(?:\s*[（(][^）)]*[）)])?|DeepThink(?:\s*\([^)]*\))?)$/i;
 const UPLOAD_ITEM_SELECTOR = '[data-testid="attachment"], [data-testid="file-preview"], [data-attachment], .ds-file-list-item, .ds-file-upload-item, .ds-attachment, .d5fa3d1b._183e647';
 
-class BrowserBridgeError extends Error {
+export class BrowserBridgeError extends Error {
   constructor(code, status, message) {
     super(message);
     this.name = 'BrowserBridgeError';
@@ -316,24 +316,29 @@ export class DeepSeekBrowser {
   }
 
   async _setReasoning(page, enabled, signal, deadline) {
-    let mode = await within(page.evaluate(reasoningControl, { action: 'read', waitMs: 1500 }), signal, deadline);
+    return this._setPageToggle(page, 'reasoning', enabled, signal, deadline);
+  }
+  async _setPageToggle(page, feature, enabled, signal, deadline) {
+    const label = feature === 'search' ? '智能搜索' : '深度思考';
+    const errorCode = feature === 'search' ? 'web_search_state_unknown' : 'reasoning_state_unknown';
+    let mode = await within(page.evaluate(reasoningControl, { action: 'read', waitMs: 1500, feature }), signal, deadline);
     if (mode.count !== 1 || typeof mode.enabled !== 'boolean') {
-      throw new BrowserBridgeError('reasoning_state_unknown', 400,
-        `无法确认深度思考状态（找到 ${mode.count} 个控件，${mode.reason || '状态未暴露'}）。请在首页重新检测。`);
+      throw new BrowserBridgeError(errorCode, 400,
+        `无法确认${label}状态（找到 ${mode.count} 个控件，${mode.reason || '状态未暴露'}）。请在首页重新检测。`);
     }
     if (mode.enabled === enabled) return;
     checkRequest(signal, deadline);
-    const changed = await within(page.evaluate(reasoningControl, { action: 'set', enabled }), signal, deadline);
+    const changed = await within(page.evaluate(reasoningControl, { action: 'set', enabled, feature }), signal, deadline);
     if (!changed.clicked && !changed.alreadySet) {
-      throw new BrowserBridgeError('reasoning_state_unknown', 400, '深度思考开关不可操作或状态发生变化，已停止发送。');
+      throw new BrowserBridgeError(errorCode, 400, `${label}开关不可操作或状态发生变化，已停止发送。`);
     }
     const modeDeadline = Math.min(deadline, Date.now() + 3000);
     while (Date.now() < modeDeadline) {
-      mode = await within(this._readReasoningMode(page), signal, deadline);
+      mode = await within(page.evaluate(reasoningControl, { action: 'read', feature }), signal, deadline);
       if (mode.count === 1 && mode.enabled === enabled) return;
       await pause(this.config.pollMs, signal, deadline);
     }
-    throw new BrowserBridgeError('reasoning_state_unknown', 400, '深度思考开关切换后未能确认状态，已停止发送。');
+    throw new BrowserBridgeError(errorCode, 400, `${label}开关切换后未能确认状态，已停止发送。`);
   }
 
   async _decodeImages(page, images, signal, deadline) {
@@ -483,6 +488,9 @@ export class DeepSeekBrowser {
     }
   }
 
+  async _submitComposer(_page, composer, _options) { await composer.press('Enter'); }
+  async _beforeSubmit(_page, _options) {}
+
   async _waitSubmission(page, before, prompt, signal, deadline) {
     const submissionDeadline = Math.min(deadline, Date.now() + 5000);
     while (Date.now() < submissionDeadline) {
@@ -501,22 +509,26 @@ export class DeepSeekBrowser {
         }
         await pause(this.config.pollMs, signal, submissionDeadline);
       } catch (error) {
-        if (error?.code === 'REQUEST_TIMEOUT' && Date.now() >= submissionDeadline && !signal?.aborted) break;
+        // A read begun just before this phase's deadline may reach the read
+        // timeout wrapper first. It is still an unconfirmed submission, not
+        // a separate observation failure; never submit the same prompt again.
+        if (['REQUEST_TIMEOUT', 'webpage_observation_timeout'].includes(error?.code) && Date.now() >= submissionDeadline && !signal?.aborted) break;
         throw error;
       }
     }
     checkRequest(signal, deadline);
     throw new BrowserBridgeError('webpage_submission_failed', 400,
-      '按 Enter 后 5 秒内网页未确认接收消息（输入未清空、没有新消息或新对话）。已停止，未重复提交。');
+      '提交后 5 秒内网页未确认接收消息（输入未清空、没有新消息或新对话）。已停止，未重复提交。');
   }
 
-  async *generate({ prompt, images = [], reasoning = false, signal } = {}) {
+  async *generate({ prompt, images = [], reasoning = false, webSearch, signal } = {}) {
     if (typeof prompt !== 'string' || !prompt.trim()) {
       throw new BrowserBridgeError('INVALID_PROMPT', 400, '消息内容不能为空。');
     }
     if (typeof reasoning !== 'boolean') {
       throw new BrowserBridgeError('invalid_reasoning', 400, 'reasoning 必须是布尔值。');
     }
+    if (webSearch !== undefined && typeof webSearch !== 'boolean') throw new BrowserBridgeError('invalid_web_search', 400, 'web_search 必须是布尔值。');
     if (!Array.isArray(images) || images.some(image => !image || !Buffer.isBuffer(image.buffer)
       || !image.buffer.length || typeof image.name !== 'string' || !image.name
       || typeof image.mimeType !== 'string' || !image.mimeType.startsWith('image/'))) {
@@ -557,11 +569,12 @@ export class DeepSeekBrowser {
       const beforeSubmission = await this._readStateBounded(page, signal, deadline);
       this._checkState(beforeSubmission, prompt);
       await this._setReasoning(page, reasoning, signal, deadline);
+      await within(this._beforeSubmit(page, { reasoning, webSearch, signal, deadline }), signal, deadline);
       this._activeRequest.phase = 'ready';
       yield { type: 'ready' };
       checkRequest(signal, deadline);
       this._activeRequest.phase = 'submitting';
-      await within(composer.press('Enter'), signal, deadline);
+      await within(this._submitComposer(page, composer, { prompt, signal, deadline }), signal, deadline);
       let pendingState = await this._waitSubmission(page, beforeSubmission, prompt, signal, deadline);
       const firstOutputDeadline = Math.min(deadline, Date.now() + this.config.firstOutputTimeoutMs);
       let sawOutput = false;

@@ -1,6 +1,6 @@
-# DeepSeek 安卓本机桥 v0.2.1
+# DeepSeek 安卓本机桥 v0.3.0
 
-在安卓手机上登录 DeepSeek 网页，并把网页操作转换成同一部手机可以调用的 OpenAI Chat Completions 接口。运行链路全部在手机上：
+在安卓手机上登录 DeepSeek 网页，并把网页操作转换成同一部手机可以调用的 OpenAI Chat Completions 和 Anthropic Messages 接口。两种协议共用端口、密钥、队列与网页登录状态。运行链路全部在手机上：
 
 ```text
 手机兼容客户端
@@ -12,11 +12,11 @@ https://chat.deepseek.com/
 
 运行时不需要电脑、Termux、Root、ADB 或桌面 Harness。需要互联网连接 DeepSeek。安卓客户端若要执行工具，须具备它自己的工具执行能力；本桥只交出经过校验的工具请求。
 
-**当前为按钮初始化修复与 Logo 更新 v0.2.1。101 项 JS/DOM/UI 测试、15 项原生 HTTP 检查与 APK 签名校验通过。** 新版包含概览、DeepSeek、连接三个页面，以及明暗主题、真实状态、独立网页登录区域和诊断。尚未在用户手机实测；先分屏保持应用可见，后台与锁屏行为需设备验证。按钮修复详见 FIX_0.2.1.md；此前界面升级见 UI_UPGRADE.md。
+**当前 v0.3.0 新增 Anthropic 协议适配、Claude Code 配置复制、可靠点击发送按钮，以及网页智能搜索策略。** 保留按钮启动修复、新 Logo 与三个页面。完整测试与 APK 校验记录见 VERIFICATION.md，变更见 FIX_0.3.0.md。尚未在用户手机实测；首次分屏保持应用可见，后台与锁屏行为需设备验证。
 
 ## 安装与使用
 
-1. 将 `deepseek-android-bridge-v0.2.1.apk` 传到手机并安装。支持 Android 8.0 / API 26 及以上；要求 Android System WebView/Chrome 的 Chromium 版本达到 120。版本过低时应用会提示更新。
+1. 将 `deepseek-android-bridge-v0.3.0.apk` 传到手机并安装。支持 Android 8.0 / API 26 及以上；要求 Android System WebView/Chrome 的 Chromium 版本达到 120。版本过低时应用会提示更新。
 2. 打开「DeepSeek 本机桥」。应用会启动本机接口并显示概览；底部导航可以进入 DeepSeek 网页和连接设置。允许通知后可以从通知栏回到应用。
 3. 进入「DeepSeek」页，在应用内的网页手动登录 DeepSeek，手动完成短信与网站要求的人机验证。手机拥有独立登录状态，不会导入电脑会话。
 4. 回到「概览」，点「重新检测」，再点「接口自测」卡片。后者会真实发送“只回复 ANDROID_BRIDGE_OK”，必须看到成功结果才算手机首次基本验收通过。
@@ -29,21 +29,27 @@ https://chat.deepseek.com/
 | API Key | 「连接」页复制的手机密钥 |
 | 协议 | OpenAI Chat Completions |
 
+Claude Code 在「连接 → 复制 Claude Code 配置」中直接复制，使用根地址 `http://127.0.0.1:8787`（不加 `/v1`）。详细配置见 [CLAUDE_CODE.md](CLAUDE_CODE.md)。`127.0.0.1` 指调用程序所在设备；电脑 Claude Code 需要端口转发，不能直接用电脑本机地址访问手机。
+
 电脑可以关机。手机需要保持网络；客户端须允许访问本机 HTTP 地址。不要填电脑版的密钥。接口不提供浏览器跨域访问；网页客户端需要自己的后端。
 
 概览中的「停止服务」会停止接口并移除前台服务通知。重开应用可再次启动。应用不会开机自启。清除应用数据或卸载会移除手机密钥及 WebView 登录数据。
 
 ## 能力与边界
 
-- 文本、完整消息历史、OpenAI 形式的 `tools` / `tool_choice`、AJV JSON Schema 校验、独立 `reasoning_content`、SSE 和估算 usage。
-- 复用桌面桥 v0.2.2 的核心；其中四个文件保持原文，browser.js 加入安卓思考开关适配。各版本 SHA-256 与差异记录在 `CORE_PROVENANCE.json`。平台差异集中在 WebView 适配层与原生 HTTP 传输；桌面浏览器启动与文件系统操作在 APK 内不可用。
+- 文本、完整消息历史、OpenAI 形式的 `tools` / `tool_choice`、独立 `reasoning_content`、SSE 和估算 usage。工具 Schema 保留并执行 draft-07 / 2019-09 / 2020-12 校验。
+- Anthropic `/v1/messages`：system、content blocks、`tool_use` / `tool_result`、具名 SSE、thinking 开关和长 MCP 名称映射。`/v1/messages/count_tokens` 为本地估算，不生成网页请求。支持 `?beta=true` 路径及 Bearer / `x-api-key` 认证。两种认证同时发送时必须均有效。
+- Anthropic thinking/adaptive 映射为网页思考开关；没有 Anthropic 的签名状态，`usage_meta.thinking_signature` 为 `not_available`，不伪造签名。结构化输出、服务端执行工具等未实现能力明确报错。
+- 复用桌面桥 v0.2.2 的核心；三个文件保持原文，browser.js 加入安卓开关与提交钩子，protocol.js 加入 Schema 方言选择。哈希与修改说明在 `CORE_PROVENANCE.json`。没有修改或重启桌面桥 / Harness。
 - 一次只操作一个网页；最多等待 8 个请求。取消后等待旧页面清理，避免把旧回答混入下一轮。
 - 工具封装校验失败或完全无输出时最多再尝试一次，两种恢复共用最多两次的预算。完全无输出等待 120 秒，总请求时限 600 秒（含排队）。已出现正文或原始思考时不走空响应重试。
 - 手机请求体传输上限 **16 MiB**，超限返回 413；不截断历史。没有宣称手机实测过 1M token。
 - 图片实现支持 PNG/JPEG/WebP 的 base64 data URL，每张不超过 10 MiB、最多 8 张，受整体请求上限约束。远程 HTTP(S) 图片 URL 明确返回 400。手机端图片上传采用 WebView FileList/DataTransfer + DOM 就绪检查；尚未在真实手机的 DeepSeek 上传链路验收。
 - usage 是字符启发式估算，图片 token 不计入。网页没有暴露官方缓存统计，`usage_meta.cache.status` 为 `unknown`，不伪造命中数。
 - 仍保留网页渲染、验证码、登录失效、限流和改版导致失败的可能。手机号与验证码只在网页中由你输入，不由桥处理。
-- 手机端 Enter 提交、真实页面布局、文件上传与长期后台生命周期需要设备验证。内置自测遇到错误时，保留错误文字即可继续定位；不要把密钥或验证码贴进报告。
+- 自动发送会核对当前编辑器和待发正文，点击唯一可用发送按钮，再检查提交发生。同一提交最多点击一次；缺失、禁用、歧义或生成中明确报错。真实手机页面布局、文件上传与长期后台生命周期仍需设备验证。
+- 智能搜索默认开启，在「概览 → 智能搜索」可调整。每次发送前应用并确认网页开关，无需外部搜索模型/API。网页自行决定是否实际检索，请求可用 boolean `web_search` 覆盖本次策略。Anthropic `web_search_*` 声明映射为网页搜索，不提供其原生结果块、引用格式和高级过滤语义。
+- 本版仍按独立请求创建网页对话。任务会话复用是后续设计，尚未实现；不会自动删除现有对话。
 
 ## 结构与构建
 
@@ -65,7 +71,9 @@ npm.cmd test
 
 构建脚本直接使用 JDK 17、Android API 35 与 Build Tools 35.0.0，无需 Android Studio/Gradle。SDK 下载来自 Google，JDK 来自 Eclipse Adoptium，下载按官方元数据校验。构建依赖与 SDK 留在本地构建目录。签名密钥应保留在私有目录以便升级，不放入源码包。当前 APK 用本机测试签名签署，未发布到应用商店。
 
-发布源码包已经包含核心。`npm.cmd run sync` 会拒绝直接覆盖已打补丁的 browser.js；维护者需手动合并移动端适配后再同步。`scripts/sync-tests.mjs` 同理，只用于从相邻工程同步现有核心测试。
+发布源码包已经包含核心。`npm.cmd run sync` 会拒绝直接覆盖已修改的 browser.js / protocol.js；维护者需手动合并后同步。`scripts/sync-tests.mjs` 同理，只用于从相邻工程同步现有核心测试。
+
+已安装 Claude Code 的主机可运行 `node scripts/smoke-claude.mjs <隔离测试目录>`，或通过 `CLAUDE_TEST_BINARY` 指定可执行文件。该测试使用生产 JS 协议引擎与确定性模型夹具，实际调用客户端 Write 工具、检查文件及结果回传；不使用真实账号、不读写用户 Claude 设置。证据见 `claude-smoke-results.json`。
 
 Android 的 WebView 是应用内网页组件，后台服务需遵循系统的前台服务与生命周期规则；前台通知不等于保证网页永不暂停。参考 [WebView 官方文档](https://developer.android.com/develop/ui/views/layout/webapps/webview)、[前台服务类型](https://developer.android.com/develop/background-work/services/fgs/service-types)。
 

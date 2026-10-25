@@ -54,8 +54,8 @@
   var init_platform = __esm({
     "js/platform.js"() {
       platform_default = {
-        resolve: (...parts) => parts.join("/"),
-        join: (...parts) => parts.join("/"),
+        resolve: (...parts2) => parts2.join("/"),
+        join: (...parts2) => parts2.join("/"),
         mkdir: unavailable,
         readdir: unavailable,
         readFile: unavailable,
@@ -3256,28 +3256,28 @@
           if (left.length === 1 && left[0] === "") left.length = 0;
           if (right.length === 1 && right[0] === "") right.length = 0;
         }
-        const parts = left.concat(right);
+        const parts2 = left.concat(right);
         let hextetCount = 0;
-        for (let i = 0; i < parts.length; i++) {
-          const part = parts[i];
+        for (let i = 0; i < parts2.length; i++) {
+          const part = parts2[i];
           if (part === "") return void 0;
           if (part.indexOf(".") !== -1) {
-            if (i !== parts.length - 1 || compression !== -1 && right.length === 0 || !isIPv4(part)) return void 0;
+            if (i !== parts2.length - 1 || compression !== -1 && right.length === 0 || !isIPv4(part)) return void 0;
             hextetCount += 2;
             continue;
           }
           if (!isHextet(part)) return void 0;
-          parts[i] = parseInt(part, 16).toString(16);
+          parts2[i] = parseInt(part, 16).toString(16);
           hextetCount++;
         }
         if (compression === -1) {
           if (hextetCount !== 8) return void 0;
-          return compressIPv6ZeroRun(parts);
+          return compressIPv6ZeroRun(parts2);
         }
         if (hextetCount >= 8) return void 0;
-        const expanded = parts.slice(0, left.length);
+        const expanded = parts2.slice(0, left.length);
         for (let i = hextetCount; i < 8; i++) expanded.push("0");
-        for (let i = left.length; i < parts.length; i++) expanded.push(parts[i]);
+        for (let i = left.length; i < parts2.length; i++) expanded.push(parts2[i]);
         return compressIPv6ZeroRun(expanded);
       }
       function normalizeIPv6(host) {
@@ -5107,8 +5107,8 @@
           const { gen, data, schemaCode, it } = cxt;
           const prec = it.opts.multipleOfPrecision;
           const res = gen.let("res");
-          const invalid = prec ? (0, codegen_1._)`Math.abs(Math.round(${res}) - ${res}) > 1e-${prec}` : (0, codegen_1._)`${res} !== parseInt(${res})`;
-          cxt.fail$data((0, codegen_1._)`(${schemaCode} === 0 || (${res} = ${data}/${schemaCode}, ${invalid}))`);
+          const invalid2 = prec ? (0, codegen_1._)`Math.abs(Math.round(${res}) - ${res}) > 1e-${prec}` : (0, codegen_1._)`${res} !== parseInt(${res})`;
+          cxt.fail$data((0, codegen_1._)`(${schemaCode} === 0 || (${res} = ${data}/${schemaCode}, ${invalid2}))`);
         }
       };
       exports.default = def;
@@ -6935,6 +6935,1286 @@
     }
   });
 
+  // node_modules/ajv/dist/vocabularies/dynamic/dynamicAnchor.js
+  var require_dynamicAnchor = __commonJS({
+    "node_modules/ajv/dist/vocabularies/dynamic/dynamicAnchor.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", { value: true });
+      exports.dynamicAnchor = void 0;
+      var codegen_1 = require_codegen();
+      var names_1 = require_names();
+      var compile_1 = require_compile();
+      var ref_1 = require_ref();
+      var def = {
+        keyword: "$dynamicAnchor",
+        schemaType: "string",
+        code: (cxt) => dynamicAnchor(cxt, cxt.schema)
+      };
+      function dynamicAnchor(cxt, anchor) {
+        const { gen, it } = cxt;
+        it.schemaEnv.root.dynamicAnchors[anchor] = true;
+        const v = (0, codegen_1._)`${names_1.default.dynamicAnchors}${(0, codegen_1.getProperty)(anchor)}`;
+        const validate = it.errSchemaPath === "#" ? it.validateName : _getValidate(cxt);
+        gen.if((0, codegen_1._)`!${v}`, () => gen.assign(v, validate));
+      }
+      exports.dynamicAnchor = dynamicAnchor;
+      function _getValidate(cxt) {
+        const { schemaEnv, schema, self } = cxt.it;
+        const { root, baseId, localRefs, meta } = schemaEnv.root;
+        const { schemaId } = self.opts;
+        const sch = new compile_1.SchemaEnv({ schema, schemaId, root, baseId, localRefs, meta });
+        compile_1.compileSchema.call(self, sch);
+        return (0, ref_1.getValidate)(cxt, sch);
+      }
+      exports.default = def;
+    }
+  });
+
+  // node_modules/ajv/dist/vocabularies/dynamic/dynamicRef.js
+  var require_dynamicRef = __commonJS({
+    "node_modules/ajv/dist/vocabularies/dynamic/dynamicRef.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", { value: true });
+      exports.dynamicRef = void 0;
+      var codegen_1 = require_codegen();
+      var names_1 = require_names();
+      var ref_1 = require_ref();
+      var def = {
+        keyword: "$dynamicRef",
+        schemaType: "string",
+        code: (cxt) => dynamicRef(cxt, cxt.schema)
+      };
+      function dynamicRef(cxt, ref) {
+        const { gen, keyword, it } = cxt;
+        if (ref[0] !== "#")
+          throw new Error(`"${keyword}" only supports hash fragment reference`);
+        const anchor = ref.slice(1);
+        if (it.allErrors) {
+          _dynamicRef();
+        } else {
+          const valid = gen.let("valid", false);
+          _dynamicRef(valid);
+          cxt.ok(valid);
+        }
+        function _dynamicRef(valid) {
+          if (it.schemaEnv.root.dynamicAnchors[anchor]) {
+            const v = gen.let("_v", (0, codegen_1._)`${names_1.default.dynamicAnchors}${(0, codegen_1.getProperty)(anchor)}`);
+            gen.if(v, _callRef(v, valid), _callRef(it.validateName, valid));
+          } else {
+            _callRef(it.validateName, valid)();
+          }
+        }
+        function _callRef(validate, valid) {
+          return valid ? () => gen.block(() => {
+            (0, ref_1.callRef)(cxt, validate);
+            gen.let(valid, true);
+          }) : () => (0, ref_1.callRef)(cxt, validate);
+        }
+      }
+      exports.dynamicRef = dynamicRef;
+      exports.default = def;
+    }
+  });
+
+  // node_modules/ajv/dist/vocabularies/dynamic/recursiveAnchor.js
+  var require_recursiveAnchor = __commonJS({
+    "node_modules/ajv/dist/vocabularies/dynamic/recursiveAnchor.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", { value: true });
+      var dynamicAnchor_1 = require_dynamicAnchor();
+      var util_1 = require_util();
+      var def = {
+        keyword: "$recursiveAnchor",
+        schemaType: "boolean",
+        code(cxt) {
+          if (cxt.schema)
+            (0, dynamicAnchor_1.dynamicAnchor)(cxt, "");
+          else
+            (0, util_1.checkStrictMode)(cxt.it, "$recursiveAnchor: false is ignored");
+        }
+      };
+      exports.default = def;
+    }
+  });
+
+  // node_modules/ajv/dist/vocabularies/dynamic/recursiveRef.js
+  var require_recursiveRef = __commonJS({
+    "node_modules/ajv/dist/vocabularies/dynamic/recursiveRef.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", { value: true });
+      var dynamicRef_1 = require_dynamicRef();
+      var def = {
+        keyword: "$recursiveRef",
+        schemaType: "string",
+        code: (cxt) => (0, dynamicRef_1.dynamicRef)(cxt, cxt.schema)
+      };
+      exports.default = def;
+    }
+  });
+
+  // node_modules/ajv/dist/vocabularies/dynamic/index.js
+  var require_dynamic = __commonJS({
+    "node_modules/ajv/dist/vocabularies/dynamic/index.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", { value: true });
+      var dynamicAnchor_1 = require_dynamicAnchor();
+      var dynamicRef_1 = require_dynamicRef();
+      var recursiveAnchor_1 = require_recursiveAnchor();
+      var recursiveRef_1 = require_recursiveRef();
+      var dynamic = [dynamicAnchor_1.default, dynamicRef_1.default, recursiveAnchor_1.default, recursiveRef_1.default];
+      exports.default = dynamic;
+    }
+  });
+
+  // node_modules/ajv/dist/vocabularies/validation/dependentRequired.js
+  var require_dependentRequired = __commonJS({
+    "node_modules/ajv/dist/vocabularies/validation/dependentRequired.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", { value: true });
+      var dependencies_1 = require_dependencies();
+      var def = {
+        keyword: "dependentRequired",
+        type: "object",
+        schemaType: "object",
+        error: dependencies_1.error,
+        code: (cxt) => (0, dependencies_1.validatePropertyDeps)(cxt)
+      };
+      exports.default = def;
+    }
+  });
+
+  // node_modules/ajv/dist/vocabularies/applicator/dependentSchemas.js
+  var require_dependentSchemas = __commonJS({
+    "node_modules/ajv/dist/vocabularies/applicator/dependentSchemas.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", { value: true });
+      var dependencies_1 = require_dependencies();
+      var def = {
+        keyword: "dependentSchemas",
+        type: "object",
+        schemaType: "object",
+        code: (cxt) => (0, dependencies_1.validateSchemaDeps)(cxt)
+      };
+      exports.default = def;
+    }
+  });
+
+  // node_modules/ajv/dist/vocabularies/validation/limitContains.js
+  var require_limitContains = __commonJS({
+    "node_modules/ajv/dist/vocabularies/validation/limitContains.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", { value: true });
+      var util_1 = require_util();
+      var def = {
+        keyword: ["maxContains", "minContains"],
+        type: "array",
+        schemaType: "number",
+        code({ keyword, parentSchema, it }) {
+          if (parentSchema.contains === void 0) {
+            (0, util_1.checkStrictMode)(it, `"${keyword}" without "contains" is ignored`);
+          }
+        }
+      };
+      exports.default = def;
+    }
+  });
+
+  // node_modules/ajv/dist/vocabularies/next.js
+  var require_next = __commonJS({
+    "node_modules/ajv/dist/vocabularies/next.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", { value: true });
+      var dependentRequired_1 = require_dependentRequired();
+      var dependentSchemas_1 = require_dependentSchemas();
+      var limitContains_1 = require_limitContains();
+      var next = [dependentRequired_1.default, dependentSchemas_1.default, limitContains_1.default];
+      exports.default = next;
+    }
+  });
+
+  // node_modules/ajv/dist/vocabularies/unevaluated/unevaluatedProperties.js
+  var require_unevaluatedProperties = __commonJS({
+    "node_modules/ajv/dist/vocabularies/unevaluated/unevaluatedProperties.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", { value: true });
+      var codegen_1 = require_codegen();
+      var util_1 = require_util();
+      var names_1 = require_names();
+      var error = {
+        message: "must NOT have unevaluated properties",
+        params: ({ params }) => (0, codegen_1._)`{unevaluatedProperty: ${params.unevaluatedProperty}}`
+      };
+      var def = {
+        keyword: "unevaluatedProperties",
+        type: "object",
+        schemaType: ["boolean", "object"],
+        trackErrors: true,
+        error,
+        code(cxt) {
+          const { gen, schema, data, errsCount, it } = cxt;
+          if (!errsCount)
+            throw new Error("ajv implementation error");
+          const { allErrors, props } = it;
+          if (props instanceof codegen_1.Name) {
+            gen.if((0, codegen_1._)`${props} !== true`, () => gen.forIn("key", data, (key) => gen.if(unevaluatedDynamic(props, key), () => unevaluatedPropCode(key))));
+          } else if (props !== true) {
+            gen.forIn("key", data, (key) => props === void 0 ? unevaluatedPropCode(key) : gen.if(unevaluatedStatic(props, key), () => unevaluatedPropCode(key)));
+          }
+          it.props = true;
+          cxt.ok((0, codegen_1._)`${errsCount} === ${names_1.default.errors}`);
+          function unevaluatedPropCode(key) {
+            if (schema === false) {
+              cxt.setParams({ unevaluatedProperty: key });
+              cxt.error();
+              if (!allErrors)
+                gen.break();
+              return;
+            }
+            if (!(0, util_1.alwaysValidSchema)(it, schema)) {
+              const valid = gen.name("valid");
+              cxt.subschema({
+                keyword: "unevaluatedProperties",
+                dataProp: key,
+                dataPropType: util_1.Type.Str
+              }, valid);
+              if (!allErrors)
+                gen.if((0, codegen_1.not)(valid), () => gen.break());
+            }
+          }
+          function unevaluatedDynamic(evaluatedProps, key) {
+            return (0, codegen_1._)`!${evaluatedProps} || !${evaluatedProps}[${key}]`;
+          }
+          function unevaluatedStatic(evaluatedProps, key) {
+            const ps = [];
+            for (const p in evaluatedProps) {
+              if (evaluatedProps[p] === true)
+                ps.push((0, codegen_1._)`${key} !== ${p}`);
+            }
+            return (0, codegen_1.and)(...ps);
+          }
+        }
+      };
+      exports.default = def;
+    }
+  });
+
+  // node_modules/ajv/dist/vocabularies/unevaluated/unevaluatedItems.js
+  var require_unevaluatedItems = __commonJS({
+    "node_modules/ajv/dist/vocabularies/unevaluated/unevaluatedItems.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", { value: true });
+      var codegen_1 = require_codegen();
+      var util_1 = require_util();
+      var error = {
+        message: ({ params: { len } }) => (0, codegen_1.str)`must NOT have more than ${len} items`,
+        params: ({ params: { len } }) => (0, codegen_1._)`{limit: ${len}}`
+      };
+      var def = {
+        keyword: "unevaluatedItems",
+        type: "array",
+        schemaType: ["boolean", "object"],
+        error,
+        code(cxt) {
+          const { gen, schema, data, it } = cxt;
+          const items = it.items || 0;
+          if (items === true)
+            return;
+          const len = gen.const("len", (0, codegen_1._)`${data}.length`);
+          if (schema === false) {
+            cxt.setParams({ len: items });
+            cxt.fail((0, codegen_1._)`${len} > ${items}`);
+          } else if (typeof schema == "object" && !(0, util_1.alwaysValidSchema)(it, schema)) {
+            const valid = gen.var("valid", (0, codegen_1._)`${len} <= ${items}`);
+            gen.if((0, codegen_1.not)(valid), () => validateItems(valid, items));
+            cxt.ok(valid);
+          }
+          it.items = true;
+          function validateItems(valid, from) {
+            gen.forRange("i", from, len, (i) => {
+              cxt.subschema({ keyword: "unevaluatedItems", dataProp: i, dataPropType: util_1.Type.Num }, valid);
+              if (!it.allErrors)
+                gen.if((0, codegen_1.not)(valid), () => gen.break());
+            });
+          }
+        }
+      };
+      exports.default = def;
+    }
+  });
+
+  // node_modules/ajv/dist/vocabularies/unevaluated/index.js
+  var require_unevaluated = __commonJS({
+    "node_modules/ajv/dist/vocabularies/unevaluated/index.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", { value: true });
+      var unevaluatedProperties_1 = require_unevaluatedProperties();
+      var unevaluatedItems_1 = require_unevaluatedItems();
+      var unevaluated = [unevaluatedProperties_1.default, unevaluatedItems_1.default];
+      exports.default = unevaluated;
+    }
+  });
+
+  // node_modules/ajv/dist/refs/json-schema-2019-09/schema.json
+  var require_schema = __commonJS({
+    "node_modules/ajv/dist/refs/json-schema-2019-09/schema.json"(exports, module) {
+      module.exports = {
+        $schema: "https://json-schema.org/draft/2019-09/schema",
+        $id: "https://json-schema.org/draft/2019-09/schema",
+        $vocabulary: {
+          "https://json-schema.org/draft/2019-09/vocab/core": true,
+          "https://json-schema.org/draft/2019-09/vocab/applicator": true,
+          "https://json-schema.org/draft/2019-09/vocab/validation": true,
+          "https://json-schema.org/draft/2019-09/vocab/meta-data": true,
+          "https://json-schema.org/draft/2019-09/vocab/format": false,
+          "https://json-schema.org/draft/2019-09/vocab/content": true
+        },
+        $recursiveAnchor: true,
+        title: "Core and Validation specifications meta-schema",
+        allOf: [
+          { $ref: "meta/core" },
+          { $ref: "meta/applicator" },
+          { $ref: "meta/validation" },
+          { $ref: "meta/meta-data" },
+          { $ref: "meta/format" },
+          { $ref: "meta/content" }
+        ],
+        type: ["object", "boolean"],
+        properties: {
+          definitions: {
+            $comment: "While no longer an official keyword as it is replaced by $defs, this keyword is retained in the meta-schema to prevent incompatible extensions as it remains in common use.",
+            type: "object",
+            additionalProperties: { $recursiveRef: "#" },
+            default: {}
+          },
+          dependencies: {
+            $comment: '"dependencies" is no longer a keyword, but schema authors should avoid redefining it to facilitate a smooth transition to "dependentSchemas" and "dependentRequired"',
+            type: "object",
+            additionalProperties: {
+              anyOf: [{ $recursiveRef: "#" }, { $ref: "meta/validation#/$defs/stringArray" }]
+            }
+          }
+        }
+      };
+    }
+  });
+
+  // node_modules/ajv/dist/refs/json-schema-2019-09/meta/applicator.json
+  var require_applicator2 = __commonJS({
+    "node_modules/ajv/dist/refs/json-schema-2019-09/meta/applicator.json"(exports, module) {
+      module.exports = {
+        $schema: "https://json-schema.org/draft/2019-09/schema",
+        $id: "https://json-schema.org/draft/2019-09/meta/applicator",
+        $vocabulary: {
+          "https://json-schema.org/draft/2019-09/vocab/applicator": true
+        },
+        $recursiveAnchor: true,
+        title: "Applicator vocabulary meta-schema",
+        type: ["object", "boolean"],
+        properties: {
+          additionalItems: { $recursiveRef: "#" },
+          unevaluatedItems: { $recursiveRef: "#" },
+          items: {
+            anyOf: [{ $recursiveRef: "#" }, { $ref: "#/$defs/schemaArray" }]
+          },
+          contains: { $recursiveRef: "#" },
+          additionalProperties: { $recursiveRef: "#" },
+          unevaluatedProperties: { $recursiveRef: "#" },
+          properties: {
+            type: "object",
+            additionalProperties: { $recursiveRef: "#" },
+            default: {}
+          },
+          patternProperties: {
+            type: "object",
+            additionalProperties: { $recursiveRef: "#" },
+            propertyNames: { format: "regex" },
+            default: {}
+          },
+          dependentSchemas: {
+            type: "object",
+            additionalProperties: {
+              $recursiveRef: "#"
+            }
+          },
+          propertyNames: { $recursiveRef: "#" },
+          if: { $recursiveRef: "#" },
+          then: { $recursiveRef: "#" },
+          else: { $recursiveRef: "#" },
+          allOf: { $ref: "#/$defs/schemaArray" },
+          anyOf: { $ref: "#/$defs/schemaArray" },
+          oneOf: { $ref: "#/$defs/schemaArray" },
+          not: { $recursiveRef: "#" }
+        },
+        $defs: {
+          schemaArray: {
+            type: "array",
+            minItems: 1,
+            items: { $recursiveRef: "#" }
+          }
+        }
+      };
+    }
+  });
+
+  // node_modules/ajv/dist/refs/json-schema-2019-09/meta/content.json
+  var require_content = __commonJS({
+    "node_modules/ajv/dist/refs/json-schema-2019-09/meta/content.json"(exports, module) {
+      module.exports = {
+        $schema: "https://json-schema.org/draft/2019-09/schema",
+        $id: "https://json-schema.org/draft/2019-09/meta/content",
+        $vocabulary: {
+          "https://json-schema.org/draft/2019-09/vocab/content": true
+        },
+        $recursiveAnchor: true,
+        title: "Content vocabulary meta-schema",
+        type: ["object", "boolean"],
+        properties: {
+          contentMediaType: { type: "string" },
+          contentEncoding: { type: "string" },
+          contentSchema: { $recursiveRef: "#" }
+        }
+      };
+    }
+  });
+
+  // node_modules/ajv/dist/refs/json-schema-2019-09/meta/core.json
+  var require_core3 = __commonJS({
+    "node_modules/ajv/dist/refs/json-schema-2019-09/meta/core.json"(exports, module) {
+      module.exports = {
+        $schema: "https://json-schema.org/draft/2019-09/schema",
+        $id: "https://json-schema.org/draft/2019-09/meta/core",
+        $vocabulary: {
+          "https://json-schema.org/draft/2019-09/vocab/core": true
+        },
+        $recursiveAnchor: true,
+        title: "Core vocabulary meta-schema",
+        type: ["object", "boolean"],
+        properties: {
+          $id: {
+            type: "string",
+            format: "uri-reference",
+            $comment: "Non-empty fragments not allowed.",
+            pattern: "^[^#]*#?$"
+          },
+          $schema: {
+            type: "string",
+            format: "uri"
+          },
+          $anchor: {
+            type: "string",
+            pattern: "^[A-Za-z][-A-Za-z0-9.:_]*$"
+          },
+          $ref: {
+            type: "string",
+            format: "uri-reference"
+          },
+          $recursiveRef: {
+            type: "string",
+            format: "uri-reference"
+          },
+          $recursiveAnchor: {
+            type: "boolean",
+            default: false
+          },
+          $vocabulary: {
+            type: "object",
+            propertyNames: {
+              type: "string",
+              format: "uri"
+            },
+            additionalProperties: {
+              type: "boolean"
+            }
+          },
+          $comment: {
+            type: "string"
+          },
+          $defs: {
+            type: "object",
+            additionalProperties: { $recursiveRef: "#" },
+            default: {}
+          }
+        }
+      };
+    }
+  });
+
+  // node_modules/ajv/dist/refs/json-schema-2019-09/meta/format.json
+  var require_format3 = __commonJS({
+    "node_modules/ajv/dist/refs/json-schema-2019-09/meta/format.json"(exports, module) {
+      module.exports = {
+        $schema: "https://json-schema.org/draft/2019-09/schema",
+        $id: "https://json-schema.org/draft/2019-09/meta/format",
+        $vocabulary: {
+          "https://json-schema.org/draft/2019-09/vocab/format": true
+        },
+        $recursiveAnchor: true,
+        title: "Format vocabulary meta-schema",
+        type: ["object", "boolean"],
+        properties: {
+          format: { type: "string" }
+        }
+      };
+    }
+  });
+
+  // node_modules/ajv/dist/refs/json-schema-2019-09/meta/meta-data.json
+  var require_meta_data = __commonJS({
+    "node_modules/ajv/dist/refs/json-schema-2019-09/meta/meta-data.json"(exports, module) {
+      module.exports = {
+        $schema: "https://json-schema.org/draft/2019-09/schema",
+        $id: "https://json-schema.org/draft/2019-09/meta/meta-data",
+        $vocabulary: {
+          "https://json-schema.org/draft/2019-09/vocab/meta-data": true
+        },
+        $recursiveAnchor: true,
+        title: "Meta-data vocabulary meta-schema",
+        type: ["object", "boolean"],
+        properties: {
+          title: {
+            type: "string"
+          },
+          description: {
+            type: "string"
+          },
+          default: true,
+          deprecated: {
+            type: "boolean",
+            default: false
+          },
+          readOnly: {
+            type: "boolean",
+            default: false
+          },
+          writeOnly: {
+            type: "boolean",
+            default: false
+          },
+          examples: {
+            type: "array",
+            items: true
+          }
+        }
+      };
+    }
+  });
+
+  // node_modules/ajv/dist/refs/json-schema-2019-09/meta/validation.json
+  var require_validation2 = __commonJS({
+    "node_modules/ajv/dist/refs/json-schema-2019-09/meta/validation.json"(exports, module) {
+      module.exports = {
+        $schema: "https://json-schema.org/draft/2019-09/schema",
+        $id: "https://json-schema.org/draft/2019-09/meta/validation",
+        $vocabulary: {
+          "https://json-schema.org/draft/2019-09/vocab/validation": true
+        },
+        $recursiveAnchor: true,
+        title: "Validation vocabulary meta-schema",
+        type: ["object", "boolean"],
+        properties: {
+          multipleOf: {
+            type: "number",
+            exclusiveMinimum: 0
+          },
+          maximum: {
+            type: "number"
+          },
+          exclusiveMaximum: {
+            type: "number"
+          },
+          minimum: {
+            type: "number"
+          },
+          exclusiveMinimum: {
+            type: "number"
+          },
+          maxLength: { $ref: "#/$defs/nonNegativeInteger" },
+          minLength: { $ref: "#/$defs/nonNegativeIntegerDefault0" },
+          pattern: {
+            type: "string",
+            format: "regex"
+          },
+          maxItems: { $ref: "#/$defs/nonNegativeInteger" },
+          minItems: { $ref: "#/$defs/nonNegativeIntegerDefault0" },
+          uniqueItems: {
+            type: "boolean",
+            default: false
+          },
+          maxContains: { $ref: "#/$defs/nonNegativeInteger" },
+          minContains: {
+            $ref: "#/$defs/nonNegativeInteger",
+            default: 1
+          },
+          maxProperties: { $ref: "#/$defs/nonNegativeInteger" },
+          minProperties: { $ref: "#/$defs/nonNegativeIntegerDefault0" },
+          required: { $ref: "#/$defs/stringArray" },
+          dependentRequired: {
+            type: "object",
+            additionalProperties: {
+              $ref: "#/$defs/stringArray"
+            }
+          },
+          const: true,
+          enum: {
+            type: "array",
+            items: true
+          },
+          type: {
+            anyOf: [
+              { $ref: "#/$defs/simpleTypes" },
+              {
+                type: "array",
+                items: { $ref: "#/$defs/simpleTypes" },
+                minItems: 1,
+                uniqueItems: true
+              }
+            ]
+          }
+        },
+        $defs: {
+          nonNegativeInteger: {
+            type: "integer",
+            minimum: 0
+          },
+          nonNegativeIntegerDefault0: {
+            $ref: "#/$defs/nonNegativeInteger",
+            default: 0
+          },
+          simpleTypes: {
+            enum: ["array", "boolean", "integer", "null", "number", "object", "string"]
+          },
+          stringArray: {
+            type: "array",
+            items: { type: "string" },
+            uniqueItems: true,
+            default: []
+          }
+        }
+      };
+    }
+  });
+
+  // node_modules/ajv/dist/refs/json-schema-2019-09/index.js
+  var require_json_schema_2019_09 = __commonJS({
+    "node_modules/ajv/dist/refs/json-schema-2019-09/index.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", { value: true });
+      var metaSchema = require_schema();
+      var applicator = require_applicator2();
+      var content = require_content();
+      var core = require_core3();
+      var format = require_format3();
+      var metadata = require_meta_data();
+      var validation = require_validation2();
+      var META_SUPPORT_DATA = ["/properties"];
+      function addMetaSchema2019($data) {
+        ;
+        [
+          metaSchema,
+          applicator,
+          content,
+          core,
+          with$data(this, format),
+          metadata,
+          with$data(this, validation)
+        ].forEach((sch) => this.addMetaSchema(sch, void 0, false));
+        return this;
+        function with$data(ajv, sch) {
+          return $data ? ajv.$dataMetaSchema(sch, META_SUPPORT_DATA) : sch;
+        }
+      }
+      exports.default = addMetaSchema2019;
+    }
+  });
+
+  // node_modules/ajv/dist/2019.js
+  var require__ = __commonJS({
+    "node_modules/ajv/dist/2019.js"(exports, module) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", { value: true });
+      exports.MissingRefError = exports.ValidationError = exports.CodeGen = exports.Name = exports.nil = exports.stringify = exports.str = exports._ = exports.KeywordCxt = exports.Ajv2019 = void 0;
+      var core_1 = require_core();
+      var draft7_1 = require_draft7();
+      var dynamic_1 = require_dynamic();
+      var next_1 = require_next();
+      var unevaluated_1 = require_unevaluated();
+      var discriminator_1 = require_discriminator();
+      var json_schema_2019_09_1 = require_json_schema_2019_09();
+      var META_SCHEMA_ID = "https://json-schema.org/draft/2019-09/schema";
+      var Ajv20192 = class extends core_1.default {
+        constructor(opts = {}) {
+          super({
+            ...opts,
+            dynamicRef: true,
+            next: true,
+            unevaluated: true
+          });
+        }
+        _addVocabularies() {
+          super._addVocabularies();
+          this.addVocabulary(dynamic_1.default);
+          draft7_1.default.forEach((v) => this.addVocabulary(v));
+          this.addVocabulary(next_1.default);
+          this.addVocabulary(unevaluated_1.default);
+          if (this.opts.discriminator)
+            this.addKeyword(discriminator_1.default);
+        }
+        _addDefaultMetaSchema() {
+          super._addDefaultMetaSchema();
+          const { $data, meta } = this.opts;
+          if (!meta)
+            return;
+          json_schema_2019_09_1.default.call(this, $data);
+          this.refs["http://json-schema.org/schema"] = META_SCHEMA_ID;
+        }
+        defaultMeta() {
+          return this.opts.defaultMeta = super.defaultMeta() || (this.getSchema(META_SCHEMA_ID) ? META_SCHEMA_ID : void 0);
+        }
+      };
+      exports.Ajv2019 = Ajv20192;
+      module.exports = exports = Ajv20192;
+      module.exports.Ajv2019 = Ajv20192;
+      Object.defineProperty(exports, "__esModule", { value: true });
+      exports.default = Ajv20192;
+      var validate_1 = require_validate();
+      Object.defineProperty(exports, "KeywordCxt", { enumerable: true, get: function() {
+        return validate_1.KeywordCxt;
+      } });
+      var codegen_1 = require_codegen();
+      Object.defineProperty(exports, "_", { enumerable: true, get: function() {
+        return codegen_1._;
+      } });
+      Object.defineProperty(exports, "str", { enumerable: true, get: function() {
+        return codegen_1.str;
+      } });
+      Object.defineProperty(exports, "stringify", { enumerable: true, get: function() {
+        return codegen_1.stringify;
+      } });
+      Object.defineProperty(exports, "nil", { enumerable: true, get: function() {
+        return codegen_1.nil;
+      } });
+      Object.defineProperty(exports, "Name", { enumerable: true, get: function() {
+        return codegen_1.Name;
+      } });
+      Object.defineProperty(exports, "CodeGen", { enumerable: true, get: function() {
+        return codegen_1.CodeGen;
+      } });
+      var validation_error_1 = require_validation_error();
+      Object.defineProperty(exports, "ValidationError", { enumerable: true, get: function() {
+        return validation_error_1.default;
+      } });
+      var ref_error_1 = require_ref_error();
+      Object.defineProperty(exports, "MissingRefError", { enumerable: true, get: function() {
+        return ref_error_1.default;
+      } });
+    }
+  });
+
+  // node_modules/ajv/dist/vocabularies/draft2020.js
+  var require_draft2020 = __commonJS({
+    "node_modules/ajv/dist/vocabularies/draft2020.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", { value: true });
+      var core_1 = require_core2();
+      var validation_1 = require_validation();
+      var applicator_1 = require_applicator();
+      var dynamic_1 = require_dynamic();
+      var next_1 = require_next();
+      var unevaluated_1 = require_unevaluated();
+      var format_1 = require_format2();
+      var metadata_1 = require_metadata();
+      var draft2020Vocabularies = [
+        dynamic_1.default,
+        core_1.default,
+        validation_1.default,
+        (0, applicator_1.default)(true),
+        format_1.default,
+        metadata_1.metadataVocabulary,
+        metadata_1.contentVocabulary,
+        next_1.default,
+        unevaluated_1.default
+      ];
+      exports.default = draft2020Vocabularies;
+    }
+  });
+
+  // node_modules/ajv/dist/refs/json-schema-2020-12/schema.json
+  var require_schema2 = __commonJS({
+    "node_modules/ajv/dist/refs/json-schema-2020-12/schema.json"(exports, module) {
+      module.exports = {
+        $schema: "https://json-schema.org/draft/2020-12/schema",
+        $id: "https://json-schema.org/draft/2020-12/schema",
+        $vocabulary: {
+          "https://json-schema.org/draft/2020-12/vocab/core": true,
+          "https://json-schema.org/draft/2020-12/vocab/applicator": true,
+          "https://json-schema.org/draft/2020-12/vocab/unevaluated": true,
+          "https://json-schema.org/draft/2020-12/vocab/validation": true,
+          "https://json-schema.org/draft/2020-12/vocab/meta-data": true,
+          "https://json-schema.org/draft/2020-12/vocab/format-annotation": true,
+          "https://json-schema.org/draft/2020-12/vocab/content": true
+        },
+        $dynamicAnchor: "meta",
+        title: "Core and Validation specifications meta-schema",
+        allOf: [
+          { $ref: "meta/core" },
+          { $ref: "meta/applicator" },
+          { $ref: "meta/unevaluated" },
+          { $ref: "meta/validation" },
+          { $ref: "meta/meta-data" },
+          { $ref: "meta/format-annotation" },
+          { $ref: "meta/content" }
+        ],
+        type: ["object", "boolean"],
+        $comment: "This meta-schema also defines keywords that have appeared in previous drafts in order to prevent incompatible extensions as they remain in common use.",
+        properties: {
+          definitions: {
+            $comment: '"definitions" has been replaced by "$defs".',
+            type: "object",
+            additionalProperties: { $dynamicRef: "#meta" },
+            deprecated: true,
+            default: {}
+          },
+          dependencies: {
+            $comment: '"dependencies" has been split and replaced by "dependentSchemas" and "dependentRequired" in order to serve their differing semantics.',
+            type: "object",
+            additionalProperties: {
+              anyOf: [{ $dynamicRef: "#meta" }, { $ref: "meta/validation#/$defs/stringArray" }]
+            },
+            deprecated: true,
+            default: {}
+          },
+          $recursiveAnchor: {
+            $comment: '"$recursiveAnchor" has been replaced by "$dynamicAnchor".',
+            $ref: "meta/core#/$defs/anchorString",
+            deprecated: true
+          },
+          $recursiveRef: {
+            $comment: '"$recursiveRef" has been replaced by "$dynamicRef".',
+            $ref: "meta/core#/$defs/uriReferenceString",
+            deprecated: true
+          }
+        }
+      };
+    }
+  });
+
+  // node_modules/ajv/dist/refs/json-schema-2020-12/meta/applicator.json
+  var require_applicator3 = __commonJS({
+    "node_modules/ajv/dist/refs/json-schema-2020-12/meta/applicator.json"(exports, module) {
+      module.exports = {
+        $schema: "https://json-schema.org/draft/2020-12/schema",
+        $id: "https://json-schema.org/draft/2020-12/meta/applicator",
+        $vocabulary: {
+          "https://json-schema.org/draft/2020-12/vocab/applicator": true
+        },
+        $dynamicAnchor: "meta",
+        title: "Applicator vocabulary meta-schema",
+        type: ["object", "boolean"],
+        properties: {
+          prefixItems: { $ref: "#/$defs/schemaArray" },
+          items: { $dynamicRef: "#meta" },
+          contains: { $dynamicRef: "#meta" },
+          additionalProperties: { $dynamicRef: "#meta" },
+          properties: {
+            type: "object",
+            additionalProperties: { $dynamicRef: "#meta" },
+            default: {}
+          },
+          patternProperties: {
+            type: "object",
+            additionalProperties: { $dynamicRef: "#meta" },
+            propertyNames: { format: "regex" },
+            default: {}
+          },
+          dependentSchemas: {
+            type: "object",
+            additionalProperties: { $dynamicRef: "#meta" },
+            default: {}
+          },
+          propertyNames: { $dynamicRef: "#meta" },
+          if: { $dynamicRef: "#meta" },
+          then: { $dynamicRef: "#meta" },
+          else: { $dynamicRef: "#meta" },
+          allOf: { $ref: "#/$defs/schemaArray" },
+          anyOf: { $ref: "#/$defs/schemaArray" },
+          oneOf: { $ref: "#/$defs/schemaArray" },
+          not: { $dynamicRef: "#meta" }
+        },
+        $defs: {
+          schemaArray: {
+            type: "array",
+            minItems: 1,
+            items: { $dynamicRef: "#meta" }
+          }
+        }
+      };
+    }
+  });
+
+  // node_modules/ajv/dist/refs/json-schema-2020-12/meta/unevaluated.json
+  var require_unevaluated2 = __commonJS({
+    "node_modules/ajv/dist/refs/json-schema-2020-12/meta/unevaluated.json"(exports, module) {
+      module.exports = {
+        $schema: "https://json-schema.org/draft/2020-12/schema",
+        $id: "https://json-schema.org/draft/2020-12/meta/unevaluated",
+        $vocabulary: {
+          "https://json-schema.org/draft/2020-12/vocab/unevaluated": true
+        },
+        $dynamicAnchor: "meta",
+        title: "Unevaluated applicator vocabulary meta-schema",
+        type: ["object", "boolean"],
+        properties: {
+          unevaluatedItems: { $dynamicRef: "#meta" },
+          unevaluatedProperties: { $dynamicRef: "#meta" }
+        }
+      };
+    }
+  });
+
+  // node_modules/ajv/dist/refs/json-schema-2020-12/meta/content.json
+  var require_content2 = __commonJS({
+    "node_modules/ajv/dist/refs/json-schema-2020-12/meta/content.json"(exports, module) {
+      module.exports = {
+        $schema: "https://json-schema.org/draft/2020-12/schema",
+        $id: "https://json-schema.org/draft/2020-12/meta/content",
+        $vocabulary: {
+          "https://json-schema.org/draft/2020-12/vocab/content": true
+        },
+        $dynamicAnchor: "meta",
+        title: "Content vocabulary meta-schema",
+        type: ["object", "boolean"],
+        properties: {
+          contentEncoding: { type: "string" },
+          contentMediaType: { type: "string" },
+          contentSchema: { $dynamicRef: "#meta" }
+        }
+      };
+    }
+  });
+
+  // node_modules/ajv/dist/refs/json-schema-2020-12/meta/core.json
+  var require_core4 = __commonJS({
+    "node_modules/ajv/dist/refs/json-schema-2020-12/meta/core.json"(exports, module) {
+      module.exports = {
+        $schema: "https://json-schema.org/draft/2020-12/schema",
+        $id: "https://json-schema.org/draft/2020-12/meta/core",
+        $vocabulary: {
+          "https://json-schema.org/draft/2020-12/vocab/core": true
+        },
+        $dynamicAnchor: "meta",
+        title: "Core vocabulary meta-schema",
+        type: ["object", "boolean"],
+        properties: {
+          $id: {
+            $ref: "#/$defs/uriReferenceString",
+            $comment: "Non-empty fragments not allowed.",
+            pattern: "^[^#]*#?$"
+          },
+          $schema: { $ref: "#/$defs/uriString" },
+          $ref: { $ref: "#/$defs/uriReferenceString" },
+          $anchor: { $ref: "#/$defs/anchorString" },
+          $dynamicRef: { $ref: "#/$defs/uriReferenceString" },
+          $dynamicAnchor: { $ref: "#/$defs/anchorString" },
+          $vocabulary: {
+            type: "object",
+            propertyNames: { $ref: "#/$defs/uriString" },
+            additionalProperties: {
+              type: "boolean"
+            }
+          },
+          $comment: {
+            type: "string"
+          },
+          $defs: {
+            type: "object",
+            additionalProperties: { $dynamicRef: "#meta" }
+          }
+        },
+        $defs: {
+          anchorString: {
+            type: "string",
+            pattern: "^[A-Za-z_][-A-Za-z0-9._]*$"
+          },
+          uriString: {
+            type: "string",
+            format: "uri"
+          },
+          uriReferenceString: {
+            type: "string",
+            format: "uri-reference"
+          }
+        }
+      };
+    }
+  });
+
+  // node_modules/ajv/dist/refs/json-schema-2020-12/meta/format-annotation.json
+  var require_format_annotation = __commonJS({
+    "node_modules/ajv/dist/refs/json-schema-2020-12/meta/format-annotation.json"(exports, module) {
+      module.exports = {
+        $schema: "https://json-schema.org/draft/2020-12/schema",
+        $id: "https://json-schema.org/draft/2020-12/meta/format-annotation",
+        $vocabulary: {
+          "https://json-schema.org/draft/2020-12/vocab/format-annotation": true
+        },
+        $dynamicAnchor: "meta",
+        title: "Format vocabulary meta-schema for annotation results",
+        type: ["object", "boolean"],
+        properties: {
+          format: { type: "string" }
+        }
+      };
+    }
+  });
+
+  // node_modules/ajv/dist/refs/json-schema-2020-12/meta/meta-data.json
+  var require_meta_data2 = __commonJS({
+    "node_modules/ajv/dist/refs/json-schema-2020-12/meta/meta-data.json"(exports, module) {
+      module.exports = {
+        $schema: "https://json-schema.org/draft/2020-12/schema",
+        $id: "https://json-schema.org/draft/2020-12/meta/meta-data",
+        $vocabulary: {
+          "https://json-schema.org/draft/2020-12/vocab/meta-data": true
+        },
+        $dynamicAnchor: "meta",
+        title: "Meta-data vocabulary meta-schema",
+        type: ["object", "boolean"],
+        properties: {
+          title: {
+            type: "string"
+          },
+          description: {
+            type: "string"
+          },
+          default: true,
+          deprecated: {
+            type: "boolean",
+            default: false
+          },
+          readOnly: {
+            type: "boolean",
+            default: false
+          },
+          writeOnly: {
+            type: "boolean",
+            default: false
+          },
+          examples: {
+            type: "array",
+            items: true
+          }
+        }
+      };
+    }
+  });
+
+  // node_modules/ajv/dist/refs/json-schema-2020-12/meta/validation.json
+  var require_validation3 = __commonJS({
+    "node_modules/ajv/dist/refs/json-schema-2020-12/meta/validation.json"(exports, module) {
+      module.exports = {
+        $schema: "https://json-schema.org/draft/2020-12/schema",
+        $id: "https://json-schema.org/draft/2020-12/meta/validation",
+        $vocabulary: {
+          "https://json-schema.org/draft/2020-12/vocab/validation": true
+        },
+        $dynamicAnchor: "meta",
+        title: "Validation vocabulary meta-schema",
+        type: ["object", "boolean"],
+        properties: {
+          type: {
+            anyOf: [
+              { $ref: "#/$defs/simpleTypes" },
+              {
+                type: "array",
+                items: { $ref: "#/$defs/simpleTypes" },
+                minItems: 1,
+                uniqueItems: true
+              }
+            ]
+          },
+          const: true,
+          enum: {
+            type: "array",
+            items: true
+          },
+          multipleOf: {
+            type: "number",
+            exclusiveMinimum: 0
+          },
+          maximum: {
+            type: "number"
+          },
+          exclusiveMaximum: {
+            type: "number"
+          },
+          minimum: {
+            type: "number"
+          },
+          exclusiveMinimum: {
+            type: "number"
+          },
+          maxLength: { $ref: "#/$defs/nonNegativeInteger" },
+          minLength: { $ref: "#/$defs/nonNegativeIntegerDefault0" },
+          pattern: {
+            type: "string",
+            format: "regex"
+          },
+          maxItems: { $ref: "#/$defs/nonNegativeInteger" },
+          minItems: { $ref: "#/$defs/nonNegativeIntegerDefault0" },
+          uniqueItems: {
+            type: "boolean",
+            default: false
+          },
+          maxContains: { $ref: "#/$defs/nonNegativeInteger" },
+          minContains: {
+            $ref: "#/$defs/nonNegativeInteger",
+            default: 1
+          },
+          maxProperties: { $ref: "#/$defs/nonNegativeInteger" },
+          minProperties: { $ref: "#/$defs/nonNegativeIntegerDefault0" },
+          required: { $ref: "#/$defs/stringArray" },
+          dependentRequired: {
+            type: "object",
+            additionalProperties: {
+              $ref: "#/$defs/stringArray"
+            }
+          }
+        },
+        $defs: {
+          nonNegativeInteger: {
+            type: "integer",
+            minimum: 0
+          },
+          nonNegativeIntegerDefault0: {
+            $ref: "#/$defs/nonNegativeInteger",
+            default: 0
+          },
+          simpleTypes: {
+            enum: ["array", "boolean", "integer", "null", "number", "object", "string"]
+          },
+          stringArray: {
+            type: "array",
+            items: { type: "string" },
+            uniqueItems: true,
+            default: []
+          }
+        }
+      };
+    }
+  });
+
+  // node_modules/ajv/dist/refs/json-schema-2020-12/index.js
+  var require_json_schema_2020_12 = __commonJS({
+    "node_modules/ajv/dist/refs/json-schema-2020-12/index.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", { value: true });
+      var metaSchema = require_schema2();
+      var applicator = require_applicator3();
+      var unevaluated = require_unevaluated2();
+      var content = require_content2();
+      var core = require_core4();
+      var format = require_format_annotation();
+      var metadata = require_meta_data2();
+      var validation = require_validation3();
+      var META_SUPPORT_DATA = ["/properties"];
+      function addMetaSchema2020($data) {
+        ;
+        [
+          metaSchema,
+          applicator,
+          unevaluated,
+          content,
+          core,
+          with$data(this, format),
+          metadata,
+          with$data(this, validation)
+        ].forEach((sch) => this.addMetaSchema(sch, void 0, false));
+        return this;
+        function with$data(ajv, sch) {
+          return $data ? ajv.$dataMetaSchema(sch, META_SUPPORT_DATA) : sch;
+        }
+      }
+      exports.default = addMetaSchema2020;
+    }
+  });
+
+  // node_modules/ajv/dist/2020.js
+  var require__2 = __commonJS({
+    "node_modules/ajv/dist/2020.js"(exports, module) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", { value: true });
+      exports.MissingRefError = exports.ValidationError = exports.CodeGen = exports.Name = exports.nil = exports.stringify = exports.str = exports._ = exports.KeywordCxt = exports.Ajv2020 = void 0;
+      var core_1 = require_core();
+      var draft2020_1 = require_draft2020();
+      var discriminator_1 = require_discriminator();
+      var json_schema_2020_12_1 = require_json_schema_2020_12();
+      var META_SCHEMA_ID = "https://json-schema.org/draft/2020-12/schema";
+      var Ajv20202 = class extends core_1.default {
+        constructor(opts = {}) {
+          super({
+            ...opts,
+            dynamicRef: true,
+            next: true,
+            unevaluated: true
+          });
+        }
+        _addVocabularies() {
+          super._addVocabularies();
+          draft2020_1.default.forEach((v) => this.addVocabulary(v));
+          if (this.opts.discriminator)
+            this.addKeyword(discriminator_1.default);
+        }
+        _addDefaultMetaSchema() {
+          super._addDefaultMetaSchema();
+          const { $data, meta } = this.opts;
+          if (!meta)
+            return;
+          json_schema_2020_12_1.default.call(this, $data);
+          this.refs["http://json-schema.org/schema"] = META_SCHEMA_ID;
+        }
+        defaultMeta() {
+          return this.opts.defaultMeta = super.defaultMeta() || (this.getSchema(META_SCHEMA_ID) ? META_SCHEMA_ID : void 0);
+        }
+      };
+      exports.Ajv2020 = Ajv20202;
+      module.exports = exports = Ajv20202;
+      module.exports.Ajv2020 = Ajv20202;
+      Object.defineProperty(exports, "__esModule", { value: true });
+      exports.default = Ajv20202;
+      var validate_1 = require_validate();
+      Object.defineProperty(exports, "KeywordCxt", { enumerable: true, get: function() {
+        return validate_1.KeywordCxt;
+      } });
+      var codegen_1 = require_codegen();
+      Object.defineProperty(exports, "_", { enumerable: true, get: function() {
+        return codegen_1._;
+      } });
+      Object.defineProperty(exports, "str", { enumerable: true, get: function() {
+        return codegen_1.str;
+      } });
+      Object.defineProperty(exports, "stringify", { enumerable: true, get: function() {
+        return codegen_1.stringify;
+      } });
+      Object.defineProperty(exports, "nil", { enumerable: true, get: function() {
+        return codegen_1.nil;
+      } });
+      Object.defineProperty(exports, "Name", { enumerable: true, get: function() {
+        return codegen_1.Name;
+      } });
+      Object.defineProperty(exports, "CodeGen", { enumerable: true, get: function() {
+        return codegen_1.CodeGen;
+      } });
+      var validation_error_1 = require_validation_error();
+      Object.defineProperty(exports, "ValidationError", { enumerable: true, get: function() {
+        return validation_error_1.default;
+      } });
+      var ref_error_1 = require_ref_error();
+      Object.defineProperty(exports, "MissingRefError", { enumerable: true, get: function() {
+        return ref_error_1.default;
+      } });
+    }
+  });
+
   // js/core/browser.js
   init_platform();
   init_platform();
@@ -7106,8 +8386,8 @@
   };
 
   // js/core/reasoning-control.js
-  async function reasoningControl({ action = "read", enabled, waitMs = 0 } = {}) {
-    const pattern = /^(?:深度思考(?:模式)?|思考模式|思考|Deep\s*Think|Thinking(?:\s*mode)?)(?:\s*[(（][^()（）]{1,32}[)）])?(?:\s*[:：]\s*(?:开|关|开启|关闭|on|off))?$/i;
+  async function reasoningControl({ action = "read", enabled, waitMs = 0, feature = "reasoning" } = {}) {
+    const pattern = feature === "search" ? /^(?:智能搜索|联网搜索|联网|搜索|Smart\s*Search|Web\s*Search|Search(?:\s*the\s*web)?)(?:\s*[(（][^()（）]{1,32}[)）])?(?:\s*[:：]\s*(?:开|关|开启|关闭|on|off))?$/i : /^(?:深度思考(?:模式)?|思考模式|思考|Deep\s*Think|Thinking(?:\s*mode)?)(?:\s*[(（][^()（）]{1,32}[)）])?(?:\s*[:：]\s*(?:开|关|开启|关闭|on|off))?$/i;
     const interactive = 'button,input[type="checkbox"],[role="button"],[role="switch"],[role="checkbox"],[role="tab"],[role="radio"],[aria-pressed],[aria-checked],[aria-selected],label,.ds-toggle-button,[data-state],[data-checked],[data-selected],[data-active],[tabindex]';
     const visible = (element2) => {
       if (!element2?.isConnected || !element2.getClientRects().length) return false;
@@ -7194,7 +8474,7 @@
     if (result.enabled === enabled) return { ...publicResult, clicked: false, alreadySet: true };
     if (!enabled && ["tab", "radio"].includes(element.getAttribute("role"))) {
       const group = element.closest('[role="tablist"],[role="radiogroup"]');
-      const normal = group ? [...group.querySelectorAll('[role="tab"],[role="radio"]')].filter((node) => node !== element && visible(node)).filter((node) => labels(node).some((label) => /^(?:普通|标准|快速|非思考|直接回答|normal|standard|fast|instant)$/i.test(label))) : [];
+      const normal = group ? [...group.querySelectorAll('[role="tab"],[role="radio"]')].filter((node) => node !== element && visible(node)).filter((node) => labels(node).some((label) => (feature === "search" ? /^(?:不联网|不搜索|关闭搜索|无需搜索|no search|no web|search off)$/i : /^(?:普通|标准|快速|非思考|直接回答|normal|standard|fast|instant)$/i).test(label))) : [];
       if (normal.length !== 1 || normal[0].matches(":disabled") || normal[0].getAttribute("aria-disabled") === "true") return { ...publicResult, clicked: false, reason: "normal_mode_missing" };
       normal[0].click();
       return { ...publicResult, clicked: true };
@@ -7513,27 +8793,32 @@
       return page.evaluate(reasoningControl, { action: "read" });
     }
     async _setReasoning(page, enabled, signal, deadline) {
-      let mode = await within(page.evaluate(reasoningControl, { action: "read", waitMs: 1500 }), signal, deadline);
+      return this._setPageToggle(page, "reasoning", enabled, signal, deadline);
+    }
+    async _setPageToggle(page, feature, enabled, signal, deadline) {
+      const label = feature === "search" ? "\u667A\u80FD\u641C\u7D22" : "\u6DF1\u5EA6\u601D\u8003";
+      const errorCode = feature === "search" ? "web_search_state_unknown" : "reasoning_state_unknown";
+      let mode = await within(page.evaluate(reasoningControl, { action: "read", waitMs: 1500, feature }), signal, deadline);
       if (mode.count !== 1 || typeof mode.enabled !== "boolean") {
         throw new BrowserBridgeError(
-          "reasoning_state_unknown",
+          errorCode,
           400,
-          `\u65E0\u6CD5\u786E\u8BA4\u6DF1\u5EA6\u601D\u8003\u72B6\u6001\uFF08\u627E\u5230 ${mode.count} \u4E2A\u63A7\u4EF6\uFF0C${mode.reason || "\u72B6\u6001\u672A\u66B4\u9732"}\uFF09\u3002\u8BF7\u5728\u9996\u9875\u91CD\u65B0\u68C0\u6D4B\u3002`
+          `\u65E0\u6CD5\u786E\u8BA4${label}\u72B6\u6001\uFF08\u627E\u5230 ${mode.count} \u4E2A\u63A7\u4EF6\uFF0C${mode.reason || "\u72B6\u6001\u672A\u66B4\u9732"}\uFF09\u3002\u8BF7\u5728\u9996\u9875\u91CD\u65B0\u68C0\u6D4B\u3002`
         );
       }
       if (mode.enabled === enabled) return;
       checkRequest(signal, deadline);
-      const changed = await within(page.evaluate(reasoningControl, { action: "set", enabled }), signal, deadline);
+      const changed = await within(page.evaluate(reasoningControl, { action: "set", enabled, feature }), signal, deadline);
       if (!changed.clicked && !changed.alreadySet) {
-        throw new BrowserBridgeError("reasoning_state_unknown", 400, "\u6DF1\u5EA6\u601D\u8003\u5F00\u5173\u4E0D\u53EF\u64CD\u4F5C\u6216\u72B6\u6001\u53D1\u751F\u53D8\u5316\uFF0C\u5DF2\u505C\u6B62\u53D1\u9001\u3002");
+        throw new BrowserBridgeError(errorCode, 400, `${label}\u5F00\u5173\u4E0D\u53EF\u64CD\u4F5C\u6216\u72B6\u6001\u53D1\u751F\u53D8\u5316\uFF0C\u5DF2\u505C\u6B62\u53D1\u9001\u3002`);
       }
       const modeDeadline = Math.min(deadline, Date.now() + 3e3);
       while (Date.now() < modeDeadline) {
-        mode = await within(this._readReasoningMode(page), signal, deadline);
+        mode = await within(page.evaluate(reasoningControl, { action: "read", feature }), signal, deadline);
         if (mode.count === 1 && mode.enabled === enabled) return;
         await pause(this.config.pollMs, signal, deadline);
       }
-      throw new BrowserBridgeError("reasoning_state_unknown", 400, "\u6DF1\u5EA6\u601D\u8003\u5F00\u5173\u5207\u6362\u540E\u672A\u80FD\u786E\u8BA4\u72B6\u6001\uFF0C\u5DF2\u505C\u6B62\u53D1\u9001\u3002");
+      throw new BrowserBridgeError(errorCode, 400, `${label}\u5F00\u5173\u5207\u6362\u540E\u672A\u80FD\u786E\u8BA4\u72B6\u6001\uFF0C\u5DF2\u505C\u6B62\u53D1\u9001\u3002`);
     }
     async _decodeImages(page, images, signal, deadline) {
       for (const image of images) {
@@ -7686,6 +8971,11 @@
         network.dispose();
       }
     }
+    async _submitComposer(_page, composer, _options) {
+      await composer.press("Enter");
+    }
+    async _beforeSubmit(_page, _options) {
+    }
     async _waitSubmission(page, before, prompt, signal, deadline) {
       const submissionDeadline = Math.min(deadline, Date.now() + 5e3);
       while (Date.now() < submissionDeadline) {
@@ -7703,7 +8993,7 @@
           }
           await pause(this.config.pollMs, signal, submissionDeadline);
         } catch (error) {
-          if (error?.code === "REQUEST_TIMEOUT" && Date.now() >= submissionDeadline && !signal?.aborted) break;
+          if (["REQUEST_TIMEOUT", "webpage_observation_timeout"].includes(error?.code) && Date.now() >= submissionDeadline && !signal?.aborted) break;
           throw error;
         }
       }
@@ -7711,16 +9001,17 @@
       throw new BrowserBridgeError(
         "webpage_submission_failed",
         400,
-        "\u6309 Enter \u540E 5 \u79D2\u5185\u7F51\u9875\u672A\u786E\u8BA4\u63A5\u6536\u6D88\u606F\uFF08\u8F93\u5165\u672A\u6E05\u7A7A\u3001\u6CA1\u6709\u65B0\u6D88\u606F\u6216\u65B0\u5BF9\u8BDD\uFF09\u3002\u5DF2\u505C\u6B62\uFF0C\u672A\u91CD\u590D\u63D0\u4EA4\u3002"
+        "\u63D0\u4EA4\u540E 5 \u79D2\u5185\u7F51\u9875\u672A\u786E\u8BA4\u63A5\u6536\u6D88\u606F\uFF08\u8F93\u5165\u672A\u6E05\u7A7A\u3001\u6CA1\u6709\u65B0\u6D88\u606F\u6216\u65B0\u5BF9\u8BDD\uFF09\u3002\u5DF2\u505C\u6B62\uFF0C\u672A\u91CD\u590D\u63D0\u4EA4\u3002"
       );
     }
-    async *generate({ prompt, images = [], reasoning = false, signal } = {}) {
+    async *generate({ prompt, images = [], reasoning = false, webSearch, signal } = {}) {
       if (typeof prompt !== "string" || !prompt.trim()) {
         throw new BrowserBridgeError("INVALID_PROMPT", 400, "\u6D88\u606F\u5185\u5BB9\u4E0D\u80FD\u4E3A\u7A7A\u3002");
       }
       if (typeof reasoning !== "boolean") {
         throw new BrowserBridgeError("invalid_reasoning", 400, "reasoning \u5FC5\u987B\u662F\u5E03\u5C14\u503C\u3002");
       }
+      if (webSearch !== void 0 && typeof webSearch !== "boolean") throw new BrowserBridgeError("invalid_web_search", 400, "web_search \u5FC5\u987B\u662F\u5E03\u5C14\u503C\u3002");
       if (!Array.isArray(images) || images.some((image) => !image || !Buffer.isBuffer(image.buffer) || !image.buffer.length || typeof image.name !== "string" || !image.name || typeof image.mimeType !== "string" || !image.mimeType.startsWith("image/"))) {
         throw new BrowserBridgeError("invalid_image_data", 400, "\u56FE\u7247\u6570\u636E\u65E0\u6548\uFF0C\u672A\u53D1\u9001\u6D88\u606F\u3002");
       }
@@ -7770,11 +9061,12 @@
         const beforeSubmission = await this._readStateBounded(page, signal, deadline);
         this._checkState(beforeSubmission, prompt);
         await this._setReasoning(page, reasoning, signal, deadline);
+        await within(this._beforeSubmit(page, { reasoning, webSearch, signal, deadline }), signal, deadline);
         this._activeRequest.phase = "ready";
         yield { type: "ready" };
         checkRequest(signal, deadline);
         this._activeRequest.phase = "submitting";
-        await within(composer.press("Enter"), signal, deadline);
+        await within(this._submitComposer(page, composer, { prompt, signal, deadline }), signal, deadline);
         let pendingState = await this._waitSubmission(page, beforeSubmission, prompt, signal, deadline);
         const firstOutputDeadline = Math.min(deadline, Date.now() + this.config.firstOutputTimeoutMs);
         let sawOutput = false;
@@ -7922,6 +9214,71 @@
 
   // js/mobile-browser.js
   init_platform();
+
+  // js/send-control.js
+  function sendControl({ prompt, nonce, action = "click" } = {}) {
+    const result = (reason, extra = {}) => ({ clicked: false, count: 0, reason, ...extra });
+    if (location.origin !== "https://chat.deepseek.com") return result("unexpected_origin");
+    const visible = (element) => {
+      if (!element?.isConnected || !element.getClientRects().length) return false;
+      for (let node = element; node; node = node.parentElement) {
+        const style = getComputedStyle(node);
+        if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) return false;
+      }
+      return true;
+    };
+    const inputs = [...document.querySelectorAll("textarea")].filter(visible);
+    const named = inputs.filter((node) => /DeepSeek/i.test(node.getAttribute("placeholder") || ""));
+    const composers = named.length === 1 ? named : inputs;
+    if (composers.length !== 1) return result(composers.length ? "multiple_composers" : "composer_missing");
+    const input = composers[0];
+    if (nonce && input.getAttribute("data-local-bridge-send") === nonce) return { clicked: true, count: 1, reason: "already_triggered" };
+    if (typeof prompt !== "string" || input.value !== prompt) return result("prompt_changed");
+    const nameOf = (element) => {
+      const ids = (element.getAttribute("aria-labelledby") || "").trim().split(/\s+/).filter(Boolean);
+      return (element.getAttribute("aria-label") || ids.map((id) => document.getElementById(id)?.textContent || "").join(" ") || element.getAttribute("title") || element.textContent || "").trim();
+    };
+    const sendName = /^(?:发送(?:消息|问题)?|提交(?:消息|问题)?|send(?: message| prompt)?|submit)(?:\s*[（(](?:enter|return|回车|↵)[）)])?$/i;
+    const sourceOf = (element) => {
+      if (sendName.test(nameOf(element))) return "accessible_name";
+      if (/^(?:send(?:[-_](?:button|message|prompt))?|submit[-_]?(?:button|message))$/i.test(element.getAttribute("data-testid") || "")) return "test_id";
+      if (element.tagName === "BUTTON" && element.type === "submit" && element.form && element.form === input.form) return "form_submit";
+      const classes = element.classList;
+      if (classes.contains("ds-button") && classes.contains("ds-button--primary") && classes.contains("ds-button--circle")) {
+        const arrow = [...element.querySelectorAll("svg path")].some((path) => {
+          const d = (path.getAttribute("d") || "").replace(/[\s,]+/g, "").toLowerCase();
+          return d.startsWith("m8.31250.980206c8.66767") && d.includes("v15.0417h7v3.95579");
+        });
+        if (arrow) return "deepseek_send_arrow";
+      }
+      return null;
+    };
+    const disabled = (element) => {
+      for (let node = element; node; node = node.parentElement) {
+        if (node.matches(':disabled, [inert], [aria-disabled="true"], [data-disabled="true"], .ds-button--disabled, .ds-icon-button--disabled') || getComputedStyle(node).pointerEvents === "none") return true;
+      }
+      return false;
+    };
+    for (let scope = input.parentElement, depth = 0; scope && depth < 7 && !/^(?:BODY|HTML)$/.test(scope.tagName); scope = scope.parentElement, depth++) {
+      if ([...scope.querySelectorAll("textarea")].filter(visible).length !== 1) break;
+      if (scope.querySelector('.ds-message, .ds-assistant-message-main-content, [role="log"]')) break;
+      const controls = [...scope.querySelectorAll('button, [role="button"]')].filter(visible);
+      const candidates = controls.map((element2) => ({ element: element2, source: sourceOf(element2) })).filter((item) => item.source);
+      if (!candidates.length) continue;
+      if (candidates.length !== 1) return result("multiple_send_controls", { count: candidates.length });
+      const { element, source } = candidates[0];
+      if (disabled(element)) return result("send_disabled", { count: 1, source });
+      if (controls.some((node) => /^(?:停止(?:生成|回答)?|stop(?: generating| generation| response)?)$/i.test(nameOf(node)))) return result("generation_active", { count: 1, source });
+      if (action !== "click") return result("ready", { count: 1, source });
+      if (typeof nonce !== "string" || !nonce || nonce.length > 120) return result("invalid_nonce");
+      input.setAttribute("data-local-bridge-send", nonce);
+      element.click();
+      return { clicked: true, count: 1, reason: "clicked", source };
+    }
+    return result("send_missing");
+  }
+
+  // js/mobile-browser.js
   async function locatorAction({ spec, action, argument }, evaluator) {
     if (location.origin !== "https://chat.deepseek.com") throw new Error("UNEXPECTED_PAGE");
     const visible = (element2) => {
@@ -8048,6 +9405,42 @@
     constructor(rpc2, config = {}) {
       super({ profileDir: "android-app-private-webview", timeoutMs: 6e5, firstOutputTimeoutMs: 12e4, pollMs: 100, ...config });
       this.rpc = rpc2;
+      this.sendControlTimeoutMs = Number.isFinite(config.sendControlTimeoutMs) ? Math.max(100, config.sendControlTimeoutMs) : 5e3;
+    }
+    async _beforeSubmit(page, { webSearch = true, reasoning, signal, deadline }) {
+      await this._setPageToggle(page, "search", webSearch, signal, deadline);
+      const thought = await this._readReasoningMode(page);
+      if (thought.count !== 1 || thought.enabled !== reasoning) throw new BrowserBridgeError("reasoning_search_conflict", 400, "\u667A\u80FD\u641C\u7D22\u5207\u6362\u540E\u601D\u8003\u72B6\u6001\u53D1\u751F\u53D8\u5316\uFF0C\u65E0\u6CD5\u540C\u65F6\u786E\u8BA4\u8BF7\u6C42\u7684\u8BBE\u7F6E\uFF0C\u5DF2\u505C\u6B62\u53D1\u9001\u3002");
+    }
+    async _submitComposer(page, _composer, { prompt, signal, deadline }) {
+      const stopAt = Math.min(deadline, Date.now() + this.sendControlTimeoutMs);
+      const nonce = "send-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2);
+      const reasons = {
+        send_missing: "\u6CA1\u6709\u627E\u5230\u53D1\u9001\u6309\u94AE",
+        send_disabled: "\u53D1\u9001\u6309\u94AE\u5C1A\u672A\u542F\u7528",
+        multiple_send_controls: "\u5B58\u5728\u591A\u4E2A\u53D1\u9001\u6309\u94AE",
+        composer_missing: "\u8F93\u5165\u6846\u5DF2\u6D88\u5931",
+        multiple_composers: "\u5B58\u5728\u591A\u4E2A\u8F93\u5165\u6846",
+        prompt_changed: "\u8F93\u5165\u6846\u5185\u5BB9\u5DF2\u53D8\u5316",
+        generation_active: "\u7F51\u9875\u6B63\u5728\u5904\u7406\u53E6\u4E00\u6761\u6D88\u606F",
+        unexpected_origin: "\u7F51\u9875\u6765\u6E90\u4E0D\u5339\u914D"
+      };
+      let state;
+      while (Date.now() < stopAt) {
+        if (signal?.aborted) throw new BrowserBridgeError("REQUEST_CANCELLED", 499, "\u8BF7\u6C42\u5DF2\u53D6\u6D88\u3002");
+        state = await page.evaluate(sendControl, { prompt, nonce });
+        if (state.clicked) return;
+        if (!["send_missing", "send_disabled", "composer_missing", "generation_active"].includes(state.reason)) break;
+        await new Promise((resolve) => setTimeout(resolve, Math.min(this.config.pollMs, Math.max(1, stopAt - Date.now()))));
+      }
+      if (signal?.aborted) throw new BrowserBridgeError("REQUEST_CANCELLED", 499, "\u8BF7\u6C42\u5DF2\u53D6\u6D88\u3002");
+      const error = new BrowserBridgeError(
+        "webpage_send_control_unavailable",
+        400,
+        `\u65E0\u6CD5\u81EA\u52A8\u53D1\u9001\uFF1A${reasons[state?.reason] || "\u65E0\u6CD5\u786E\u8BA4\u53D1\u9001\u63A7\u4EF6"}\u3002\u5DF2\u505C\u6B62\uFF0C\u672A\u6A21\u62DF\u56DE\u8F66\u6216\u91CD\u590D\u63D0\u4EA4\u3002`
+      );
+      error.details = { phase: "submitting", sendControlReason: state?.reason || "timeout", sendControlCount: state?.count || 0 };
+      throw error;
     }
     async _ensureBrowser() {
       if (!this._page || this._page.isClosed()) {
@@ -8059,12 +9452,22 @@
     async status() {
       await this._ensureBrowser();
       const status = await super.status();
-      if (!status.loggedIn) return { ...status, reasoningMode: { count: 0, enabled: null, reason: status.needsVerification ? "verification_required" : "login_required" } };
-      try {
-        return { ...status, reasoningMode: await this._readReasoningMode(this._page) };
-      } catch {
-        return { ...status, reasoningMode: { count: 0, enabled: null, reason: "observation_failed" } };
+      if (!status.loggedIn) {
+        const unavailable2 = { count: 0, enabled: null, reason: status.needsVerification ? "verification_required" : "login_required" };
+        return { ...status, reasoningMode: unavailable2, webSearchMode: unavailable2 };
       }
+      const result = { ...status };
+      try {
+        result.reasoningMode = await this._readReasoningMode(this._page);
+      } catch {
+        result.reasoningMode = { count: 0, enabled: null, reason: "observation_failed" };
+      }
+      try {
+        result.webSearchMode = await this._page.evaluate(reasoningControl, { action: "read", feature: "search" });
+      } catch {
+        result.webSearchMode = { count: 0, enabled: null, reason: "observation_failed" };
+      }
+      return result;
     }
     async _discardPage(page) {
       page.closed = true;
@@ -8090,6 +9493,8 @@
   // js/core/protocol.js
   init_platform();
   var import_ajv = __toESM(require_ajv(), 1);
+  var import__ = __toESM(require__(), 1);
+  var import__2 = __toESM(require__2(), 1);
   var BridgeError = class extends Error {
     constructor(status, code, message) {
       super(message);
@@ -8174,7 +9579,7 @@
     const tools = body.tools ?? [];
     if (!Array.isArray(tools) || tools.length > 128) bad("tools must be an array of at most 128 functions.");
     const definitions = /* @__PURE__ */ new Map();
-    const ajv = new import_ajv.default({ strict: false, allErrors: true, validateFormats: false });
+    const validators = /* @__PURE__ */ new Map();
     const cleanedTools = tools.map((tool) => {
       if (!isObject(tool) || tool.type !== "function" || !isObject(tool.function) || !validToolName(tool.function.name)) bad("Only named function tools are supported.");
       const fn = tool.function;
@@ -8183,7 +9588,12 @@
       if (!isObject(parameters)) bad("Tool parameters must be a JSON Schema object.");
       let validate;
       try {
-        validate = ajv.compile(parameters);
+        const dialect = typeof parameters.$schema === "string" && parameters.$schema.includes("/draft/2020-12/") ? "2020" : typeof parameters.$schema === "string" && parameters.$schema.includes("/draft/2019-09/") ? "2019" : "07";
+        if (!validators.has(dialect)) {
+          const Validator = dialect === "2020" ? import__2.default : dialect === "2019" ? import__.default : import_ajv.default;
+          validators.set(dialect, new Validator({ strict: false, allErrors: true, validateFormats: false }));
+        }
+        validate = validators.get(dialect).compile(parameters);
       } catch {
         bad(`Unsupported or invalid schema for tool ${fn.name}.`);
       }
@@ -8237,7 +9647,7 @@
     return { prompt, images, reasoning, includeUsage: body.stream_options?.include_usage === true, stream: body.stream === true, toolsEnabled, choice, forcedName, definitions };
   }
   function parseToolResponse(text, request) {
-    const invalid = (message) => {
+    const invalid2 = (message) => {
       throw new BridgeError(502, "invalid_tool_response", message);
     };
     let raw = text.trim();
@@ -8247,29 +9657,29 @@
     try {
       value = JSON.parse(raw);
     } catch {
-      invalid("The webpage did not return a valid tool protocol envelope. Retry the request or use a native tool-calling API.");
+      invalid2("The webpage did not return a valid tool protocol envelope. Retry the request or use a native tool-calling API.");
     }
-    if (!isObject(value)) invalid("Invalid tool protocol envelope.");
-    if (typeof value.content === "string" && !value.content.isWellFormed()) invalid("The content contains an unpaired UTF-16 surrogate.");
+    if (!isObject(value)) invalid2("Invalid tool protocol envelope.");
+    if (typeof value.content === "string" && !value.content.isWellFormed()) invalid2("The content contains an unpaired UTF-16 surrogate.");
     if (Array.isArray(value.tool_calls) && value.tool_calls.length) {
-      if (value.tool_calls.length > 16) invalid("Too many tool calls.");
+      if (value.tool_calls.length > 16) invalid2("Too many tool calls.");
       const calls = value.tool_calls.map((call) => {
-        if (!isObject(call) || !request.definitions.has(call.name) || request.forcedName && call.name !== request.forcedName) invalid("The model requested an unavailable tool.");
+        if (!isObject(call) || !request.definitions.has(call.name) || request.forcedName && call.name !== request.forcedName) invalid2("The model requested an unavailable tool.");
         let args = call.arguments;
         if (typeof args === "string") {
           try {
             args = JSON.parse(args);
           } catch {
-            invalid("Tool arguments are not valid JSON.");
+            invalid2("Tool arguments are not valid JSON.");
           }
         }
-        if (!isObject(args) || !request.definitions.get(call.name)(args)) invalid(`Arguments do not match the schema for tool ${call.name}.`);
+        if (!isObject(args) || !request.definitions.get(call.name)(args)) invalid2(`Arguments do not match the schema for tool ${call.name}.`);
         return { id: `call_${randomUUID().replaceAll("-", "")}`, type: "function", function: { name: call.name, arguments: JSON.stringify(args) } };
       });
       return { message: { role: "assistant", content: typeof value.content === "string" ? value.content : null, tool_calls: calls }, finishReason: "tool_calls" };
     }
-    if (request.choice === "required") invalid("The model did not return the required tool call.");
-    if (typeof value.content !== "string" || value.tool_calls !== void 0) invalid("Expected a content or tool_calls envelope.");
+    if (request.choice === "required") invalid2("The model did not return the required tool call.");
+    if (typeof value.content !== "string" || value.tool_calls !== void 0) invalid2("Expected a content or tool_calls envelope.");
     return { message: { role: "assistant", content: value.content }, finishReason: "stop" };
   }
   function buildToolRetryPrompt(request, draft, publishedContent) {
@@ -8471,10 +9881,260 @@
 
   // js/engine.js
   init_platform();
+
+  // js/anthropic.js
+  init_platform();
+  var object = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+  var invalid = (message) => {
+    throw new BridgeError(400, "invalid_request_error", message);
+  };
+  var usageMeta = { estimated: true, image_tokens_included: false, cache: { status: "unknown", source: "not_exposed_by_web_ui", tokens_reported: false }, thinking_signature: "not_available" };
+  function alias(name) {
+    if (typeof name !== "string" || !name || name.length > 1024) invalid("Tool name must be a non-empty string of at most 1024 characters.");
+    if (/^[a-zA-Z0-9_-]{1,64}$/.test(name)) return name;
+    let hash = 2166136261;
+    for (const ch of name) {
+      hash ^= ch.codePointAt(0);
+      hash = Math.imul(hash, 16777619);
+    }
+    return "bridge_" + name.replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 44) + "_" + (hash >>> 0).toString(16).padStart(8, "0");
+  }
+  function parts(content) {
+    if (typeof content === "string") return [{ type: "text", text: content }];
+    if (!Array.isArray(content)) invalid("Message content must be text or an array of content blocks.");
+    return content.map((block) => {
+      if (!object(block)) invalid("Content blocks must be objects.");
+      if (block.type === "text" && typeof block.text === "string") return { type: "text", text: block.text };
+      if (block.type === "image") {
+        const source = block.source;
+        if (!object(source) || source.type !== "base64" || !/^image\/(?:png|jpeg|webp)$/.test(source.media_type || "") || typeof source.data !== "string") invalid("Images require PNG/JPEG/WebP base64 source blocks.");
+        return { type: "image_url", image_url: { url: `data:${source.media_type};base64,${source.data}` } };
+      }
+      invalid("Unsupported content block: " + String(block.type || "missing type") + ".");
+    });
+  }
+  function fromAnthropic(input, { countOnly = false } = {}) {
+    if (!object(input)) invalid("The JSON body must be an object.");
+    if (!Array.isArray(input.messages) || !input.messages.length) invalid("messages must contain at least one message.");
+    if (!countOnly && (!Number.isSafeInteger(input.max_tokens) || input.max_tokens < 1)) invalid("max_tokens must be a positive integer.");
+    if (input.output_config?.format || input.response_format) invalid("Structured output is not supported by this webpage adapter. Use ordinary text or client function tools.");
+    if (input.tools !== void 0 && (!Array.isArray(input.tools) || input.tools.length > 128)) invalid("tools must be an array of at most 128 definitions.");
+    const names = /* @__PURE__ */ new Map(), originals = /* @__PURE__ */ new Set(), tools = [];
+    let delegatedSearch = false;
+    for (const tool of input.tools || []) {
+      if (!object(tool)) invalid("Each tool must be an object.");
+      if (typeof tool.type === "string" && /^web_search_/.test(tool.type)) {
+        delegatedSearch = true;
+        continue;
+      }
+      if (typeof tool.type === "string" && /^tool_search_tool_/.test(tool.type)) continue;
+      if (tool.type && tool.type !== "custom") invalid("Unsupported server tool type: " + tool.type + ".");
+      const name = alias(tool.name);
+      if (originals.has(tool.name) || names.has(name)) invalid("Duplicate or colliding tool name.");
+      if (!object(tool.input_schema)) invalid("Custom tools require an input_schema object.");
+      originals.add(tool.name);
+      names.set(name, tool.name);
+      tools.push({ type: "function", function: { name, description: typeof tool.description === "string" ? tool.description : "", parameters: tool.input_schema } });
+    }
+    const messages = [];
+    if (input.system !== void 0) {
+      const blocks = parts(input.system);
+      if (blocks.some((block) => block.type !== "text")) invalid("System blocks must be text.");
+      messages.push({ role: "system", content: blocks.map((block) => block.text).join("\n\n") });
+    }
+    for (const message of input.messages) {
+      if (!object(message) || !["user", "assistant", "system"].includes(message.role)) invalid("Messages require user, assistant or system roles.");
+      if (message.role === "system") {
+        messages.push({ role: "system", content: parts(message.content) });
+        continue;
+      }
+      if (typeof message.content === "string") {
+        messages.push({ role: message.role, content: message.content });
+        continue;
+      }
+      if (!Array.isArray(message.content)) invalid("Message content must be text or content blocks.");
+      if (message.role === "assistant") {
+        const text = [], calls = [];
+        for (const block of message.content) {
+          if (!object(block)) invalid("Assistant blocks must be objects.");
+          if (block.type === "thinking" || block.type === "redacted_thinking") continue;
+          if (block.type === "tool_use") {
+            if (typeof block.id !== "string" || !block.id || !object(block.input)) invalid("tool_use requires id, name and an input object.");
+            calls.push({ id: block.id, type: "function", function: { name: alias(block.name), arguments: JSON.stringify(block.input) } });
+          } else text.push(...parts([block]));
+        }
+        messages.push({ role: "assistant", content: text.length ? text : null, ...calls.length ? { tool_calls: calls } : {} });
+      } else {
+        let pending2 = [];
+        const flush = () => {
+          if (pending2.length) {
+            messages.push({ role: "user", content: pending2 });
+            pending2 = [];
+          }
+        };
+        for (const block of message.content) {
+          if (!object(block)) invalid("User blocks must be objects.");
+          if (block.type === "tool_result") {
+            flush();
+            if (typeof block.tool_use_id !== "string" || !block.tool_use_id) invalid("tool_result requires tool_use_id.");
+            const content = parts(block.content ?? "");
+            if (block.is_error) content.unshift({ type: "text", text: "[Tool execution failed]" });
+            messages.push({ role: "tool", tool_call_id: block.tool_use_id, content });
+          } else pending2.push(...parts([block]));
+        }
+        flush();
+      }
+    }
+    let choice = "auto";
+    if (input.tool_choice !== void 0) {
+      if (!object(input.tool_choice)) invalid("tool_choice must be an object.");
+      const kind = input.tool_choice.type;
+      if (kind === "any") choice = "required";
+      else if (kind === "none") choice = "none";
+      else if (kind === "tool") choice = { type: "function", function: { name: alias(input.tool_choice.name) } };
+      else if (kind !== "auto") invalid("Unsupported tool_choice type.");
+    }
+    const body = { model: input.model, messages, tools, tool_choice: choice, stream: input.stream ?? false, max_tokens: input.max_tokens ?? 1, stream_options: { include_usage: true } };
+    if (input.stop_sequences !== void 0) body.stop = input.stop_sequences;
+    if (input.web_search !== void 0) body.web_search = input.web_search;
+    else if (delegatedSearch) body.web_search = true;
+    if (input.thinking !== void 0) {
+      if (!object(input.thinking) || !["enabled", "disabled", "adaptive"].includes(input.thinking.type)) invalid("thinking.type must be enabled, disabled or adaptive.");
+      body.thinking = { type: input.thinking.type === "disabled" ? "disabled" : "enabled" };
+    }
+    return { body, names, showThinking: input.thinking?.type !== "disabled" && input.thinking?.display !== "omitted", delegatedSearch };
+  }
+  function anthropicError(payload, status = 500) {
+    const source = payload?.error || payload || {};
+    const type = status === 401 ? "authentication_error" : status === 403 ? "permission_error" : status === 404 ? "not_found_error" : status === 413 ? "request_too_large" : status === 429 ? "rate_limit_error" : status < 500 ? "invalid_request_error" : "api_error";
+    return { type: "error", error: { type, message: source.message || "Webpage bridge request failed.", ...source.code ? { code: source.code } : {}, ...source.details ? { details: source.details } : {} } };
+  }
+  var stopReason = (reason) => reason === "tool_calls" ? "tool_use" : reason === "length" ? "max_tokens" : "end_turn";
+  var usage = (stats) => ({ input_tokens: stats?.prompt_tokens || 0, output_tokens: stats?.completion_tokens || 0 });
+  function anthropicChannel(input, conversion) {
+    const id = "msg_" + randomUUID().replaceAll("-", "");
+    const model = input.model;
+    const initial = estimateUsage({ prompt: JSON.stringify(conversion.body) }).prompt_tokens;
+    const meta = (extra) => ({ ...usageMeta, ...extra });
+    const responseName = (name) => conversion.names.get(name) || name;
+    const message = (content, finish2, stats2, extra) => ({
+      id,
+      type: "message",
+      role: "assistant",
+      model,
+      content,
+      stop_reason: finish2,
+      stop_sequence: null,
+      usage: usage(stats2),
+      usage_meta: meta(extra)
+    });
+    let started = false, finished = false, failed = false, block = null, nextIndex = 0, finish = "end_turn", stats;
+    const calls = /* @__PURE__ */ new Map();
+    function emit(kind, payload, send) {
+      const event = (type, fields = {}) => send("data", { text: `event: ${type}
+data: ${JSON.stringify({ type, ...fields })}
+
+` });
+      const start = () => {
+        if (started) return;
+        started = true;
+        send("stream", {});
+        event("message_start", { message: message([], null, { prompt_tokens: initial, completion_tokens: 0 }) });
+      };
+      const closeBlock = () => {
+        if (block) {
+          event("content_block_stop", { index: block.index });
+          block = null;
+        }
+      };
+      const append = (type, value) => {
+        if (!value) return;
+        if (type === "thinking" && !conversion.showThinking) return;
+        if (!block || block.type !== type) {
+          closeBlock();
+          block = { type, index: nextIndex++ };
+          event("content_block_start", { index: block.index, content_block: type === "thinking" ? { type, thinking: "", signature: "" } : { type, text: "" } });
+        }
+        event("content_block_delta", { index: block.index, delta: type === "thinking" ? { type: "thinking_delta", thinking: value } : { type: "text_delta", text: value } });
+      };
+      const complete = () => {
+        if (finished || failed) return;
+        start();
+        closeBlock();
+        for (const call of calls.values()) {
+          let args;
+          try {
+            args = JSON.parse(call.arguments || "{}");
+          } catch {
+            throw new Error("Invalid validated tool argument stream.");
+          }
+          const index = nextIndex++;
+          event("content_block_start", { index, content_block: { type: "tool_use", id: call.id, name: responseName(call.name), input: {} } });
+          event("content_block_delta", { index, delta: { type: "input_json_delta", partial_json: JSON.stringify(args) } });
+          event("content_block_stop", { index });
+        }
+        event("message_delta", { delta: { stop_reason: calls.size ? "tool_use" : finish, stop_sequence: null }, usage: usage(stats), usage_meta: meta() });
+        event("message_stop");
+        finished = true;
+      };
+      if (kind === "response") {
+        if (payload.status >= 400 || payload.body.error) return send("response", { status: payload.status, body: anthropicError(payload.body, payload.status) });
+        if (payload.body.object !== "chat.completion") return send(kind, payload);
+        const choice = payload.body.choices[0], answer = choice.message, content = [];
+        if (conversion.showThinking && answer.reasoning_content) content.push({ type: "thinking", thinking: answer.reasoning_content, signature: "" });
+        if (answer.content) content.push({ type: "text", text: answer.content });
+        for (const call of answer.tool_calls || []) content.push({ type: "tool_use", id: call.id, name: responseName(call.function.name), input: JSON.parse(call.function.arguments) });
+        return send("response", { status: payload.status, body: message(content, stopReason(choice.finish_reason), payload.body.usage, payload.body.usage_meta) });
+      }
+      if (kind === "stream") return start();
+      if (kind === "end") {
+        complete();
+        return send("end", {});
+      }
+      if (kind !== "data" || finished || failed) return;
+      start();
+      for (const line of payload.text.split("\n")) {
+        if (line.startsWith(":")) {
+          event("ping");
+          continue;
+        }
+        if (!line.startsWith("data: ")) continue;
+        const raw = line.slice(6);
+        if (raw === "[DONE]") {
+          complete();
+          continue;
+        }
+        const chunk = JSON.parse(raw);
+        if (chunk.error) {
+          closeBlock();
+          const error = anthropicError(chunk, 502);
+          event("error", { error: error.error });
+          failed = true;
+          continue;
+        }
+        if (chunk.usage) stats = chunk.usage;
+        for (const item of chunk.choices || []) {
+          if (item.finish_reason) finish = stopReason(item.finish_reason);
+          append("thinking", item.delta?.reasoning_content);
+          append("text", item.delta?.content);
+          for (const part of item.delta?.tool_calls || []) {
+            const old = calls.get(part.index) || { id: "", name: "", arguments: "" };
+            if (part.id) old.id = part.id;
+            if (part.function?.name) old.name += part.function.name;
+            if (part.function?.arguments) old.arguments += part.function.arguments;
+            calls.set(part.index, old);
+          }
+        }
+      }
+    }
+    return { emit, error: anthropicError };
+  }
+
+  // js/engine.js
   function errorPayload(error) {
     const payload = { message: error.status || error.code ? error.message : "Android bridge error.", type: "bridge_error", code: error.code || "internal_error", param: null };
     if (error.details) {
-      const allowed = ["phase", "answerContainers", "reasoningContainers", "composers", "parserState", "receivedCharacters", "formatAttempts", "firstOutputTimeoutMs", "emptyResponseAttempts"];
+      const allowed = ["phase", "answerContainers", "reasoningContainers", "composers", "parserState", "receivedCharacters", "formatAttempts", "firstOutputTimeoutMs", "emptyResponseAttempts", "sendControlReason", "sendControlCount"];
       payload.details = Object.fromEntries(allowed.filter((key) => ["string", "number"].includes(typeof error.details[key])).map((key) => [key, error.details[key]]));
     }
     return { error: payload };
@@ -8489,13 +10149,16 @@
     });
   }
   function createEngine(backend2, emitNative, options = {}) {
-    const config = { model: "deepseek-web", timeoutMs: 6e5, heartbeatMs: 1e4, maxQueue: 8, ...options };
+    const config = { model: "deepseek-web", timeoutMs: 6e5, heartbeatMs: 1e4, maxQueue: 8, defaultWebSearch: () => true, ...options };
     const jobs = /* @__PURE__ */ new Map();
     const waiting = [];
     let active = null;
     let sequence2 = 0;
     const emit = (job, kind, payload = {}) => {
-      if (!job.disconnected) emitNative(job.id, kind, payload);
+      if (job.disconnected) return;
+      const send = (outputKind, outputPayload) => emitNative(job.id, outputKind, outputPayload);
+      if (job.anthropic) job.anthropic.emit(kind, payload, send);
+      else send(kind, payload);
     };
     const cancelled2 = () => new BridgeError(499, "request_cancelled", "\u624B\u673A\u5BA2\u6237\u7AEF\u5DF2\u53D6\u6D88\u8BF7\u6C42\u3002");
     const abortable = (promise, signal) => {
@@ -8545,6 +10208,12 @@
         if (job.path === "/browser/status") return respond(job, 200, { ...await abortable(backend2.status(), signal), busy: false, queued: waiting.length });
         if (job.path === "/browser/open") return respond(job, 200, await abortable(backend2.openLogin(), signal));
         const prepared = prepareRequest(job.body, config.model);
+        if (job.countOnly) return respond(job, 200, {
+          input_tokens: estimateUsage({ prompt: prepared.prompt }).prompt_tokens,
+          usage_meta: { estimated: true, method: "unicode_han_1.5_chars_per_token_other_4_chars_per_token", image_tokens_included: false, cache: { status: "unknown" } }
+        });
+        if ("web_search" in job.body && typeof job.body.web_search !== "boolean") throw new BridgeError(400, "invalid_web_search", "web_search \u5FC5\u987B\u662F true \u6216 false\u3002");
+        const webSearch = job.body.web_search ?? config.defaultWebSearch();
         const images = resolveDataImages(prepared.images);
         let output = "", reasoning = "", published = "", currentPrompt = prepared.prompt;
         let formatRetries = 0, emptyRetries = 0, finishReason = "stop", result;
@@ -8562,7 +10231,7 @@
           const attemptReasoning = prepared.reasoning && formatRetries === 0;
           output = "";
           prompts.push(currentPrompt);
-          iterator = backend2.generate({ prompt: currentPrompt, images, reasoning: attemptReasoning, signal })[Symbol.asyncIterator]();
+          iterator = backend2.generate({ prompt: currentPrompt, images, reasoning: attemptReasoning, webSearch, signal })[Symbol.asyncIterator]();
           try {
             for (; ; ) {
               const next = await abortable(iterator.next(), signal);
@@ -8640,16 +10309,16 @@
           }
         }
         if (reasoning) result.message.reasoning_content = reasoning;
-        const usage = estimateUsage({ prompt: prompts.join("\n"), content: outputs.join("\n"), reasoning, images });
-        const usageMeta = { estimated: true, method: "unicode_han_1.5_chars_per_token_other_4_chars_per_token", image_tokens_included: false, cache: { status: "unknown", source: "not_exposed_by_web_ui", tokens_reported: false }, format_retries: formatRetries, empty_response_retries: emptyRetries };
-        if (!prepared.stream) return respond(job, 200, { id, object: "chat.completion", created, model: config.model, choices: [{ index: 0, message: result.message, finish_reason: result.finishReason }], usage, usage_meta: usageMeta });
+        const usage2 = estimateUsage({ prompt: prompts.join("\n"), content: outputs.join("\n"), reasoning, images });
+        const usageMeta2 = { estimated: true, method: "unicode_han_1.5_chars_per_token_other_4_chars_per_token", image_tokens_included: false, cache: { status: "unknown", source: "not_exposed_by_web_ui", tokens_reported: false }, format_retries: formatRetries, empty_response_retries: emptyRetries };
+        if (!prepared.stream) return respond(job, 200, { id, object: "chat.completion", created, model: config.model, choices: [{ index: 0, message: result.message, finish_reason: result.finishReason }], usage: usage2, usage_meta: usageMeta2 });
         if (prepared.toolsEnabled) {
           const finalText = result.message.content || "";
           if (finalText.slice(published.length)) chunk(envelope({ content: finalText.slice(published.length) }));
           if (result.message.tool_calls) chunk(envelope({ tool_calls: result.message.tool_calls.map((call, index) => ({ index, ...call })) }));
         }
         chunk(envelope({}, result.finishReason));
-        if (prepared.includeUsage) chunk({ id, object: "chat.completion.chunk", created, model: config.model, choices: [], usage, usage_meta: usageMeta });
+        if (prepared.includeUsage) chunk({ id, object: "chat.completion.chunk", created, model: config.model, choices: [], usage: usage2, usage_meta: usageMeta2 });
         emit(job, "data", { text: "data: [DONE]\n\n" });
         emit(job, "end");
       } catch (error) {
@@ -8682,7 +10351,24 @@ data: [DONE]
       void execute(job);
     }
     function receive(request) {
-      const job = { ...request, id: request.id || `mobile-${++sequence2}`, controller: new AbortController(), disconnected: false };
+      const id = request.id || `mobile-${++sequence2}`;
+      const nativeAnthropic = ["/v1/messages", "/v1/messages/count_tokens"].includes(request.path);
+      let conversion;
+      if (nativeAnthropic) {
+        try {
+          conversion = fromAnthropic(request.body, { countOnly: request.path.endsWith("/count_tokens") });
+        } catch (error) {
+          emitNative(id, "response", { status: error.status || 400, body: anthropicError(errorPayload(error), error.status || 400) });
+          return;
+        }
+      }
+      const job = {
+        ...request,
+        id,
+        controller: new AbortController(),
+        disconnected: false,
+        ...nativeAnthropic ? { path: "/v1/chat/completions", body: conversion.body, countOnly: request.path.endsWith("/count_tokens"), anthropic: anthropicChannel(request.body, conversion) } : {}
+      };
       if (active && waiting.length >= config.maxQueue) return respond(job, 429, errorPayload(new BridgeError(429, "queue_full", "\u624B\u673A\u7F51\u9875\u6B63\u5728\u5904\u7406\uFF0C\u961F\u5217\u5DF2\u6EE1\u3002")));
       if (job.path !== "/v1/chat/completions" && !["/browser/status", "/browser/open"].includes(job.path)) return respond(job, 404, errorPayload(new BridgeError(404, "not_found", "Unsupported path.")));
       jobs.set(job.id, job);
@@ -8750,7 +10436,7 @@ data: [DONE]
     if (!document.getElementById("app")) return;
     const $ = (id) => document.getElementById(id);
     document.querySelectorAll("[data-icon]").forEach((node) => icon(node, node.dataset.icon));
-    let state = { ready: false, running: false, loggedIn: false, hasInspection: false, inspecting: false, busy: false, testStatus: "untested", reasoningMode: { enabled: null }, activities: [], version: "0.2.1" };
+    let state = { ready: false, running: false, loggedIn: false, hasInspection: false, inspecting: false, busy: false, testStatus: "untested", reasoningMode: { enabled: null }, activities: [], version: "0.3.0" };
     let tab = "home", toastTimer, modal = false, previousFocus;
     let theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
     try {
@@ -8860,8 +10546,32 @@ data: [DONE]
         navigate("connect");
       } }], "bridge");
     }
+    function searchSheet() {
+      const mode = state.webSearchMode || {};
+      const enabled = state.webSearchDefault !== false;
+      const label = typeof mode.enabled === "boolean" ? mode.enabled ? "\u5DF2\u5F00\u542F" : "\u5DF2\u5173\u95ED" : "\u5C1A\u672A\u786E\u8BA4";
+      sheet("\u7F51\u9875\u667A\u80FD\u641C\u7D22", [
+        row("\u5F53\u524D\u7F51\u9875\u72B6\u6001", label),
+        row("\u8BF7\u6C42\u9ED8\u8BA4\u7B56\u7565", enabled ? "\u9ED8\u8BA4\u5F00\u542F" : "\u9ED8\u8BA4\u5173\u95ED"),
+        paragraph("\u4F7F\u7528 DeepSeek \u7F51\u9875\u81EA\u5E26\u7684\u667A\u80FD\u641C\u7D22\uFF0C\u4E0D\u9700\u8981\u914D\u7F6E\u989D\u5916\u641C\u7D22\u6A21\u578B\u6216 API Key\u3002\u7F51\u9875\u4F1A\u51B3\u5B9A\u672C\u6B21\u56DE\u7B54\u662F\u5426\u9700\u8981\u5B9E\u9645\u68C0\u7D22\u3002"),
+        paragraph("\u9ED8\u8BA4\u7B56\u7565\u4F1A\u5728\u4E0B\u6B21\u8BF7\u6C42\u53D1\u9001\u524D\u5E94\u7528\uFF0C\u5E76\u786E\u8BA4\u5F00\u5173\u72B6\u6001\u3002\u8BF7\u6C42\u4F53\u91CC\u7684 web_search: true \u6216 false \u4F18\u5148\u4E8E\u8FD9\u91CC\u7684\u9ED8\u8BA4\u503C\u3002")
+      ], [
+        { label: "\u9ED8\u8BA4\u5F00\u542F", disabled: enabled, run: () => {
+          native("search-policy", { enabled: true });
+          closeSheet();
+        } },
+        { label: "\u9ED8\u8BA4\u5173\u95ED", disabled: !enabled, run: () => {
+          native("search-policy", { enabled: false });
+          closeSheet();
+        } },
+        { label: "\u91CD\u65B0\u68C0\u6D4B\u7F51\u9875", disabled: state.inspecting, run: () => {
+          closeSheet();
+          native("inspect");
+        } }
+      ], "globe");
+    }
     function diagnostics() {
-      sheet("\u8FDE\u63A5\u8BCA\u65AD", [row("\u5E94\u7528\u7248\u672C", state.version || "0.2.1"), row("\u672C\u673A\u670D\u52A1", state.running ? "\u5DF2\u542F\u52A8" : "\u672A\u542F\u52A8"), row("\u7F51\u9875\u767B\u5F55", state.hasInspection ? state.loggedIn ? "\u5DF2\u767B\u5F55" : "\u9700\u8981\u767B\u5F55\u6216\u9A8C\u8BC1" : "\u5C1A\u672A\u68C0\u6D4B"), row("\u601D\u8003\u5F00\u5173", state.reasoningMode?.source || "\u5F85\u68C0\u6D4B"), row("\u63A5\u53E3\u8BF7\u6C42", String(state.requests || 0) + " \u6B21"), row("\u5F53\u524D\u4EFB\u52A1", state.busy ? "\u5904\u7406\u4E2D" : "\u7A7A\u95F2"), paragraph(state.lastError || "\u8BCA\u65AD\u4E0D\u5305\u542B API \u5BC6\u94A5\u3001\u9A8C\u8BC1\u7801\u548C\u804A\u5929\u6B63\u6587\u3002")], [{ label: "\u590D\u5236\u8BCA\u65AD\u4FE1\u606F", run: () => native("copy", { field: "diagnostics" }) }, { label: "\u91CD\u65B0\u68C0\u6D4B", disabled: state.inspecting, run: () => {
+      sheet("\u8FDE\u63A5\u8BCA\u65AD", [row("\u5E94\u7528\u7248\u672C", state.version || "0.3.0"), row("\u672C\u673A\u670D\u52A1", state.running ? "\u5DF2\u542F\u52A8" : "\u672A\u542F\u52A8"), row("\u7F51\u9875\u767B\u5F55", state.hasInspection ? state.loggedIn ? "\u5DF2\u767B\u5F55" : "\u9700\u8981\u767B\u5F55\u6216\u9A8C\u8BC1" : "\u5C1A\u672A\u68C0\u6D4B"), row("\u601D\u8003\u5F00\u5173", state.reasoningMode?.source || "\u5F85\u68C0\u6D4B"), row("\u63A5\u53E3\u8BF7\u6C42", String(state.requests || 0) + " \u6B21"), row("\u5F53\u524D\u4EFB\u52A1", state.busy ? "\u5904\u7406\u4E2D" : "\u7A7A\u95F2"), paragraph(state.lastError || "\u8BCA\u65AD\u4E0D\u5305\u542B API \u5BC6\u94A5\u3001\u9A8C\u8BC1\u7801\u548C\u804A\u5929\u6B63\u6587\u3002")], [{ label: "\u590D\u5236\u8BCA\u65AD\u4FE1\u606F", run: () => native("copy", { field: "diagnostics" }) }, { label: "\u91CD\u65B0\u68C0\u6D4B", disabled: state.inspecting, run: () => {
         closeSheet();
         native("inspect");
       } }], "activity");
@@ -8885,6 +10595,8 @@ data: [DONE]
       $("login-value").textContent = state.inspecting ? "\u68C0\u6D4B\u4E2D" : state.hasInspection ? state.needsVerification ? "\u9700\u9A8C\u8BC1" : loggedIn ? "\u5DF2\u767B\u5F55" : "\u5F85\u767B\u5F55" : "\u5F85\u68C0\u6D4B";
       const thought = state.reasoningMode || {};
       $("reasoning-value").textContent = state.inspecting ? "\u68C0\u6D4B\u4E2D" : typeof thought.enabled === "boolean" ? thought.enabled ? "\u5DF2\u5F00\u542F" : "\u5DF2\u5173\u95ED" : !loggedIn ? "\u5F85\u767B\u5F55" : "\u672A\u8BC6\u522B";
+      const search = state.webSearchMode || {};
+      $("search-value").textContent = state.inspecting ? "\u68C0\u6D4B\u4E2D" : typeof search.enabled === "boolean" ? search.enabled ? "\u5DF2\u5F00\u542F" : "\u5DF2\u5173\u95ED" : !loggedIn ? "\u5F85\u767B\u5F55" : "\u672A\u8BC6\u522B";
       $("test-value").textContent = state.probeRunning ? "\u6D4B\u8BD5\u4E2D" : state.testStatus === "passed" ? "\u5DF2\u901A\u8FC7" : state.testStatus === "failed" ? "\u672A\u901A\u8FC7" : "\u672A\u6D4B\u8BD5";
       $("login-subtitle").textContent = loggedIn ? "\u7F51\u9875\u4F1A\u8BDD\u5DF2\u786E\u8BA4\uFF0C\u53EF\u4EE5\u7EE7\u7EED\u8C03\u7528" : state.needsVerification ? "\u6253\u5F00\u7F51\u9875\uFF0C\u624B\u52A8\u5B8C\u6210\u9A8C\u8BC1" : "\u5728\u5E94\u7528\u5185\u5B8C\u6210\u7F51\u9875\u767B\u5F55";
       $("test-subtitle").textContent = state.probeRunning ? "\u6B63\u5728\u7B49\u5F85\u771F\u5B9E\u7F51\u9875\u54CD\u5E94\u2026" : state.testStatus === "passed" ? "\u771F\u5B9E\u7F51\u9875\u8C03\u7528\u5DF2\u9A8C\u8BC1\u901A\u8FC7" : state.testStatus === "failed" ? "\u4E0A\u6B21\u6D4B\u8BD5\u672A\u901A\u8FC7\uFF0C\u53EF\u67E5\u770B\u8FDE\u63A5\u8BCA\u65AD" : "\u786E\u8BA4\u7F51\u9875\u4E0E\u672C\u673A\u63A5\u53E3\u8FDE\u63A5\u6B63\u5E38";
@@ -8899,7 +10611,7 @@ data: [DONE]
       $("web-status").textContent = state.busy ? "\u6B63\u5728\u5904\u7406\u8BF7\u6C42\uFF0C\u8BF7\u4FDD\u6301\u7F51\u9875\u8FDE\u63A5" : "\u5728\u8FD9\u91CC\u767B\u5F55\u5E76\u7BA1\u7406\u4F60\u7684\u7F51\u9875\u4F1A\u8BDD";
       $("web-login-chip").textContent = loggedIn ? "\u7F51\u9875\u767B\u5F55\u6709\u6548" : state.needsVerification ? "\u9700\u8981\u624B\u52A8\u9A8C\u8BC1" : "\u767B\u5F55\u72B6\u6001\u5F85\u786E\u8BA4";
       $("web-think-chip").textContent = typeof thought.enabled === "boolean" ? thought.enabled ? "\u6DF1\u5EA6\u601D\u8003\u5DF2\u5F00\u542F" : "\u6DF1\u5EA6\u601D\u8003\u5DF2\u5173\u95ED" : "\u68C0\u6D4B\u6DF1\u5EA6\u601D\u8003";
-      $("app-version").textContent = state.version || "0.2.1";
+      $("app-version").textContent = state.version || "0.3.0";
       const activities = (state.activities || []).slice(-4).reverse();
       if (activities.length) {
         $("activity-list").replaceChildren(...activities.map((item) => {
@@ -8920,6 +10632,7 @@ data: [DONE]
       const action = button.dataset.action;
       if (action === "help") help();
       else if (action === "reasoning") reasoningSheet();
+      else if (action === "search") searchSheet();
       else if (action === "diagnostics") diagnostics();
       else if (action === "test") {
         if (!state.running) toast("\u8BF7\u5148\u542F\u52A8\u670D\u52A1");
@@ -9002,7 +10715,9 @@ data: [DONE]
     NativeBridge.request(id, operation, JSON.stringify(argument));
   });
   var backend = new MobileBrowser(rpc);
-  var engine = createEngine(backend, (id, kind, payload) => NativeBridge.response(id, kind, JSON.stringify(payload)));
+  var engine = createEngine(backend, (id, kind, payload) => NativeBridge.response(id, kind, JSON.stringify(payload)), {
+    defaultWebSearch: () => NativeBridge.searchDefault?.() ?? true
+  });
   var inspecting = false;
   globalThis.AndroidEngine = {
     receive: (request) => engine.receive(request),

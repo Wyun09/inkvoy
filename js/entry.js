@@ -27,7 +27,9 @@ const rpc = (operation, argument) => new Promise((resolve, reject) => {
   NativeBridge.request(id, operation, JSON.stringify(argument));
 });
 const backend = new MobileBrowser(rpc);
-const engine = createEngine(backend, (id, kind, payload) => NativeBridge.response(id, kind, JSON.stringify(payload)));
+const engine = createEngine(backend, (id, kind, payload) => NativeBridge.response(id, kind, JSON.stringify(payload)), {
+  defaultWebSearch: () => NativeBridge.searchDefault?.() ?? true,
+});
 let inspecting = false;
 globalThis.AndroidEngine = {
   receive: request => engine.receive(request), cancel: id => engine.cancel(id),

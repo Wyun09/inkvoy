@@ -2,11 +2,12 @@ import { prepareRequest, parseToolResponse, buildToolRetryPrompt, BridgeError } 
 import { ContentEnvelopeDecoder } from './core/streaming.js';
 import { estimateUsage } from './core/usage.js';
 import { MobileBuffer, randomUUID } from './platform.js';
+import { fromAnthropic, anthropicChannel, anthropicError } from './anthropic.js';
 
 function errorPayload(error) {
   const payload = { message: error.status || error.code ? error.message : 'Android bridge error.', type: 'bridge_error', code: error.code || 'internal_error', param: null };
   if (error.details) {
-    const allowed = ['phase', 'answerContainers', 'reasoningContainers', 'composers', 'parserState', 'receivedCharacters', 'formatAttempts', 'firstOutputTimeoutMs', 'emptyResponseAttempts'];
+    const allowed = ['phase', 'answerContainers', 'reasoningContainers', 'composers', 'parserState', 'receivedCharacters', 'formatAttempts', 'firstOutputTimeoutMs', 'emptyResponseAttempts', 'sendControlReason', 'sendControlCount'];
     payload.details = Object.fromEntries(allowed.filter(key => ['string', 'number'].includes(typeof error.details[key])).map(key => [key, error.details[key]]));
   }
   return { error: payload };
@@ -23,13 +24,16 @@ export function resolveDataImages(images) {
 }
 
 export function createEngine(backend, emitNative, options = {}) {
-  const config = { model: 'deepseek-web', timeoutMs: 600000, heartbeatMs: 10000, maxQueue: 8, ...options };
+  const config = { model: 'deepseek-web', timeoutMs: 600000, heartbeatMs: 10000, maxQueue: 8, defaultWebSearch: () => true, ...options };
   const jobs = new Map();
   const waiting = [];
   let active = null;
   let sequence = 0;
   const emit = (job, kind, payload = {}) => {
-    if (!job.disconnected) emitNative(job.id, kind, payload);
+    if (job.disconnected) return;
+    const send = (outputKind, outputPayload) => emitNative(job.id, outputKind, outputPayload);
+    if (job.anthropic) job.anthropic.emit(kind, payload, send);
+    else send(kind, payload);
   };
   const cancelled = () => new BridgeError(499, 'request_cancelled', '手机客户端已取消请求。');
   const abortable = (promise, signal) => {
@@ -64,6 +68,10 @@ export function createEngine(backend, emitNative, options = {}) {
       if (job.path === '/browser/status') return respond(job, 200, { ...await abortable(backend.status(), signal), busy: false, queued: waiting.length });
       if (job.path === '/browser/open') return respond(job, 200, await abortable(backend.openLogin(), signal));
       const prepared = prepareRequest(job.body, config.model);
+      if (job.countOnly) return respond(job, 200, { input_tokens: estimateUsage({ prompt: prepared.prompt }).prompt_tokens,
+        usage_meta: { estimated: true, method: 'unicode_han_1.5_chars_per_token_other_4_chars_per_token', image_tokens_included: false, cache: { status: 'unknown' } } });
+      if ('web_search' in job.body && typeof job.body.web_search !== 'boolean') throw new BridgeError(400, 'invalid_web_search', 'web_search 必须是 true 或 false。');
+      const webSearch = job.body.web_search ?? config.defaultWebSearch();
       const images = resolveDataImages(prepared.images);
       let output = '', reasoning = '', published = '', currentPrompt = prepared.prompt;
       let formatRetries = 0, emptyRetries = 0, finishReason = 'stop', result;
@@ -80,7 +88,7 @@ export function createEngine(backend, emitNative, options = {}) {
         const attemptReasoning = prepared.reasoning && formatRetries === 0;
         output = '';
         prompts.push(currentPrompt);
-        iterator = backend.generate({ prompt: currentPrompt, images, reasoning: attemptReasoning, signal })[Symbol.asyncIterator]();
+        iterator = backend.generate({ prompt: currentPrompt, images, reasoning: attemptReasoning, webSearch, signal })[Symbol.asyncIterator]();
         try {
           for (;;) {
             const next = await abortable(iterator.next(), signal);
@@ -166,7 +174,15 @@ export function createEngine(backend, emitNative, options = {}) {
     active = job; void execute(job);
   }
   function receive(request) {
-    const job = { ...request, id: request.id || `mobile-${++sequence}`, controller: new AbortController(), disconnected: false };
+    const id = request.id || `mobile-${++sequence}`;
+    const nativeAnthropic = ['/v1/messages', '/v1/messages/count_tokens'].includes(request.path);
+    let conversion;
+    if (nativeAnthropic) {
+      try { conversion = fromAnthropic(request.body, { countOnly: request.path.endsWith('/count_tokens') }); }
+      catch (error) { emitNative(id, 'response', { status: error.status || 400, body: anthropicError(errorPayload(error), error.status || 400) }); return; }
+    }
+    const job = { ...request, id, controller: new AbortController(), disconnected: false,
+      ...(nativeAnthropic ? { path: '/v1/chat/completions', body: conversion.body, countOnly: request.path.endsWith('/count_tokens'), anthropic: anthropicChannel(request.body, conversion) } : {}) };
     if (active && waiting.length >= config.maxQueue) return respond(job, 429, errorPayload(new BridgeError(429, 'queue_full', '手机网页正在处理，队列已满。')));
     if (job.path !== '/v1/chat/completions' && !['/browser/status', '/browser/open'].includes(job.path)) return respond(job, 404, errorPayload(new BridgeError(404, 'not_found', 'Unsupported path.')));
     jobs.set(job.id, job);

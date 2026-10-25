@@ -12,6 +12,11 @@ test('packaged UI routes, real state labels, private-key handling and touch size
   assert.equal(await page.locator('#login-value').textContent(), '已登录');
   assert.equal(await page.locator('#reasoning-value').textContent(), '已关闭');
   assert.equal(await page.locator('#test-value').textContent(), '已通过');
+  await page.evaluate(() => BridgeDashboard.render({ webSearchMode: { count: 1, enabled: true }, webSearchDefault: true }));
+  assert.equal(await page.locator('#search-value').textContent(), '已开启');
+  await page.locator('[data-action="search"]').click();
+  await page.getByRole('button', { name: '默认关闭', exact: true }).click();
+  assert.ok((await page.evaluate(() => nativeActions)).some(item => item.action === 'search-policy' && item.payload.enabled === false));
   for (const tab of ['home', 'web', 'connect']) {
     await page.locator('.bottom-nav [data-navigate="' + tab + '"]').click();
     assert.equal(await page.locator('#page-' + tab).isVisible(), true);
@@ -21,6 +26,8 @@ test('packaged UI routes, real state labels, private-key handling and touch size
   }
   await page.getByRole('button', { name: '复制本机 API 密钥', exact: true }).click();
   assert.ok((await page.evaluate(() => nativeActions)).some(item => item.action === 'copy' && item.payload.field === 'key'));
+  await page.getByRole('button', { name: '复制 Claude Code 配置', exact: true }).click();
+  assert.ok((await page.evaluate(() => nativeActions)).some(item => item.action === 'copy' && item.payload.field === 'claude'));
   assert.ok(!(await page.locator('body').innerText()).includes('android-'));
   await page.evaluate(() => BridgeDashboard.render({ loggedIn: false, hasInspection: true, needsVerification: true, reasoningMode: { enabled: null, reason: 'verification_required' } }));
   await page.locator('.bottom-nav [data-navigate="home"]').click();

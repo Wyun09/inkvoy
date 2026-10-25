@@ -30,7 +30,7 @@ export function initDashboard() {
   if (!document.getElementById('app')) return;
   const $ = id => document.getElementById(id);
   document.querySelectorAll('[data-icon]').forEach(node => icon(node, node.dataset.icon));
-  let state = { ready: false, running: false, loggedIn: false, hasInspection: false, inspecting: false, busy: false, testStatus: 'untested', reasoningMode: { enabled: null }, activities: [], version: '0.2.1' };
+  let state = { ready: false, running: false, loggedIn: false, hasInspection: false, inspecting: false, busy: false, testStatus: 'untested', reasoningMode: { enabled: null }, activities: [], version: '0.3.0' };
   let tab = 'home', toastTimer, modal = false, previousFocus;
   // Android WebView disables DOM storage by default. Preferences are optional:
   // an unavailable, blocked or full store must never stop event binding/boot.
@@ -98,8 +98,20 @@ export function initDashboard() {
   function help() {
     sheet('在手机上，完成连接', [paragraph('01  打开 DeepSeek 页面，手动登录并完成网站要求的验证。'), paragraph('02  回到概览，运行一次接口自测。通过后在连接页复制配置。'), paragraph('03  在同一部手机的兼容客户端填写本机地址、模型和密钥。电脑无需参与运行。'), paragraph('建议分屏保持本应用可见。锁屏与长期后台运行仍需在你的设备上验证。'), paragraph('这是第三方适配应用。账号登录由 DeepSeek 网页处理。')], [{ label: '打开 DeepSeek', run: () => { closeSheet(); navigate('web'); } }, { label: '连接配置', run: () => { closeSheet(); navigate('connect'); } }], 'bridge');
   }
+  function searchSheet() {
+    const mode = state.webSearchMode || {};
+    const enabled = state.webSearchDefault !== false;
+    const label = typeof mode.enabled === 'boolean' ? mode.enabled ? '已开启' : '已关闭' : '尚未确认';
+    sheet('网页智能搜索', [row('当前网页状态', label), row('请求默认策略', enabled ? '默认开启' : '默认关闭'),
+      paragraph('使用 DeepSeek 网页自带的智能搜索，不需要配置额外搜索模型或 API Key。网页会决定本次回答是否需要实际检索。'),
+      paragraph('默认策略会在下次请求发送前应用，并确认开关状态。请求体里的 web_search: true 或 false 优先于这里的默认值。')], [
+      { label: '默认开启', disabled: enabled, run: () => { native('search-policy', { enabled: true }); closeSheet(); } },
+      { label: '默认关闭', disabled: !enabled, run: () => { native('search-policy', { enabled: false }); closeSheet(); } },
+      { label: '重新检测网页', disabled: state.inspecting, run: () => { closeSheet(); native('inspect'); } },
+    ], 'globe');
+  }
   function diagnostics() {
-    sheet('连接诊断', [row('应用版本', state.version || '0.2.1'), row('本机服务', state.running ? '已启动' : '未启动'), row('网页登录', state.hasInspection ? state.loggedIn ? '已登录' : '需要登录或验证' : '尚未检测'), row('思考开关', state.reasoningMode?.source || '待检测'), row('接口请求', String(state.requests || 0) + ' 次'), row('当前任务', state.busy ? '处理中' : '空闲'), paragraph(state.lastError || '诊断不包含 API 密钥、验证码和聊天正文。')], [{ label: '复制诊断信息', run: () => native('copy', { field: 'diagnostics' }) }, { label: '重新检测', disabled: state.inspecting, run: () => { closeSheet(); native('inspect'); } }], 'activity');
+    sheet('连接诊断', [row('应用版本', state.version || '0.3.0'), row('本机服务', state.running ? '已启动' : '未启动'), row('网页登录', state.hasInspection ? state.loggedIn ? '已登录' : '需要登录或验证' : '尚未检测'), row('思考开关', state.reasoningMode?.source || '待检测'), row('接口请求', String(state.requests || 0) + ' 次'), row('当前任务', state.busy ? '处理中' : '空闲'), paragraph(state.lastError || '诊断不包含 API 密钥、验证码和聊天正文。')], [{ label: '复制诊断信息', run: () => native('copy', { field: 'diagnostics' }) }, { label: '重新检测', disabled: state.inspecting, run: () => { closeSheet(); native('inspect'); } }], 'activity');
   }
   function result(result) {
     const ok = result.passed === true;
@@ -117,6 +129,8 @@ export function initDashboard() {
     $('login-value').textContent = state.inspecting ? '检测中' : state.hasInspection ? state.needsVerification ? '需验证' : loggedIn ? '已登录' : '待登录' : '待检测';
     const thought = state.reasoningMode || {};
     $('reasoning-value').textContent = state.inspecting ? '检测中' : typeof thought.enabled === 'boolean' ? thought.enabled ? '已开启' : '已关闭' : !loggedIn ? '待登录' : '未识别';
+    const search = state.webSearchMode || {};
+    $('search-value').textContent = state.inspecting ? '检测中' : typeof search.enabled === 'boolean' ? search.enabled ? '已开启' : '已关闭' : !loggedIn ? '待登录' : '未识别';
     $('test-value').textContent = state.probeRunning ? '测试中' : state.testStatus === 'passed' ? '已通过' : state.testStatus === 'failed' ? '未通过' : '未测试';
     $('login-subtitle').textContent = loggedIn ? '网页会话已确认，可以继续调用' : state.needsVerification ? '打开网页，手动完成验证' : '在应用内完成网页登录';
     $('test-subtitle').textContent = state.probeRunning ? '正在等待真实网页响应…' : state.testStatus === 'passed' ? '真实网页调用已验证通过' : state.testStatus === 'failed' ? '上次测试未通过，可查看连接诊断' : '确认网页与本机接口连接正常';
@@ -130,7 +144,7 @@ export function initDashboard() {
     $('web-status').textContent = state.busy ? '正在处理请求，请保持网页连接' : '在这里登录并管理你的网页会话';
     $('web-login-chip').textContent = loggedIn ? '网页登录有效' : state.needsVerification ? '需要手动验证' : '登录状态待确认';
     $('web-think-chip').textContent = typeof thought.enabled === 'boolean' ? thought.enabled ? '深度思考已开启' : '深度思考已关闭' : '检测深度思考';
-    $('app-version').textContent = state.version || '0.2.1';
+    $('app-version').textContent = state.version || '0.3.0';
     const activities = (state.activities || []).slice(-4).reverse();
     if (activities.length) {
       $('activity-list').replaceChildren(...activities.map(item => {
@@ -144,7 +158,7 @@ export function initDashboard() {
   document.querySelectorAll('[data-copy]').forEach(button => button.addEventListener('click', () => native('copy', { field: button.dataset.copy })));
   document.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click', () => {
     const action = button.dataset.action;
-    if (action === 'help') help(); else if (action === 'reasoning') reasoningSheet(); else if (action === 'diagnostics') diagnostics();
+    if (action === 'help') help(); else if (action === 'reasoning') reasoningSheet(); else if (action === 'search') searchSheet(); else if (action === 'diagnostics') diagnostics();
     else if (action === 'test') {
       if (!state.running) toast('请先启动服务'); else if (state.busy || state.probeRunning) toast('当前请求处理中，请稍后再试'); else native('test', { thinking: false });
     } else native(action);

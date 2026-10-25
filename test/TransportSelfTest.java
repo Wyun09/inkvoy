@@ -21,11 +21,13 @@ public final class TransportSelfTest {
     public static void main(String[] args) throws Exception {
         String auth = "Authorization: Bearer test-key-local-only\r\n";
         AtomicInteger dispatched = new AtomicInteger();
+        AtomicReference<String> lastPath = new AtomicReference<>();
         CountDownLatch acceptedCancelled = new CountDownLatch(1), cancelled = new CountDownLatch(1);
         AtomicReference<String> cancelledId = new AtomicReference<>();
         LoopbackServer.Dispatcher dispatcher = new LoopbackServer.Dispatcher() {
             public void dispatch(String id, String path, String body, LoopbackServer.Exchange response) {
                 dispatched.incrementAndGet();
+                lastPath.set(path);
                 if (body.contains("cancel-test")) { cancelledId.set(id); acceptedCancelled.countDown(); return; }
                 if (body.contains("stream-test")) {
                     response.stream(); response.data("data: {\"content\":\"one\"}\n\n");
@@ -41,6 +43,14 @@ public final class TransportSelfTest {
             check(call(port, "GET", "/v1/models", "", null).contains("401 Error"), "models require authentication");
             check(call(port, "GET", "/v1/models", auth, null).contains("deepseek-web"), "authenticated model discovery");
             check(call(port, "GET", "/v1/models", "Authorization: bearer test-key-local-only\r\n", null).contains("200 OK"), "Bearer scheme is case insensitive");
+            String apiKey = "x-api-key: test-key-local-only\r\n";
+            check(call(port, "GET", "/v1/models", apiKey, null).contains("deepseek-web"), "Anthropic x-api-key authentication works");
+            check(call(port, "POST", "/v1/messages?beta=true", auth, "{}").contains("accepted") && lastPath.get().equals("/v1/messages"), "Claude Code beta query reaches the normalized Messages route");
+            check(call(port, "POST", "/v1/messages/count_tokens?beta=true", apiKey, "{}").contains("accepted") && lastPath.get().equals("/v1/messages/count_tokens"), "token counting uses the same native transport");
+            check(call(port, "POST", "/v1/messages", "", "{}").contains("\"type\":\"authentication_error\""), "Messages authentication errors use the Anthropic error envelope");
+            check(call(port, "POST", "/v1/messages", auth + "x-api-key: wrong\r\n", "{}").contains("401 Error"), "conflicting credentials are rejected even with a valid Bearer token");
+            check(call(port, "POST", "/v1/messages", "Authorization: Bearer wrong\r\n" + apiKey, "{}").contains("401 Error"), "conflicting credentials are rejected even with a valid x-api-key");
+            check(call(port, "POST", "/v1/messages", auth + apiKey, "{}").contains("accepted"), "matching dual credentials are accepted");
             check(call(port, "GET", "/health", "Origin: https://untrusted.example\r\n", null).contains("403 Error"), "web origins cannot call the local server");
             check(call(port, "GET", "/health", "Host: attacker.example\r\n", null).contains("400 Error"), "duplicate Host headers fail closed");
             check(call(port, "POST", "/v1/chat/completions", auth, "{\"messages\":[]}").contains("accepted"), "JSON body reaches the dispatcher");

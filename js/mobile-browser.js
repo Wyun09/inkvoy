@@ -1,5 +1,7 @@
-import { DeepSeekBrowser } from './core/browser.js';
+import { DeepSeekBrowser, BrowserBridgeError } from './core/browser.js';
 import { MobileBuffer } from './platform.js';
+import { sendControl } from './send-control.js';
+import { reasoningControl } from './core/reasoning-control.js';
 
 // Runs in the DeepSeek WebView through evaluateJavascript, with no native
 // JavascriptInterface installed in that remote page.
@@ -93,6 +95,31 @@ export class MobileBrowser extends DeepSeekBrowser {
   constructor(rpc, config = {}) {
     super({ profileDir: 'android-app-private-webview', timeoutMs: 600000, firstOutputTimeoutMs: 120000, pollMs: 100, ...config });
     this.rpc = rpc;
+    this.sendControlTimeoutMs = Number.isFinite(config.sendControlTimeoutMs) ? Math.max(100, config.sendControlTimeoutMs) : 5000;
+  }
+  async _beforeSubmit(page, { webSearch = true, reasoning, signal, deadline }) {
+    await this._setPageToggle(page, 'search', webSearch, signal, deadline);
+    const thought = await this._readReasoningMode(page);
+    if (thought.count !== 1 || thought.enabled !== reasoning) throw new BrowserBridgeError('reasoning_search_conflict', 400, '智能搜索切换后思考状态发生变化，无法同时确认请求的设置，已停止发送。');
+  }
+  async _submitComposer(page, _composer, { prompt, signal, deadline }) {
+    const stopAt = Math.min(deadline, Date.now() + this.sendControlTimeoutMs);
+    const nonce = 'send-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2);
+    const reasons = { send_missing: '没有找到发送按钮', send_disabled: '发送按钮尚未启用', multiple_send_controls: '存在多个发送按钮',
+      composer_missing: '输入框已消失', multiple_composers: '存在多个输入框', prompt_changed: '输入框内容已变化', generation_active: '网页正在处理另一条消息', unexpected_origin: '网页来源不匹配' };
+    let state;
+    while (Date.now() < stopAt) {
+      if (signal?.aborted) throw new BrowserBridgeError('REQUEST_CANCELLED', 499, '请求已取消。');
+      state = await page.evaluate(sendControl, { prompt, nonce });
+      if (state.clicked) return;
+      if (!['send_missing', 'send_disabled', 'composer_missing', 'generation_active'].includes(state.reason)) break;
+      await new Promise(resolve => setTimeout(resolve, Math.min(this.config.pollMs, Math.max(1, stopAt - Date.now()))));
+    }
+    if (signal?.aborted) throw new BrowserBridgeError('REQUEST_CANCELLED', 499, '请求已取消。');
+    const error = new BrowserBridgeError('webpage_send_control_unavailable', 400,
+      `无法自动发送：${reasons[state?.reason] || '无法确认发送控件'}。已停止，未模拟回车或重复提交。`);
+    error.details = { phase: 'submitting', sendControlReason: state?.reason || 'timeout', sendControlCount: state?.count || 0 };
+    throw error;
   }
   async _ensureBrowser() {
     if (!this._page || this._page.isClosed()) {
@@ -104,9 +131,16 @@ export class MobileBrowser extends DeepSeekBrowser {
   async status() {
     await this._ensureBrowser();
     const status = await super.status();
-    if (!status.loggedIn) return { ...status, reasoningMode: { count: 0, enabled: null, reason: status.needsVerification ? 'verification_required' : 'login_required' } };
-    try { return { ...status, reasoningMode: await this._readReasoningMode(this._page) }; }
-    catch { return { ...status, reasoningMode: { count: 0, enabled: null, reason: 'observation_failed' } }; }
+    if (!status.loggedIn) {
+      const unavailable = { count: 0, enabled: null, reason: status.needsVerification ? 'verification_required' : 'login_required' };
+      return { ...status, reasoningMode: unavailable, webSearchMode: unavailable };
+    }
+    const result = { ...status };
+    try { result.reasoningMode = await this._readReasoningMode(this._page); }
+    catch { result.reasoningMode = { count: 0, enabled: null, reason: 'observation_failed' }; }
+    try { result.webSearchMode = await this._page.evaluate(reasoningControl, { action: 'read', feature: 'search' }); }
+    catch { result.webSearchMode = { count: 0, enabled: null, reason: 'observation_failed' }; }
+    return result;
   }
   async _discardPage(page) {
     page.closed = true;

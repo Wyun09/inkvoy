@@ -1,0 +1,28 @@
+{
+  "pass": true,
+  "exitCode": 0,
+  "requests": [
+    {
+      "path": "/v1/messages",
+      "model": "deepseek-web",
+      "toolNames": [
+        "Write"
+      ],
+      "stream": true,
+      "hasToolResult": false
+    },
+    {
+      "path": "/v1/messages",
+      "model": "deepseek-web",
+      "toolNames": [
+        "Write"
+      ],
+      "stream": true,
+      "hasToolResult": true
+    }
+  ],
+  "toolResponses": 1,
+  "actualFileMatches": true,
+  "toolResultReturned": true,
+  "mode": "installed Claude Code against the production JS protocol engine with deterministic model fixtures; not an Android/real-account test"
+}

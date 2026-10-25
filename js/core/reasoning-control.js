@@ -2,8 +2,10 @@
  * State must come from an explicit attribute, a native checkbox, or a known
  * component state class. Colour and absence of arbitrary classes are not state.
  */
-export async function reasoningControl({ action = 'read', enabled, waitMs = 0 } = {}) {
-  const pattern = /^(?:深度思考(?:模式)?|思考模式|思考|Deep\s*Think|Thinking(?:\s*mode)?)(?:\s*[(（][^()（）]{1,32}[)）])?(?:\s*[:：]\s*(?:开|关|开启|关闭|on|off))?$/i;
+export async function reasoningControl({ action = 'read', enabled, waitMs = 0, feature = 'reasoning' } = {}) {
+  const pattern = feature === 'search'
+    ? /^(?:智能搜索|联网搜索|联网|搜索|Smart\s*Search|Web\s*Search|Search(?:\s*the\s*web)?)(?:\s*[(（][^()（）]{1,32}[)）])?(?:\s*[:：]\s*(?:开|关|开启|关闭|on|off))?$/i
+    : /^(?:深度思考(?:模式)?|思考模式|思考|Deep\s*Think|Thinking(?:\s*mode)?)(?:\s*[(（][^()（）]{1,32}[)）])?(?:\s*[:：]\s*(?:开|关|开启|关闭|on|off))?$/i;
   const interactive = 'button,input[type="checkbox"],[role="button"],[role="switch"],[role="checkbox"],[role="tab"],[role="radio"],[aria-pressed],[aria-checked],[aria-selected],label,.ds-toggle-button,[data-state],[data-checked],[data-selected],[data-active],[tabindex]';
   const visible = element => {
     if (!element?.isConnected || !element.getClientRects().length) return false;
@@ -83,7 +85,9 @@ export async function reasoningControl({ action = 'read', enabled, waitMs = 0 } 
   if (!enabled && ['tab', 'radio'].includes(element.getAttribute('role'))) {
     const group = element.closest('[role="tablist"],[role="radiogroup"]');
     const normal = group ? [...group.querySelectorAll('[role="tab"],[role="radio"]')].filter(node => node !== element && visible(node))
-      .filter(node => labels(node).some(label => /^(?:普通|标准|快速|非思考|直接回答|normal|standard|fast|instant)$/i.test(label))) : [];
+      .filter(node => labels(node).some(label => (feature === 'search'
+        ? /^(?:不联网|不搜索|关闭搜索|无需搜索|no search|no web|search off)$/i
+        : /^(?:普通|标准|快速|非思考|直接回答|normal|standard|fast|instant)$/i).test(label))) : [];
     if (normal.length !== 1 || normal[0].matches(':disabled') || normal[0].getAttribute('aria-disabled') === 'true') return { ...publicResult, clicked: false, reason: 'normal_mode_missing' };
     normal[0].click(); return { ...publicResult, clicked: true };
   }

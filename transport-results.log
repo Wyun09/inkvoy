@@ -2,6 +2,13 @@ PASS public health responds
 PASS models require authentication
 PASS authenticated model discovery
 PASS Bearer scheme is case insensitive
+PASS Anthropic x-api-key authentication works
+PASS Claude Code beta query reaches the normalized Messages route
+PASS token counting uses the same native transport
+PASS Messages authentication errors use the Anthropic error envelope
+PASS conflicting credentials are rejected even with a valid Bearer token
+PASS conflicting credentials are rejected even with a valid x-api-key
+PASS matching dual credentials are accepted
 PASS web origins cannot call the local server
 PASS duplicate Host headers fail closed
 PASS JSON body reaches the dispatcher
@@ -13,4 +20,4 @@ PASS first SSE content arrives before the final chunk
 PASS later SSE content and DONE are delivered
 PASS cancellation fixture is accepted
 PASS disconnect cancels work before any response exists
-TRANSPORT_PASS assertions=15
+TRANSPORT_PASS assertions=22

@@ -1,5 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import Ajv from 'ajv';
+import Ajv2019 from 'ajv/dist/2019.js';
+import Ajv2020 from 'ajv/dist/2020.js';
 
 export class BridgeError extends Error {
   constructor(status, code, message) { super(message); this.name = 'BridgeError'; this.status = status; this.code = code; }
@@ -82,7 +84,7 @@ export function prepareRequest(body, model) {
   const tools = body.tools ?? [];
   if (!Array.isArray(tools) || tools.length > 128) bad('tools must be an array of at most 128 functions.');
   const definitions = new Map();
-  const ajv = new Ajv({ strict: false, allErrors: true, validateFormats: false });
+  const validators = new Map();
   const cleanedTools = tools.map(tool => {
     if (!isObject(tool) || tool.type !== 'function' || !isObject(tool.function) || !validToolName(tool.function.name)) bad('Only named function tools are supported.');
     const fn = tool.function;
@@ -90,7 +92,15 @@ export function prepareRequest(body, model) {
     const parameters = fn.parameters ?? { type: 'object', properties: {} };
     if (!isObject(parameters)) bad('Tool parameters must be a JSON Schema object.');
     let validate;
-    try { validate = ajv.compile(parameters); } catch { bad(`Unsupported or invalid schema for tool ${fn.name}.`); }
+    try {
+      const dialect = typeof parameters.$schema === 'string' && parameters.$schema.includes('/draft/2020-12/') ? '2020'
+        : typeof parameters.$schema === 'string' && parameters.$schema.includes('/draft/2019-09/') ? '2019' : '07';
+      if (!validators.has(dialect)) {
+        const Validator = dialect === '2020' ? Ajv2020 : dialect === '2019' ? Ajv2019 : Ajv;
+        validators.set(dialect, new Validator({ strict: false, allErrors: true, validateFormats: false }));
+      }
+      validate = validators.get(dialect).compile(parameters);
+    } catch { bad(`Unsupported or invalid schema for tool ${fn.name}.`); }
     definitions.set(fn.name, validate);
     return { name: fn.name, description: typeof fn.description === 'string' ? fn.description : '', parameters };
   });

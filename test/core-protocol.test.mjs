@@ -25,6 +25,41 @@ function assertBad(callback, code) {
   });
 }
 
+test('Claude Code Write schema keeps its declared 2020-12 dialect and validates actual arguments', () => {
+  const schema = { $schema: 'https://json-schema.org/draft/2020-12/schema', type: 'object', properties: { file_path: { type: 'string' }, content: { type: 'string' } }, required: ['file_path', 'content'], additionalProperties: false };
+  const request = prepare({ tools: [{ type: 'function', function: { name: 'Write', parameters: schema } }] });
+  const response = args => JSON.stringify({ tool_calls: [{ name: 'Write', arguments: args }] });
+  assert.equal(parseToolResponse(response({ file_path: 'C:/fixture.txt', content: 'ok' }), request).message.tool_calls[0].function.name, 'Write');
+  for (const args of [{ file_path: 'x' }, { file_path: 5, content: 'ok' }, { file_path: 'x', content: 'ok', extra: true }]) {
+    assert.throws(() => parseToolResponse(response(args), request), /Arguments do not match/);
+  }
+  assert.ok(request.prompt.includes(schema.$schema));
+});
+
+test('2020-12 prefixItems and unevaluatedProperties are enforced rather than ignored', () => {
+  const request = prepare({ tools: [{ type: 'function', function: { name: 'tuple', parameters: {
+    $schema: 'https://json-schema.org/draft/2020-12/schema', type: 'object',
+    properties: { pair: { type: 'array', prefixItems: [{ type: 'string' }, { type: 'integer' }], minItems: 2, items: false } },
+    required: ['pair'], unevaluatedProperties: false,
+  } } }] });
+  const response = args => JSON.stringify({ tool_calls: [{ name: 'tuple', arguments: args }] });
+  assert.equal(parseToolResponse(response({ pair: ['a', 1] }), request).finishReason, 'tool_calls');
+  for (const args of [{ pair: [1, 'a'] }, { pair: ['a', 1, 2] }, { pair: ['a', 1], other: true }]) {
+    assert.throws(() => parseToolResponse(response(args), request), /Arguments do not match/);
+  }
+});
+
+test('2019-09 dependentRequired is enforced alongside draft-07 tools', () => {
+  const request = prepare({ tools: [...TOOLS, { type: 'function', function: { name: 'dependent', parameters: {
+    $schema: 'https://json-schema.org/draft/2019-09/schema', type: 'object',
+    properties: { source: { type: 'string' }, destination: { type: 'string' } }, dependentRequired: { source: ['destination'] },
+  } } }] });
+  const response = args => JSON.stringify({ tool_calls: [{ name: 'dependent', arguments: args }] });
+  assert.throws(() => parseToolResponse(response({ source: 'a' }), request), /Arguments do not match/);
+  assert.equal(parseToolResponse(response({ source: 'a', destination: 'b' }), request).finishReason, 'tool_calls');
+  assert.equal(parseToolResponse('{"tool_calls":[{"name":"weather","arguments":{"city":"上海"}}]}', request).finishReason, 'tool_calls');
+});
+
 test('retains more than 512 messages and more than 500000 prompt characters without trimming', () => {
   const messages = Array.from({ length: 620 }, (_, index) => ({
     role: index % 2 ? 'assistant' : 'user',

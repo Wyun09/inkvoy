@@ -3,7 +3,10 @@ import { createHash } from 'node:crypto';
 const destination = new URL('../js/core/', import.meta.url);
 const source = new URL('../../deepseek-web-bridge/src/', import.meta.url);
 try {
-  if ((await readFile(new URL('browser.js', destination), 'utf8')).includes("from './reasoning-control.js'")) throw new Error('The Android browser contains the v0.2.0 reasoning adaptation. Refusing to overwrite it; rebase this module explicitly before syncing.');
+  if ((await readFile(new URL('browser.js', destination), 'utf8')).includes("from './reasoning-control.js'")) throw new Error('The Android browser contains toggle/submission adaptations. Refusing to overwrite it; rebase this module explicitly before syncing.');
+} catch (error) { if (error.code !== 'ENOENT') throw error; }
+try {
+  if ((await readFile(new URL('protocol.js', destination), 'utf8')).includes("from 'ajv/dist/2020.js'")) throw new Error('The Android protocol contains multi-dialect schema validation. Refusing to overwrite it; rebase this module explicitly before syncing.');
 } catch (error) { if (error.code !== 'ENOENT') throw error; }
 await mkdir(destination, { recursive: true });
 const hashes = {};
