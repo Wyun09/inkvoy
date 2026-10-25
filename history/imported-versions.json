@@ -1,0 +1,141 @@
+{
+  "importedAt": "2026-10-25T13:41:05.337920+08:00",
+  "versions": [
+    {
+      "version": "0.1.0",
+      "commit": "99100e4377c4d0af10ec4263fcc323a407fe19ed",
+      "tree": "cb16802dcef76aafe6020b7d0f0d8cb4a92c4fff",
+      "branch": "release/0.1.0",
+      "branchCreated": true
+    },
+    {
+      "version": "0.2.0",
+      "commit": "0cc3bf16ff3572a73ba243520df855e317895692",
+      "tree": "2fca4aa8e16d7350077000ad903a07739673cd32",
+      "branch": "release/0.2.0",
+      "branchCreated": true
+    },
+    {
+      "version": "0.2.1",
+      "commit": "18a7ded1b4ee7a7b5945ee143fbfac6d8a137055",
+      "tree": "761016c9bfcaccb0b8f35d39cab5cf7e72b702d7",
+      "branch": "release/0.2.1",
+      "branchCreated": true
+    },
+    {
+      "version": "0.3.0",
+      "commit": "b5337c0af3b49c52868a7a8d414ab8514714439f",
+      "tree": "503823f8b59dfa3adc8c696dff4bc0942aa3c7fb",
+      "branch": "release/0.3.0",
+      "branchCreated": true
+    },
+    {
+      "version": "0.4.0",
+      "commit": "f1a392782e4c7b0c9807624fac815703c13e2623",
+      "tree": "ecbcd23bcf8992f0b4d3901d2161256cca7099ed",
+      "branch": "release/0.4.0",
+      "branchCreated": true
+    },
+    {
+      "version": "1.0.0",
+      "commit": "37710b62da3a716fee26d5e71675554ba89c8ede",
+      "tree": "bbac1c094173b4ae16a9e37122b0d066b2c996ce",
+      "branch": "release/1.0.0",
+      "branchCreated": true
+    },
+    {
+      "version": "2.2.0",
+      "commit": "54229053879e1f0debf583e85c1a583ee9fe4f77",
+      "tree": "0d993f67e57faffe2d374d22f171238c342c3084",
+      "branch": "release/2.2.0",
+      "branchCreated": true
+    },
+    {
+      "version": "2.3.0",
+      "commit": "7a3406b39ebe44378e38aeb2d06c6403ec1f304d",
+      "tree": "85557e0222af2ffee307a0544c0bb2318b6dfe03",
+      "branch": "release/2.3.0",
+      "branchCreated": true
+    },
+    {
+      "version": "2.3.1",
+      "commit": "0f15bff0461644677e97289ec81f37d75e9a907e",
+      "tree": "2ba70fa3a0dc05d67d338039df7378ebac34c535",
+      "branch": "release/2.3.1",
+      "branchCreated": true
+    },
+    {
+      "version": "2.4.0",
+      "commit": "962a805b7f9e2952afde6f9f4aa264b3c0316127",
+      "tree": "ccb24325c9e618726817e4f723766c31bf4b30ca",
+      "branch": "release/2.4.0",
+      "branchCreated": true
+    },
+    {
+      "version": "2.4.1",
+      "commit": "f18725737eceac9bbf8d41196cec587d39d1565a",
+      "tree": "f77697de37ae4579f1c60af9520e4d53234546c2",
+      "branch": "release/2.4.1",
+      "branchCreated": true
+    },
+    {
+      "version": "2.4.2",
+      "commit": "a45d648d92a108ed00b150e3c77aaeab0665fff8",
+      "tree": "596b9b37198f89ab48b10ea5ef13be8899369f77",
+      "branch": "release/2.4.2",
+      "branchCreated": true
+    },
+    {
+      "version": "3.0.0",
+      "commit": "233bc91a61d4d113485c2df1235c93ee5e86bd83",
+      "tree": "7b7f82de886c556f8e41a641d614803c10969271",
+      "branch": "release/3.0.0",
+      "branchCreated": true
+    },
+    {
+      "version": "3.1.0",
+      "commit": "f32ba7bc399a0b5f8433602d39bb434fdda5b76c",
+      "tree": "40253fb24fa7fedabe3122cde652c503fb79a291",
+      "branch": "release/3.1.0",
+      "branchCreated": true
+    },
+    {
+      "version": "4.0.0",
+      "commit": "e2a14387116fa0a661fec6453c46b5ba09e646ad",
+      "tree": "bc3f53afc7bffd8adefac238c07a4686fbab48b1",
+      "branch": "release/4.0.0",
+      "branchCreated": true
+    },
+    {
+      "version": "5.0.0",
+      "commit": "7940a0b74623cf710396f3f44f2543ca933bad90",
+      "tree": "e132f3d6dc654eb713dcdeca1240f97fac642c82",
+      "branch": "release/5.0.0",
+      "branchCreated": true
+    },
+    {
+      "version": "5.1.0",
+      "commit": "339934daf271c7700ab3d01b2753f1f42b0752d0",
+      "tree": "9e094b8dbe84509287d3274935d0375a53d51fa1",
+      "branch": "release/5.1.0",
+      "branchCreated": true
+    },
+    {
+      "version": "5.1.1",
+      "commit": "465e0c79415c42f44d55da7730ad261247d81aad",
+      "tree": "9349b9aedb624847c06a2f795c9767a742a765d7",
+      "branch": "release/5.1.1",
+      "branchCreated": true
+    }
+  ],
+  "missingSourceVersions": [
+    "2.0.0",
+    "2.0.1",
+    "2.0.2",
+    "2.0.3",
+    "2.1.0",
+    "2.3.2"
+  ],
+  "projectLicense": "GPL-3.0-only",
+  "largeArtifactsUploaded": false
+}

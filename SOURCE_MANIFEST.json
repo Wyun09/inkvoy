@@ -1,11 +1,19 @@
 {
+  ".github/workflows/checks.yml": {
+    "sha256": "a238c078601c42e4874a3341de50335e86169aa9130320766be2a1b8f31ca4a7",
+    "bytes": 467
+  },
   ".gitignore": {
-    "sha256": "ac5830411beb349055822a11476b522224bb3815b15718a087f41ba8ac73a7db",
-    "bytes": 55
+    "sha256": "bf958b06ef85e7fc9faeed6e0157f3868f7563c8b9e0bc3c55228c8657f53861",
+    "bytes": 261
   },
   "CLAUDE_CODE.md": {
     "sha256": "a925d0ffd05cbdb5e0dc40301e2dbadd0defa46fb50218c186873c68910f3fb5",
     "bytes": 1045
+  },
+  "CONTRIBUTING.md": {
+    "sha256": "d4b324c0625125a6822c880dc81024d467bb991aac7def433edf693052d3f20b",
+    "bytes": 525
   },
   "CORE_PROVENANCE.json": {
     "sha256": "77270016b7a7a02871a80bd386988cc5ac506be55e5429f7023d77e509b94299",
@@ -23,13 +31,17 @@
     "sha256": "9a1a683e3bcedcd3e38869c4f9d60f331f262a637cea16676a4cd949389d38e0",
     "bytes": 4827
   },
+  "EXTERNAL_ARTIFACTS.json": {
+    "sha256": "6d7845a32c765d55371f3f5d34280dee647597faccd89ac1620c027990894a6e",
+    "bytes": 353275
+  },
   "FIX_5.1.1.md": {
     "sha256": "6d73990b1028d459a2a3b98b4d2370de1012d505a8bfde9f886779e340a797b9",
     "bytes": 960
   },
   "GITHUB_MIGRATION.md": {
-    "sha256": "e36014a165cea0bda41a91fdcc2eaaf1cdeb90053a1cb2f8db088b28e0015678",
-    "bytes": 2389
+    "sha256": "eb23cdbc85e8b149f28bacb9eca8dc918627d13b9ce8124407309bb9a67d85b0",
+    "bytes": 618
   },
   "GITHUB_REPOSITORY_PROMPT.md": {
     "sha256": "0c55b1b484e9e27eb697084d80244a8c20bd69bbf35a833d77e2f98555af6a76",
@@ -43,9 +55,21 @@
     "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
     "bytes": 35149
   },
+  "LICENSING.md": {
+    "sha256": "00937a19c8dde729ae292808d81751dbd325b18a9b4460965d56d0443ece1c9e",
+    "bytes": 297
+  },
+  "README.en.md": {
+    "sha256": "91d29334a5ecded0ee9b8eece2ed390f6e0db42d01c1dcf160664f6d6d920d6e",
+    "bytes": 1581
+  },
   "README.md": {
-    "sha256": "eb26f62d7b922e40433aae82dc83fbcf8dec7fdd00417dc62a5f7aa185470c55",
-    "bytes": 27503
+    "sha256": "e5bc9863d0df5b3199744cfee6a185d3ce5ff0e44297254fb4f159ff644f85fe",
+    "bytes": 2779
+  },
+  "SNAPSHOT.json": {
+    "sha256": "eab69627c997fa2fd6389e53a1cb56567bf7a887faed32cd311d3fd88f5d1a90",
+    "bytes": 292
   },
   "THIRD_PARTY_NOTICES.md": {
     "sha256": "deb0844b8a310e8970f727e4b4945d37d63764f01d387144e633fde07a9b70e1",
@@ -338,6 +362,26 @@
   "branding/promo.html": {
     "sha256": "b247e179f23bb32c266f7c5cc178b43d39489d8ccc5a684b28f85d1eea0b184c",
     "bytes": 10262
+  },
+  "docs/BUILD.md": {
+    "sha256": "d35df3aab6e094f3431bce2b6585475067286b16e1296ddba002e5c1f8917af5",
+    "bytes": 2168
+  },
+  "docs/HISTORY.md": {
+    "sha256": "8e004ca064254767b65bee752a36b9832c65aa567fcdcbf16b99c76daf8875a5",
+    "bytes": 4502
+  },
+  "docs/assets/inkvoy-cover.jpg": {
+    "sha256": "97496300c7e5cb5e24be73143ef559151ca337c67d91b130cceaaaae8a710386",
+    "bytes": 65977
+  },
+  "history/imported-versions.json": {
+    "sha256": "ea67455fb9e159fb8332fe4c512f56c43fe2b2bbce332595bdd4db18d11493b3",
+    "bytes": 4181
+  },
+  "history/original-source-manifest.json": {
+    "sha256": "884f33d538ae8273cc51ba33ab5ce57f729c8a4bf7f99f48a0e84765ef85cc71",
+    "bytes": 412627
   },
   "js/agent-tools.js": {
     "sha256": "b47ec91fc17c5da6e433565d67ce93b9a3b6ee9bdb3058113729ed1fafa8ad80",
