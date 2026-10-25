@@ -1,0 +1,16 @@
+PASS public health responds
+PASS models require authentication
+PASS authenticated model discovery
+PASS Bearer scheme is case insensitive
+PASS web origins cannot call the local server
+PASS duplicate Host headers fail closed
+PASS JSON body reaches the dispatcher
+PASS oversized bodies rejected before reading or truncating
+PASS unsupported transfer encoding rejected
+PASS unsupported methods rejected
+PASS unauthenticated bodies never reach the engine
+PASS first SSE content arrives before the final chunk
+PASS later SSE content and DONE are delivered
+PASS cancellation fixture is accepted
+PASS disconnect cancels work before any response exists
+TRANSPORT_PASS assertions=15

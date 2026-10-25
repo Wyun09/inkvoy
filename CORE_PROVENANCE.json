@@ -1,0 +1,11 @@
+{
+  "source": "deepseek-web-bridge v0.2.2",
+  "method": "unchanged source copy; browser platform imports supplied by build-time shims",
+  "sha256": {
+    "protocol.js": "91ad4abd414a0839c061730b3c8f56b10f0c294f7c09bb04f4e324f95cbeedc5",
+    "browser.js": "c254bc0651afeba881eee9fbd030b360f50ae355fb4ce270374305ceb6323640",
+    "dom-text.js": "d9775fe3bafb5d99726b9aeffb45f5f844bbae09c9ade63b9d526fe96a1358cd",
+    "streaming.js": "4f147b44938b9c9d2b1067a6d8c7d462eb15ecb7f825ad7e4d0fad25e4caa7aa",
+    "usage.js": "6a68f11c1da18fe855fbc4c8ed1e6b102ce0cae44652350d457b98cd2daeaa43"
+  }
+}
