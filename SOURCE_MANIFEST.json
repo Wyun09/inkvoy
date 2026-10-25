@@ -1868,8 +1868,8 @@
     "bytes": 16090
   },
   "test/color-contrast.test.mjs": {
-    "sha256": "6ea7048eb4c8a20027346e88bc3e8eefc31024ef584f4286853dc1e36ce7b99c",
-    "bytes": 1226
+    "sha256": "da5dc612be022b852c6956551f1417d66a3aa47a2e597b0cb7ec08dc01c5ffe8",
+    "bytes": 1920
   },
   "test/companion-state.test.mjs": {
     "sha256": "ebecf06c34d9e3e43fb0bdab4334fa3e2b02e31b0a1897429ab2fe80d3cba4ef",
