@@ -101,5 +101,11 @@ public class ComputerBrowserTest {
         Method wait=ComputerBrowser.class.getDeclaredMethod("waitLoaded",int.class,StudioRuntime.Reply.class,int.class);wait.setAccessible(true);
         wait.invoke(browser,0,(StudioRuntime.Reply)(ok,value)->{assertFalse(ok);assertTrue(String.valueOf(value).contains("导航尚未提交"));rejected[0]=true;},55);assertTrue(rejected[0]);
     }
+    @Test public void navigationWaitsForCommitRatherThanJustTheStartCallback()throws Exception{
+        browser.surface();WebView web=(WebView)field(browser,"web");String url="https://example.com/";web.loadUrl(url);
+        web.getWebViewClient().onPageStarted(web,url,null);assertTrue((Boolean)field(browser,"navigationPending"));
+        web.getWebViewClient().onPageCommitVisible(web,"https://previous.example/");assertTrue((Boolean)field(browser,"navigationPending"));
+        web.getWebViewClient().onPageCommitVisible(web,url);assertFalse((Boolean)field(browser,"navigationPending"));
+    }
 
 }

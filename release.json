@@ -1,11 +1,11 @@
 {
-  "version": "2.4.0",
-  "versionCode": 17,
+  "version": "2.4.1",
+  "versionCode": 18,
   "buildDate": "2026-10-20",
   "package": "io.github.deepseekbridge",
-  "apk": "deepseek-android-bridge-v2.4.0.apk",
+  "apk": "deepseek-android-bridge-v2.4.1.apk",
   "bytes": 615843759,
-  "sha256": "1961cd6b16939fab07e3d3b1baa2b543aa5ef51d4f64c81c0a19bdd6df2a1b71",
+  "sha256": "b84db9e1e9eb86ceb0e38e03ba9dab97673f4d8b4a7e5cb5a862174e3c581c96",
   "signerSha256": "cc8f15b569d5e813c68d49f4fa17d19afbe6f7526ef5dbdade88e317116c2b59",
   "minSdk": 26,
   "targetSdk": 35,
@@ -103,7 +103,7 @@
     "lockScreenBackground": false,
     "androidFrameworkNativeSqlite": 12,
     "physicalAndroidDevice": false,
-    "androidFrameworkRegression": 121,
+    "androidFrameworkRegression": 123,
     "androidRuntimeAssets": 10,
     "androidPermissions": 5,
     "rawZipPathsPortable": true,
@@ -113,15 +113,16 @@
     "androidFileRevisions": 20,
     "androidResponsiveness": 6,
     "androidProviderHttp": 8,
-    "androidComputerUse": 28,
+    "androidComputerUse": 30,
     "androidChatMedia": 6,
     "androidManagedProcesses": 14,
     "androidDisplayModes": 4,
     "postLayoutUiRegression": 3,
     "currentRun": [
-      "Full JavaScript suite 290; post-layout browser UI rerun 3",
-      "Final APK Android API 26/33 suite 121",
-      "APK source payload, signing and archive checks"
+      "Full JavaScript suite 290 on the 2.4 feature branch; unchanged by the native navigation patch",
+      "Final 2.4.1 production UI regression 3",
+      "Final 2.4.1 APK Android API 26/33 suite 123",
+      "Final 2.4.1 APK source payload, signing and archive checks"
     ]
   },
   "debianSources": {
@@ -334,7 +335,8 @@
       30,
       70
     ],
-    "scrollImplementation": "Original whole-page scrollBy retained"
+    "scrollImplementation": "Original whole-page scrollBy retained",
+    "commitCallbackGate": "onPageCommitVisible or matching onPageFinished; onPageStarted remains pending"
   },
   "webSearch": {
     "tool": "web_search",

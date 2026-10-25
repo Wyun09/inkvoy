@@ -1,0 +1,31 @@
+{
+  "removed": [
+    {
+      "bytes": 615595836,
+      "path": "D:\\CodexBuild\\deepseek-studio-2.4.0\\build\\resources.apk"
+    },
+    {
+      "bytes": 615834865,
+      "path": "D:\\CodexBuild\\deepseek-studio-2.4.0\\build\\unsigned.apk"
+    },
+    {
+      "bytes": 615834877,
+      "path": "D:\\CodexBuild\\deepseek-studio-2.4.0\\build\\aligned.apk"
+    },
+    {
+      "bytes": 615595835,
+      "path": "D:\\CodexBuild\\deepseek-studio-2.4.1\\build\\resources.apk"
+    },
+    {
+      "bytes": 615834863,
+      "path": "D:\\CodexBuild\\deepseek-studio-2.4.1\\build\\unsigned.apk"
+    },
+    {
+      "bytes": 615834876,
+      "path": "D:\\CodexBuild\\deepseek-studio-2.4.1\\build\\aligned.apk"
+    }
+  ],
+  "scope": "Only regenerated intermediate APKs; delivered v2.4.0 and v2.4.1 files retained",
+  "date": "2026-10-20",
+  "removedBytes": 3694531152.0
+}

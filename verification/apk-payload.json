@@ -1,7 +1,7 @@
 {
-  "apk": "deepseek-android-bridge-v2.4.0.apk",
+  "apk": "deepseek-android-bridge-v2.4.1.apk",
   "bytes": 615843759,
-  "sha256": "1961cd6b16939fab07e3d3b1baa2b543aa5ef51d4f64c81c0a19bdd6df2a1b71",
+  "sha256": "b84db9e1e9eb86ceb0e38e03ba9dab97673f4d8b4a7e5cb5a862174e3c581c96",
   "rawZipPathsPortable": true,
   "sourcePayloadsMatched": [
     "assets/app.css",
@@ -45,6 +45,6 @@
   "sameSignerAsV1": true,
   "minSdk": 26,
   "targetSdk": 35,
-  "versionCode": 17,
+  "versionCode": 18,
   "androidDeviceVerified": false
 }

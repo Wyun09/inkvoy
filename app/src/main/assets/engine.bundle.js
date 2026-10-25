@@ -31937,7 +31937,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
       const p = state.permissions || {};
       for (const [key, property] of [["files", "allFiles"], ["notifications", "notifications"], ["battery", "batteryUnrestricted"]]) $3("permission-" + key + "-status").textContent = p[property] === true ? "\u5DF2\u5F00\u542F \u2713" : p[property] === false ? "\u53BB\u5F00\u542F \u203A" : "\u67E5\u770B\u8BBE\u7F6E \u203A";
       $3("permission-summary").textContent = p.allFiles && p.notifications && p.batteryUnrestricted ? "\u6743\u9650\u5DF2\u5C31\u7EEA" : "\u6309\u9700\u5F00\u542F\uFF0C\u7CFB\u7EDF\u6388\u6743\u540E\u81EA\u52A8\u66F4\u65B0";
-      $3("drawer-service-state").textContent = (state.running ? "\u25CF \u672C\u673A\u6865\u8FD0\u884C\u4E2D" : "\u25CB \u672C\u673A\u6865\u5DF2\u505C\u6B62") + (state.busy ? " \xB7 \u6B63\u5728\u5904\u7406\u4EFB\u52A1" : "") + " \xB7 " + (state.version || "2.4.0");
+      $3("drawer-service-state").textContent = (state.running ? "\u25CF \u672C\u673A\u6865\u8FD0\u884C\u4E2D" : "\u25CB \u672C\u673A\u6865\u5DF2\u505C\u6B62") + (state.busy ? " \xB7 \u6B63\u5728\u5904\u7406\u4EFB\u52A1" : "") + " \xB7 " + (state.version || "2.4.1");
     }
     const archivedButton = document.createElement("button");
     archivedButton.id = "session-archived-toggle";
@@ -32412,7 +32412,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     $3("runtime-test").after(diagnostic);
     click("runtime-diagnostic", async () => {
       await refreshRuntime();
-      NativeBridge.uiAction("copy-text", JSON.stringify({ text: JSON.stringify({ appVersion: "2.4.0", runtime: runtimeCurrent }, null, 2) }));
+      NativeBridge.uiAction("copy-text", JSON.stringify({ text: JSON.stringify({ appVersion: "2.4.1", runtime: runtimeCurrent }, null, 2) }));
       toast("\u73AF\u5883\u8BCA\u65AD\u5DF2\u590D\u5236");
     });
     click("runtime-refresh", refreshRuntime);
