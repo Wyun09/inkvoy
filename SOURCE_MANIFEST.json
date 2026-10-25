@@ -1840,8 +1840,8 @@
     "bytes": 9930
   },
   "test/attachments-ui.test.mjs": {
-    "sha256": "937e4c2caa658114bd26e53eff10c374266651d73802e113a678fdcdcfda2537",
-    "bytes": 2550
+    "sha256": "a29772f5d197d1c2d6bf1a28ceae875fb75ea0cbc3f5c009cb70ba7368130289",
+    "bytes": 2626
   },
   "test/browser-actions.test.mjs": {
     "sha256": "e5ff33d22511db8498ab069dadb6cdb2a07b764a3880e583bb5f7086616091cd",
@@ -2048,8 +2048,8 @@
     "bytes": 6985
   },
   "test/settings-hub.test.mjs": {
-    "sha256": "f28f54f7fa3a7880bedc9fc739d7d749afa0305a780061b2193021fa0b1c0b20",
-    "bytes": 5604
+    "sha256": "9b3ee1ad982003d693801bf41cf82f7c2e0584c92f608cb84ea2384a5e230316",
+    "bytes": 5670
   },
   "test/setup-journey-ui.test.mjs": {
     "sha256": "2c18e0531b1c1f0e1122d95489f6c06c4bc85f012f00a0e6854c998159efb48c",
