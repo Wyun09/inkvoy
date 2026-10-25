@@ -57,7 +57,7 @@ export function initDashboard() {
     layoutFrame = requestAnimationFrame(() => {
       layoutFrame = 0;
       const page=$(tab==='computer'?'page-computer':'page-web');
-      const visible = (tab === 'web'||tab === 'computer') && !modal && !page?.inert && !page?.hidden && !document.querySelector('.computer-workspace.is-resizing,.media-viewer:not([hidden]),.model-scrim:not([hidden])');
+      const visible = (tab === 'web'||tab === 'computer') && !modal && !page?.inert && !page?.hidden && !document.querySelector('.computer-workspace.is-resizing,.media-viewer:not([hidden]),.model-scrim:not([hidden]),.workspace-overlay:not([hidden])');
       const slot = visible ? $(tab==='computer'?'computer-slot':'web-slot').getBoundingClientRect() : null;
       const rounded = value => Math.round(value * 2) / 2;
       const raw = JSON.stringify(visible ? { visible, ...(tab==='computer'?{surface:'computer'}:{}), top: rounded(slot.top), left: rounded(slot.left), width: rounded(slot.width), height: rounded(slot.height), viewportWidth: innerWidth } : { visible: false });

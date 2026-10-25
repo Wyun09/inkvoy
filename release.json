@@ -1,11 +1,11 @@
 {
-  "version": "3.1.0",
-  "versionCode": 21,
-  "buildDate": "2026-10-21",
+  "version": "4.0.0",
+  "versionCode": 22,
+  "buildDate": "2026-10-23",
   "package": "io.github.deepseekbridge",
-  "apk": "deepseek-android-bridge-v3.1.0.apk",
-  "bytes": 616028286,
-  "sha256": "d5bfea2b249a35a30d82c260a6a7a51439ecfddb4865da590169785fd825e9f1",
+  "apk": "deepseek-android-bridge-v4.0.0.apk",
+  "bytes": 616048828,
+  "sha256": "1038a4a3d5a63e0bb2df9f5f76c536aeddb145da8deb7689770e30b6aea7a28d",
   "signerSha256": "cc8f15b569d5e813c68d49f4fa17d19afbe6f7526ef5dbdade88e317116c2b59",
   "minSdk": 26,
   "targetSdk": 35,
@@ -92,45 +92,44 @@
     }
   },
   "verification": {
-    "javascript": 322,
-    "androidFrameworkRegression": 177,
+    "javascript": 328,
+    "androidFrameworkRegression": 181,
     "androidImeThreads": 6,
     "androidComputerUse": 34,
     "androidChatMedia": 8,
-    "androidMcpPlugins": 24,
+    "androidMcpPlugins": 26,
     "androidOpenAiAccounts": 14,
     "nativeProviderHttp": 12,
     "rawZipPathsPortable": true,
     "signedApkReadByAndroidAssetManager": true,
     "fullInstalledApkImageHashChecked": true,
-    "sourcePayloadsCompared": 17,
+    "sourcePayloadsCompared": 18,
     "physicalAndroidDevice": false,
     "realDeepseekAccount": false,
     "realOpenAiAccount": false,
     "realAndroidMcpProcess": false,
     "lockScreenBackground": false,
     "currentRun": [
-      "322 JavaScript tests",
-      "177 Android API 26/33 framework tests against final signed APK",
-      "Old SSE parser negative control fails four expected tests",
-      "Final signed APK payloads, signing, paths and ELF alignment",
-      "Two runs per version of desktop benchmark after regression suites",
-      "Fifteen production-resource desktop previews inspected"
+      "328 JavaScript tests",
+      "181 Android API 26/33 tests against final signed APK",
+      "Final APK signing, assets, runtime hash, portable ZIP paths and native alignment",
+      "Production screenshots and two actual desktop interaction videos",
+      "Desktop benchmark against final 3.1.0 APK"
     ],
-    "detailedRecord": "verification/regression-310.json"
+    "detailedRecord": "verification/regression-400.json"
   },
   "debianSources": {
     "packages": 465,
     "files": 2145,
     "bytes": 1134408545
   },
-  "fix": "Rebuilt workspace shell, grouped navigation and responsive model editor; nine display scales and smaller browser cursor; robust Responses SSE detection; one-paste MCP and simple skill/plugin imports.",
+  "fix": "FIX_4.0.0.md",
   "ui": {
-    "reference": "https://github.com/assistant-ui/assistant-ui",
+    "reference": "https://m3.material.io/",
     "commit": "e97f7c61365ef0f73686c7b596751802f1a1ddd2",
     "license": "MIT",
-    "adaptation": "Paper/graphite/copper workspace with a shared design system, Lucide icons, grouped navigation, responsive two-pane model editor and compact execution chain.",
-    "desktopRenderedPreviews": 15,
+    "adaptation": "Original Material-inspired saturated flat-color workspace; persistent tool rail, document tabs, continuous activity journal, full-screen mobile model editor, interactive Inky and stateful generated reply logo.",
+    "desktopRenderedPreviews": 23,
     "physicalAndroidDevice": false,
     "originalGeneratedCompanion": true,
     "companionPoses": 8,
@@ -155,7 +154,7 @@
       8
     ],
     "companionBackground": "transparent",
-    "currentVersionNewDesktopPreviews": 15,
+    "currentVersionNewDesktopPreviews": 23,
     "historicalDesktopPreviews": 47,
     "previewDisclosure": "Production assets in desktop Edge with explicit Native/model fixtures; native cursor is a geometry preview, not an Android screenshot",
     "defaultScale": 90,
@@ -170,7 +169,7 @@
       100,
       110
     ],
-    "minPhysicalButtonCssPixels": 28,
+    "minPhysicalButtonCssPixels": 24,
     "motionReducedSetting": true,
     "minScaleRestoreButtonCssPixels": 44,
     "icons": {
@@ -179,14 +178,29 @@
       "license": "ISC; some icons derived from MIT sources; complete license in notices"
     },
     "workspaceModules": [
-      "workspace-shell.js",
-      "workspace-chrome.js",
-      "icon-system.js",
-      "design-system.css",
-      "workspace.css",
-      "connections.css",
-      "extension-setup.js"
-    ]
+      "v4/pages.js",
+      "v4/workspace.js",
+      "v4/lab-composition.js",
+      "v4/motion.js",
+      "v4/expressive-motion.js",
+      "v4/palette.js",
+      "expressive/*.css"
+    ],
+    "motionVideos": [
+      "preview/4.0.0/interaction-motion.webm",
+      "preview/4.0.0/research-motion.webm"
+    ],
+    "logoGenerated": true,
+    "logoGeneration": "branding/logo-generation-400.json",
+    "logoStateAnimations": [
+      "thinking",
+      "tools",
+      "waiting",
+      "done",
+      "error",
+      "idle"
+    ],
+    "physicsInkyDrag": true
   },
   "hardLinks": {
     "deniedErrnos": [
@@ -234,14 +248,13 @@
     "commandStdoutLive": false
   },
   "performance": {
+    "record": "verification/ui-performance-400.json",
     "environment": "Desktop Edge, 390 x 844 CSS pixels, 4x CPU throttle. Synthetic 60-turn history. This is not a physical Android frame-rate measurement.",
-    "method": "Two runs per version with reversed second-run order; 25 samples per run. No concurrent regression suite.",
-    "date": "2026-10-21T15:59:47.150Z",
     "combined": [
       {
-        "name": "3.0.0 signed APK",
-        "renderMedianMs": 3.7000000001862645,
-        "renderP95Ms": 5.800000000745058,
+        "name": "3.1.0 signed APK",
+        "renderMedianMs": 1.900000000372529,
+        "renderP95Ms": 3.1000000005587935,
         "samples": 50,
         "repeatedLayouts": [
           0,
@@ -257,9 +270,9 @@
         ]
       },
       {
-        "name": "3.1.0 current bundle",
-        "renderMedianMs": 3.900000000372529,
-        "renderP95Ms": 6.2000000001862645,
+        "name": "4.0.0 current bundle",
+        "renderMedianMs": 1.2000000001862645,
+        "renderP95Ms": 1.800000000745058,
         "samples": 50,
         "repeatedLayouts": [
           0,
@@ -275,156 +288,7 @@
         ]
       }
     ],
-    "results": [
-      {
-        "name": "3.0.0 signed APK",
-        "repeat": 1,
-        "repeatedLayouts": 0,
-        "renderMedianMs": 3.1000000005587935,
-        "renderP95Ms": 5.5,
-        "mountedTurns": 20,
-        "hiddenLogCodeBlocks": 0,
-        "chatElements": 805,
-        "samples": [
-          1.900000000372529,
-          2.199999999254942,
-          2.2000000001862645,
-          2.2000000001862645,
-          2.5,
-          2.5,
-          2.599999999627471,
-          2.6000000005587935,
-          2.7000000001862645,
-          2.900000000372529,
-          2.900000000372529,
-          3,
-          3.1000000005587935,
-          3.5,
-          3.7999999998137355,
-          3.800000000745058,
-          3.8999999994412065,
-          4.099999999627471,
-          4.7000000001862645,
-          4.7000000001862645,
-          4.900000000372529,
-          5.2000000001862645,
-          5.2000000001862645,
-          5.5,
-          5.900000000372529
-        ]
-      },
-      {
-        "name": "3.1.0 current bundle",
-        "repeat": 1,
-        "repeatedLayouts": 0,
-        "renderMedianMs": 3.5,
-        "renderP95Ms": 4.7000000001862645,
-        "mountedTurns": 20,
-        "hiddenLogCodeBlocks": 0,
-        "chatElements": 805,
-        "samples": [
-          2.7999999998137355,
-          2.7999999998137355,
-          2.8999999994412065,
-          2.900000000372529,
-          2.900000000372529,
-          3.099999999627471,
-          3.099999999627471,
-          3.2999999998137355,
-          3.2999999998137355,
-          3.300000000745058,
-          3.400000000372529,
-          3.5,
-          3.5,
-          3.599999999627471,
-          3.599999999627471,
-          3.6000000005587935,
-          3.7000000001862645,
-          3.7999999998137355,
-          4.099999999627471,
-          4.1000000005587935,
-          4.1000000005587935,
-          4.2999999998137355,
-          4.6000000005587935,
-          4.7000000001862645,
-          5
-        ]
-      },
-      {
-        "name": "3.1.0 current bundle",
-        "repeat": 2,
-        "repeatedLayouts": 0,
-        "renderMedianMs": 4.400000000372529,
-        "renderP95Ms": 6.2999999998137355,
-        "mountedTurns": 20,
-        "hiddenLogCodeBlocks": 0,
-        "chatElements": 805,
-        "samples": [
-          2.2999999998137355,
-          2.800000000745058,
-          2.8999999994412065,
-          3.099999999627471,
-          3.7000000001862645,
-          3.7999999998137355,
-          3.8999999994412065,
-          3.900000000372529,
-          4,
-          4.099999999627471,
-          4.1000000005587935,
-          4.400000000372529,
-          4.400000000372529,
-          4.599999999627471,
-          4.7999999998137355,
-          5,
-          5,
-          5,
-          5.1000000005587935,
-          5.199999999254942,
-          5.400000000372529,
-          6,
-          6.2000000001862645,
-          6.2999999998137355,
-          7.7999999998137355
-        ]
-      },
-      {
-        "name": "3.0.0 signed APK",
-        "repeat": 2,
-        "repeatedLayouts": 0,
-        "renderMedianMs": 3.7999999998137355,
-        "renderP95Ms": 5.800000000745058,
-        "mountedTurns": 20,
-        "hiddenLogCodeBlocks": 0,
-        "chatElements": 805,
-        "samples": [
-          2.7000000001862645,
-          3,
-          3,
-          3.099999999627471,
-          3.099999999627471,
-          3.2999999998137355,
-          3.300000000745058,
-          3.5,
-          3.599999999627471,
-          3.699999999254942,
-          3.699999999254942,
-          3.7000000001862645,
-          3.7999999998137355,
-          3.900000000372529,
-          3.900000000372529,
-          4.099999999627471,
-          4.3999999994412065,
-          4.400000000372529,
-          4.7000000001862645,
-          5,
-          5.2000000001862645,
-          5.2000000001862645,
-          5.6000000005587935,
-          5.800000000745058,
-          6.2000000001862645
-        ]
-      }
-    ]
+    "physicalAndroidDevice": false
   },
   "harnessSourceReview": {
     "repository": "https://github.com/deepseek-ai/deepseek-harness",
@@ -591,7 +455,14 @@
     "explicitFiniteBudgetsRetained": true,
     "stopAndNeedsInputRetained": true,
     "durableClaimsBeforeEffects": true,
-    "unknownToolStatusDoesNotAutoRetry": true
+    "unknownToolStatusDoesNotAutoRetry": true,
+    "specialization": [
+      "cybersecurity",
+      "authorized penetration testing",
+      "reverse engineering",
+      "programming"
+    ],
+    "identitySharedAcrossConnections": true
   },
   "mcp": {
     "sdk": "@modelcontextprotocol/client 2.3.1",
@@ -647,6 +518,9 @@
     "manifestOptionalForSkills": true,
     "recursiveSkills": true,
     "builtinSkills": [
+      "安全审计",
+      "授权渗透测试",
+      "逆向分析",
       "排错与修复",
       "代码审查",
       "网页调研"
@@ -677,5 +551,5 @@
     "nonStreamingResponsesJson": true,
     "bomAndSplitCrLf": true
   },
-  "verificationDate": "2026-10-22T00:01:05.516687+08:00"
+  "verificationDate": "2026-10-23T00:14:59.253849+08:00"
 }

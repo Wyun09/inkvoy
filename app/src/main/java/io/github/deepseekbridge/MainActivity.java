@@ -187,7 +187,7 @@ public final class MainActivity extends Activity {
         }
         if (action.equals("copy-text")) {
             String text=argument.optString("text");if(text.length()>2097152){service.runtime.toast("复制内容超过限制");return;}
-            ((ClipboardManager)getSystemService(CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText("DeepSeek Studio",text));service.runtime.toast("已复制");return;
+            ((ClipboardManager)getSystemService(CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText("Inkvoy",text));service.runtime.toast("已复制");return;
         }
         if (action.equals("search-policy")) { service.runtime.setWebSearchDefault(argument.optBoolean("enabled")); return; }
         if (action.equals("reset-conversations")) { service.runtime.resetConversations(); return; }

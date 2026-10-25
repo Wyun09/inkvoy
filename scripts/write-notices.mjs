@@ -17,6 +17,8 @@ while(queue.length){const name=queue.shift();if(included.has(name))continue;incl
 parts.push(await readFile(new URL('third_party/RUNTIME_NOTICES.md',project),'utf8'));
 parts.push(await readFile(new URL('third_party/termux-pty/LICENSE.txt',project),'utf8'));
 parts.push('## assistant-ui Claude example and thread shell (adapted UI)\n\nSource: https://github.com/assistant-ui/assistant-ui/tree/e97f7c61365ef0f73686c7b596751802f1a1ddd2\n\n'+await readFile(new URL('third_party/assistant-ui/LICENSE',project),'utf8'));
+parts.push('## shadcn/ui command and sidebar composition references\n\nPinned source and adaptation: third_party/ui-v4/origin.json and ADAPTATION.md\n\n'+await readFile(new URL('third_party/ui-v4/LICENSE.md',project),'utf8'));
+parts.push('## Geist variable font\n\nUnmodified font from google/fonts; pinned source and SHA-256: third_party/ui-v4/origin.json\n\n'+await readFile(new URL('third_party/ui-v4/Geist-OFL.txt',project),'utf8'));
 for(const file of (await readdir(new URL('third_party/licenses/',project))).sort())parts.push(`## ${file}\n\n`+await readFile(new URL('third_party/licenses/'+file,project),'utf8'));
 const text = parts.join('\n\n') + '\n';
 await mkdir(new URL('app/src/main/assets/', project), { recursive: true });

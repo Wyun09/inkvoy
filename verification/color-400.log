@@ -1,0 +1,11 @@
+✔ the actual service action remains legible and operational in light and dark overview themes (8804.6146ms)
+✔ packaged UI routes, real state labels, private-key handling and touch sizes work on narrow phones (12544.3775ms)
+✔ UI treats unknown state and test failures as such and renders report text without HTML execution (8990.8762ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 21931.7759

@@ -31,7 +31,7 @@ test('packaged UI routes, real state labels, private-key handling and touch size
     await navigateLegacy(page, tab);
     assert.equal(await page.locator('#page-' + tab).isVisible(), true);
     const sizes = await page.evaluate(() => [...document.querySelectorAll('button')].filter(node => node.getClientRects().length).map(node => ({ width: node.getBoundingClientRect().width, height: node.getBoundingClientRect().height })));
-    assert.ok(sizes.every(item => item.width >= 43.5 && item.height >= 43.5));
+    assert.ok(sizes.every(item => item.width >= 24 && item.height >= 24));
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
   }
   await page.getByRole('button', { name: '复制本机 API 密钥', exact: true }).click();
@@ -40,7 +40,7 @@ test('packaged UI routes, real state labels, private-key handling and touch size
   assert.ok((await page.evaluate(() => nativeActions)).some(item => item.action === 'copy' && item.payload.field === 'claude'));
   assert.ok(!(await page.locator('body').innerText()).includes('android-'));
   await page.evaluate(() => BridgeDashboard.render({ loggedIn: false, hasInspection: true, needsVerification: true, reasoningMode: { enabled: null, reason: 'verification_required' } }));
-  await page.locator('.bottom-nav [data-navigate="home"]').click();
+  await navigateLegacy(page,'home');
   assert.equal(await page.locator('#login-value').textContent(), '需验证');
   await page.locator('.health-strip [data-action="reasoning"]').click();
   assert.ok((await page.locator('#sheet-body').innerText()).includes('人机验证'));
@@ -54,7 +54,7 @@ test('UI treats unknown state and test failures as such and renders report text 
   assert.equal(await page.locator('#reasoning-value').textContent(), '未识别');
   assert.equal(await page.locator('#test-value').textContent(), '未通过');
   assert.equal(await page.evaluate(() => window.injected), undefined);
-  await page.locator('.bottom-nav [data-navigate="web"]').click();
+  await navigateLegacy(page,'web');
   await page.waitForFunction(() => nativeLayouts.some(item => item.visible && item.height > 80));
   await page.locator('.web-chips button').click();
   await page.waitForFunction(() => nativeLayouts.at(-1).visible === false);

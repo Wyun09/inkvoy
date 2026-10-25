@@ -14,15 +14,15 @@ for (const storage of ['disabled', 'blocked', 'read-only']) {
     await page.evaluate(state => BridgeDashboard.render(state), readyState);
     await page.locator('#theme').click();
     assert.equal(await page.locator('body').getAttribute('class'), 'dark');
-    await page.locator('[data-action="help"]').first().click();
+    await page.locator('#command-open').click();await page.locator('#command-input').fill('使用帮助');await page.keyboard.press('Enter');
     assert.equal(await page.locator('#sheet-scrim').isVisible(), true);
     await page.locator('#close-sheet').click();
-    await page.locator('.bottom-nav [data-navigate="web"]').click();
+    await navigateLegacy(page,'web');
     assert.equal(await page.locator('#page-web').isVisible(), true);
     await navigateLegacy(page, 'connect');
     await page.getByRole('button', { name: '复制本机 API 密钥', exact: true }).click();
     assert.ok((await page.evaluate(() => nativeActions)).some(item => item.action === 'copy' && item.payload.field === 'key'));
-    await page.locator('.bottom-nav [data-navigate="home"]').click();
+    await navigateLegacy(page,'home');
     await page.locator('#service-toggle').click();
     assert.ok((await page.evaluate(() => nativeActions)).some(item => item.action === 'stop'));
     assert.deepEqual(errors, []);

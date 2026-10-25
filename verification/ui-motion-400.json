@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-22T16:02:58.283Z",
+  "version": "4.0.0",
+  "environment": "Production packaged assets in desktop Edge, 390x844; no physical Android",
+  "video": "preview/4.0.0/interaction-motion.webm",
+  "actions": [
+    "Drag Inky, release and observe spring return",
+    "Tap Inky",
+    "Switch files, terminal and research; actual shared navigation indicators",
+    "Open keyboard command palette and route to appearance",
+    "Cycle production reply-logo state animations using explicitly labelled preview"
+  ],
+  "workingVideo": "preview/4.0.0/research-motion.webm",
+  "workingVideoUses": "Actual built-in client resuming a pending terminal tool against deterministic Native fixture; same reply brand state as production"
+}

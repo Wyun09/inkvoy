@@ -134,12 +134,13 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
                 else if ("/app.css".equals(uri.getPath())) asset = "app.css";
                 else if ("/logo.png".equals(uri.getPath())) asset = "logo.png";
                 else if ("/companion.png".equals(uri.getPath())) asset = "companion.png";
+                else if ("/Geist.ttf".equals(uri.getPath())) asset = "Geist.ttf";
                 else if(uri.getPath()!=null&&uri.getPath().matches("/chat-media/[a-f0-9]{64}")){
                     try{return new WebResourceResponse("image/jpeg",null,new FileInputStream(studio.media.file(uri.getLastPathSegment())));}catch(IOException e){return blocked();}
                 }else if(uri.getPath()!=null&&uri.getPath().matches("/browser-capture/[a-f0-9-]{36}\\.jpg")){
                     try{return new WebResourceResponse("image/jpeg",null,new FileInputStream(computer.captureFile(uri.getLastPathSegment().replace(".jpg","")))) ;}catch(IOException e){return blocked();}
                 }else return blocked();
-                try { return new WebResourceResponse(asset.endsWith(".png") ? "image/png" : asset.endsWith(".js") ? "application/javascript" : asset.endsWith(".css") ? "text/css" : "text/html", asset.endsWith(".png") ? null : "UTF-8", context.getAssets().open(asset)); }
+                try { return new WebResourceResponse(asset.endsWith(".ttf") ? "font/ttf" : asset.endsWith(".png") ? "image/png" : asset.endsWith(".js") ? "application/javascript" : asset.endsWith(".css") ? "text/css" : "text/html", asset.endsWith(".png") || asset.endsWith(".ttf") ? null : "UTF-8", context.getAssets().open(asset)); }
                 catch (IOException e) { return blocked(); }
             }
         });
@@ -185,7 +186,7 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
     public void resumeWebviews(){if(destroyed)return;browser.onResume();engine.onResume();}
     public void publishUi() { try { js("BridgeDashboard.render(" + snapshot() + ")"); } catch (JSONException ignored) {} }
     public JSONObject snapshot() throws JSONException {
-        return new JSONObject().put("version", "3.1.0").put("ready", ready).put("running", running)
+        return new JSONObject().put("version", "4.0.0").put("ready", ready).put("running", running)
             .put("loggedIn", loggedIn).put("hasInspection", hasInspection).put("needsVerification", needsVerification)
             .put("inspecting", inspecting).put("reasoningMode", reasoningMode).put("busy", !completions.isEmpty() || taskboard.optInt("active") > 0)
             .put("webSearchMode", webSearchMode).put("webSearchDefault", webSearchDefault)
@@ -204,7 +205,7 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
         js("AndroidEngine.resetConversations()");
     }
     public JSONObject diagnostics() throws JSONException {
-        return new JSONObject().put("version", "3.1.0").put("running", running).put("ready", ready).put("loggedIn", loggedIn)
+        return new JSONObject().put("version", "4.0.0").put("running", running).put("ready", ready).put("loggedIn", loggedIn)
             .put("storage", new JSONObject(localState.status())).put("agentStrict", agentStrict)
             .put("requests", taskboard.optInt("totalRequests")).put("active", taskboard.optInt("active"))
             .put("trackedSessions", conversations.optInt("tracked")).put("reused", conversations.optInt("reused"));

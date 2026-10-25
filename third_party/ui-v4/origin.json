@@ -1,0 +1,34 @@
+{
+  "shadcn": {
+    "repository": "https://github.com/shadcn-ui/ui",
+    "commit": "25af02b1b467fcd53b63e0c6d6d324c57c16ef18",
+    "license": "MIT",
+    "files": {
+      "LICENSE.md": {
+        "path": "LICENSE.md",
+        "sha256": "1564074e13439397221ffd522e2e504d56561994a23d371aa5e3ad43e4f5423f"
+      },
+      "command.tsx": {
+        "path": "apps/v4/registry/new-york-v4/ui/command.tsx",
+        "sha256": "319e9264567dd46f04d705028bc345470663ca5919f31292c4ec43ea5ceb9336"
+      },
+      "sidebar.tsx": {
+        "path": "apps/v4/registry/new-york-v4/ui/sidebar.tsx",
+        "sha256": "2ba1a9b9422f4172373f4cd0587b675d2331a41f4fa68f65dab2b23ca98fd9d2"
+      }
+    },
+    "usage": "Grouped sidebar and command composition studied and reimplemented with existing vanilla DOM; no React runtime or upstream brand assets."
+  },
+  "geist": {
+    "repository": "https://github.com/google/fonts",
+    "commit": "87a44ad3d4535f7b3a5a715a08e8944f144afd06",
+    "path": "ofl/geist/Geist[wght].ttf",
+    "sha256": "73894e0448cae90a92b6c2f8732b7bb9acb7b94c418bff559dad4a18e1de9659",
+    "license": "SIL Open Font License 1.1",
+    "usage": "Unmodified locally bundled variable font; CJK uses installed system fallback."
+  },
+  "zed": {
+    "repository": "https://github.com/zed-industries/zed",
+    "usage": "Workspace panel hierarchy observed only; no source copied."
+  }
+}

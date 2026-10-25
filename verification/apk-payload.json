@@ -1,7 +1,7 @@
 {
-  "apk": "deepseek-android-bridge-v3.1.0.apk",
-  "bytes": 616028286,
-  "sha256": "d5bfea2b249a35a30d82c260a6a7a51439ecfddb4865da590169785fd825e9f1",
+  "apk": "deepseek-android-bridge-v4.0.0.apk",
+  "bytes": 616048828,
+  "sha256": "1038a4a3d5a63e0bb2df9f5f76c536aeddb145da8deb7689770e30b6aea7a28d",
   "rawZipPathsPortable": true,
   "sourcePayloadsMatched": [
     "assets/app.css",
@@ -11,6 +11,7 @@
     "assets/compute.worker.js",
     "assets/engine.bundle.js",
     "assets/engine.html",
+    "assets/Geist.ttf",
     "assets/logo.png",
     "assets/mcp.worker.js",
     "assets/NOTICE.txt",
@@ -48,6 +49,6 @@
   "sameSignerAsV1": true,
   "minSdk": 26,
   "targetSdk": 35,
-  "versionCode": 21,
+  "versionCode": 22,
   "androidDeviceVerified": false
 }

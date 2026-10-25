@@ -3,6 +3,7 @@ import DOMPurify from 'dompurify';
 import {highlightCode} from '../background.js';
 import {replyTurns,TOOL_LABELS,STATUS_LABELS} from './reply-model.js';
 import {attachmentCards} from './attachments.js';
+import {createWelcome} from './v4/welcome.js';
 const languages=new Set(['javascript','typescript','python','bash','json','xml','css','java']);
 
 const el=(tag,className,text)=>{const n=document.createElement(tag);if(className)n.className=className;if(text!==undefined)n.textContent=text;return n;};
@@ -81,7 +82,7 @@ export function createReplyView({container,copy,openFile,showChange,openImage=()
     const raw=manualDetails('reply-raw','原始结果');raw.details.addEventListener('toggle',()=>{if(raw.details.open&&!raw.loaded){raw.loaded=true;raw.details.append(code(String(tool.resultMessage.content||''),'JSON'));}});node.append(raw.details);
   }
   function updateTurn(v,turn,session){
-    v.root.dataset.status=turn.status;v.status.textContent=turn.draft==='partial'?'部分输出 · 未完成':turn.draft==='live'?'正在回复':STATUS_LABELS[turn.status]||'已返回';
+    v.root.dataset.status=turn.status;v.root.dataset.brandState=turn.status==='tools'?'tools':['generating','preparing'].includes(turn.status)?'thinking':turn.status==='completed'?'done':['needs_input','budget','cancelling'].includes(turn.status)?'waiting':['failed','interrupted'].includes(turn.status)?'error':'idle';v.status.textContent=turn.draft==='partial'?'部分输出 · 未完成':turn.draft==='live'?'正在回复':STATUS_LABELS[turn.status]||'已返回';
     v.brand.textContent=turn.messages.find(m=>m.message.model_label)?.message.model_label||session.modelLabel||'DeepSeek';
     v.root.copyText=turn.final?.message.content||turn.messages.map(m=>m.message.content||'').filter(Boolean).join('\n\n');v.footer.hidden=!v.root.copyText;
     v.thinking.details.hidden=!turn.reasoning;if(v.thought.textContent!==turn.reasoning)v.thought.textContent=turn.reasoning;
@@ -124,7 +125,7 @@ export function createReplyView({container,copy,openFile,showChange,openImage=()
     if(!same){highlighter.disconnect();nodes.clear();container.replaceChildren();selected=session?.id;previousUsers=0;startIndex=userIndices.at(-20)??0;}
     lastSession=session;lastActive=active;lastDraft=draft;
     const items=replyTurns(session,active,startIndex,draft),users=userIndices.length,newUser=users>previousUsers;previousUsers=users;
-    if(!items.length){if(!container.querySelector('.chat-welcome')){container.replaceChildren();const welcome=el('section','chat-welcome'),pet=el('span','welcome-companion');pet.dataset.pose='idle';pet.setAttribute('aria-hidden','true');pet.append(el('span','companion-sprite'));welcome.append(pet,el('h2','','有什么可以帮你？'),el('p','','从一个问题、一段想法，或当前项目开始。'));container.append(welcome);}jump.hidden=true;return;}
+    if(!items.length){if(!container.querySelector('.chat-welcome'))container.replaceChildren(createWelcome());jump.hidden=true;return;}
     container.querySelector('.chat-welcome')?.remove();if(startIndex>0){container.prepend(earlier);earlier.textContent='加载更早的对话 · '+userIndices.filter(i=>i<startIndex).length+' 轮';}else earlier.remove();const keep=new Set();let cursor=earlier.isConnected?earlier.nextSibling:container.firstChild;
     for(const item of items){keep.add(item.key);let view=nodes.get(item.key);if(!view){view=item.type==='assistant'?makeTurn():{root:el('article','chat-message user'),body:el('div','markdown')};if(item.type==='user')view.root.append(view.body);view.root.dataset.replyKey=item.key;nodes.set(item.key,view);}
       if(item.type==='assistant'){const last=item.messages.at(-1)?.message,lastResult=item.tools.at(-1)?.resultMessage,stamp=[last,lastResult,item.messages.length,item.tools.length,item.status,item.draft,item.reasoning,session.tool?.id];if(!view.stamp||stamp.some((value,i)=>value!==view.stamp[i])){view.stamp=stamp;updateTurn(view,item,session);}}else {if(view.body.textContent!==String(item.message.content||''))view.body.textContent=String(item.message.content||'');const key=JSON.stringify(item.message.attachments||[]);if(view.attachmentKey!==key){view.attachmentKey=key;view.attachments?.remove();if(item.message.attachments?.length){view.attachments=attachmentCards(item.message.attachments,{openImage,openFile});view.root.append(view.attachments);}}}

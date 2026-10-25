@@ -1,10 +1,20 @@
 {
-  "version": "3.1.0",
+  "version": "4.0.0",
   "files": [
     {
       "path": "app/src/main/assets/runtime/debian-arm64.tar.gz",
       "bytes": 613920380,
       "sha256": "5076aaae48f952433e556f15939a24465cab6633a6a568d1c216a0b37c6efa24"
+    },
+    {
+      "path": "preview/4.0.0/interaction-motion.webm",
+      "bytes": 1235819,
+      "sha256": "1ce9ae734ba2269a6cd387e76a1158c95fd601750d4e9d8fe66f7554e803c616"
+    },
+    {
+      "path": "preview/4.0.0/research-motion.webm",
+      "bytes": 399705,
+      "sha256": "eb96459547f2aac82edc2e781b7c401c0d21aed026fd380396e2c3b2ee076a9c"
     },
     {
       "path": "test/android-runtime/lib/espresso.jar",

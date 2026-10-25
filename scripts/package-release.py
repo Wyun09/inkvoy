@@ -9,9 +9,11 @@ if output.exists():raise SystemExit('Preserve the existing release ZIP')
 files=[]
 for name in ['app','js','scripts','test','preview','branding','third_party','verification']:
     files.extend(p for p in (root/name).rglob('*') if p.is_file())
-for name in ['.gitignore','package.json','package-lock.json','README.md','CLAUDE_CODE.md','VERIFICATION.md','CORE_PROVENANCE.json','THIRD_PARTY_NOTICES.md','release.json']:files.append(root/name)
+for name in ['.gitignore','package.json','package-lock.json','README.md','CLAUDE_CODE.md','VERIFICATION.md','CORE_PROVENANCE.json','THIRD_PARTY_NOTICES.md','release.json','DESIGN_4.0.md']:files.append(root/name)
 fix=root/f'FIX_{version}.md'
 if fix.exists():files.append(fix)
+# Ship only the final version's documented previews; keep rejected local drafts intact.
+files=[p for p in files if not (p.relative_to(root).parts[:2]==('preview','4.0.0') and p.suffix=='.png' and not p.name.startswith(('research-','interaction-')))]
 for file in files:
     if file.suffix in ('.jks','.keystore') or file.name in ('signing.json','.env','id_rsa','id_ed25519') or any(p in ('node_modules','.git','.browser-profile') for p in file.relative_to(root).parts):raise ValueError('Private path in release')
     if not file.is_file():raise ValueError('Missing release file: '+file.name)

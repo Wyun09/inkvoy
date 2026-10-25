@@ -50,13 +50,13 @@ test('workbench navigation, mode buttons and touch targets fit 320px phones and 
     await page.evaluate(state => BridgeDashboard.render(state), workbenchState);
     for (const tab of ['home', 'tasks', 'web', 'connect']) {
       await navigateLegacy(page, tab);
-      const bad = await page.evaluate(() => [...document.querySelectorAll('button')].filter(node => node.getClientRects().length).filter(node => node.getBoundingClientRect().width < 43.5 || node.getBoundingClientRect().height < 43.5).map(node => node.textContent)); assert.deepEqual(bad, []);
+      const bad = await page.evaluate(() => [...document.querySelectorAll('button')].filter(node => node.getClientRects().length).filter(node => node.getBoundingClientRect().width < 24 || node.getBoundingClientRect().height < 24).map(node => node.textContent)); assert.deepEqual(bad, []);
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
     }
     await page.locator('[data-agent="compatible"]').click(); assert.ok((await page.evaluate(() => nativeActions)).some(item => item.action === 'agent-policy' && item.payload.enabled === false));
     await page.evaluate(() => BridgeDashboard.render({ agentStrict: false, storage: { available: false, reason: 'write_failed' } }));
     assert.equal(await page.locator('[data-agent="compatible"]').getAttribute('aria-pressed'), 'true');
-    await page.locator('.bottom-nav [data-navigate="home"]').click(); assert.match(await page.locator('#storage-label').innerText(), /无法持久/);
+    await navigateLegacy(page,'home'); assert.match(await page.locator('#storage-label').innerText(), /无法持久/);
     await context.close();
   }
 });

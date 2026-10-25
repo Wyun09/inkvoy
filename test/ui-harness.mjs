@@ -1,12 +1,12 @@
 import { readFile } from 'node:fs/promises';
-export async function uiHarness(browser, viewport = { width: 390, height: 844 }, { storage = 'enabled', failStartup = false, initialPage = 'home', studio = false, holdTools=false, clientState = {}, providerState={}, mediaFiles={}, fileChanges={}, saveDelay=0, assetsDirectory, runtimeTools = [{name:'JADX',version:'1.5.6',kind:'APK / DEX'},{name:'radare2',version:'6.2.4',kind:'ELF / SO'}] } = {}) {
-  const context = await browser.newContext({ viewport, deviceScaleFactor: 1 });
+export async function uiHarness(browser, viewport = { width: 390, height: 844 }, { storage = 'enabled', failStartup = false, initialPage = 'home', studio = false, holdTools=false, clientState = {}, providerState={}, mediaFiles={}, fileChanges={}, saveDelay=0, assetsDirectory, recordVideo, runtimeTools = [{name:'JADX',version:'1.5.6',kind:'APK / DEX'},{name:'radare2',version:'6.2.4',kind:'ELF / SO'}] } = {}) {
+  const context = await browser.newContext({ viewport, deviceScaleFactor: 1,...(recordVideo?{recordVideo}:{}) });
   const page = await context.newPage();
   const assets = assetsDirectory || new URL('../app/src/main/assets/', import.meta.url);
   await page.route('https://bridge.local/**', async route => {
     const name = new URL(route.request().url()).pathname.slice(1);
-    if (!['engine.html', 'engine.bundle.js', 'compute.worker.js', 'mcp.worker.js', 'app.css', 'logo.png', 'companion.png'].includes(name)) return route.abort();
-    return route.fulfill({ contentType: name.endsWith('.png') ? 'image/png' : name.endsWith('.js') ? 'application/javascript' : name.endsWith('.css') ? 'text/css' : 'text/html; charset=utf-8', body: await readFile(new URL(name, assets)) });
+    if (!['engine.html', 'engine.bundle.js', 'compute.worker.js', 'mcp.worker.js', 'app.css', 'logo.png', 'companion.png','Geist.ttf'].includes(name)) return route.abort();
+    return route.fulfill({ contentType: name.endsWith('.ttf')?'font/ttf':name.endsWith('.png') ? 'image/png' : name.endsWith('.js') ? 'application/javascript' : name.endsWith('.css') ? 'text/css' : 'text/html; charset=utf-8', body: await readFile(new URL(name, assets)) });
   });
   await page.addInitScript(({ storage, failStartup, studio, holdTools, clientState, providerState, mediaFiles, fileChanges, runtimeTools, saveDelay }) => {
     if (failStartup) window.ResizeObserver = class { constructor() { throw new Error('ResizeObserver unavailable'); } };
@@ -68,6 +68,7 @@ export async function uiHarness(browser, viewport = { width: 390, height: 844 },
 }
 export async function navigateLegacy(page, tab) {
   if(await page.locator('#page-chat').isVisible())return navigateStudio(page,tab);
+  if(await page.locator('#workspace-menu').count())return navigateStudio(page,tab);
   if(['tasks','connect'].includes(tab)) {
     await page.locator('.bottom-nav [data-navigate="home"]').click();
     await page.locator('#page-home [data-navigate="'+tab+'"]').first().click();
@@ -75,8 +76,11 @@ export async function navigateLegacy(page, tab) {
 }
 export async function navigateStudio(page,tab) {
   if(await page.locator('#page-'+tab).isVisible())return;
-  if(await page.locator('#page-chat').isVisible()){
-    await page.locator('#session-menu').click();
+  if(tab==='settings'&&await page.locator('#rail-settings').isVisible()){await page.locator('#rail-settings').click();return;}
+  const rail=page.locator('[data-rail-page="'+tab+'"]');if(await rail.count()&&await rail.isVisible()){await rail.click();return;}
+  const direct=page.locator('.bottom-nav [data-navigate="'+tab+'"]');if(await direct.count()&&await direct.isVisible()){await direct.click();return;}
+  if(await page.locator('#workspace-menu').count()){
+    if(await page.locator('#session-menu').isVisible())await page.locator('#session-menu').click();else if(await page.locator('#workspace-menu').isVisible())await page.locator('#workspace-menu').click();else await page.locator('#rail-sessions').click();
     const extra=page.locator('#studio-drawer [data-drawer-page="'+tab+'"]');if(await extra.count()&&!(await extra.isVisible()))await page.locator('#drawer-more>summary').click();
     await page.locator('[data-drawer-page="'+tab+'"]').click();
   }else await navigateLegacy(page,tab);

@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self'; connect-src 'none'; worker-src 'self'; frame-src 'none'; base-uri 'none'; form-action 'none'">
-<meta name="color-scheme" content="light dark"><link rel="stylesheet" href="app.css"><title>DeepSeek Studio</title><script src="engine.bundle.js" defer></script></head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self'; connect-src 'none'; worker-src 'self'; frame-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="color-scheme" content="light dark"><link rel="stylesheet" href="app.css"><title>Inkvoy</title><script src="engine.bundle.js" defer></script></head>
 <body><div class="app" id="app">
-  <header class="topbar"><div class="brand"><span class="brand-mark"><img src="logo.png" alt="" width="40" height="40"></span><div><strong>DeepSeek Studio</strong><span>DEEPSEEK STUDIO</span></div></div><div class="top-actions"><button class="icon-button" id="theme" aria-label="切换明暗主题" data-icon="moon"></button><button class="icon-button" data-action="help" aria-label="使用帮助" data-icon="help"></button></div></header>
+  <header class="topbar"><div class="brand"><span class="brand-mark"><img src="logo.png" alt="" width="40" height="40"></span><div><strong>Inkvoy</strong><span>INKVOY</span></div></div><div class="top-actions"><button class="icon-button" id="theme" aria-label="切换明暗主题" data-icon="moon"></button><button class="icon-button" data-action="help" aria-label="使用帮助" data-icon="help"></button></div></header>
   <main class="page home-page" id="page-home">
-    <div class="page-heading"><p class="eyebrow">A QUIETER WAY TO WORK</p><h1>工作台</h1><p class="subtitle">本机服务、连接与请求记录</p></div>
+    <div class="page-heading"><p class="eyebrow">YOUR WORKSPACE</p><h1>工作台</h1><p class="subtitle">本机服务、连接与请求记录</p></div>
     <section class="hero" aria-labelledby="hero-title"><div class="hero-decoration" aria-hidden="true"><i></i><i></i><i></i><span data-icon="layers"></span></div><div class="service-pill"><span class="status-dot" id="hero-dot"></span><span id="service-label">正在准备本机服务</span></div><h2 id="hero-title">准备连接</h2><p id="hero-detail">正在初始化运行环境</p><div class="hero-actions"><button class="hero-primary" id="service-toggle"><span data-icon="power"></span><span id="service-toggle-label">启动服务</span></button><button class="hero-secondary" data-navigate="web">打开 DeepSeek<span data-icon="arrow-up-right"></span></button></div></section>
     <section class="work-metrics" aria-label="真实请求统计"><div><strong id="metric-requests">0</strong><span>累计请求</span></div><div><strong id="metric-reused">0</strong><span>会话续接</span></div><div><strong id="metric-first">—</strong><span>平均首段输出</span></div></section>
     <div class="section-heading"><h2>任务现场<span class="live-label">LIVE</span></h2><button class="text-button" data-navigate="tasks">全部任务<span data-icon="arrow-right"></span></button></div>
@@ -17,7 +17,7 @@
     <div class="section-heading"><h2>本机接口</h2><button class="text-button" data-navigate="connect">连接配置<span data-icon="arrow-right"></span></button></div>
     <section class="card endpoint-card"><div><span class="tiny-label">BASE URL</span><code>http://127.0.0.1:8787/v1</code><span class="endpoint-caption"><i></i>服务运行在这台手机上</span></div><button class="copy-button" data-copy="url" aria-label="复制 API 地址" data-icon="copy"></button></section>
     <div class="storage-note" id="storage-note"><span data-icon="lock"></span><span id="storage-label">正在检查本机存储</span></div>
-    <section class="activity-section"><div class="section-heading"><h2>最近动态</h2><span class="tiny-label">ON THIS DEVICE</span></div><div id="activity-list" class="activity-list"><div class="empty-activity">启动服务后，连接动态会显示在这里</div></div></section><div class="page-footnote">YOUR SESSION. YOUR PACE.</div>
+    <section class="activity-section"><div class="section-heading"><h2>最近动态</h2><span class="tiny-label">ON THIS DEVICE</span></div><div id="activity-list" class="activity-list"><div class="empty-activity">启动服务后，连接动态会显示在这里</div></div></section><div class="page-footnote">INKVOY</div>
   </main>
   <main class="page tasks-page" id="page-tasks" hidden>
     <div class="page-heading compact"><p class="eyebrow">EVERY STEP, IN VIEW</p><h1>任务工作台<span class="heading-dot">。</span></h1><p class="subtitle">查看请求进度与会话关联</p></div>
@@ -51,7 +51,7 @@ Idempotency-Key: unique-operation-id
 
 GET /v1/bridge/tasks
 GET /v1/bridge/tasks/TASK_ID/result</pre><p class="quiet-note">相同重试键与请求会返回已保存结果；工具调用 ID 保持一致。记录有容量上限，客户端仍需防止重复执行工具。</p></details>
-    <button class="diagnostics-link" data-action="diagnostics"><span data-icon="activity"></span>查看连接诊断<span data-icon="arrow-right"></span></button><div class="page-footnote">DEEPSEEK STUDIO · <span id="app-version">3.1.0</span></div>
+    <button class="diagnostics-link" data-action="diagnostics"><span data-icon="activity"></span>查看连接诊断<span data-icon="arrow-right"></span></button><div class="page-footnote">INKVOY · <span id="app-version">4.0.0</span></div>
   </main>
   <nav class="bottom-nav" aria-label="主导航"><button data-navigate="home" class="active" aria-current="page"><span data-icon="grid"></span><span>概览</span></button><button data-navigate="tasks"><span data-icon="activity"></span><span>任务</span><i id="task-nav-dot" hidden></i></button><button data-navigate="web"><span data-icon="globe"></span><span>DeepSeek</span></button><button data-navigate="connect"><span data-icon="plug"></span><span>连接</span></button></nav>
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>

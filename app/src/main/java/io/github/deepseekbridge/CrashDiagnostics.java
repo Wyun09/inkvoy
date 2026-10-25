@@ -12,7 +12,7 @@ public final class CrashDiagnostics {
     private static File file(Context context){return new File(context.getFilesDir(),"last-startup-error.txt");}
     public static String record(Context context,String stage,Throwable error){
         String value;
-        try{StringWriter text=new StringWriter();error.printStackTrace(new PrintWriter(text));value="DeepSeek Studio "+version(context)+"\nAndroid "+Build.VERSION.RELEASE+" / API "+Build.VERSION.SDK_INT+"\nStage: "+stage+"\nTime: "+new Date()+"\n\n"+text;}
+        try{StringWriter text=new StringWriter();error.printStackTrace(new PrintWriter(text));value="Inkvoy "+version(context)+"\nAndroid "+Build.VERSION.RELEASE+" / API "+Build.VERSION.SDK_INT+"\nStage: "+stage+"\nTime: "+new Date()+"\n\n"+text;}
         catch(Throwable ignored){value="启动失败："+error.getClass().getSimpleName();}
         value=redact(value);if(value.length()>16384)value=value.substring(0,16384);
         try(FileOutputStream output=new FileOutputStream(file(context))){output.write(value.getBytes(StandardCharsets.UTF_8));output.getFD().sync();}catch(Throwable ignored){}

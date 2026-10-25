@@ -1,0 +1,214 @@
+{
+  "version": "4.0.0",
+  "date": "2026-10-23T00:14:59.253849+08:00",
+  "javascript": {
+    "tests": 328,
+    "passed": 328,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "android": {
+    "tests": 181,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "sdk": [
+      26,
+      33
+    ],
+    "reports": [
+      {
+        "class": "io.github.deepseekbridge.AccessSettingsTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.BrowserImeRegressionTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.ChatMediaTest",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.ComputerBrowserTest",
+        "tests": 34,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.DisplayModeTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.ExtensionHubTest",
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.ExtensionImportTest",
+        "tests": 14,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.FileRevisionsTest",
+        "tests": 20,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.ManagedTasksTest",
+        "tests": 14,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.OpenAiAccountsTest",
+        "tests": 14,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.ProviderGatewayTest",
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.ResponsivenessTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.RuntimeAssetsTest",
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.RuntimeHardLinkTest",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "io.github.deepseekbridge.StartupRegressionTest",
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  "apk": {
+    "apk": "deepseek-android-bridge-v4.0.0.apk",
+    "bytes": 616048828,
+    "sha256": "1038a4a3d5a63e0bb2df9f5f76c536aeddb145da8deb7689770e30b6aea7a28d",
+    "rawZipPathsPortable": true,
+    "sourcePayloadsMatched": [
+      "assets/app.css",
+      "assets/browser-actions.js",
+      "assets/browser-observation.js",
+      "assets/companion.png",
+      "assets/compute.worker.js",
+      "assets/engine.bundle.js",
+      "assets/engine.html",
+      "assets/Geist.ttf",
+      "assets/logo.png",
+      "assets/mcp.worker.js",
+      "assets/NOTICE.txt",
+      "assets/runtime/debian-arm64.tar.gz",
+      "assets/runtime/manifest.json",
+      "lib/arm64-v8a/libandroid-shmem.so",
+      "lib/arm64-v8a/libproot.so",
+      "lib/arm64-v8a/libproot_loader.so",
+      "lib/arm64-v8a/libtalloc.so",
+      "lib/arm64-v8a/libtermux.so"
+    ],
+    "nativeLibraries": {
+      "lib/arm64-v8a/libandroid-shmem.so": {
+        "sha256": "84475798e07c8174dbbfaec70a827fdb02f19ffa69a589380c13e7507fd0e731",
+        "minLoadAlignment": 16384
+      },
+      "lib/arm64-v8a/libproot.so": {
+        "sha256": "0df9240e08015aa7f5194c32b3fe5d9c8a8ea16dfb895ccafb65847a7f392c7d",
+        "minLoadAlignment": 16384
+      },
+      "lib/arm64-v8a/libproot_loader.so": {
+        "sha256": "cbdef0e652c2b78af25d867e1719fdebbb0915e25aae2dd35b3b5c1835f6b551",
+        "minLoadAlignment": 16384
+      },
+      "lib/arm64-v8a/libtalloc.so": {
+        "sha256": "160d39bc0d7ed946f22310d1d6f20addda21b02b0972dffe929fe49951543941",
+        "minLoadAlignment": 16384
+      },
+      "lib/arm64-v8a/libtermux.so": {
+        "sha256": "937c85da731e3a8b1b0bb66a3ccfaca8d66d48ef1cde3b1962e9d18b97072852",
+        "minLoadAlignment": 16384
+      }
+    },
+    "signerSha256": "cc8f15b569d5e813c68d49f4fa17d19afbe6f7526ef5dbdade88e317116c2b59",
+    "sameSignerAsV1": true,
+    "minSdk": 26,
+    "targetSdk": 35,
+    "versionCode": 22,
+    "androidDeviceVerified": false
+  },
+  "logs": {
+    "verification/javascript-400.log": "e0efd52aad38c8f59207a360d740f77749d27b3cb1fed153c0b0ed552ac8ef9b",
+    "verification/android-400.log": "0f9f5e674ba3bfb47ea62cbc9d99bfdf2b998e9ed38561928d9ba0db21ec0066",
+    "verification/apk-400.log": "3a1db066d6f4fc31291aece49efd288c10737514b82d420fba7b92158086c0fa",
+    "verification/payload-400.log": "5efb83b34d4bc9ed3d24322d5aa749e3fc1e2290c2f9aac8813a4be8c8a13157",
+    "verification/performance-400.log": "12d57be75422bb4b453612fe2319854be225ea8e9e1be44cf16a94b044df5e8c",
+    "verification/color-400.log": "ad62810c60c160d3163aa11159b85dd708b2038b9b2d452df3619fc959f369a0"
+  },
+  "productionScreenshots": 23,
+  "motionVideos": [
+    "preview/4.0.0/interaction-motion.webm",
+    "preview/4.0.0/research-motion.webm"
+  ],
+  "dependencies": 35,
+  "physicalAndroidDevice": false,
+  "realDeepseekAccount": false,
+  "realOpenAiAccount": false,
+  "realAndroidMcpProcess": false,
+  "postStyleVerification": {
+    "checks": 3,
+    "passed": 3,
+    "failed": 0,
+    "change": "Dark overview service-action foreground contrast only",
+    "coreBytesUnchanged": {
+      "assets/engine.bundle.js": "805043c78370ef3c956b64135b9f7836c78a9b1921a6c92bf0d1cc8404347413",
+      "assets/compute.worker.js": "31ebd4889417fc793fb8e41d3bd22adc3b4c163e028d976e63d5751b737db574",
+      "assets/mcp.worker.js": "74f8beb4df5468d37651b88ac2988d8b94c0573ef4bfe2a113c5f5a0cacf2bf8",
+      "classes.dex": "767fe45bc3582929a3ad5f5e9590fe206a24a6141767212aa3755641b1c5e07e"
+    },
+    "newTest": "color-contrast.test.mjs",
+    "otherChecks": "ui.test.mjs rerun against final styles"
+  }
+}

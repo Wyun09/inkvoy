@@ -1,0 +1,9 @@
+{
+  "version": "4.0.0",
+  "tool": "Built-in image_gen via imagegen skill; no external image API",
+  "modelVersion": "Not exposed by the built-in tool",
+  "transparentBackground": true,
+  "source": "branding/logo-source.png",
+  "packaging": "scripts/build-icons.ps1 resizes the generated image for launcher densities and js/ui/logo.png. The reply avatar uses the PNG alpha as a CSS mask with a solid theme color. Runtime animation is driven by actual reply status.",
+  "prompt": "Use case: logo-brand. Create ONE polished original symbol for Inkvoy, an AI workspace for security research, reverse engineering and programming. This is a production UI reply avatar and app brand mark that will be animated in code. Style: bold flat vector-like solid color, playful intelligent energy, Google Material 3 Expressive level of simplicity, distinctive silhouette, no imitation of existing AI brands. Symbol: an asymmetric four-armed rounded pinwheel / ink spark formed from thick flowing lobes around a small clean negative-space center. It should suggest a curious living ink creature without a face. Each lobe is broad and confident, a rounded soft square petal with a subtle forward twist; all lobes join as one simple memorable silhouette. Use one saturated electric violet (#6547F2) solid fill only. Large optical mass so it reads clearly at 24 px. Centered single icon occupying about 78 percent of a square canvas. Background: true transparent alpha everywhere outside the mark, including the central aperture. No white square, no tile, no shadow, no gradient, no bevel, no gloss, no texture, no lettering, no border, no mockup, no extra symbols. The result should feel expressive, premium, friendly, and precise."
+}

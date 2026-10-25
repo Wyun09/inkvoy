@@ -1,0 +1,8 @@
+{
+  "version": "4.0.0",
+  "performed": false,
+  "removedBytes": 0,
+  "reason": "Automatic approval rejected the proposed cleanup command with blocked by policy. No cleanup was retried. Intermediate APKs and rejected local preview files remain on disk.",
+  "finalArtifact": "D:/CodexBuild/deepseek-studio-4.0.0/delivery/deepseek-android-bridge-v4.0.0.apk",
+  "sourcePackage": "Only final documented 4.0.0 PNG previews are included; local draft files are preserved."
+}

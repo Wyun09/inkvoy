@@ -16,6 +16,13 @@ import static org.junit.Assert.*;
 @Config(sdk={26,33},manifest=Config.NONE,application=Application.class)
 public class RuntimeAssetsTest {
     private File apk()throws IOException{return new File(System.getProperty("studio.testApk","../../build/resources.apk")).getCanonicalFile();}
+    @Test public void localFontAndResearchDeskStylesAreActuallyInTheApk()throws Exception {
+        try(java.util.zip.ZipFile zip=new java.util.zip.ZipFile(apk())){
+            try(InputStream in=zip.getInputStream(zip.getEntry("assets/Geist.ttf"))){assertEquals(0,in.read());assertEquals(1,in.read());assertEquals(0,in.read());assertEquals(0,in.read());}
+            String html=RuntimeInstaller.read(zip.getInputStream(zip.getEntry("assets/engine.html")),65536);assertTrue(html.contains("font-src 'self'"));assertTrue(html.contains("<title>Inkvoy</title>"));
+            String css=RuntimeInstaller.read(zip.getInputStream(zip.getEntry("assets/app.css")),1048576);assertTrue(css.contains(".command-deck"));assertTrue(css.contains(".ledger-heading"));assertTrue(css.contains("Geist.ttf"));
+        }
+    }
     @Test public void realApkManifestLoadsAndArchiveOpens()throws Exception {
         Context context=RuntimeEnvironment.getApplication();
         File apk=apk();

@@ -1,0 +1,46 @@
+{
+  "version": "4.0.0",
+  "date": "2026-10-22T16:02:40.298Z",
+  "productionAssets": true,
+  "native": "Desktop deterministic Native/model fixtures. No device or real account. Browser slot is a native-surface placeholder.",
+  "viewports": [
+    {
+      "width": 390,
+      "height": 844
+    },
+    {
+      "width": 844,
+      "height": 390
+    },
+    {
+      "width": 1440,
+      "height": 960
+    }
+  ],
+  "files": [
+    "preview/4.0.0/research-phone.png",
+    "preview/4.0.0/research-phone-dark.png",
+    "preview/4.0.0/research-drawer.png",
+    "preview/4.0.0/research-command.png",
+    "preview/4.0.0/research-models.png",
+    "preview/4.0.0/research-files.png",
+    "preview/4.0.0/research-editor.png",
+    "preview/4.0.0/research-terminal.png",
+    "preview/4.0.0/research-terminal-running.png",
+    "preview/4.0.0/research-tools.png",
+    "preview/4.0.0/research-accounts.png",
+    "preview/4.0.0/research-extensions.png",
+    "preview/4.0.0/research-mcp-form.png",
+    "preview/4.0.0/research-skills.png",
+    "preview/4.0.0/research-home.png",
+    "preview/4.0.0/research-settings-appearance.png",
+    "preview/4.0.0/research-settings-scale.png",
+    "preview/4.0.0/research-settings-motion.png",
+    "preview/4.0.0/research-split-phone.png",
+    "preview/4.0.0/research-split-landscape.png",
+    "preview/4.0.0/research-wide.png",
+    "preview/4.0.0/research-models-wide.png",
+    "preview/4.0.0/research-working.png",
+    "preview/4.0.0/research-motion.webm"
+  ]
+}
