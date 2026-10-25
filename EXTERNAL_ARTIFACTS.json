@@ -1,5 +1,5 @@
 {
-  "version": "2.4.1",
+  "version": "2.4.2",
   "files": [
     {
       "path": "app/src/main/assets/runtime/debian-arm64.tar.gz",
@@ -15,6 +15,11 @@
       "path": "test/android-runtime/lib/monitor.jar",
       "bytes": 119278,
       "sha256": "343391452abb133d044d8e5665ef2e2e670412a5c8a0f0ee992db9ecea7c7896"
+    },
+    {
+      "path": "third_party/debian-sources/Sources.xz",
+      "bytes": 10540436,
+      "sha256": "6002f81f463a2d976d84b34170367cc16da2d60bd0ba9ab9d868d6e1c1a935d9"
     },
     {
       "path": "third_party/debian-sources/acl_2.3.2-2.debian.tar.xz",
@@ -8065,11 +8070,6 @@
       "path": "third_party/debian-sources/shadow_4.17.4.orig.tar.xz",
       "bytes": 2326584,
       "sha256": "554801054694ff7d8a7abdf0d6ece34e2f16e111673cc01b8c9ee1278451181e"
-    },
-    {
-      "path": "third_party/debian-sources/Sources.xz",
-      "bytes": 10540436,
-      "sha256": "6002f81f463a2d976d84b34170367cc16da2d60bd0ba9ab9d868d6e1c1a935d9"
     },
     {
       "path": "third_party/debian-sources/sqlite3_3.46.1-7+deb13u2.debian.tar.xz",

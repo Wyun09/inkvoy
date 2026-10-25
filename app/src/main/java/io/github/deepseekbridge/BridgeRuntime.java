@@ -95,7 +95,7 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
     }
     private void createEngine() {
         engineEpoch++;
-        engine = new WebView(context);
+        engine = new WebView(browserContext);
         keepRenderer(engine);
         engine.getSettings().setJavaScriptEnabled(true);
         engine.getSettings().setDomStorageEnabled(true);
@@ -183,7 +183,7 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
     public void resumeWebviews(){if(destroyed)return;browser.onResume();engine.onResume();}
     public void publishUi() { try { js("BridgeDashboard.render(" + snapshot() + ")"); } catch (JSONException ignored) {} }
     public JSONObject snapshot() throws JSONException {
-        return new JSONObject().put("version", "2.4.1").put("ready", ready).put("running", running)
+        return new JSONObject().put("version", "2.4.2").put("ready", ready).put("running", running)
             .put("loggedIn", loggedIn).put("hasInspection", hasInspection).put("needsVerification", needsVerification)
             .put("inspecting", inspecting).put("reasoningMode", reasoningMode).put("busy", !completions.isEmpty() || taskboard.optInt("active") > 0)
             .put("webSearchMode", webSearchMode).put("webSearchDefault", webSearchDefault)
@@ -202,7 +202,7 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
         js("AndroidEngine.resetConversations()");
     }
     public JSONObject diagnostics() throws JSONException {
-        return new JSONObject().put("version", "2.4.1").put("running", running).put("ready", ready).put("loggedIn", loggedIn)
+        return new JSONObject().put("version", "2.4.2").put("running", running).put("ready", ready).put("loggedIn", loggedIn)
             .put("storage", new JSONObject(localState.status())).put("agentStrict", agentStrict)
             .put("requests", taskboard.optInt("totalRequests")).put("active", taskboard.optInt("active"))
             .put("trackedSessions", conversations.optInt("tracked")).put("reused", conversations.optInt("reused"));

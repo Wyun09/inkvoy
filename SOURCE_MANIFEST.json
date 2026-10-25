@@ -8,27 +8,31 @@
     "bytes": 1045
   },
   "CORE_PROVENANCE.json": {
-    "sha256": "d7927ac085dff506d0bb68f3cdbe94ba32034573b7572fc3b8f9c3734f07351b",
-    "bytes": 6155
+    "sha256": "8cb4ab63dcfb72c5cea9cd5bb1f23b648f569a71fafb3667bb4f66e55705bcce",
+    "bytes": 6554
   },
   "FIX_2.4.1.md": {
     "sha256": "a2c998c0e0d5e0c1d740a8dad096baf7219cf490f51b972a34c67fe932137305",
     "bytes": 2985
   },
+  "FIX_2.4.2.md": {
+    "sha256": "261a96aa44b99813865f388b21fc1aa1024ab621bf37a98a863b74c9ea06e7f3",
+    "bytes": 2020
+  },
   "README.md": {
-    "sha256": "be91f6548ab1e4222025254e38c0c7f0afcf8d151f9f6d941f17304111cfb58b",
-    "bytes": 15705
+    "sha256": "7721fc3092ffd3d23e44303e93243cc0e8a01b387efbecd9c2c298ed40044c8c",
+    "bytes": 16082
   },
   "THIRD_PARTY_NOTICES.md": {
     "sha256": "d101f82823d0d64d4c88cbccac6819dc6274ec193d4e7e792d996a0e8c6803aa",
     "bytes": 105574
   },
   "VERIFICATION.md": {
-    "sha256": "b23799115aebf22d053d43de73f814c17c6c652e5d11da137ee91437336c1a80",
-    "bytes": 4174
+    "sha256": "f2a5358745d96fd4c15239b9af047fb3f5f6e69dcb1ab6c849c5a67e1888bb60",
+    "bytes": 1613
   },
   "app/src/main/AndroidManifest.xml": {
-    "sha256": "2655466769ef44d72d3963c3f18d2473212ff6a4957dd9f979f63db169c60035",
+    "sha256": "eaf21d1b03336f1581563a357f1c80517439c21ffc925df0265b506358ed9ab1",
     "bytes": 2277
   },
   "app/src/main/assets/NOTICE.txt": {
@@ -48,8 +52,8 @@
     "bytes": 1007507
   },
   "app/src/main/assets/engine.bundle.js": {
-    "sha256": "100fed6ac12ac9121bb8711ab841bc3ad9a558359281fe3b39067cfa1c1b5499",
-    "bytes": 1475461
+    "sha256": "82e98d3b5ede0e1900aa34f678a7de18750b22325add0e10827eff773d2bded2",
+    "bytes": 1493312
   },
   "app/src/main/assets/engine.html": {
     "sha256": "a66812b19e9c619f80fb8a2b3bd7302c4c418ec9c48fbf69a8534c5d2495dd01",
@@ -80,8 +84,8 @@
     "bytes": 3044
   },
   "app/src/main/java/io/github/deepseekbridge/BridgeRuntime.java": {
-    "sha256": "b95e312eb914ddc3781e2cdf6d5c8987b9f7b9751f740427f91038774188e8fb",
-    "bytes": 39256
+    "sha256": "b97509daa831386dde024e429a25ddbfe8cea9160e290b48c37e859d9c44c875",
+    "bytes": 39263
   },
   "app/src/main/java/io/github/deepseekbridge/BridgeService.java": {
     "sha256": "1b78438fcecdfea7f6f20c7acb6ca932f97209e2cf0daebabbaa8a66d5e3368e",
@@ -92,12 +96,12 @@
     "bytes": 5358
   },
   "app/src/main/java/io/github/deepseekbridge/ComputerBrowser.java": {
-    "sha256": "83edc813a6671e9579e46edf558e73afe760f058435f14a543b995819cdae56f",
-    "bytes": 34323
+    "sha256": "a060b6e16ef3c72f9e1ac78f8a579490383b068fb36988223b4f7ce9aa285d04",
+    "bytes": 34484
   },
   "app/src/main/java/io/github/deepseekbridge/CrashDiagnostics.java": {
-    "sha256": "13fab03b485a2ca303d9e9fb093377fd8f55089cc71341b91cade56ce95eeafc",
-    "bytes": 1832
+    "sha256": "3d02f216a666f6d8a93db160c6da9a56f55788e7db676743f3ad00ee6b3cd2a7",
+    "bytes": 2105
   },
   "app/src/main/java/io/github/deepseekbridge/DisplayMode.java": {
     "sha256": "4cabdb7d7384d05212497d9fc25cb5eccd30c03186ace9beec4cce9457adb74c",
@@ -252,8 +256,8 @@
     "bytes": 2043
   },
   "js/client.js": {
-    "sha256": "29433d09d09e994be61edb7c810eebfee0098652ac38c6183e60de8f90ef68e6",
-    "bytes": 18335
+    "sha256": "504dcb0190a77fa02043bb8298a5d4547e93302f78b4f01e2f1339ed2593f001",
+    "bytes": 18341
   },
   "js/conversation-dom.js": {
     "sha256": "a898404f1372a7e39b02e14698c45e24219b5928dafc7eaa80808b2cf63c5ab8",
@@ -404,7 +408,7 @@
     "bytes": 19464
   },
   "js/ui/studio.js": {
-    "sha256": "39947137a044dbef8745710dede357dd228e29135e992a774bcecf53d806e7ca",
+    "sha256": "76a53ddacdfe53a7ee405d650a4ff33b0ef916f7cf44d30f2785537e92e4f5c3",
     "bytes": 39322
   },
   "js/ui/thread.css": {
@@ -420,11 +424,11 @@
     "bytes": 4661
   },
   "package-lock.json": {
-    "sha256": "56c8c02360f631caa6397adfbbd39bd9c3d2843cb2122365cee2771043acf2fb",
+    "sha256": "cc313e6f80cb24b5b384028c3d7726ad1d555ff7b0f0c6c0392412de98474c0c",
     "bytes": 20612
   },
   "package.json": {
-    "sha256": "82fc8769630dab118935b9fa1a04f808240fecc9619b571bc9447550ceeaa78d",
+    "sha256": "3d7a3470213dfc0dfaebb1e6e60015b62e954dc84d8a05f2a844e26cf1527fa5",
     "bytes": 573
   },
   "preview/README.md": {
@@ -612,8 +616,8 @@
     "bytes": 25200
   },
   "release.json": {
-    "sha256": "487ff6d30cddef4d4e672fa33293312209af8323116e1fec1b62cdd7bb5d8139",
-    "bytes": 13186
+    "sha256": "695c568d41990cc87b0e356407c96afbe55be623efd61dd61a1f1a5b48df8645",
+    "bytes": 13402
   },
   "scripts/benchmark-ui.mjs": {
     "sha256": "e736b7760cb090668ad7d24baefdb2f602acc9f2bc10f5ede9b49fd0234aec01",
@@ -820,20 +824,24 @@
     "bytes": 663
   },
   "test/android-runtime/pom.xml": {
-    "sha256": "752468bd892bdfc2033027c7fc772eaa996bd7d6b872f4f556d60316ed282b99",
+    "sha256": "7e54678a0eb4f1213a0c5cd89c173d25f625eb8850ede0031fe2dbac38101149",
     "bytes": 2356
   },
   "test/android-runtime/src/test/java/io/github/deepseekbridge/AccessSettingsTest.java": {
     "sha256": "e5f286e3ced67383b661c424f48b63f23ef709e38a1017fe8297f533bc94b529",
     "bytes": 3315
   },
+  "test/android-runtime/src/test/java/io/github/deepseekbridge/BrowserImeRegressionTest.java": {
+    "sha256": "9c269a702f8e63aa1453fbd8d8aeaa40ec4250825683941631b8943124883be1",
+    "bytes": 6293
+  },
   "test/android-runtime/src/test/java/io/github/deepseekbridge/ChatMediaTest.java": {
     "sha256": "742cffcefc6248b148e72a601dce82101ac99035d19786ebeebeb213bdb9e92f",
     "bytes": 2083
   },
   "test/android-runtime/src/test/java/io/github/deepseekbridge/ComputerBrowserTest.java": {
-    "sha256": "ab37bd03edbd0f54b452aff8555cd9f18e90d3dfc585cdcb84e6fbc0920e398f",
-    "bytes": 14046
+    "sha256": "0deb548cda54c7a513628c43942b654f3efcbe4255301c331ef614a76c802105",
+    "bytes": 15264
   },
   "test/android-runtime/src/test/java/io/github/deepseekbridge/DisplayModeTest.java": {
     "sha256": "b93adad34594781ec445c2206111dc5fab385119782b1e2ebf215ac369f9294a",
@@ -888,8 +896,8 @@
     "bytes": 1302
   },
   "test/client.test.mjs": {
-    "sha256": "452f4513916d9a8e99df06202dfa8d2f6a7da1cd56098bfae927099677690746",
-    "bytes": 14533
+    "sha256": "0a3ffa53332e64d2fd5de3e04cbacb0961ba548a2d8ecde3a16ed48fb3eefde4",
+    "bytes": 15011
   },
   "test/companion-state.test.mjs": {
     "sha256": "ebecf06c34d9e3e43fb0bdab4334fa3e2b02e31b0a1897429ab2fe80d3cba4ef",
@@ -3487,6 +3495,10 @@
     "sha256": "5733de07cc0a7bd15992f62a44684001fc8a6657e51c72cb6312e595fb7d5659",
     "bytes": 1420
   },
+  "verification/android-242-full.log": {
+    "sha256": "c0a51e37767b96b6d1fa30657b4229581649693a63ec7f957926727acea7ad0d",
+    "bytes": 13269
+  },
   "verification/android-runtime-2.0.2-results.json": {
     "sha256": "3c550b5e93cdff53d6bd0c33db3e05bf1279f27882f4099b4fd95955b8b222f8",
     "bytes": 2514
@@ -3548,7 +3560,7 @@
     "bytes": 2715
   },
   "verification/apk-payload.json": {
-    "sha256": "3f947776785dec0e9c8cb6c35cdba3512a9692058a15dd00d1e83f6916c04a5c",
+    "sha256": "a691eb0c9c7163276a74c62f9a5354679318ae1fb3dbe9f56ee936933a701c6a",
     "bytes": 1754
   },
   "verification/artifact-cleanup-230.json": {
@@ -3599,9 +3611,21 @@
     "sha256": "87f7e6ea41a55c6ec461eaff1fb3bef05cc39589da9f9fe2c072e03a3ed1be0e",
     "bytes": 118
   },
+  "verification/ime-242-negative-control.log": {
+    "sha256": "deb22bc2ead52d56c72c7cbac361cff5103ad4991395173223b6f5778cf80261",
+    "bytes": 10072
+  },
+  "verification/ime-242-regression.log": {
+    "sha256": "b0caac330e064ac39c7e8dbafd38341664b15a9f22606de516f42a8674fc68ac",
+    "bytes": 4043
+  },
   "verification/javascript-231-full-baseline.log": {
     "sha256": "5d6f17f30cee4407bd3cd7d37cf6d7dd44d1782921ef1ba1409e5cb91fae89c7",
     "bytes": 26662
+  },
+  "verification/javascript-242-full.log": {
+    "sha256": "441d18f2d0f23fea901851ae8308c6fec396ef56966fb32081baa65434856c28",
+    "bytes": 27480
   },
   "verification/javascript-tests.log": {
     "sha256": "96a3328ff698a0a802741591caea6fdb302198ecbc59a78a3986008c7b2df081",
@@ -3650,6 +3674,10 @@
   "verification/regression-241.json": {
     "sha256": "b418a9c09bf9e9ffa8269355a98bfd917951c22f6996e480682eb5ac5ed90a1a",
     "bytes": 2827
+  },
+  "verification/regression-242.json": {
+    "sha256": "b48a4d45823fd8f390d1f283ae11fded8fc3b048319c2c5a3d52b958261e0b98",
+    "bytes": 2066
   },
   "verification/runtime-image.json": {
     "sha256": "5a7e67ec1ff7dda18a63e000f7c637a707a739afc159d4f0d63f52379a2e939f",

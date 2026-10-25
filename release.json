@@ -1,11 +1,11 @@
 {
-  "version": "2.4.1",
-  "versionCode": 18,
+  "version": "2.4.2",
+  "versionCode": 19,
   "buildDate": "2026-10-20",
   "package": "io.github.deepseekbridge",
-  "apk": "deepseek-android-bridge-v2.4.1.apk",
-  "bytes": 615843759,
-  "sha256": "b84db9e1e9eb86ceb0e38e03ba9dab97673f4d8b4a7e5cb5a862174e3c581c96",
+  "apk": "deepseek-android-bridge-v2.4.2.apk",
+  "bytes": 615847855,
+  "sha256": "cd23cae9fc8a35ee1060ac9a13d776df7a5103a1bf7f41cbe7952ed0e524cad6",
   "signerSha256": "cc8f15b569d5e813c68d49f4fa17d19afbe6f7526ef5dbdade88e317116c2b59",
   "minSdk": 26,
   "targetSdk": 35,
@@ -89,7 +89,7 @@
     }
   },
   "verification": {
-    "javascript": 290,
+    "javascript": 291,
     "transportHost": 35,
     "storageHost": 11,
     "workspaceHost": 23,
@@ -103,7 +103,7 @@
     "lockScreenBackground": false,
     "androidFrameworkNativeSqlite": 12,
     "physicalAndroidDevice": false,
-    "androidFrameworkRegression": 123,
+    "androidFrameworkRegression": 131,
     "androidRuntimeAssets": 10,
     "androidPermissions": 5,
     "rawZipPathsPortable": true,
@@ -113,24 +113,25 @@
     "androidFileRevisions": 20,
     "androidResponsiveness": 6,
     "androidProviderHttp": 8,
-    "androidComputerUse": 30,
+    "androidComputerUse": 32,
     "androidChatMedia": 6,
     "androidManagedProcesses": 14,
     "androidDisplayModes": 4,
     "postLayoutUiRegression": 3,
     "currentRun": [
-      "Full JavaScript suite 290 on the 2.4 feature branch; unchanged by the native navigation patch",
-      "Final 2.4.1 production UI regression 3",
-      "Final 2.4.1 APK Android API 26/33 suite 123",
-      "Final 2.4.1 APK source payload, signing and archive checks"
-    ]
+      "Full JavaScript suite 291",
+      "Final signed APK Android API 26/33 suite 131",
+      "Production InputConnection wrapper and expected-failure negative control",
+      "Signed APK payload, metadata and archive checks"
+    ],
+    "androidImeThread": 6
   },
   "debianSources": {
     "packages": 465,
     "files": 2145,
     "bytes": 1134408545
   },
-  "fix": "Grounded browser target refs, verified native editing/deletion, cooperative human priority, committed navigation, visible cursor, zoom, persistent orientation, resizable split workspace, chunked verified image upload and direct API forms.",
+  "fix": "Manual IME input notifications and browser state emission are dispatched to the UI thread; original Chromium input threading is preserved. Crash reports show the installed version. Default local Agent model rounds are unbounded.",
   "ui": {
     "reference": "https://github.com/assistant-ui/assistant-ui",
     "commit": "e97f7c61365ef0f73686c7b596751802f1a1ddd2",
@@ -336,7 +337,9 @@
       70
     ],
     "scrollImplementation": "Original whole-page scrollBy retained",
-    "commitCallbackGate": "onPageCommitVisible or matching onPageFinished; onPageStarted remains pending"
+    "commitCallbackGate": "onPageCommitVisible or matching onPageFinished; onPageStarted remains pending",
+    "imeNotificationsOnMainThread": true,
+    "chromiumInputThreadPreserved": true
   },
   "webSearch": {
     "tool": "web_search",
@@ -427,5 +430,11 @@
     ],
     "separateAddButton": true,
     "activation": "explicit save only"
+  },
+  "localAgent": {
+    "defaultModelRoundLimit": null,
+    "explicitStop": true,
+    "durableToolJournal": true,
+    "invalidProgressGuard": true
   }
 }

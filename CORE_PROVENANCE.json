@@ -1,5 +1,5 @@
 {
-  "version": "2.4.1",
+  "version": "2.4.2",
   "source": "deepseek-web-bridge v0.2.2",
   "method": "Supplied Android sources include mobile page hooks, validated tool protocol, current-turn DOM boundaries and stable output buffering. No desktop bridge or Harness was modified.",
   "modules": {
@@ -52,8 +52,8 @@
     "js/conversation-dom.js": "a898404f1372a7e39b02e14698c45e24219b5928dafc7eaa80808b2cf63c5ab8",
     "js/tasks.js": "1567d992f13df107d3a260fd65e6fdc23af33fb72c6b10a3a74960647fa53892",
     "js/engine.js": "5b2772972d7801148d7991f4da1cd4917acce5d66fd671895968ed49f4d4c5e7",
-    "js/client.js": "29433d09d09e994be61edb7c810eebfee0098652ac38c6183e60de8f90ef68e6",
-    "js/ui/studio.js": "39947137a044dbef8745710dede357dd228e29135e992a774bcecf53d806e7ca",
+    "js/client.js": "504dcb0190a77fa02043bb8298a5d4547e93302f78b4f01e2f1339ed2593f001",
+    "js/ui/studio.js": "76a53ddacdfe53a7ee405d650a4ff33b0ef916f7cf44d30f2785537e92e4f5c3",
     "js/ui/companion.js": "31fd623a6b423a3e76e80c6ee38869bd55286a489fa3ea4e115d664cf7a1f7bd",
     "js/ui/reply-model.js": "59c85b9ac02cb6e454af355df9d4816df081f51af6323048077bf65467316e4a",
     "js/ui/replies.js": "c4fdd7c1edd8994add71224154d8fff266e2a79464a23e71809cdbf039091295",
@@ -90,5 +90,10 @@
     "Android submission hook clicks one verified send control; default desktop Enter contract is retained in the shared class.",
     "A state read ending at the submission deadline reports unconfirmed submission consistently, without resubmission.",
     "Unknown, contradictory and ambiguous state remains an explicit error."
+  ],
+  "nativeInputPatch": [
+    "Route humanActivity and emit notifications to main Looper before WebView access.",
+    "Delegate original input connection operations on the original Chromium handler.",
+    "Exercise production PageWebView wrapper on InputConnectionHandlerThread at API 26 and 33."
   ]
 }

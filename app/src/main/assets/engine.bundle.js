@@ -86,9 +86,9 @@
     }
   });
 
-  // node_modules/ajv/dist/compile/codegen/code.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/codegen/code.js
   var require_code = __commonJS({
-    "node_modules/ajv/dist/compile/codegen/code.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/codegen/code.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.regexpCode = exports.getEsmExportName = exports.getProperty = exports.safeStringify = exports.stringify = exports.strConcat = exports.addCodeArg = exports.str = exports._ = exports.nil = exports._Code = exports.Name = exports.IDENTIFIER = exports._CodeOrName = void 0;
@@ -240,9 +240,9 @@
     }
   });
 
-  // node_modules/ajv/dist/compile/codegen/scope.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/codegen/scope.js
   var require_scope = __commonJS({
-    "node_modules/ajv/dist/compile/codegen/scope.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/codegen/scope.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.ValueScope = exports.ValueScopeName = exports.Scope = exports.varKinds = exports.UsedValueState = void 0;
@@ -385,9 +385,9 @@
     }
   });
 
-  // node_modules/ajv/dist/compile/codegen/index.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/codegen/index.js
   var require_codegen = __commonJS({
-    "node_modules/ajv/dist/compile/codegen/index.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/codegen/index.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.or = exports.and = exports.not = exports.CodeGen = exports.operators = exports.varKinds = exports.ValueScopeName = exports.ValueScope = exports.Scope = exports.Name = exports.regexpCode = exports.stringify = exports.getProperty = exports.nil = exports.strConcat = exports.str = exports._ = void 0;
@@ -1105,9 +1105,9 @@
     }
   });
 
-  // node_modules/ajv/dist/compile/util.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/util.js
   var require_util = __commonJS({
-    "node_modules/ajv/dist/compile/util.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/util.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.checkStrictMode = exports.getErrorPath = exports.Type = exports.useFunc = exports.setEvaluated = exports.evaluatedPropsToName = exports.mergeEvaluated = exports.eachItem = exports.unescapeJsonPointer = exports.escapeJsonPointer = exports.escapeFragment = exports.unescapeFragment = exports.schemaRefOrVal = exports.schemaHasRulesButRef = exports.schemaHasRules = exports.checkUnknownRules = exports.alwaysValidSchema = exports.toHash = void 0;
@@ -1272,9 +1272,9 @@
     }
   });
 
-  // node_modules/ajv/dist/compile/names.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/names.js
   var require_names = __commonJS({
-    "node_modules/ajv/dist/compile/names.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/names.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var codegen_1 = require_codegen();
@@ -1311,9 +1311,9 @@
     }
   });
 
-  // node_modules/ajv/dist/compile/errors.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/errors.js
   var require_errors = __commonJS({
-    "node_modules/ajv/dist/compile/errors.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/errors.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.extendErrors = exports.resetErrorsCount = exports.reportExtraError = exports.reportError = exports.keyword$DataError = exports.keywordError = void 0;
@@ -1433,9 +1433,9 @@
     }
   });
 
-  // node_modules/ajv/dist/compile/validate/boolSchema.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/validate/boolSchema.js
   var require_boolSchema = __commonJS({
-    "node_modules/ajv/dist/compile/validate/boolSchema.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/validate/boolSchema.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.boolOrEmptySchema = exports.topBoolOrEmptySchema = void 0;
@@ -1484,9 +1484,9 @@
     }
   });
 
-  // node_modules/ajv/dist/compile/rules.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/rules.js
   var require_rules = __commonJS({
-    "node_modules/ajv/dist/compile/rules.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/rules.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.getRules = exports.isJSONType = void 0;
@@ -1515,9 +1515,9 @@
     }
   });
 
-  // node_modules/ajv/dist/compile/validate/applicability.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/validate/applicability.js
   var require_applicability = __commonJS({
-    "node_modules/ajv/dist/compile/validate/applicability.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/validate/applicability.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.shouldUseRule = exports.shouldUseGroup = exports.schemaHasRulesForType = void 0;
@@ -1538,9 +1538,9 @@
     }
   });
 
-  // node_modules/ajv/dist/compile/validate/dataType.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/validate/dataType.js
   var require_dataType = __commonJS({
-    "node_modules/ajv/dist/compile/validate/dataType.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/validate/dataType.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.reportTypeError = exports.checkDataTypes = exports.checkDataType = exports.coerceAndCheckDataType = exports.getJSONTypes = exports.getSchemaTypes = exports.DataType = void 0;
@@ -1722,9 +1722,9 @@
     }
   });
 
-  // node_modules/ajv/dist/compile/validate/defaults.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/validate/defaults.js
   var require_defaults = __commonJS({
-    "node_modules/ajv/dist/compile/validate/defaults.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/validate/defaults.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.assignDefaults = void 0;
@@ -1759,9 +1759,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/code.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/code.js
   var require_code2 = __commonJS({
-    "node_modules/ajv/dist/vocabularies/code.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/code.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.validateUnion = exports.validateArray = exports.usePattern = exports.callValidateCode = exports.schemaProperties = exports.allSchemaProperties = exports.noPropertyInData = exports.propertyInData = exports.isOwnProperty = exports.hasPropFunc = exports.reportMissingProp = exports.checkMissingProp = exports.checkReportMissingProp = void 0;
@@ -1892,9 +1892,9 @@
     }
   });
 
-  // node_modules/ajv/dist/compile/validate/keyword.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/validate/keyword.js
   var require_keyword = __commonJS({
-    "node_modules/ajv/dist/compile/validate/keyword.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/validate/keyword.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.validateKeywordUsage = exports.validSchemaType = exports.funcKeywordCode = exports.macroKeywordCode = void 0;
@@ -2010,9 +2010,9 @@
     }
   });
 
-  // node_modules/ajv/dist/compile/validate/subschema.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/validate/subschema.js
   var require_subschema = __commonJS({
-    "node_modules/ajv/dist/compile/validate/subschema.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/validate/subschema.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.extendSubschemaMode = exports.extendSubschemaData = exports.getSubschema = void 0;
@@ -2093,9 +2093,9 @@
     }
   });
 
-  // node_modules/fast-deep-equal/index.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/fast-deep-equal/index.js
   var require_fast_deep_equal = __commonJS({
-    "node_modules/fast-deep-equal/index.js"(exports, module) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/fast-deep-equal/index.js"(exports, module) {
       "use strict";
       module.exports = function equal(a3, b2) {
         if (a3 === b2) return true;
@@ -2128,9 +2128,9 @@
     }
   });
 
-  // node_modules/json-schema-traverse/index.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/json-schema-traverse/index.js
   var require_json_schema_traverse = __commonJS({
-    "node_modules/json-schema-traverse/index.js"(exports, module) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/json-schema-traverse/index.js"(exports, module) {
       "use strict";
       var traverse = module.exports = function(schema, opts, cb) {
         if (typeof opts == "function") {
@@ -2216,9 +2216,9 @@
     }
   });
 
-  // node_modules/ajv/dist/compile/resolve.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/resolve.js
   var require_resolve = __commonJS({
-    "node_modules/ajv/dist/compile/resolve.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/resolve.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.getSchemaRefs = exports.resolveUrl = exports.normalizeId = exports._getFullPath = exports.getFullPath = exports.inlineRef = void 0;
@@ -2372,9 +2372,9 @@
     }
   });
 
-  // node_modules/ajv/dist/compile/validate/index.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/validate/index.js
   var require_validate = __commonJS({
-    "node_modules/ajv/dist/compile/validate/index.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/validate/index.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.getData = exports.KeywordCxt = exports.validateFunctionCode = void 0;
@@ -2880,9 +2880,9 @@
     }
   });
 
-  // node_modules/ajv/dist/runtime/validation_error.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/runtime/validation_error.js
   var require_validation_error = __commonJS({
-    "node_modules/ajv/dist/runtime/validation_error.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/runtime/validation_error.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var ValidationError = class extends Error {
@@ -2896,9 +2896,9 @@
     }
   });
 
-  // node_modules/ajv/dist/compile/ref_error.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/ref_error.js
   var require_ref_error = __commonJS({
-    "node_modules/ajv/dist/compile/ref_error.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/ref_error.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var resolve_1 = require_resolve();
@@ -2913,9 +2913,9 @@
     }
   });
 
-  // node_modules/ajv/dist/compile/index.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/index.js
   var require_compile = __commonJS({
-    "node_modules/ajv/dist/compile/index.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/compile/index.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.resolveSchema = exports.getCompilingSchema = exports.resolveRef = exports.compileSchema = exports.SchemaEnv = void 0;
@@ -3137,9 +3137,9 @@
     }
   });
 
-  // node_modules/ajv/dist/refs/data.json
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/data.json
   var require_data = __commonJS({
-    "node_modules/ajv/dist/refs/data.json"(exports, module) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/data.json"(exports, module) {
       module.exports = {
         $id: "https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#",
         description: "Meta-schema for $data reference (JSON AnySchema extension proposal)",
@@ -3156,9 +3156,9 @@
     }
   });
 
-  // node_modules/fast-uri/lib/utils.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/fast-uri/lib/utils.js
   var require_utils = __commonJS({
-    "node_modules/fast-uri/lib/utils.js"(exports, module) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/fast-uri/lib/utils.js"(exports, module) {
       "use strict";
       var isUUID = RegExp.prototype.test.bind(/^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$/iu);
       var isIPv4 = RegExp.prototype.test.bind(/^(?:(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)$/u);
@@ -3658,9 +3658,9 @@
     }
   });
 
-  // node_modules/fast-uri/lib/schemes.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/fast-uri/lib/schemes.js
   var require_schemes = __commonJS({
-    "node_modules/fast-uri/lib/schemes.js"(exports, module) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/fast-uri/lib/schemes.js"(exports, module) {
       "use strict";
       var { isUUID } = require_utils();
       var URN_REG = /^([\da-z][\d\-a-z]{0,31}):((?:[\w!$'()*+,\-./:;=@]|%[\da-f]{2})+)$/iu;
@@ -3869,9 +3869,9 @@
     }
   });
 
-  // node_modules/fast-uri/index.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/fast-uri/index.js
   var require_fast_uri = __commonJS({
-    "node_modules/fast-uri/index.js"(exports, module) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/fast-uri/index.js"(exports, module) {
       "use strict";
       var { normalizeIPv6, removeDotSegments, recomposeAuthority, normalizePercentEncoding, normalizePathEncoding, serializePathEncoding, normalizeQueryFragmentEncoding, encodeQuery, encodeFragment, reescapeHostDelimiters, isIPv4, nonSimpleDomain } = require_utils();
       var { SCHEMES, getSchemeHandler } = require_schemes();
@@ -4275,9 +4275,9 @@
     }
   });
 
-  // node_modules/ajv/dist/runtime/uri.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/runtime/uri.js
   var require_uri = __commonJS({
-    "node_modules/ajv/dist/runtime/uri.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/runtime/uri.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var uri = require_fast_uri();
@@ -4286,9 +4286,9 @@
     }
   });
 
-  // node_modules/ajv/dist/core.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/core.js
   var require_core = __commonJS({
-    "node_modules/ajv/dist/core.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/core.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.CodeGen = exports.Name = exports.nil = exports.stringify = exports.str = exports._ = exports.KeywordCxt = void 0;
@@ -4897,9 +4897,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/core/id.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/core/id.js
   var require_id = __commonJS({
-    "node_modules/ajv/dist/vocabularies/core/id.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/core/id.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var def = {
@@ -4912,9 +4912,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/core/ref.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/core/ref.js
   var require_ref = __commonJS({
-    "node_modules/ajv/dist/vocabularies/core/ref.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/core/ref.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.callRef = exports.getValidate = void 0;
@@ -5034,9 +5034,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/core/index.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/core/index.js
   var require_core2 = __commonJS({
-    "node_modules/ajv/dist/vocabularies/core/index.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/core/index.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var id_1 = require_id();
@@ -5055,9 +5055,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/validation/limitNumber.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/validation/limitNumber.js
   var require_limitNumber = __commonJS({
-    "node_modules/ajv/dist/vocabularies/validation/limitNumber.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/validation/limitNumber.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var codegen_1 = require_codegen();
@@ -5087,9 +5087,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/validation/multipleOf.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/validation/multipleOf.js
   var require_multipleOf = __commonJS({
-    "node_modules/ajv/dist/vocabularies/validation/multipleOf.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/validation/multipleOf.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var codegen_1 = require_codegen();
@@ -5115,9 +5115,9 @@
     }
   });
 
-  // node_modules/ajv/dist/runtime/ucs2length.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/runtime/ucs2length.js
   var require_ucs2length = __commonJS({
-    "node_modules/ajv/dist/runtime/ucs2length.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/runtime/ucs2length.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       function ucs2length(str) {
@@ -5141,9 +5141,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/validation/limitLength.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/validation/limitLength.js
   var require_limitLength = __commonJS({
-    "node_modules/ajv/dist/vocabularies/validation/limitLength.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/validation/limitLength.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var codegen_1 = require_codegen();
@@ -5173,9 +5173,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/validation/pattern.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/validation/pattern.js
   var require_pattern = __commonJS({
-    "node_modules/ajv/dist/vocabularies/validation/pattern.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/validation/pattern.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var code_1 = require_code2();
@@ -5210,9 +5210,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/validation/limitProperties.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/validation/limitProperties.js
   var require_limitProperties = __commonJS({
-    "node_modules/ajv/dist/vocabularies/validation/limitProperties.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/validation/limitProperties.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var codegen_1 = require_codegen();
@@ -5239,9 +5239,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/validation/required.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/validation/required.js
   var require_required = __commonJS({
-    "node_modules/ajv/dist/vocabularies/validation/required.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/validation/required.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var code_1 = require_code2();
@@ -5321,9 +5321,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/validation/limitItems.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/validation/limitItems.js
   var require_limitItems = __commonJS({
-    "node_modules/ajv/dist/vocabularies/validation/limitItems.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/validation/limitItems.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var codegen_1 = require_codegen();
@@ -5350,9 +5350,9 @@
     }
   });
 
-  // node_modules/ajv/dist/runtime/equal.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/runtime/equal.js
   var require_equal = __commonJS({
-    "node_modules/ajv/dist/runtime/equal.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/runtime/equal.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var equal = require_fast_deep_equal();
@@ -5361,9 +5361,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/validation/uniqueItems.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/validation/uniqueItems.js
   var require_uniqueItems = __commonJS({
-    "node_modules/ajv/dist/vocabularies/validation/uniqueItems.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/validation/uniqueItems.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var dataType_1 = require_dataType();
@@ -5428,9 +5428,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/validation/const.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/validation/const.js
   var require_const = __commonJS({
-    "node_modules/ajv/dist/vocabularies/validation/const.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/validation/const.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var codegen_1 = require_codegen();
@@ -5457,9 +5457,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/validation/enum.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/validation/enum.js
   var require_enum = __commonJS({
-    "node_modules/ajv/dist/vocabularies/validation/enum.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/validation/enum.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var codegen_1 = require_codegen();
@@ -5506,9 +5506,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/validation/index.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/validation/index.js
   var require_validation = __commonJS({
-    "node_modules/ajv/dist/vocabularies/validation/index.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/validation/index.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var limitNumber_1 = require_limitNumber();
@@ -5544,9 +5544,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/applicator/additionalItems.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/additionalItems.js
   var require_additionalItems = __commonJS({
-    "node_modules/ajv/dist/vocabularies/applicator/additionalItems.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/additionalItems.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.validateAdditionalItems = void 0;
@@ -5597,9 +5597,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/applicator/items.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/items.js
   var require_items = __commonJS({
-    "node_modules/ajv/dist/vocabularies/applicator/items.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/items.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.validateTuple = void 0;
@@ -5654,9 +5654,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/applicator/prefixItems.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/prefixItems.js
   var require_prefixItems = __commonJS({
-    "node_modules/ajv/dist/vocabularies/applicator/prefixItems.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/prefixItems.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var items_1 = require_items();
@@ -5671,9 +5671,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/applicator/items2020.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/items2020.js
   var require_items2020 = __commonJS({
-    "node_modules/ajv/dist/vocabularies/applicator/items2020.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/items2020.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var codegen_1 = require_codegen();
@@ -5706,9 +5706,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/applicator/contains.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/contains.js
   var require_contains = __commonJS({
-    "node_modules/ajv/dist/vocabularies/applicator/contains.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/contains.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var codegen_1 = require_codegen();
@@ -5800,9 +5800,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/applicator/dependencies.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/dependencies.js
   var require_dependencies = __commonJS({
-    "node_modules/ajv/dist/vocabularies/applicator/dependencies.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/dependencies.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.validateSchemaDeps = exports.validatePropertyDeps = exports.error = void 0;
@@ -5894,9 +5894,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/applicator/propertyNames.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/propertyNames.js
   var require_propertyNames = __commonJS({
-    "node_modules/ajv/dist/vocabularies/applicator/propertyNames.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/propertyNames.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var codegen_1 = require_codegen();
@@ -5937,9 +5937,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/applicator/additionalProperties.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/additionalProperties.js
   var require_additionalProperties = __commonJS({
-    "node_modules/ajv/dist/vocabularies/applicator/additionalProperties.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/additionalProperties.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var code_1 = require_code2();
@@ -6043,9 +6043,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/applicator/properties.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/properties.js
   var require_properties = __commonJS({
-    "node_modules/ajv/dist/vocabularies/applicator/properties.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/properties.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var validate_1 = require_validate();
@@ -6101,9 +6101,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/applicator/patternProperties.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/patternProperties.js
   var require_patternProperties = __commonJS({
-    "node_modules/ajv/dist/vocabularies/applicator/patternProperties.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/patternProperties.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var code_1 = require_code2();
@@ -6175,9 +6175,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/applicator/not.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/not.js
   var require_not = __commonJS({
-    "node_modules/ajv/dist/vocabularies/applicator/not.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/not.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var util_1 = require_util();
@@ -6206,9 +6206,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/applicator/anyOf.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/anyOf.js
   var require_anyOf = __commonJS({
-    "node_modules/ajv/dist/vocabularies/applicator/anyOf.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/anyOf.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var code_1 = require_code2();
@@ -6223,9 +6223,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/applicator/oneOf.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/oneOf.js
   var require_oneOf = __commonJS({
-    "node_modules/ajv/dist/vocabularies/applicator/oneOf.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/oneOf.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var codegen_1 = require_codegen();
@@ -6281,9 +6281,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/applicator/allOf.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/allOf.js
   var require_allOf = __commonJS({
-    "node_modules/ajv/dist/vocabularies/applicator/allOf.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/allOf.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var util_1 = require_util();
@@ -6308,9 +6308,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/applicator/if.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/if.js
   var require_if = __commonJS({
-    "node_modules/ajv/dist/vocabularies/applicator/if.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/if.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var codegen_1 = require_codegen();
@@ -6377,9 +6377,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/applicator/thenElse.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/thenElse.js
   var require_thenElse = __commonJS({
-    "node_modules/ajv/dist/vocabularies/applicator/thenElse.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/thenElse.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var util_1 = require_util();
@@ -6395,9 +6395,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/applicator/index.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/index.js
   var require_applicator = __commonJS({
-    "node_modules/ajv/dist/vocabularies/applicator/index.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/index.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var additionalItems_1 = require_additionalItems();
@@ -6443,9 +6443,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/format/format.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/format/format.js
   var require_format = __commonJS({
-    "node_modules/ajv/dist/vocabularies/format/format.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/format/format.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var codegen_1 = require_codegen();
@@ -6533,9 +6533,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/format/index.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/format/index.js
   var require_format2 = __commonJS({
-    "node_modules/ajv/dist/vocabularies/format/index.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/format/index.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var format_1 = require_format();
@@ -6544,9 +6544,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/metadata.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/metadata.js
   var require_metadata = __commonJS({
-    "node_modules/ajv/dist/vocabularies/metadata.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/metadata.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.contentVocabulary = exports.metadataVocabulary = void 0;
@@ -6567,9 +6567,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/draft7.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/draft7.js
   var require_draft7 = __commonJS({
-    "node_modules/ajv/dist/vocabularies/draft7.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/draft7.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var core_1 = require_core2();
@@ -6589,9 +6589,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/discriminator/types.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/discriminator/types.js
   var require_types = __commonJS({
-    "node_modules/ajv/dist/vocabularies/discriminator/types.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/discriminator/types.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.DiscrError = void 0;
@@ -6603,9 +6603,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/discriminator/index.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/discriminator/index.js
   var require_discriminator = __commonJS({
-    "node_modules/ajv/dist/vocabularies/discriminator/index.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/discriminator/index.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var codegen_1 = require_codegen();
@@ -6708,9 +6708,9 @@
     }
   });
 
-  // node_modules/ajv/dist/refs/json-schema-draft-07.json
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-draft-07.json
   var require_json_schema_draft_07 = __commonJS({
-    "node_modules/ajv/dist/refs/json-schema-draft-07.json"(exports, module) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-draft-07.json"(exports, module) {
       module.exports = {
         $schema: "http://json-schema.org/draft-07/schema#",
         $id: "http://json-schema.org/draft-07/schema#",
@@ -6865,9 +6865,9 @@
     }
   });
 
-  // node_modules/ajv/dist/ajv.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/ajv.js
   var require_ajv = __commonJS({
-    "node_modules/ajv/dist/ajv.js"(exports, module) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/ajv.js"(exports, module) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.MissingRefError = exports.ValidationError = exports.CodeGen = exports.Name = exports.nil = exports.stringify = exports.str = exports._ = exports.KeywordCxt = exports.Ajv = void 0;
@@ -6935,9 +6935,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/dynamic/dynamicAnchor.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/dynamic/dynamicAnchor.js
   var require_dynamicAnchor = __commonJS({
-    "node_modules/ajv/dist/vocabularies/dynamic/dynamicAnchor.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/dynamic/dynamicAnchor.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.dynamicAnchor = void 0;
@@ -6970,9 +6970,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/dynamic/dynamicRef.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/dynamic/dynamicRef.js
   var require_dynamicRef = __commonJS({
-    "node_modules/ajv/dist/vocabularies/dynamic/dynamicRef.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/dynamic/dynamicRef.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.dynamicRef = void 0;
@@ -7016,9 +7016,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/dynamic/recursiveAnchor.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/dynamic/recursiveAnchor.js
   var require_recursiveAnchor = __commonJS({
-    "node_modules/ajv/dist/vocabularies/dynamic/recursiveAnchor.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/dynamic/recursiveAnchor.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var dynamicAnchor_1 = require_dynamicAnchor();
@@ -7037,9 +7037,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/dynamic/recursiveRef.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/dynamic/recursiveRef.js
   var require_recursiveRef = __commonJS({
-    "node_modules/ajv/dist/vocabularies/dynamic/recursiveRef.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/dynamic/recursiveRef.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var dynamicRef_1 = require_dynamicRef();
@@ -7052,9 +7052,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/dynamic/index.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/dynamic/index.js
   var require_dynamic = __commonJS({
-    "node_modules/ajv/dist/vocabularies/dynamic/index.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/dynamic/index.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var dynamicAnchor_1 = require_dynamicAnchor();
@@ -7066,9 +7066,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/validation/dependentRequired.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/validation/dependentRequired.js
   var require_dependentRequired = __commonJS({
-    "node_modules/ajv/dist/vocabularies/validation/dependentRequired.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/validation/dependentRequired.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var dependencies_1 = require_dependencies();
@@ -7083,9 +7083,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/applicator/dependentSchemas.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/dependentSchemas.js
   var require_dependentSchemas = __commonJS({
-    "node_modules/ajv/dist/vocabularies/applicator/dependentSchemas.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/applicator/dependentSchemas.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var dependencies_1 = require_dependencies();
@@ -7099,9 +7099,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/validation/limitContains.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/validation/limitContains.js
   var require_limitContains = __commonJS({
-    "node_modules/ajv/dist/vocabularies/validation/limitContains.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/validation/limitContains.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var util_1 = require_util();
@@ -7119,9 +7119,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/next.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/next.js
   var require_next = __commonJS({
-    "node_modules/ajv/dist/vocabularies/next.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/next.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var dependentRequired_1 = require_dependentRequired();
@@ -7132,9 +7132,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/unevaluated/unevaluatedProperties.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/unevaluated/unevaluatedProperties.js
   var require_unevaluatedProperties = __commonJS({
-    "node_modules/ajv/dist/vocabularies/unevaluated/unevaluatedProperties.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/unevaluated/unevaluatedProperties.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var codegen_1 = require_codegen();
@@ -7198,9 +7198,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/unevaluated/unevaluatedItems.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/unevaluated/unevaluatedItems.js
   var require_unevaluatedItems = __commonJS({
-    "node_modules/ajv/dist/vocabularies/unevaluated/unevaluatedItems.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/unevaluated/unevaluatedItems.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var codegen_1 = require_codegen();
@@ -7242,9 +7242,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/unevaluated/index.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/unevaluated/index.js
   var require_unevaluated = __commonJS({
-    "node_modules/ajv/dist/vocabularies/unevaluated/index.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/unevaluated/index.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var unevaluatedProperties_1 = require_unevaluatedProperties();
@@ -7254,9 +7254,9 @@
     }
   });
 
-  // node_modules/ajv/dist/refs/json-schema-2019-09/schema.json
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2019-09/schema.json
   var require_schema = __commonJS({
-    "node_modules/ajv/dist/refs/json-schema-2019-09/schema.json"(exports, module) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2019-09/schema.json"(exports, module) {
       module.exports = {
         $schema: "https://json-schema.org/draft/2019-09/schema",
         $id: "https://json-schema.org/draft/2019-09/schema",
@@ -7298,9 +7298,9 @@
     }
   });
 
-  // node_modules/ajv/dist/refs/json-schema-2019-09/meta/applicator.json
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2019-09/meta/applicator.json
   var require_applicator2 = __commonJS({
-    "node_modules/ajv/dist/refs/json-schema-2019-09/meta/applicator.json"(exports, module) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2019-09/meta/applicator.json"(exports, module) {
       module.exports = {
         $schema: "https://json-schema.org/draft/2019-09/schema",
         $id: "https://json-schema.org/draft/2019-09/meta/applicator",
@@ -7356,9 +7356,9 @@
     }
   });
 
-  // node_modules/ajv/dist/refs/json-schema-2019-09/meta/content.json
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2019-09/meta/content.json
   var require_content = __commonJS({
-    "node_modules/ajv/dist/refs/json-schema-2019-09/meta/content.json"(exports, module) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2019-09/meta/content.json"(exports, module) {
       module.exports = {
         $schema: "https://json-schema.org/draft/2019-09/schema",
         $id: "https://json-schema.org/draft/2019-09/meta/content",
@@ -7377,9 +7377,9 @@
     }
   });
 
-  // node_modules/ajv/dist/refs/json-schema-2019-09/meta/core.json
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2019-09/meta/core.json
   var require_core3 = __commonJS({
-    "node_modules/ajv/dist/refs/json-schema-2019-09/meta/core.json"(exports, module) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2019-09/meta/core.json"(exports, module) {
       module.exports = {
         $schema: "https://json-schema.org/draft/2019-09/schema",
         $id: "https://json-schema.org/draft/2019-09/meta/core",
@@ -7439,9 +7439,9 @@
     }
   });
 
-  // node_modules/ajv/dist/refs/json-schema-2019-09/meta/format.json
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2019-09/meta/format.json
   var require_format3 = __commonJS({
-    "node_modules/ajv/dist/refs/json-schema-2019-09/meta/format.json"(exports, module) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2019-09/meta/format.json"(exports, module) {
       module.exports = {
         $schema: "https://json-schema.org/draft/2019-09/schema",
         $id: "https://json-schema.org/draft/2019-09/meta/format",
@@ -7458,9 +7458,9 @@
     }
   });
 
-  // node_modules/ajv/dist/refs/json-schema-2019-09/meta/meta-data.json
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2019-09/meta/meta-data.json
   var require_meta_data = __commonJS({
-    "node_modules/ajv/dist/refs/json-schema-2019-09/meta/meta-data.json"(exports, module) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2019-09/meta/meta-data.json"(exports, module) {
       module.exports = {
         $schema: "https://json-schema.org/draft/2019-09/schema",
         $id: "https://json-schema.org/draft/2019-09/meta/meta-data",
@@ -7499,9 +7499,9 @@
     }
   });
 
-  // node_modules/ajv/dist/refs/json-schema-2019-09/meta/validation.json
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2019-09/meta/validation.json
   var require_validation2 = __commonJS({
-    "node_modules/ajv/dist/refs/json-schema-2019-09/meta/validation.json"(exports, module) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2019-09/meta/validation.json"(exports, module) {
       module.exports = {
         $schema: "https://json-schema.org/draft/2019-09/schema",
         $id: "https://json-schema.org/draft/2019-09/meta/validation",
@@ -7594,9 +7594,9 @@
     }
   });
 
-  // node_modules/ajv/dist/refs/json-schema-2019-09/index.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2019-09/index.js
   var require_json_schema_2019_09 = __commonJS({
-    "node_modules/ajv/dist/refs/json-schema-2019-09/index.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2019-09/index.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var metaSchema = require_schema();
@@ -7627,9 +7627,9 @@
     }
   });
 
-  // node_modules/ajv/dist/2019.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/2019.js
   var require__ = __commonJS({
-    "node_modules/ajv/dist/2019.js"(exports, module) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/2019.js"(exports, module) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.MissingRefError = exports.ValidationError = exports.CodeGen = exports.Name = exports.nil = exports.stringify = exports.str = exports._ = exports.KeywordCxt = exports.Ajv2019 = void 0;
@@ -7710,9 +7710,9 @@
     }
   });
 
-  // node_modules/ajv/dist/vocabularies/draft2020.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/draft2020.js
   var require_draft2020 = __commonJS({
-    "node_modules/ajv/dist/vocabularies/draft2020.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/vocabularies/draft2020.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var core_1 = require_core2();
@@ -7738,9 +7738,9 @@
     }
   });
 
-  // node_modules/ajv/dist/refs/json-schema-2020-12/schema.json
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2020-12/schema.json
   var require_schema2 = __commonJS({
-    "node_modules/ajv/dist/refs/json-schema-2020-12/schema.json"(exports, module) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2020-12/schema.json"(exports, module) {
       module.exports = {
         $schema: "https://json-schema.org/draft/2020-12/schema",
         $id: "https://json-schema.org/draft/2020-12/schema",
@@ -7798,9 +7798,9 @@
     }
   });
 
-  // node_modules/ajv/dist/refs/json-schema-2020-12/meta/applicator.json
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2020-12/meta/applicator.json
   var require_applicator3 = __commonJS({
-    "node_modules/ajv/dist/refs/json-schema-2020-12/meta/applicator.json"(exports, module) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2020-12/meta/applicator.json"(exports, module) {
       module.exports = {
         $schema: "https://json-schema.org/draft/2020-12/schema",
         $id: "https://json-schema.org/draft/2020-12/meta/applicator",
@@ -7851,9 +7851,9 @@
     }
   });
 
-  // node_modules/ajv/dist/refs/json-schema-2020-12/meta/unevaluated.json
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2020-12/meta/unevaluated.json
   var require_unevaluated2 = __commonJS({
-    "node_modules/ajv/dist/refs/json-schema-2020-12/meta/unevaluated.json"(exports, module) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2020-12/meta/unevaluated.json"(exports, module) {
       module.exports = {
         $schema: "https://json-schema.org/draft/2020-12/schema",
         $id: "https://json-schema.org/draft/2020-12/meta/unevaluated",
@@ -7871,9 +7871,9 @@
     }
   });
 
-  // node_modules/ajv/dist/refs/json-schema-2020-12/meta/content.json
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2020-12/meta/content.json
   var require_content2 = __commonJS({
-    "node_modules/ajv/dist/refs/json-schema-2020-12/meta/content.json"(exports, module) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2020-12/meta/content.json"(exports, module) {
       module.exports = {
         $schema: "https://json-schema.org/draft/2020-12/schema",
         $id: "https://json-schema.org/draft/2020-12/meta/content",
@@ -7892,9 +7892,9 @@
     }
   });
 
-  // node_modules/ajv/dist/refs/json-schema-2020-12/meta/core.json
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2020-12/meta/core.json
   var require_core4 = __commonJS({
-    "node_modules/ajv/dist/refs/json-schema-2020-12/meta/core.json"(exports, module) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2020-12/meta/core.json"(exports, module) {
       module.exports = {
         $schema: "https://json-schema.org/draft/2020-12/schema",
         $id: "https://json-schema.org/draft/2020-12/meta/core",
@@ -7948,9 +7948,9 @@
     }
   });
 
-  // node_modules/ajv/dist/refs/json-schema-2020-12/meta/format-annotation.json
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2020-12/meta/format-annotation.json
   var require_format_annotation = __commonJS({
-    "node_modules/ajv/dist/refs/json-schema-2020-12/meta/format-annotation.json"(exports, module) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2020-12/meta/format-annotation.json"(exports, module) {
       module.exports = {
         $schema: "https://json-schema.org/draft/2020-12/schema",
         $id: "https://json-schema.org/draft/2020-12/meta/format-annotation",
@@ -7967,9 +7967,9 @@
     }
   });
 
-  // node_modules/ajv/dist/refs/json-schema-2020-12/meta/meta-data.json
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2020-12/meta/meta-data.json
   var require_meta_data2 = __commonJS({
-    "node_modules/ajv/dist/refs/json-schema-2020-12/meta/meta-data.json"(exports, module) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2020-12/meta/meta-data.json"(exports, module) {
       module.exports = {
         $schema: "https://json-schema.org/draft/2020-12/schema",
         $id: "https://json-schema.org/draft/2020-12/meta/meta-data",
@@ -8008,9 +8008,9 @@
     }
   });
 
-  // node_modules/ajv/dist/refs/json-schema-2020-12/meta/validation.json
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2020-12/meta/validation.json
   var require_validation3 = __commonJS({
-    "node_modules/ajv/dist/refs/json-schema-2020-12/meta/validation.json"(exports, module) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2020-12/meta/validation.json"(exports, module) {
       module.exports = {
         $schema: "https://json-schema.org/draft/2020-12/schema",
         $id: "https://json-schema.org/draft/2020-12/meta/validation",
@@ -8103,9 +8103,9 @@
     }
   });
 
-  // node_modules/ajv/dist/refs/json-schema-2020-12/index.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2020-12/index.js
   var require_json_schema_2020_12 = __commonJS({
-    "node_modules/ajv/dist/refs/json-schema-2020-12/index.js"(exports) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/refs/json-schema-2020-12/index.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var metaSchema = require_schema2();
@@ -8138,9 +8138,9 @@
     }
   });
 
-  // node_modules/ajv/dist/2020.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/2020.js
   var require__2 = __commonJS({
-    "node_modules/ajv/dist/2020.js"(exports, module) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/ajv/dist/2020.js"(exports, module) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.MissingRefError = exports.ValidationError = exports.CodeGen = exports.Name = exports.nil = exports.stringify = exports.str = exports._ = exports.KeywordCxt = exports.Ajv2020 = void 0;
@@ -8215,9 +8215,9 @@
     }
   });
 
-  // node_modules/highlight.js/lib/core.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/highlight.js/lib/core.js
   var require_core5 = __commonJS({
-    "node_modules/highlight.js/lib/core.js"(exports, module) {
+    "C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/highlight.js/lib/core.js"(exports, module) {
       function deepFreeze(obj) {
         if (obj instanceof Map) {
           obj.clear = obj.delete = obj.set = function() {
@@ -13657,7 +13657,7 @@ data: [DONE]
     return typeof text2 === "string" && text2.length < 1400 && !text2.includes("```") && /(?:我(?:来先|先|将先|会先|继续|来)(?:[^。\n]{0,80})(?:查看|检查|确认|读取|勘察|搭建|核实|列出|补齐)|(?:I(?:'ll| will)|Let me|I am going to)\s+(?:first\s+)?(?:inspect|check|read|create|build|implement|review|continue))/i.test(text2);
   }
   function createClient({ request, cancel, native, agentTools: agentTools2, initialState: initialState2 = {}, saveState = () => true, onChange = () => {
-  }, modelInfo = () => ({ name: "DeepSeek", model: "deepseek-web", source: "web" }), maxSteps = 30 }) {
+  }, modelInfo = () => ({ name: "DeepSeek", model: "deepseek-web", source: "web" }), maxSteps = Infinity }) {
     const sessions = Array.isArray(initialState2.sessions) ? initialState2.sessions.filter((s15) => s15 && typeof s15.id === "string" && Array.isArray(s15.messages)).slice(0, 32) : [];
     for (const s15 of sessions) {
       s15.settings = { agent: true, thinking: false, search: true, ...s15.settings };
@@ -14025,7 +14025,7 @@ data: [DONE]
     } };
   }
 
-  // node_modules/@xterm/xterm/lib/xterm.mjs
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/@xterm/xterm/lib/xterm.mjs
   var zs = Object.defineProperty;
   var Rl = Object.getOwnPropertyDescriptor;
   var Ll = (s15, t) => {
@@ -23140,7 +23140,7 @@ ${h3.join(`
     }
   };
 
-  // node_modules/@xterm/addon-fit/lib/addon-fit.mjs
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/@xterm/addon-fit/lib/addon-fit.mjs
   var h = 2;
   var _ = 1;
   var o = class {
@@ -23207,7 +23207,7 @@ ${h3.join(`
     return { pose, label, visible: !!active || status !== "idle" && !!session.messages?.length };
   }
 
-  // node_modules/marked/lib/marked.esm.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/marked/lib/marked.esm.js
   function B2() {
     return { async: false, breaks: false, extensions: null, gfm: true, hooks: null, pedantic: false, renderer: null, silent: false, tokenizer: null, walkTokens: null };
   }
@@ -24545,7 +24545,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
   var yn2 = O.parse;
   var Sn2 = T.lex;
 
-  // node_modules/dompurify/dist/purify.es.mjs
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/dompurify/dist/purify.es.mjs
   function _OverloadYield(e, d) {
     this.v = e, this.k = d;
   }
@@ -26602,11 +26602,11 @@ Please report this to https://github.com/markedjs/marked.`, e) {
   }
   var purify_default = createDOMPurify();
 
-  // node_modules/highlight.js/es/core.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/highlight.js/es/core.js
   var import_core = __toESM(require_core5(), 1);
   var core_default = import_core.default;
 
-  // node_modules/highlight.js/es/languages/javascript.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/highlight.js/es/languages/javascript.js
   var IDENT_RE = "[A-Za-z$_][0-9A-Za-z$_]*";
   var KEYWORDS = [
     "as",
@@ -27309,7 +27309,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     };
   }
 
-  // node_modules/highlight.js/es/languages/typescript.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/highlight.js/es/languages/typescript.js
   var IDENT_RE2 = "[A-Za-z$_][0-9A-Za-z$_]*";
   var KEYWORDS2 = [
     "as",
@@ -28125,7 +28125,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     return tsLanguage;
   }
 
-  // node_modules/highlight.js/es/languages/python.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/highlight.js/es/languages/python.js
   function python(hljs) {
     const regex = hljs.regex;
     const IDENT_RE3 = new RegExp("[\\p{XID_Start}_]\\p{XID_Continue}*", "u");
@@ -28545,7 +28545,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     };
   }
 
-  // node_modules/highlight.js/es/languages/bash.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/highlight.js/es/languages/bash.js
   function bash(hljs) {
     const regex = hljs.regex;
     const VAR = {};
@@ -28939,7 +28939,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     };
   }
 
-  // node_modules/highlight.js/es/languages/json.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/highlight.js/es/languages/json.js
   var EXTENDED_NUMBER_RE = "([-+]?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)|NaN|[-+]?Infinity";
   var EXTENDED_NUMBER_MODE = {
     scope: "number",
@@ -28986,7 +28986,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     };
   }
 
-  // node_modules/highlight.js/es/languages/xml.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/highlight.js/es/languages/xml.js
   function xml2(hljs) {
     const regex = hljs.regex;
     const TAG_NAME_RE = regex.concat(/[\p{L}_]/u, regex.optional(/[\p{L}0-9_.-]*:/u), /[\p{L}0-9_.-]*/u);
@@ -29205,7 +29205,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     };
   }
 
-  // node_modules/highlight.js/es/languages/css.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/highlight.js/es/languages/css.js
   var MODES = (hljs) => {
     return {
       IMPORTANT: {
@@ -30153,7 +30153,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     };
   }
 
-  // node_modules/highlight.js/es/languages/java.js
+  // C:/Users/admin/Documents/Codex/2026-10-15/new-chat/outputs/deepseek-android-studio/node_modules/highlight.js/es/languages/java.js
   var decimalDigits = "[0-9](_*[0-9])*";
   var frac = `\\.(${decimalDigits})`;
   var hexDigits = "[0-9a-fA-F](_*[0-9a-fA-F])*";
@@ -31937,7 +31937,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
       const p = state.permissions || {};
       for (const [key, property] of [["files", "allFiles"], ["notifications", "notifications"], ["battery", "batteryUnrestricted"]]) $3("permission-" + key + "-status").textContent = p[property] === true ? "\u5DF2\u5F00\u542F \u2713" : p[property] === false ? "\u53BB\u5F00\u542F \u203A" : "\u67E5\u770B\u8BBE\u7F6E \u203A";
       $3("permission-summary").textContent = p.allFiles && p.notifications && p.batteryUnrestricted ? "\u6743\u9650\u5DF2\u5C31\u7EEA" : "\u6309\u9700\u5F00\u542F\uFF0C\u7CFB\u7EDF\u6388\u6743\u540E\u81EA\u52A8\u66F4\u65B0";
-      $3("drawer-service-state").textContent = (state.running ? "\u25CF \u672C\u673A\u6865\u8FD0\u884C\u4E2D" : "\u25CB \u672C\u673A\u6865\u5DF2\u505C\u6B62") + (state.busy ? " \xB7 \u6B63\u5728\u5904\u7406\u4EFB\u52A1" : "") + " \xB7 " + (state.version || "2.4.1");
+      $3("drawer-service-state").textContent = (state.running ? "\u25CF \u672C\u673A\u6865\u8FD0\u884C\u4E2D" : "\u25CB \u672C\u673A\u6865\u5DF2\u505C\u6B62") + (state.busy ? " \xB7 \u6B63\u5728\u5904\u7406\u4EFB\u52A1" : "") + " \xB7 " + (state.version || "2.4.2");
     }
     const archivedButton = document.createElement("button");
     archivedButton.id = "session-archived-toggle";
@@ -32412,7 +32412,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     $3("runtime-test").after(diagnostic);
     click("runtime-diagnostic", async () => {
       await refreshRuntime();
-      NativeBridge.uiAction("copy-text", JSON.stringify({ text: JSON.stringify({ appVersion: "2.4.1", runtime: runtimeCurrent }, null, 2) }));
+      NativeBridge.uiAction("copy-text", JSON.stringify({ text: JSON.stringify({ appVersion: "2.4.2", runtime: runtimeCurrent }, null, 2) }));
       toast("\u73AF\u5883\u8BCA\u65AD\u5DF2\u590D\u5236");
     });
     click("runtime-refresh", refreshRuntime);

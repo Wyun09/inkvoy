@@ -89,14 +89,14 @@ public final class ComputerBrowser {
     public boolean visible(){return visible;}
     private void showPointer(){if(pointer==null)return;pointer.shown=enabled;pointer.x=Math.max(4,Math.min(pointer.x,Math.max(4,web.getWidth()-26)));pointer.y=Math.max(4,Math.min(pointer.y,Math.max(4,web.getHeight()-32)));pointer.bringToFront();pointer.invalidate();}
     /** Human input wins the current operation, while permission for later AI steps survives. */
-    void humanActivity(){if(injecting)return;humanUntil=SystemClock.uptimeMillis()+650;observation="";generation++;epoch++;cancel();phase=enabled?"人机协作 · 你正在操作":"你正在接管";emit();}
+    void humanActivity(){if(Looper.myLooper()!=Looper.getMainLooper()){main.post(this::humanActivity);return;}if(injecting)return;humanUntil=SystemClock.uptimeMillis()+650;observation="";generation++;epoch++;cancel();phase=enabled?"人机协作 · 你正在操作":"你正在接管";emit();}
     private void navigateTo(String url){requestedUrl=url;navigationPending=true;loading=true;observation="";web.loadUrl(url);}
     private double zoom(){return web==null||baseScale<=0?1:Math.max(.25,Math.min(5,web.getScale()/baseScale));}
     private void setZoom(double value)throws IOException{if(!Double.isFinite(value)||value<.5||value>3)throw new IOException("缩放范围为 50%–300%");if(web==null)throw new IOException("请先打开网页");if(baseScale<=0)baseScale=web.getScale();double current=zoom();observation="";generation++;web.zoomBy((float)(value/current));showPointer();}
     public void takeOver(){enabled=false;observation="";epoch++;cancel();if(pointer!=null){pointer.shown=false;pointer.invalidate();}phase="你正在接管";emit();}
     public void cancel(){if(pendingCancel!=null){Runnable task=pendingCancel;pendingCancel=null;task.run();}if(pointer!=null)pointer.stop();}
     public JSONObject state(){JSONObject j=new JSONObject();try{j.put("url",web==null?"":Objects.toString(web.getUrl(),"")).put("title",web==null?"新标签页":Objects.toString(web.getTitle(),"网页")).put("loading",loading).put("progress",progress).put("canBack",web!=null&&web.canGoBack()).put("canForward",web!=null&&web.canGoForward()).put("enabled",enabled).put("busy",busy).put("phase",phase).put("error",error).put("visible",visible).put("zoom",zoom()).put("humanActive",humanTouch||SystemClock.uptimeMillis()<humanUntil).put("pointerVisible",pointer!=null&&pointer.shown);}catch(JSONException ignored){}return j;}
-    private void emit(){if(!closed)listener.changed(state());}
+    private void emit(){if(Looper.myLooper()!=Looper.getMainLooper()){main.post(this::emit);return;}if(!closed)listener.changed(state());}
     public void ui(JSONObject a,StudioRuntime.Reply reply){
         try{switch(a.optString("action")){
             case "status":break;

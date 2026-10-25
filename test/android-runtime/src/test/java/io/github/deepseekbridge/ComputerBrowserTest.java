@@ -107,5 +107,16 @@ public class ComputerBrowserTest {
         web.getWebViewClient().onPageCommitVisible(web,"https://previous.example/");assertTrue((Boolean)field(browser,"navigationPending"));
         web.getWebViewClient().onPageCommitVisible(web,url);assertFalse((Boolean)field(browser,"navigationPending"));
     }
+    @Test public void imeThreadNeverTouchesWebViewOrEmitsUiStateDirectly()throws Exception{
+        browser.surface();WebView original=(WebView)field(browser,"web");
+        WebView strict=new WebView(context){@Override public String getUrl(){assertSame("WebView URL read on input thread",android.os.Looper.getMainLooper(),android.os.Looper.myLooper());return super.getUrl();}};
+        field(browser,"web",strict);field(browser,"observation","current");
+        android.os.HandlerThread input=new android.os.HandlerThread("InputConnectionHandlerThread");input.start();
+        java.util.concurrent.atomic.AtomicReference<Throwable> error=new java.util.concurrent.atomic.AtomicReference<>();CountDownLatch returned=new CountDownLatch(1);
+        new android.os.Handler(input.getLooper()).post(()->{try{browser.humanActivity();}catch(Throwable e){error.set(e);}finally{returned.countDown();}});
+        assertTrue(returned.await(3,TimeUnit.SECONDS));assertNull(error.get());
+        org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+        assertEquals("",field(browser,"observation"));assertTrue(browser.state().getBoolean("enabled"));input.quitSafely();original.destroy();
+    }
 
 }
