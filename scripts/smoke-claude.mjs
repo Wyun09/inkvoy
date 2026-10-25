@@ -13,10 +13,17 @@ const target = resolve(workspace, 'bridge-client-smoke.txt');
 const expected = 'BRIDGE_CLAUDE_OK';
 const pending = new Map(), requests = []; let observedSchemas = [];
 let sequence = 0, toolResponses = 0, resultObserved = false;
-const backend = { async *generate({ prompt }) {
+let fixtureChats = 0, reusedCalls = 0;
+const webpages = new Map();
+const backend = { async *generate({ prompt, conversation }) {
+  const reused = conversation?.reuse && webpages.has(conversation.path);
+  const path = reused ? conversation.path : '/a/chat/s/client-fixture-' + ++fixtureChats;
+  const state = webpages.get(path) || { tools: [], turns: 0 };
+  if (reused) reusedCalls++;
   const historyText = /<conversation_json>\n([\s\S]*?)\n<\/conversation_json>/.exec(prompt)?.[1];
   const toolsText = /<available_tools_json>\n([\s\S]*?)\n<\/available_tools_json>/.exec(prompt)?.[1];
-  const history = historyText ? JSON.parse(historyText) : [], tools = toolsText ? JSON.parse(toolsText) : [];
+  const history = historyText ? JSON.parse(historyText) : [], tools = toolsText ? JSON.parse(toolsText) : state.tools;
+  state.tools = tools; state.turns++; webpages.set(path, state);
   const hasWrite = tools.some(tool => tool.name === 'Write');
   if (hasWrite && !history.some(message => message.role === 'tool')) {
     toolResponses++;
@@ -25,6 +32,7 @@ const backend = { async *generate({ prompt }) {
     if (history.some(message => message.role === 'tool')) resultObserved = true;
     yield { type: 'text', delta: tools.length ? JSON.stringify({ content: 'Verified the tool result. ' + expected }) : expected };
   }
+  yield { type: 'done', conversation: { path, answerCount: state.turns, lastAnswer: 'fixture-' + state.turns }, reused };
 } };
 const engine = createEngine(backend, (id, kind, payload) => {
   const response = pending.get(id); if (!response) return;
@@ -62,7 +70,8 @@ try {
   code = await new Promise((resolve, reject) => { child.on('error', reject); child.on('exit', resolve); }); clearTimeout(timer);
 } finally { server.closeAllConnections(); await new Promise(resolve => server.close(resolve)); }
 let contents = ''; try { contents = await readFile(target, 'utf8'); } catch {}
-const result = { pass: code === 0 && contents === expected && resultObserved, exitCode: code, requests, toolResponses, actualFileMatches: contents === expected, toolResultReturned: resultObserved,
+const result = { pass: code === 0 && contents === expected && resultObserved && fixtureChats === 1 && reusedCalls >= 1, exitCode: code, requests, toolResponses, actualFileMatches: contents === expected, toolResultReturned: resultObserved,
+  conversationReuse: { fixtureChats, reusedCalls, singleConversation: fixtureChats === 1 },
   mode: 'installed Claude Code against the production JS protocol engine with deterministic model fixtures; not an Android/real-account test' };
 await writeFile(resolve(root,'result.json'), JSON.stringify(result,null,2)+'\n');
 if (!result.pass) await writeFile(resolve(root,'tool-schemas.json'), JSON.stringify(observedSchemas,null,2)+'\n');

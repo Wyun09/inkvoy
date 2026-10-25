@@ -32,6 +32,7 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
     public String testStatus = "untested", lastError = "";
     private JSONObject reasoningMode = new JSONObject();
     private JSONObject webSearchMode = new JSONObject();
+    private JSONObject conversations = new JSONObject();
     public volatile boolean webSearchDefault;
     private final List<JSONObject> activities = new ArrayList<>();
     private final Set<String> completions = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
@@ -103,10 +104,11 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
     public void detachContext() { browserContext.setBaseContext(context); }
     public void publishUi() { try { js("BridgeDashboard.render(" + snapshot() + ")"); } catch (JSONException ignored) {} }
     public JSONObject snapshot() throws JSONException {
-        return new JSONObject().put("version", "0.3.0").put("ready", ready).put("running", running)
+        return new JSONObject().put("version", "0.4.0").put("ready", ready).put("running", running)
             .put("loggedIn", loggedIn).put("hasInspection", hasInspection).put("needsVerification", needsVerification)
             .put("inspecting", inspecting).put("reasoningMode", reasoningMode).put("busy", !completions.isEmpty())
             .put("webSearchMode", webSearchMode).put("webSearchDefault", webSearchDefault)
+            .put("conversations", conversations)
             .put("probeRunning", probeRunning).put("testStatus", testStatus).put("requests", requests)
             .put("lastError", lastError).put("activities", new JSONArray(activities));
     }
@@ -114,6 +116,10 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
         if (!ready || destroyed || inspecting || System.currentTimeMillis() - lastInspection < 1000) return;
         inspecting = true; lastInspection = System.currentTimeMillis(); changed();
         js("AndroidEngine.inspect()");
+    }
+    public void resetConversations() {
+        if (!ready || !completions.isEmpty() || probeRunning) { toast("当前请求处理中，请完成后再开始新会话"); return; }
+        js("AndroidEngine.resetConversations()");
     }
     public void event(String text) {
         try { activities.add(new JSONObject().put("text", text).put("time", new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date()))); }
@@ -277,7 +283,12 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
             main.post(() -> {
                 if (!trustedEngine() || destroyed) return;
                 try {
-                    if (kind.equals("inspectionStart")) inspecting = true;
+                    if (kind.equals("conversations")) conversations = new JSONObject(raw);
+                    else if (kind.equals("conversationReset")) {
+                        if (new JSONObject(raw).optBoolean("ok")) { event("已重置会话关联，下次调用开始新会话"); toast("下次调用将开始新会话，历史对话已保留"); }
+                        else toast("当前请求处理中，请稍后再试");
+                    }
+                    else if (kind.equals("inspectionStart")) inspecting = true;
                     else if (kind.equals("inspection")) {
                         JSONObject status = new JSONObject(raw); inspecting = false; hasInspection = true;
                         loggedIn = status.optBoolean("loggedIn"); needsVerification = status.optBoolean("needsVerification");

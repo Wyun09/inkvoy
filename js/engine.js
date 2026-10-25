@@ -3,6 +3,7 @@ import { ContentEnvelopeDecoder } from './core/streaming.js';
 import { estimateUsage } from './core/usage.js';
 import { MobileBuffer, randomUUID } from './platform.js';
 import { fromAnthropic, anthropicChannel, anthropicError } from './anthropic.js';
+import { ConversationPool } from './conversations.js';
 
 function errorPayload(error) {
   const payload = { message: error.status || error.code ? error.message : 'Android bridge error.', type: 'bridge_error', code: error.code || 'internal_error', param: null };
@@ -25,6 +26,7 @@ export function resolveDataImages(images) {
 
 export function createEngine(backend, emitNative, options = {}) {
   const config = { model: 'deepseek-web', timeoutMs: 600000, heartbeatMs: 10000, maxQueue: 8, defaultWebSearch: () => true, ...options };
+  const conversations = new ConversationPool({ onChange: config.onConversationState });
   const jobs = new Map();
   const waiting = [];
   let active = null;
@@ -52,6 +54,7 @@ export function createEngine(backend, emitNative, options = {}) {
     let heartbeat;
     let started = false;
     let roleSent = false;
+    let conversationPlan, conversationHandle, conversationReused = false;
     const { signal } = job.controller;
     const id = 'chatcmpl-' + randomUUID().replaceAll('-', '');
     const created = Math.floor(Date.now() / 1000);
@@ -73,7 +76,11 @@ export function createEngine(backend, emitNative, options = {}) {
       if ('web_search' in job.body && typeof job.body.web_search !== 'boolean') throw new BridgeError(400, 'invalid_web_search', 'web_search 必须是 true 或 false。');
       const webSearch = job.body.web_search ?? config.defaultWebSearch();
       const images = resolveDataImages(prepared.images);
-      let output = '', reasoning = '', published = '', currentPrompt = prepared.prompt;
+      conversationPlan = await conversations.plan(job.body);
+      if (signal.aborted) throw signal.reason;
+      let output = '', reasoning = '', published = '', currentPrompt = conversations.continuation(prepared, conversationPlan);
+      let conversation = { ...(conversationPlan.record?.handle || {}), reuse: conversationPlan.reuse, fullPrompt: prepared.prompt, fullImages: images };
+      let attemptImages = conversationPlan.reuse ? images.filter(image => prepared.images[image.sourceIndex].messageIndex >= conversationPlan.offset) : images;
       let formatRetries = 0, emptyRetries = 0, finishReason = 'stop', result;
       const prompts = [], outputs = [];
       const ready = () => {
@@ -88,14 +95,15 @@ export function createEngine(backend, emitNative, options = {}) {
         const attemptReasoning = prepared.reasoning && formatRetries === 0;
         output = '';
         prompts.push(currentPrompt);
-        iterator = backend.generate({ prompt: currentPrompt, images, reasoning: attemptReasoning, webSearch, signal })[Symbol.asyncIterator]();
+        conversationHandle = undefined;
+        iterator = backend.generate({ prompt: currentPrompt, images: attemptImages, reasoning: attemptReasoning, webSearch, conversation, signal })[Symbol.asyncIterator]();
         try {
           for (;;) {
             const next = await abortable(iterator.next(), signal);
             if (next.done) break;
             const event = next.value;
             if (event.type === 'ready') { ready(); continue; }
-            if (event.type === 'done') { if (event.finishReason === 'length') finishReason = 'length'; continue; }
+            if (event.type === 'done') { if (event.finishReason === 'length') finishReason = 'length'; conversationHandle = event.conversation; conversationReused = event.reused === true; continue; }
             if (event.type === 'reasoning') {
               if (!attemptReasoning) continue;
               if (typeof event.delta !== 'string') throw new BridgeError(502, 'invalid_backend_response', 'Invalid reasoning event.');
@@ -124,7 +132,9 @@ export function createEngine(backend, emitNative, options = {}) {
         iterator = null;
         outputs.push(output);
         if (generationError) {
-          if (generationError.code === 'UPSTREAM_NO_OUTPUT' && attempt === 0 && !output && !reasoning && !published && !signal.aborted) { emptyRetries++; continue; }
+          if (generationError.code === 'UPSTREAM_NO_OUTPUT' && attempt === 0 && !output && !reasoning && !published && !signal.aborted) {
+            emptyRetries++; currentPrompt = prepared.prompt; attemptImages = images; conversation = { reuse: false, fullPrompt: prepared.prompt, fullImages: images }; continue;
+          }
           throw generationError;
         }
         try {
@@ -138,14 +148,26 @@ export function createEngine(backend, emitNative, options = {}) {
           break;
         } catch (error) {
           if (error.code === 'invalid_tool_response' && attempt === 0 && finishReason !== 'length' && !signal.aborted) {
-            formatRetries++; currentPrompt = buildToolRetryPrompt(prepared, output, published); continue;
+            formatRetries++;
+            if (conversationHandle) {
+              currentPrompt = buildToolRetryPrompt({ prompt: 'Repair the immediately preceding assistant turn in this SAME conversation. The external task, new messages and tool schemas above are unchanged.' }, output, published);
+              conversation = { ...conversationHandle, reuse: true, fullPrompt: buildToolRetryPrompt(prepared, output, published), fullImages: images }; attemptImages = [];
+            } else {
+              currentPrompt = buildToolRetryPrompt(prepared, output, published);
+              conversation = { reuse: false, fullPrompt: currentPrompt, fullImages: images }; attemptImages = images;
+            }
+            continue;
           }
           throw error;
         }
       }
       if (reasoning) result.message.reasoning_content = reasoning;
-      const usage = estimateUsage({ prompt: prompts.join('\n'), content: outputs.join('\n'), reasoning, images });
-      const usageMeta = { estimated: true, method: 'unicode_han_1.5_chars_per_token_other_4_chars_per_token', image_tokens_included: false, cache: { status: 'unknown', source: 'not_exposed_by_web_ui', tokens_reported: false }, format_retries: formatRetries, empty_response_retries: emptyRetries };
+      if (signal.aborted) throw signal.reason;
+      await conversations.commit(conversationPlan, result.message, conversationHandle, conversationReused);
+      const usage = estimateUsage({ prompt: [prepared.prompt, ...prompts.slice(1)].join('\n'), content: outputs.join('\n'), reasoning, images });
+      const continued = conversationReused && conversationPlan.record?.handle.path === conversationHandle?.path;
+      const usageMeta = { estimated: true, method: 'unicode_han_1.5_chars_per_token_other_4_chars_per_token', prompt_basis: 'logical_api_history', image_tokens_included: false, cache: { status: 'unknown', source: 'not_exposed_by_web_ui', tokens_reported: false }, format_retries: formatRetries, empty_response_retries: emptyRetries,
+        conversation: { reused: continued, history_messages: job.body.messages.length, sent_messages: continued ? job.body.messages.length - conversationPlan.offset : job.body.messages.length } };
       if (!prepared.stream) return respond(job, 200, { id, object: 'chat.completion', created, model: config.model, choices: [{ index: 0, message: result.message, finish_reason: result.finishReason }], usage, usage_meta: usageMeta });
       if (prepared.toolsEnabled) {
         const finalText = result.message.content || '';
@@ -156,6 +178,7 @@ export function createEngine(backend, emitNative, options = {}) {
       if (prepared.includeUsage) chunk({ id, object: 'chat.completion.chunk', created, model: config.model, choices: [], usage, usage_meta: usageMeta });
       emit(job, 'data', { text: 'data: [DONE]\n\n' }); emit(job, 'end');
     } catch (error) {
+      conversations.invalidate(conversationPlan);
       const actual = signal.aborted ? signal.reason : error;
       if (started) { emit(job, 'data', { text: `data: ${JSON.stringify(errorPayload(actual))}\n\ndata: [DONE]\n\n` }); emit(job, 'end'); }
       else respond(job, actual.status || 500, errorPayload(actual));
@@ -199,5 +222,6 @@ export function createEngine(backend, emitNative, options = {}) {
     const index = waiting.indexOf(job);
     if (index >= 0) { waiting.splice(index, 1); clearTimeout(job.timer); jobs.delete(id); }
   }
-  return { receive, cancel, activity: () => ({ busy: active !== null, queued: waiting.length }) };
+  function resetConversations() { if (active || waiting.length) return false; conversations.reset(); return true; }
+  return { receive, cancel, resetConversations, conversationState: () => conversations.state(), activity: () => ({ busy: active !== null, queued: waiting.length }) };
 }

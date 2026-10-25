@@ -1,17 +1,17 @@
 {
-  "version": "0.3.0",
-  "versionCode": 5,
+  "version": "0.4.0",
+  "versionCode": 6,
   "package": "io.github.deepseekbridge",
-  "apk": "deepseek-android-bridge-v0.3.0.apk",
-  "bytes": 427286,
-  "sha256": "c8414af31af9e284de23569c6f255d26341c18d1e9e63f1d395b27137b72532b",
+  "apk": "deepseek-android-bridge-v0.4.0.apk",
+  "bytes": 431382,
+  "sha256": "5f914d80cc2381ece87f1ca1147858b088ad90d61a7257a49cb5f09c0b67a95c",
   "protocols": [
     "OpenAI Chat Completions",
     "Anthropic Messages",
     "estimated count_tokens"
   ],
   "unitTests": {
-    "pass": 155,
+    "pass": 179,
     "fail": 0,
     "skipped": 0
   },
@@ -21,6 +21,8 @@
     "realClient": true,
     "actualFileWrite": true,
     "actualToolResultReturned": true,
+    "singleConversation": true,
+    "reusedCalls": 1,
     "modelBackend": "deterministic fixture",
     "engine": "production JS protocol engine",
     "evidence": "claude-smoke-results.json"
@@ -31,11 +33,21 @@
   "webSearchTests": 12,
   "anthropicTests": 21,
   "schemaDialectTests": 3,
-  "sameSignerAs021": true,
+  "conversationTests": 24,
+  "sameSignerAs030": true,
   "minSdk": 26,
   "targetSdk": 35,
   "defaultWebSearch": true,
-  "conversationReuse": false,
+  "conversationReuse": {
+    "enabled": true,
+    "maxTracked": 8,
+    "persistent": false,
+    "automaticPrefixMatching": true,
+    "incrementalMessages": true,
+    "changedToolsOnly": true,
+    "resetPreservesWebsiteHistory": true,
+    "fourNormalCallsAcrossTwoTasksCreateTwoFixtureChats": true
+  },
   "logo": {
     "method": "built-in image_gen; no hand-drawn logo geometry",
     "modelVersionVerified": false,

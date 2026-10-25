@@ -15,7 +15,11 @@ try {
   await page.evaluate(() => { BridgeDashboard.render({ reasoningMode: { count: 1, enabled: false, source: 'ds_toggle_component' } }); BridgeDashboard.setTheme('light'); });
   await page.locator('.health-strip [data-action="reasoning"]').click();
   await page.screenshot({ path: new URL('reasoning-sheet.png', output).pathname.replace(/^\/([A-Za-z]:)/, '$1') });
+  await page.locator('#close-sheet').click();
+  await page.evaluate(() => BridgeDashboard.render({ conversations: { tracked: 1, created: 1, reused: 7 } }));
+  await page.locator('[data-action="conversations"]').click();
+  await page.screenshot({ path: new URL('conversation-sheet.png', output).pathname.replace(/^\/([A-Za-z]:)/, '$1') });
   await context.close();
   await writeFile(new URL('README.md', output), '# UI preview\n\nThese are the actual packaged HTML/CSS UI assets rendered in desktop Edge at 390x844 with a simulated native state. They are not Android-device screenshots or proof of a real logged-in session.\n');
-  console.log('Captured four UI previews from packaged assets with simulated state.');
+  console.log('Captured five UI previews from packaged assets with simulated state.');
 } finally { await browser.close(); }

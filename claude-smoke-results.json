@@ -24,5 +24,10 @@
   "toolResponses": 1,
   "actualFileMatches": true,
   "toolResultReturned": true,
+  "conversationReuse": {
+    "fixtureChats": 1,
+    "reusedCalls": 1,
+    "singleConversation": true
+  },
   "mode": "installed Claude Code against the production JS protocol engine with deterministic model fixtures; not an Android/real-account test"
 }

@@ -2,6 +2,7 @@ import { DeepSeekBrowser, BrowserBridgeError } from './core/browser.js';
 import { MobileBuffer } from './platform.js';
 import { sendControl } from './send-control.js';
 import { reasoningControl } from './core/reasoning-control.js';
+import { conversationDom } from './conversation-dom.js';
 
 // Runs in the DeepSeek WebView through evaluateJavascript, with no native
 // JavascriptInterface installed in that remote page.
@@ -97,6 +98,51 @@ export class MobileBrowser extends DeepSeekBrowser {
     this.rpc = rpc;
     this.sendControlTimeoutMs = Number.isFinite(config.sendControlTimeoutMs) ? Math.max(100, config.sendControlTimeoutMs) : 5000;
   }
+  async _openConversation(page, conversation, signal, deadline) {
+    this._turnBoundary = null;
+    let current = await this._readStateBounded(page, signal, deadline);
+    if (current.composerTextLength > 0) throw new BrowserBridgeError('conversation_has_draft', 409, '网页输入框还有未发送的内容，请先处理草稿后重试。');
+    if (conversation?.reuse && /^\/(?:a\/)?chat\/(?:s\/)?[a-zA-Z0-9_-]+\/?$/.test(conversation.path || '')) {
+      this._checkState(current, undefined, { allowHistory: true });
+      if (current.chatPath !== conversation.path) {
+        await page.goto('https://chat.deepseek.com' + conversation.path);
+      }
+      const restoreDeadline = Math.min(deadline, Date.now() + 3000);
+      do {
+        if (signal?.aborted) throw new BrowserBridgeError('REQUEST_CANCELLED', 499, '请求已取消。');
+        try { current = await this._readStateBounded(page, signal, deadline, restoreDeadline); }
+        catch (error) {
+          if (error.code === 'webpage_observation_timeout' && Date.now() >= restoreDeadline && !signal?.aborted) break;
+          throw error;
+        }
+        this._checkState(current, undefined, { allowHistory: true });
+        if (current.composerTextLength > 0) throw new BrowserBridgeError('conversation_has_draft', 409, '该网页会话中还有未发送的草稿，请先处理后重试。');
+        const snapshot = await page.evaluate(conversationDom, { action: 'inspect' });
+        if (snapshot?.path === conversation.path && snapshot.answerCount === conversation.answerCount
+          && snapshot.lastAnswer === conversation.lastAnswer && current.composerCount === 1) return { ...current, reused: true };
+        await new Promise(resolve => setTimeout(resolve, Math.min(this.config.pollMs, Math.max(1, restoreDeadline - Date.now()))));
+      } while (Date.now() < restoreDeadline);
+      if (signal?.aborted) throw new BrowserBridgeError('REQUEST_CANCELLED', 499, '请求已取消。');
+      if (Date.now() >= deadline) throw new BrowserBridgeError('REQUEST_TIMEOUT', 504, '网页会话恢复超时。');
+      // Recovery failed before filling or clicking. A fresh conversation gets
+      // the complete authoritative API history, not the continuation suffix.
+    }
+    return this._newConversation(page, signal, deadline);
+  }
+  async _beginTurn(page, _state, { conversation } = {}) {
+    this._turnBoundary = await page.evaluate(conversationDom, { nonce: 'turn-' + crypto.randomUUID() });
+    const snapshot = this._turnBoundary;
+    const valid = snapshot && (conversation ? snapshot.path === conversation.path && snapshot.answers.length === conversation.answerCount
+      && snapshot.answers.at(-1)?.signature === conversation.lastAnswer : snapshot.answers.length === 0);
+    if (!valid) {
+      this._turnBoundary = null;
+      throw new BrowserBridgeError('conversation_changed', 409, '发送前网页会话发生变化，已停止以避免混入旧历史。');
+    }
+  }
+  async _completeTurn(page) {
+    const snapshot = await page.evaluate(conversationDom, { action: 'inspect' });
+    return /^\/(?:a\/)?chat\/(?:s\/)?[a-zA-Z0-9_-]+\/?$/.test(snapshot?.path || '') ? snapshot : undefined;
+  }
   async _beforeSubmit(page, { webSearch = true, reasoning, signal, deadline }) {
     await this._setPageToggle(page, 'search', webSearch, signal, deadline);
     const thought = await this._readReasoningMode(page);
@@ -143,12 +189,14 @@ export class MobileBrowser extends DeepSeekBrowser {
     return result;
   }
   async _discardPage(page) {
+    this._turnBoundary = null;
     page.closed = true;
     if (this._page === page) this._page = null;
     await this.rpc('resetBrowser', {});
     this._context = null;
   }
   async _closeContext() {
+    this._turnBoundary = null;
     if (this._page) this._page.closed = true;
     this._page = null; this._context = null;
     await this.rpc('resetBrowser', {});

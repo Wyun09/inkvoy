@@ -1,21 +1,21 @@
 {
   "source": "deepseek-web-bridge v0.2.2",
-  "method": "three unchanged modules; browser.js has Android toggle/submission hooks; protocol.js selects the declared JSON Schema dialect",
+  "method": "two unchanged modules; browser.js has Android conversation/toggle/submission hooks; protocol.js supports schema dialects and normalized history; dom-text.js isolates the current turn",
   "modules": {
     "protocol.js": {
       "sourceSha256": "91ad4abd414a0839c061730b3c8f56b10f0c294f7c09bb04f4e324f95cbeedc5",
-      "localSha256": "144c43d769062231f03e786b2210317ea8c2b0a923f42e8611c8b3a6be65aea3",
+      "localSha256": "e21c060857af75aba79dee72c249c7cf8795262cf842dfa71f39ac7226417f8b",
       "unchanged": false
     },
     "browser.js": {
       "sourceSha256": "c254bc0651afeba881eee9fbd030b360f50ae355fb4ce270374305ceb6323640",
-      "localSha256": "6d8c5716b97f86bf5148b65a4c1661f169be6a2ee7cb3e757f25ba42132964b3",
+      "localSha256": "203a701505955e295282d963a98238761003718c0a04db7a02e0d02da07178dd",
       "unchanged": false
     },
     "dom-text.js": {
       "sourceSha256": "d9775fe3bafb5d99726b9aeffb45f5f844bbae09c9ade63b9d526fe96a1358cd",
-      "localSha256": "d9775fe3bafb5d99726b9aeffb45f5f844bbae09c9ade63b9d526fe96a1358cd",
-      "unchanged": true
+      "localSha256": "9666221092c158de7937091886b8b9c46dc4e41c2d180efe561bb1845eb3816f",
+      "unchanged": false
     },
     "streaming.js": {
       "sourceSha256": "4f147b44938b9c9d2b1067a6d8c7d462eb15ecb7f825ad7e4d0fad25e4caa7aa",
@@ -33,8 +33,18 @@
   },
   "platformExtensions": {
     "js/send-control.js": "a3650c214fde83974679d970cf34d6cdd1fd585fda5b483ee7bccf7580d57f54",
-    "js/anthropic.js": "26be9e08adbb9934e570118d2993e58bff4f3e07ae541a08591a99c236952151"
+    "js/anthropic.js": "a4c866ca228c485c7cee1a034f0f09f93721bb9d89e4e522c87f5110995c1d88",
+    "js/conversations.js": "5d791b37fc5e831e51aea8482def76be1c12e4f105ef3c32d48209bbfc205d27",
+    "js/conversation-dom.js": "d62ab01b832c4ac9441cc83c85d6dfd7400c345740856e48b256bc22492631df"
   },
+  "domTextPatch": [
+    "Exclude fingerprint-checked historical answers, old thinking and old completion controls from each new turn.",
+    "Restore markers after a matching DOM re-render; reject changed/missing history instead of mixing responses."
+  ],
+  "timeoutPatch": [
+    "Recheck wall time when a timer fires so a rounded/early tick cannot expire a request ahead of its deadline.",
+    "Classify total deadlines versus observation budgets from the selected budget, not an incidental clock read."
+  ],
   "protocolPatch": [
     "Select Ajv draft-07, draft-2019-09 or draft-2020-12 from the tool schema declaration.",
     "Keep schema keywords and validate real tool arguments; do not strip the declared dialect."

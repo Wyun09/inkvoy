@@ -29,10 +29,12 @@ const rpc = (operation, argument) => new Promise((resolve, reject) => {
 const backend = new MobileBrowser(rpc);
 const engine = createEngine(backend, (id, kind, payload) => NativeBridge.response(id, kind, JSON.stringify(payload)), {
   defaultWebSearch: () => NativeBridge.searchDefault?.() ?? true,
+  onConversationState: state => NativeBridge.reportUi?.('conversations', JSON.stringify(state)),
 });
 let inspecting = false;
 globalThis.AndroidEngine = {
   receive: request => engine.receive(request), cancel: id => engine.cancel(id),
+  resetConversations() { NativeBridge.reportUi?.('conversationReset', JSON.stringify({ ok: engine.resetConversations() })); },
   async inspect() {
     if (inspecting) return;
     inspecting = true;

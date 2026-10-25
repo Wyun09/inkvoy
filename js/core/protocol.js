@@ -144,7 +144,7 @@ export function prepareRequest(body, model) {
       choice === 'required' ? `You MUST request at least one function${forcedName ? `, specifically ${forcedName}` : ''}.` : 'Tool choice is auto: request functions when needed to advance the task. Do not request unnecessary functions for a direct answer, an already completed task, or a genuine question or blocker that only the user can resolve.'
     ].join('\n') : 'Reply with the ordinary assistant answer inside exactly one outer text code block. Use an opening line of FIVE backticks followed by text (`````text), then your complete answer, then a closing line of FIVE backticks (`````). Put no extra text outside this outer block. This outer fence protects the exact answer from webpage Markdown rendering; inside it, preserve normal answer text, Markdown formatting, source code, backslashes, backticks, and any normal triple-backtick code blocks. Do not use a JSON envelope. The block contents are the ordinary assistant answer.'
   ].filter(Boolean).join('\n');
-  return { prompt, images, reasoning, includeUsage: body.stream_options?.include_usage === true, stream: body.stream === true, toolsEnabled, choice, forcedName, definitions };
+  return { prompt, messages, images, reasoning, includeUsage: body.stream_options?.include_usage === true, stream: body.stream === true, toolsEnabled, choice, forcedName, definitions };
 }
 
 export function parseToolResponse(text, request) {

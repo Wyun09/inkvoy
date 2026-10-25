@@ -35,8 +35,13 @@ async function within(promise, signal, deadline) {
   let timer;
   let abort;
   const interruption = new Promise((_, reject) => {
+    const expire = () => {
+      const remaining = deadline - Date.now();
+      if (remaining > 0) timer = setTimeout(expire, remaining);
+      else reject(timedOut());
+    };
     if (Date.now() >= deadline) reject(timedOut());
-    else timer = setTimeout(() => reject(timedOut()), Math.max(1, deadline - Date.now()));
+    else timer = setTimeout(expire, Math.max(1, deadline - Date.now()));
     if (signal) {
       abort = () => reject(cancelled());
       signal.addEventListener('abort', abort, { once: true });
@@ -160,7 +165,7 @@ export class DeepSeekBrowser {
 
   async _readState(page) {
     const extracted = await page.evaluate(extractDomTexts, {
-      inspectPage: { origin: ORIGIN, answerSelector: ANSWER_SELECTOR },
+      inspectPage: { origin: ORIGIN, answerSelector: ANSWER_SELECTOR, turn: this._turnBoundary },
       selectors: [
         { key: 'answer', selector: ANSWER_SELECTOR },
         { key: 'reasoning', selector: '.ds-think-content', visibleOnly: false },
@@ -193,10 +198,11 @@ export class DeepSeekBrowser {
   }
 
   async _readStateBounded(page, signal, deadline, readDeadline = Infinity) {
+    const observationDeadline = Math.min(readDeadline, Date.now() + 5000);
     try {
-      return this._observeState(await within(this._readState(page), signal, Math.min(deadline, readDeadline, Date.now() + 5000)));
+      return this._observeState(await within(this._readState(page), signal, Math.min(deadline, observationDeadline)));
     } catch (error) {
-      if (error?.code === 'REQUEST_TIMEOUT' && Date.now() < deadline && !signal?.aborted) {
+      if (error?.code === 'REQUEST_TIMEOUT' && observationDeadline < deadline && Date.now() < deadline && !signal?.aborted) {
         throw new BrowserBridgeError('webpage_observation_timeout', 504, '网页状态读取未能在时限内完成（单次最多 5 秒），请检查专用浏览器。');
       }
       throw error;
@@ -204,6 +210,7 @@ export class DeepSeekBrowser {
   }
 
   _checkState(state, prompt, { allowHistory = false, allowAmbiguous = false } = {}) {
+    if (state.turnValid === false) throw new BrowserBridgeError('conversation_changed', 409, '网页历史在本轮生成时发生变化，已停止以避免混入旧回答。请重试或开始新会话。');
     if (!state.originMatches) {
       throw new BrowserBridgeError('UNEXPECTED_PAGE', 502, '浏览器离开了 DeepSeek 页面，请重新打开登录窗口。');
     }
@@ -490,6 +497,9 @@ export class DeepSeekBrowser {
 
   async _submitComposer(_page, composer, _options) { await composer.press('Enter'); }
   async _beforeSubmit(_page, _options) {}
+  async _openConversation(page, _conversation, signal, deadline) { return this._newConversation(page, signal, deadline); }
+  async _beginTurn(_page, _state, _options) {}
+  async _completeTurn(_page, _state, _options) {}
 
   async _waitSubmission(page, before, prompt, signal, deadline) {
     const submissionDeadline = Math.min(deadline, Date.now() + 5000);
@@ -521,7 +531,7 @@ export class DeepSeekBrowser {
       '提交后 5 秒内网页未确认接收消息（输入未清空、没有新消息或新对话）。已停止，未重复提交。');
   }
 
-  async *generate({ prompt, images = [], reasoning = false, webSearch, signal } = {}) {
+  async *generate({ prompt, images = [], reasoning = false, webSearch, conversation, signal } = {}) {
     if (typeof prompt !== 'string' || !prompt.trim()) {
       throw new BrowserBridgeError('INVALID_PROMPT', 400, '消息内容不能为空。');
     }
@@ -549,7 +559,10 @@ export class DeepSeekBrowser {
       checkRequest(signal, deadline);
       page = await within(this._ensureBrowser(), signal, deadline);
       this._activeRequest.phase = 'new_conversation';
-      const blank = await this._newConversation(page, signal, deadline);
+      const blank = await this._openConversation(page, conversation, signal, deadline);
+      if (!blank?.reused && conversation?.fullPrompt) { prompt = conversation.fullPrompt; images = conversation.fullImages || images; }
+      this._activeRequest.promptLength = Array.from(prompt).length;
+      this._activeRequest.imageCount = images.length;
       this._activeRequest.phase = 'setting_reasoning';
       await this._setReasoning(page, reasoning, signal, deadline);
       if (images.length) {
@@ -567,9 +580,10 @@ export class DeepSeekBrowser {
       const accepted = await within(composer.inputValue(), signal, deadline);
       if (accepted !== prompt) throw this._contextLengthError(prompt, accepted);
       const beforeSubmission = await this._readStateBounded(page, signal, deadline);
-      this._checkState(beforeSubmission, prompt);
+      this._checkState(beforeSubmission, prompt, { allowHistory: blank?.reused === true });
       await this._setReasoning(page, reasoning, signal, deadline);
       await within(this._beforeSubmit(page, { reasoning, webSearch, signal, deadline }), signal, deadline);
+      await within(this._beginTurn(page, beforeSubmission, { signal, deadline, conversation: blank?.reused ? conversation : undefined }), signal, deadline);
       this._activeRequest.phase = 'ready';
       yield { type: 'ready' };
       checkRequest(signal, deadline);
@@ -678,7 +692,8 @@ export class DeepSeekBrowser {
           const finalText = textTail.push(text, { final: true });
           if (finalText) yield { type: 'text', delta: finalText };
           completed = true;
-          yield { type: 'done', finishReason: 'stop' };
+          const handle = await within(this._completeTurn(page, state, { signal, deadline }), signal, deadline);
+          yield { type: 'done', finishReason: 'stop', ...(handle ? { conversation: handle, reused: blank?.reused === true } : {}) };
           return;
         }
         previous = text;

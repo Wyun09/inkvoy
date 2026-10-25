@@ -30,7 +30,7 @@ export function initDashboard() {
   if (!document.getElementById('app')) return;
   const $ = id => document.getElementById(id);
   document.querySelectorAll('[data-icon]').forEach(node => icon(node, node.dataset.icon));
-  let state = { ready: false, running: false, loggedIn: false, hasInspection: false, inspecting: false, busy: false, testStatus: 'untested', reasoningMode: { enabled: null }, activities: [], version: '0.3.0' };
+  let state = { ready: false, running: false, loggedIn: false, hasInspection: false, inspecting: false, busy: false, testStatus: 'untested', reasoningMode: { enabled: null }, activities: [], version: '0.4.0' };
   let tab = 'home', toastTimer, modal = false, previousFocus;
   // Android WebView disables DOM storage by default. Preferences are optional:
   // an unavailable, blocked or full store must never stop event binding/boot.
@@ -111,7 +111,16 @@ export function initDashboard() {
     ], 'globe');
   }
   function diagnostics() {
-    sheet('连接诊断', [row('应用版本', state.version || '0.3.0'), row('本机服务', state.running ? '已启动' : '未启动'), row('网页登录', state.hasInspection ? state.loggedIn ? '已登录' : '需要登录或验证' : '尚未检测'), row('思考开关', state.reasoningMode?.source || '待检测'), row('接口请求', String(state.requests || 0) + ' 次'), row('当前任务', state.busy ? '处理中' : '空闲'), paragraph(state.lastError || '诊断不包含 API 密钥、验证码和聊天正文。')], [{ label: '复制诊断信息', run: () => native('copy', { field: 'diagnostics' }) }, { label: '重新检测', disabled: state.inspecting, run: () => { closeSheet(); native('inspect'); } }], 'activity');
+    sheet('连接诊断', [row('应用版本', state.version || '0.4.0'), row('本机服务', state.running ? '已启动' : '未启动'), row('网页登录', state.hasInspection ? state.loggedIn ? '已登录' : '需要登录或验证' : '尚未检测'), row('思考开关', state.reasoningMode?.source || '待检测'), row('接口请求', String(state.requests || 0) + ' 次'), row('当前任务', state.busy ? '处理中' : '空闲'), paragraph(state.lastError || '诊断不包含 API 密钥、验证码和聊天正文。')], [{ label: '复制诊断信息', run: () => native('copy', { field: 'diagnostics' }) }, { label: '重新检测', disabled: state.inspecting, run: () => { closeSheet(); native('inspect'); } }], 'activity');
+  }
+  function conversationSheet() {
+    const usage = state.conversations || {};
+    sheet('会话复用', [row('工作方式', '同一任务自动续接'), row('已复用', String(usage.reused || 0) + ' 次'), row('已关联的新会话', String(usage.created || 0) + ' 个'),
+      paragraph('工具执行后的下一轮、同一聊天中的追问，会沿用对应的网页对话，只发送新增消息。不同任务分别保留会话关联。'),
+      paragraph('客户端改写或压缩历史、网页会话不可恢复时，需要重新开始。重置只清除关联，不会删除网页历史；应用进程结束后关联不保留。')], [
+      { label: '下次开始新会话', disabled: state.busy || state.probeRunning || !state.ready, run: () => { native('reset-conversations'); closeSheet(); } },
+      { label: '继续自动复用', run: closeSheet },
+    ], 'message');
   }
   function result(result) {
     const ok = result.passed === true;
@@ -144,7 +153,8 @@ export function initDashboard() {
     $('web-status').textContent = state.busy ? '正在处理请求，请保持网页连接' : '在这里登录并管理你的网页会话';
     $('web-login-chip').textContent = loggedIn ? '网页登录有效' : state.needsVerification ? '需要手动验证' : '登录状态待确认';
     $('web-think-chip').textContent = typeof thought.enabled === 'boolean' ? thought.enabled ? '深度思考已开启' : '深度思考已关闭' : '检测深度思考';
-    $('app-version').textContent = state.version || '0.3.0';
+    $('app-version').textContent = state.version || '0.4.0';
+    $('conversation-summary').textContent = state.conversations?.reused ? '已复用 ' + state.conversations.reused + ' 次，减少重复新建' : '同一任务连续调用沿用一个对话';
     const activities = (state.activities || []).slice(-4).reverse();
     if (activities.length) {
       $('activity-list').replaceChildren(...activities.map(item => {
@@ -158,7 +168,7 @@ export function initDashboard() {
   document.querySelectorAll('[data-copy]').forEach(button => button.addEventListener('click', () => native('copy', { field: button.dataset.copy })));
   document.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click', () => {
     const action = button.dataset.action;
-    if (action === 'help') help(); else if (action === 'reasoning') reasoningSheet(); else if (action === 'search') searchSheet(); else if (action === 'diagnostics') diagnostics();
+    if (action === 'help') help(); else if (action === 'reasoning') reasoningSheet(); else if (action === 'search') searchSheet(); else if (action === 'conversations') conversationSheet(); else if (action === 'diagnostics') diagnostics();
     else if (action === 'test') {
       if (!state.running) toast('请先启动服务'); else if (state.busy || state.probeRunning) toast('当前请求处理中，请稍后再试'); else native('test', { thinking: false });
     } else native(action);

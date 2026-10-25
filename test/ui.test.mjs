@@ -17,6 +17,16 @@ test('packaged UI routes, real state labels, private-key handling and touch size
   await page.locator('[data-action="search"]').click();
   await page.getByRole('button', { name: '默认关闭', exact: true }).click();
   assert.ok((await page.evaluate(() => nativeActions)).some(item => item.action === 'search-policy' && item.payload.enabled === false));
+  await page.evaluate(() => BridgeDashboard.render({ conversations: { reused: 3, created: 1, tracked: 1 } }));
+  assert.match(await page.locator('#conversation-summary').textContent(), /已复用 3 次/);
+  await page.locator('[data-action="conversations"]').click();
+  assert.ok((await page.locator('#sheet-body').innerText()).includes('不会删除网页历史'));
+  await page.getByRole('button', { name: '下次开始新会话', exact: true }).click();
+  assert.ok((await page.evaluate(() => nativeActions)).some(item => item.action === 'reset-conversations'));
+  await page.evaluate(() => BridgeDashboard.render({ busy: true }));
+  await page.locator('[data-action="conversations"]').click();
+  assert.equal(await page.getByRole('button', { name: '下次开始新会话', exact: true }).isDisabled(), true);
+  await page.locator('#close-sheet').click(); await page.evaluate(() => BridgeDashboard.render({ busy: false }));
   for (const tab of ['home', 'web', 'connect']) {
     await page.locator('.bottom-nav [data-navigate="' + tab + '"]').click();
     assert.equal(await page.locator('#page-' + tab).isVisible(), true);

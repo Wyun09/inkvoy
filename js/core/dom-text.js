@@ -68,14 +68,31 @@ export function extractDomTexts({ selectors, inspectPage }) {
     const topLevel = selector => [...document.querySelectorAll(selector)]
       .filter(element => !element.parentElement?.closest(selector));
     const answerSelector = inspectPage.answerSelector;
-    const answers = topLevel(answerSelector).filter(visible)
+    const allAnswers = topLevel(answerSelector).filter(visible)
       .filter(element => !element.closest('.ds-think-content, [data-message-role="reasoning"], [data-role="reasoning"]'));
+    const turn = inspectPage.turn;
+    const fingerprint = node => {
+      const text = node.textContent || ''; let a = 2166136261, b = 5381;
+      for (let i = 0; i < text.length; i++) { a = Math.imul(a ^ text.charCodeAt(i), 16777619); b = Math.imul(b, 33) ^ text.charCodeAt(i); }
+      return text.length + ':' + (a >>> 0).toString(16) + ':' + (b >>> 0).toString(16);
+    };
+    const oldAnswers = turn ? allAnswers.slice(0, turn.answers.length) : [];
+    const turnValid = !turn || (turn.answers.length === 0 || location.pathname === turn.path)
+      && allAnswers.length >= turn.answers.length && turn.answers.every((old, index) => {
+        const node = allAnswers[index];
+        if (node.getAttribute('data-local-bridge-history') === old.marker) return true;
+        if (fingerprint(node) !== old.signature) return false;
+        node.setAttribute('data-local-bridge-history', old.marker); return true;
+      });
+    const answers = turn ? turnValid ? allAnswers.slice(turn.answers.length) : [] : allAnswers;
     let thoughts = topLevel('.ds-think-content');
+    if (turn) thoughts = turnValid ? thoughts.filter(element => element.getAttribute('data-local-bridge-history') !== turn.nonce
+      && (!oldAnswers.length || !(oldAnswers.at(-1).compareDocumentPosition(element) & Node.DOCUMENT_POSITION_PRECEDING))) : [];
     const answer = answers.length === 1 ? answers[0] : null;
     const message = answer?.closest('.ds-message');
     const wrapper = message?.parentElement;
     const wrapperAnswers = wrapper ? [...wrapper.querySelectorAll(answerSelector)]
-      .filter(element => !element.parentElement?.closest(answerSelector)) : [];
+      .filter(element => !element.parentElement?.closest(answerSelector) && !oldAnswers.includes(element)) : [];
     if (message) {
       const currentThoughts = thoughts.filter(element => message.contains(element));
       thoughts = currentThoughts.length ? currentThoughts
@@ -88,7 +105,9 @@ export function extractDomTexts({ selectors, inspectPage }) {
     const composers = namedComposers.length === 1 ? namedComposers : allComposers;
     const completionScope = wrapperAnswers.length === 1 && wrapperAnswers[0] === answer ? wrapper : null;
     const readAloud = completionScope ? [...completionScope.querySelectorAll('[aria-label]')]
-      .filter(element => /^(?:朗读|Read aloud|播放语音)$/i.test(element.getAttribute('aria-label')?.trim())) : [];
+      .filter(element => /^(?:朗读|Read aloud|播放语音)$/i.test(element.getAttribute('aria-label')?.trim()))
+      .filter(element => !turn || element.getAttribute('data-local-bridge-history') !== turn.nonce
+        && Boolean(answer.compareDocumentPosition(element) & Node.DOCUMENT_POSITION_FOLLOWING)) : [];
     const alerts = allVisible('[role="alert"], .ds-toast, [data-testid="error-message"], [data-testid="input-error"]');
     const challenge = allVisible('[class*="captcha" i], [id*="captcha" i], [data-testid*="captcha" i], iframe[src*="captcha" i], iframe[title*="challenge" i], iframe[src*="challenges.cloudflare.com" i]');
     results.page = {
@@ -101,6 +120,8 @@ export function extractDomTexts({ selectors, inspectPage }) {
       composerSelector: namedComposers.length === 1 ? 'textarea[placeholder*="DeepSeek" i]:visible' : 'textarea:visible',
       composerTextLength: composers.length === 1 ? composers[0].value.length : 0,
       chatPath: location.pathname,
+      turnValid,
+      totalAnswerCount: allAnswers.length,
       messageCount: allVisible('.ds-message').length,
       answerCount: answers.length,
       reasoningCount: thoughts.length,

@@ -1,4 +1,4 @@
-# DeepSeek 安卓本机桥 v0.3.0
+# DeepSeek 安卓本机桥 v0.4.0
 
 在安卓手机上登录 DeepSeek 网页，并把网页操作转换成同一部手机可以调用的 OpenAI Chat Completions 和 Anthropic Messages 接口。两种协议共用端口、密钥、队列与网页登录状态。运行链路全部在手机上：
 
@@ -12,11 +12,11 @@ https://chat.deepseek.com/
 
 运行时不需要电脑、Termux、Root、ADB 或桌面 Harness。需要互联网连接 DeepSeek。安卓客户端若要执行工具，须具备它自己的工具执行能力；本桥只交出经过校验的工具请求。
 
-**当前 v0.3.0 新增 Anthropic 协议适配、Claude Code 配置复制、可靠点击发送按钮，以及网页智能搜索策略。** 保留按钮启动修复、新 Logo 与三个页面。完整测试与 APK 校验记录见 VERIFICATION.md，变更见 FIX_0.3.0.md。尚未在用户手机实测；首次分屏保持应用可见，后台与锁屏行为需设备验证。
+**当前 v0.4.0 加入任务会话复用：同一任务的追问和工具往返沿用网页对话，只发送新增消息。** 保留 Anthropic 协议适配、自动发送、内置智能搜索、按钮启动修复和新 Logo。概览页可查看复用次数并选择下次开始新会话。验证记录见 VERIFICATION.md，变更见 FIX_0.4.0.md。安卓真机与真实账号仍需设备验证。
 
 ## 安装与使用
 
-1. 将 `deepseek-android-bridge-v0.3.0.apk` 传到手机并安装。支持 Android 8.0 / API 26 及以上；要求 Android System WebView/Chrome 的 Chromium 版本达到 120。版本过低时应用会提示更新。
+1. 将 `deepseek-android-bridge-v0.4.0.apk` 传到手机并安装。支持 Android 8.0 / API 26 及以上；要求 Android System WebView/Chrome 的 Chromium 版本达到 120。版本过低时应用会提示更新。
 2. 打开「DeepSeek 本机桥」。应用会启动本机接口并显示概览；底部导航可以进入 DeepSeek 网页和连接设置。允许通知后可以从通知栏回到应用。
 3. 进入「DeepSeek」页，在应用内的网页手动登录 DeepSeek，手动完成短信与网站要求的人机验证。手机拥有独立登录状态，不会导入电脑会话。
 4. 回到「概览」，点「重新检测」，再点「接口自测」卡片。后者会真实发送“只回复 ANDROID_BRIDGE_OK”，必须看到成功结果才算手机首次基本验收通过。
@@ -40,16 +40,19 @@ Claude Code 在「连接 → 复制 Claude Code 配置」中直接复制，使�
 - 文本、完整消息历史、OpenAI 形式的 `tools` / `tool_choice`、独立 `reasoning_content`、SSE 和估算 usage。工具 Schema 保留并执行 draft-07 / 2019-09 / 2020-12 校验。
 - Anthropic `/v1/messages`：system、content blocks、`tool_use` / `tool_result`、具名 SSE、thinking 开关和长 MCP 名称映射。`/v1/messages/count_tokens` 为本地估算，不生成网页请求。支持 `?beta=true` 路径及 Bearer / `x-api-key` 认证。两种认证同时发送时必须均有效。
 - Anthropic thinking/adaptive 映射为网页思考开关；没有 Anthropic 的签名状态，`usage_meta.thinking_signature` 为 `not_available`，不伪造签名。结构化输出、服务端执行工具等未实现能力明确报错。
-- 复用桌面桥 v0.2.2 的核心；三个文件保持原文，browser.js 加入安卓开关与提交钩子，protocol.js 加入 Schema 方言选择。哈希与修改说明在 `CORE_PROVENANCE.json`。没有修改或重启桌面桥 / Harness。
+- 复用桌面桥 v0.2.2 的核心；两个文件保持原文，browser.js 加入安卓会话/开关/提交钩子，protocol.js 加入 Schema 方言与规范化消息，dom-text.js 加入本轮回答边界。哈希与修改说明在 `CORE_PROVENANCE.json`。没有修改或重启桌面桥 / Harness。
 - 一次只操作一个网页；最多等待 8 个请求。取消后等待旧页面清理，避免把旧回答混入下一轮。
 - 工具封装校验失败或完全无输出时最多再尝试一次，两种恢复共用最多两次的预算。完全无输出等待 120 秒，总请求时限 600 秒（含排队）。已出现正文或原始思考时不走空响应重试。
 - 手机请求体传输上限 **16 MiB**，超限返回 413；不截断历史。没有宣称手机实测过 1M token。
 - 图片实现支持 PNG/JPEG/WebP 的 base64 data URL，每张不超过 10 MiB、最多 8 张，受整体请求上限约束。远程 HTTP(S) 图片 URL 明确返回 400。手机端图片上传采用 WebView FileList/DataTransfer + DOM 就绪检查；尚未在真实手机的 DeepSeek 上传链路验收。
-- usage 是字符启发式估算，图片 token 不计入。网页没有暴露官方缓存统计，`usage_meta.cache.status` 为 `unknown`，不伪造命中数。
+- usage 按完整逻辑 API 历史进行字符启发式估算，图片 token 不计入；不是网页累计上下文或官方账单。物理提交可为增量，`usage_meta.conversation` 报告是否复用及发送消息数。网页没有暴露官方缓存统计，`usage_meta.cache.status` 为 `unknown`，不伪造命中数。
 - 仍保留网页渲染、验证码、登录失效、限流和改版导致失败的可能。手机号与验证码只在网页中由你输入，不由桥处理。
 - 自动发送会核对当前编辑器和待发正文，点击唯一可用发送按钮，再检查提交发生。同一提交最多点击一次；缺失、禁用、歧义或生成中明确报错。真实手机页面布局、文件上传与长期后台生命周期仍需设备验证。
 - 智能搜索默认开启，在「概览 → 智能搜索」可调整。每次发送前应用并确认网页开关，无需外部搜索模型/API。网页自行决定是否实际检索，请求可用 boolean `web_search` 覆盖本次策略。Anthropic `web_search_*` 声明映射为网页搜索，不提供其原生结果块、引用格式和高级过滤语义。
-- 本版仍按独立请求创建网页对话。任务会话复用是后续设计，尚未实现；不会自动删除现有对话。
+- 默认自动复用：比对包含上次校验后 assistant 回复和工具 ID 的完整历史前缀；匹配时只发送新增消息、上传新增图片，工具定义未变时不重复发送。无需修改普通客户端配置。
+- 最多保留 8 个任务关联；交错调用时恢复各自的网页 URL 并核对最后回答。只在内存保存历史指纹与页面锚点，进程结束后关联不保留。
+- 相同首问不用于合并独立任务。客户端改写/压缩历史、会话丢失、关联被淘汰或出现歧义时，携带完整 API 历史开始新对话；不会把增量发进不匹配的旧会话。未发送草稿会保留并明确报错。
+- 概览中的「会话复用 → 下次开始新会话」只清除本地关联，不删除网页历史。请求可传 `conversation_id` 隔离任务、`reset_conversation: true` 重置关联。没有 ID 时自动匹配；显式 ID 也需要历史前缀匹配，不会盲目拼接单条无历史请求。详见 FIX_0.4.0.md。
 
 ## 结构与构建
 
@@ -73,7 +76,7 @@ npm.cmd test
 
 发布源码包已经包含核心。`npm.cmd run sync` 会拒绝直接覆盖已修改的 browser.js / protocol.js；维护者需手动合并后同步。`scripts/sync-tests.mjs` 同理，只用于从相邻工程同步现有核心测试。
 
-已安装 Claude Code 的主机可运行 `node scripts/smoke-claude.mjs <隔离测试目录>`，或通过 `CLAUDE_TEST_BINARY` 指定可执行文件。该测试使用生产 JS 协议引擎与确定性模型夹具，实际调用客户端 Write 工具、检查文件及结果回传；不使用真实账号、不读写用户 Claude 设置。证据见 `claude-smoke-results.json`。
+已安装 Claude Code 的主机可运行 `node scripts/smoke-claude.mjs <隔离测试目录>`，或通过 `CLAUDE_TEST_BINARY` 指定可执行文件。该测试使用生产 JS 协议引擎与确定性模型夹具，实际调用 Write、检查文件及结果回传，并验证两次调用只使用一个夹具会话；不使用真实账号、不读写用户 Claude 设置。证据见 `claude-smoke-results.json`。
 
 Android 的 WebView 是应用内网页组件，后台服务需遵循系统的前台服务与生命周期规则；前台通知不等于保证网页永不暂停。参考 [WebView 官方文档](https://developer.android.com/develop/ui/views/layout/webapps/webview)、[前台服务类型](https://developer.android.com/develop/background-work/services/fgs/service-types)。
 

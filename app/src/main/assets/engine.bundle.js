@@ -443,7 +443,7 @@
         AND: new code_1._Code("&&"),
         ADD: new code_1._Code("+")
       };
-      var Node = class {
+      var Node2 = class {
         optimizeNodes() {
           return this;
         }
@@ -451,7 +451,7 @@
           return this;
         }
       };
-      var Def = class extends Node {
+      var Def = class extends Node2 {
         constructor(varKind, name, rhs) {
           super();
           this.varKind = varKind;
@@ -474,7 +474,7 @@
           return this.rhs instanceof code_1._CodeOrName ? this.rhs.names : {};
         }
       };
-      var Assign = class extends Node {
+      var Assign = class extends Node2 {
         constructor(lhs, rhs, sideEffects) {
           super();
           this.lhs = lhs;
@@ -504,7 +504,7 @@
           return `${this.lhs} ${this.op}= ${this.rhs};` + _n;
         }
       };
-      var Label = class extends Node {
+      var Label = class extends Node2 {
         constructor(label) {
           super();
           this.label = label;
@@ -514,7 +514,7 @@
           return `${this.label}:` + _n;
         }
       };
-      var Break = class extends Node {
+      var Break = class extends Node2 {
         constructor(label) {
           super();
           this.label = label;
@@ -525,7 +525,7 @@
           return `break${label};` + _n;
         }
       };
-      var Throw = class extends Node {
+      var Throw = class extends Node2 {
         constructor(error) {
           super();
           this.error = error;
@@ -537,7 +537,7 @@
           return this.error.names;
         }
       };
-      var AnyCode = class extends Node {
+      var AnyCode = class extends Node2 {
         constructor(code) {
           super();
           this.code = code;
@@ -556,7 +556,7 @@
           return this.code instanceof code_1._CodeOrName ? this.code.names : {};
         }
       };
-      var ParentNode = class extends Node {
+      var ParentNode = class extends Node2 {
         constructor(nodes = []) {
           super();
           this.nodes = nodes;
@@ -7601,7 +7601,7 @@
       Object.defineProperty(exports, "__esModule", { value: true });
       var metaSchema = require_schema();
       var applicator = require_applicator2();
-      var content = require_content();
+      var content2 = require_content();
       var core = require_core3();
       var format = require_format3();
       var metadata = require_meta_data();
@@ -7612,7 +7612,7 @@
         [
           metaSchema,
           applicator,
-          content,
+          content2,
           core,
           with$data(this, format),
           metadata,
@@ -8111,7 +8111,7 @@
       var metaSchema = require_schema2();
       var applicator = require_applicator3();
       var unevaluated = require_unevaluated2();
-      var content = require_content2();
+      var content2 = require_content2();
       var core = require_core4();
       var format = require_format_annotation();
       var metadata = require_meta_data2();
@@ -8123,7 +8123,7 @@
           metaSchema,
           applicator,
           unevaluated,
-          content,
+          content2,
           core,
           with$data(this, format),
           metadata,
@@ -8282,12 +8282,32 @@
       const textOf = (element) => (element.innerText || element.textContent || "").replace(/\r\n/g, "\n");
       const topLevel = (selector) => [...document.querySelectorAll(selector)].filter((element) => !element.parentElement?.closest(selector));
       const answerSelector = inspectPage.answerSelector;
-      const answers = topLevel(answerSelector).filter(visible).filter((element) => !element.closest('.ds-think-content, [data-message-role="reasoning"], [data-role="reasoning"]'));
+      const allAnswers = topLevel(answerSelector).filter(visible).filter((element) => !element.closest('.ds-think-content, [data-message-role="reasoning"], [data-role="reasoning"]'));
+      const turn = inspectPage.turn;
+      const fingerprint = (node) => {
+        const text = node.textContent || "";
+        let a = 2166136261, b = 5381;
+        for (let i = 0; i < text.length; i++) {
+          a = Math.imul(a ^ text.charCodeAt(i), 16777619);
+          b = Math.imul(b, 33) ^ text.charCodeAt(i);
+        }
+        return text.length + ":" + (a >>> 0).toString(16) + ":" + (b >>> 0).toString(16);
+      };
+      const oldAnswers = turn ? allAnswers.slice(0, turn.answers.length) : [];
+      const turnValid = !turn || (turn.answers.length === 0 || location.pathname === turn.path) && allAnswers.length >= turn.answers.length && turn.answers.every((old, index) => {
+        const node = allAnswers[index];
+        if (node.getAttribute("data-local-bridge-history") === old.marker) return true;
+        if (fingerprint(node) !== old.signature) return false;
+        node.setAttribute("data-local-bridge-history", old.marker);
+        return true;
+      });
+      const answers = turn ? turnValid ? allAnswers.slice(turn.answers.length) : [] : allAnswers;
       let thoughts = topLevel(".ds-think-content");
+      if (turn) thoughts = turnValid ? thoughts.filter((element) => element.getAttribute("data-local-bridge-history") !== turn.nonce && (!oldAnswers.length || !(oldAnswers.at(-1).compareDocumentPosition(element) & Node.DOCUMENT_POSITION_PRECEDING))) : [];
       const answer = answers.length === 1 ? answers[0] : null;
       const message = answer?.closest(".ds-message");
       const wrapper = message?.parentElement;
-      const wrapperAnswers = wrapper ? [...wrapper.querySelectorAll(answerSelector)].filter((element) => !element.parentElement?.closest(answerSelector)) : [];
+      const wrapperAnswers = wrapper ? [...wrapper.querySelectorAll(answerSelector)].filter((element) => !element.parentElement?.closest(answerSelector) && !oldAnswers.includes(element)) : [];
       if (message) {
         const currentThoughts = thoughts.filter((element) => message.contains(element));
         thoughts = currentThoughts.length ? currentThoughts : wrapperAnswers.length === 1 && wrapperAnswers[0] === answer ? thoughts.filter((element) => wrapper.contains(element)) : [];
@@ -8298,7 +8318,7 @@
       const namedComposers = allComposers.filter((element) => /DeepSeek/i.test(element.getAttribute("placeholder") || ""));
       const composers = namedComposers.length === 1 ? namedComposers : allComposers;
       const completionScope = wrapperAnswers.length === 1 && wrapperAnswers[0] === answer ? wrapper : null;
-      const readAloud = completionScope ? [...completionScope.querySelectorAll("[aria-label]")].filter((element) => /^(?:朗读|Read aloud|播放语音)$/i.test(element.getAttribute("aria-label")?.trim())) : [];
+      const readAloud = completionScope ? [...completionScope.querySelectorAll("[aria-label]")].filter((element) => /^(?:朗读|Read aloud|播放语音)$/i.test(element.getAttribute("aria-label")?.trim())).filter((element) => !turn || element.getAttribute("data-local-bridge-history") !== turn.nonce && Boolean(answer.compareDocumentPosition(element) & Node.DOCUMENT_POSITION_FOLLOWING)) : [];
       const alerts = allVisible('[role="alert"], .ds-toast, [data-testid="error-message"], [data-testid="input-error"]');
       const challenge = allVisible('[class*="captcha" i], [id*="captcha" i], [data-testid*="captcha" i], iframe[src*="captcha" i], iframe[title*="challenge" i], iframe[src*="challenges.cloudflare.com" i]');
       results.page = {
@@ -8309,6 +8329,8 @@
         composerSelector: namedComposers.length === 1 ? 'textarea[placeholder*="DeepSeek" i]:visible' : "textarea:visible",
         composerTextLength: composers.length === 1 ? composers[0].value.length : 0,
         chatPath: location.pathname,
+        turnValid,
+        totalAnswerCount: allAnswers.length,
         messageCount: allVisible(".ds-message").length,
         answerCount: answers.length,
         reasoningCount: thoughts.length,
@@ -8510,8 +8532,13 @@
     let timer;
     let abort;
     const interruption = new Promise((_, reject) => {
+      const expire = () => {
+        const remaining = deadline - Date.now();
+        if (remaining > 0) timer = setTimeout(expire, remaining);
+        else reject(timedOut());
+      };
       if (Date.now() >= deadline) reject(timedOut());
-      else timer = setTimeout(() => reject(timedOut()), Math.max(1, deadline - Date.now()));
+      else timer = setTimeout(expire, Math.max(1, deadline - Date.now()));
       if (signal) {
         abort = () => reject(cancelled());
         signal.addEventListener("abort", abort, { once: true });
@@ -8640,7 +8667,7 @@
     }
     async _readState(page) {
       const extracted = await page.evaluate(extractDomTexts, {
-        inspectPage: { origin: ORIGIN, answerSelector: ANSWER_SELECTOR },
+        inspectPage: { origin: ORIGIN, answerSelector: ANSWER_SELECTOR, turn: this._turnBoundary },
         selectors: [
           { key: "answer", selector: ANSWER_SELECTOR },
           { key: "reasoning", selector: ".ds-think-content", visibleOnly: false }
@@ -8671,16 +8698,18 @@
       return state;
     }
     async _readStateBounded(page, signal, deadline, readDeadline = Infinity) {
+      const observationDeadline = Math.min(readDeadline, Date.now() + 5e3);
       try {
-        return this._observeState(await within(this._readState(page), signal, Math.min(deadline, readDeadline, Date.now() + 5e3)));
+        return this._observeState(await within(this._readState(page), signal, Math.min(deadline, observationDeadline)));
       } catch (error) {
-        if (error?.code === "REQUEST_TIMEOUT" && Date.now() < deadline && !signal?.aborted) {
+        if (error?.code === "REQUEST_TIMEOUT" && observationDeadline < deadline && Date.now() < deadline && !signal?.aborted) {
           throw new BrowserBridgeError("webpage_observation_timeout", 504, "\u7F51\u9875\u72B6\u6001\u8BFB\u53D6\u672A\u80FD\u5728\u65F6\u9650\u5185\u5B8C\u6210\uFF08\u5355\u6B21\u6700\u591A 5 \u79D2\uFF09\uFF0C\u8BF7\u68C0\u67E5\u4E13\u7528\u6D4F\u89C8\u5668\u3002");
         }
         throw error;
       }
     }
     _checkState(state, prompt, { allowHistory = false, allowAmbiguous = false } = {}) {
+      if (state.turnValid === false) throw new BrowserBridgeError("conversation_changed", 409, "\u7F51\u9875\u5386\u53F2\u5728\u672C\u8F6E\u751F\u6210\u65F6\u53D1\u751F\u53D8\u5316\uFF0C\u5DF2\u505C\u6B62\u4EE5\u907F\u514D\u6DF7\u5165\u65E7\u56DE\u7B54\u3002\u8BF7\u91CD\u8BD5\u6216\u5F00\u59CB\u65B0\u4F1A\u8BDD\u3002");
       if (!state.originMatches) {
         throw new BrowserBridgeError("UNEXPECTED_PAGE", 502, "\u6D4F\u89C8\u5668\u79BB\u5F00\u4E86 DeepSeek \u9875\u9762\uFF0C\u8BF7\u91CD\u65B0\u6253\u5F00\u767B\u5F55\u7A97\u53E3\u3002");
       }
@@ -8976,6 +9005,13 @@
     }
     async _beforeSubmit(_page, _options) {
     }
+    async _openConversation(page, _conversation, signal, deadline) {
+      return this._newConversation(page, signal, deadline);
+    }
+    async _beginTurn(_page, _state, _options) {
+    }
+    async _completeTurn(_page, _state, _options) {
+    }
     async _waitSubmission(page, before, prompt, signal, deadline) {
       const submissionDeadline = Math.min(deadline, Date.now() + 5e3);
       while (Date.now() < submissionDeadline) {
@@ -9004,7 +9040,7 @@
         "\u63D0\u4EA4\u540E 5 \u79D2\u5185\u7F51\u9875\u672A\u786E\u8BA4\u63A5\u6536\u6D88\u606F\uFF08\u8F93\u5165\u672A\u6E05\u7A7A\u3001\u6CA1\u6709\u65B0\u6D88\u606F\u6216\u65B0\u5BF9\u8BDD\uFF09\u3002\u5DF2\u505C\u6B62\uFF0C\u672A\u91CD\u590D\u63D0\u4EA4\u3002"
       );
     }
-    async *generate({ prompt, images = [], reasoning = false, webSearch, signal } = {}) {
+    async *generate({ prompt, images = [], reasoning = false, webSearch, conversation, signal } = {}) {
       if (typeof prompt !== "string" || !prompt.trim()) {
         throw new BrowserBridgeError("INVALID_PROMPT", 400, "\u6D88\u606F\u5185\u5BB9\u4E0D\u80FD\u4E3A\u7A7A\u3002");
       }
@@ -9041,7 +9077,13 @@
         checkRequest(signal, deadline);
         page = await within(this._ensureBrowser(), signal, deadline);
         this._activeRequest.phase = "new_conversation";
-        const blank = await this._newConversation(page, signal, deadline);
+        const blank = await this._openConversation(page, conversation, signal, deadline);
+        if (!blank?.reused && conversation?.fullPrompt) {
+          prompt = conversation.fullPrompt;
+          images = conversation.fullImages || images;
+        }
+        this._activeRequest.promptLength = Array.from(prompt).length;
+        this._activeRequest.imageCount = images.length;
         this._activeRequest.phase = "setting_reasoning";
         await this._setReasoning(page, reasoning, signal, deadline);
         if (images.length) {
@@ -9059,9 +9101,10 @@
         const accepted = await within(composer.inputValue(), signal, deadline);
         if (accepted !== prompt) throw this._contextLengthError(prompt, accepted);
         const beforeSubmission = await this._readStateBounded(page, signal, deadline);
-        this._checkState(beforeSubmission, prompt);
+        this._checkState(beforeSubmission, prompt, { allowHistory: blank?.reused === true });
         await this._setReasoning(page, reasoning, signal, deadline);
         await within(this._beforeSubmit(page, { reasoning, webSearch, signal, deadline }), signal, deadline);
+        await within(this._beginTurn(page, beforeSubmission, { signal, deadline, conversation: blank?.reused ? conversation : void 0 }), signal, deadline);
         this._activeRequest.phase = "ready";
         yield { type: "ready" };
         checkRequest(signal, deadline);
@@ -9158,7 +9201,8 @@
             const finalText = textTail.push(text, { final: true });
             if (finalText) yield { type: "text", delta: finalText };
             completed = true;
-            yield { type: "done", finishReason: "stop" };
+            const handle = await within(this._completeTurn(page, state, { signal, deadline }), signal, deadline);
+            yield { type: "done", finishReason: "stop", ...handle ? { conversation: handle, reused: blank?.reused === true } : {} };
             return;
           }
           previous = text;
@@ -9276,6 +9320,39 @@
       return { clicked: true, count: 1, reason: "clicked", source };
     }
     return result("send_missing");
+  }
+
+  // js/conversation-dom.js
+  function conversationDom({ action = "snapshot", nonce = "turn" } = {}) {
+    if (location.origin !== "https://chat.deepseek.com") return null;
+    const visible = (element) => {
+      if (!element?.isConnected || !element.getClientRects().length) return false;
+      for (let node = element; node; node = node.parentElement) {
+        const style = getComputedStyle(node);
+        if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) return false;
+      }
+      return true;
+    };
+    const fingerprint = (node) => {
+      const text = node.textContent || "";
+      let a = 2166136261, b = 5381;
+      for (let i = 0; i < text.length; i++) {
+        a = Math.imul(a ^ text.charCodeAt(i), 16777619);
+        b = Math.imul(b, 33) ^ text.charCodeAt(i);
+      }
+      return text.length + ":" + (a >>> 0).toString(16) + ":" + (b >>> 0).toString(16);
+    };
+    const selector = ".ds-markdown.ds-assistant-message-main-content";
+    const answers = [...document.querySelectorAll(selector)].filter((node) => visible(node) && !node.parentElement?.closest(selector) && !node.closest('.ds-think-content, [data-message-role="reasoning"], [data-role="reasoning"]'));
+    const signatures = answers.map(fingerprint);
+    if (action === "inspect") return { path: location.pathname, answerCount: answers.length, lastAnswer: signatures.at(-1) || "" };
+    const descriptors = answers.map((node, index) => {
+      const marker = nonce + "-" + index;
+      node.setAttribute("data-local-bridge-history", marker);
+      return { marker, signature: signatures[index] };
+    });
+    document.querySelectorAll('.ds-think-content, [aria-label="\u6717\u8BFB"], [aria-label="Read aloud"], [aria-label="\u64AD\u653E\u8BED\u97F3"]').forEach((node) => node.setAttribute("data-local-bridge-history", nonce));
+    return { path: location.pathname, nonce, answers: descriptors };
   }
 
   // js/mobile-browser.js
@@ -9407,6 +9484,48 @@
       this.rpc = rpc2;
       this.sendControlTimeoutMs = Number.isFinite(config.sendControlTimeoutMs) ? Math.max(100, config.sendControlTimeoutMs) : 5e3;
     }
+    async _openConversation(page, conversation, signal, deadline) {
+      this._turnBoundary = null;
+      let current = await this._readStateBounded(page, signal, deadline);
+      if (current.composerTextLength > 0) throw new BrowserBridgeError("conversation_has_draft", 409, "\u7F51\u9875\u8F93\u5165\u6846\u8FD8\u6709\u672A\u53D1\u9001\u7684\u5185\u5BB9\uFF0C\u8BF7\u5148\u5904\u7406\u8349\u7A3F\u540E\u91CD\u8BD5\u3002");
+      if (conversation?.reuse && /^\/(?:a\/)?chat\/(?:s\/)?[a-zA-Z0-9_-]+\/?$/.test(conversation.path || "")) {
+        this._checkState(current, void 0, { allowHistory: true });
+        if (current.chatPath !== conversation.path) {
+          await page.goto("https://chat.deepseek.com" + conversation.path);
+        }
+        const restoreDeadline = Math.min(deadline, Date.now() + 3e3);
+        do {
+          if (signal?.aborted) throw new BrowserBridgeError("REQUEST_CANCELLED", 499, "\u8BF7\u6C42\u5DF2\u53D6\u6D88\u3002");
+          try {
+            current = await this._readStateBounded(page, signal, deadline, restoreDeadline);
+          } catch (error) {
+            if (error.code === "webpage_observation_timeout" && Date.now() >= restoreDeadline && !signal?.aborted) break;
+            throw error;
+          }
+          this._checkState(current, void 0, { allowHistory: true });
+          if (current.composerTextLength > 0) throw new BrowserBridgeError("conversation_has_draft", 409, "\u8BE5\u7F51\u9875\u4F1A\u8BDD\u4E2D\u8FD8\u6709\u672A\u53D1\u9001\u7684\u8349\u7A3F\uFF0C\u8BF7\u5148\u5904\u7406\u540E\u91CD\u8BD5\u3002");
+          const snapshot = await page.evaluate(conversationDom, { action: "inspect" });
+          if (snapshot?.path === conversation.path && snapshot.answerCount === conversation.answerCount && snapshot.lastAnswer === conversation.lastAnswer && current.composerCount === 1) return { ...current, reused: true };
+          await new Promise((resolve) => setTimeout(resolve, Math.min(this.config.pollMs, Math.max(1, restoreDeadline - Date.now()))));
+        } while (Date.now() < restoreDeadline);
+        if (signal?.aborted) throw new BrowserBridgeError("REQUEST_CANCELLED", 499, "\u8BF7\u6C42\u5DF2\u53D6\u6D88\u3002");
+        if (Date.now() >= deadline) throw new BrowserBridgeError("REQUEST_TIMEOUT", 504, "\u7F51\u9875\u4F1A\u8BDD\u6062\u590D\u8D85\u65F6\u3002");
+      }
+      return this._newConversation(page, signal, deadline);
+    }
+    async _beginTurn(page, _state, { conversation } = {}) {
+      this._turnBoundary = await page.evaluate(conversationDom, { nonce: "turn-" + crypto.randomUUID() });
+      const snapshot = this._turnBoundary;
+      const valid = snapshot && (conversation ? snapshot.path === conversation.path && snapshot.answers.length === conversation.answerCount && snapshot.answers.at(-1)?.signature === conversation.lastAnswer : snapshot.answers.length === 0);
+      if (!valid) {
+        this._turnBoundary = null;
+        throw new BrowserBridgeError("conversation_changed", 409, "\u53D1\u9001\u524D\u7F51\u9875\u4F1A\u8BDD\u53D1\u751F\u53D8\u5316\uFF0C\u5DF2\u505C\u6B62\u4EE5\u907F\u514D\u6DF7\u5165\u65E7\u5386\u53F2\u3002");
+      }
+    }
+    async _completeTurn(page) {
+      const snapshot = await page.evaluate(conversationDom, { action: "inspect" });
+      return /^\/(?:a\/)?chat\/(?:s\/)?[a-zA-Z0-9_-]+\/?$/.test(snapshot?.path || "") ? snapshot : void 0;
+    }
     async _beforeSubmit(page, { webSearch = true, reasoning, signal, deadline }) {
       await this._setPageToggle(page, "search", webSearch, signal, deadline);
       const thought = await this._readReasoningMode(page);
@@ -9470,12 +9589,14 @@
       return result;
     }
     async _discardPage(page) {
+      this._turnBoundary = null;
       page.closed = true;
       if (this._page === page) this._page = null;
       await this.rpc("resetBrowser", {});
       this._context = null;
     }
     async _closeContext() {
+      this._turnBoundary = null;
       if (this._page) this._page.closed = true;
       this._page = null;
       this._context = null;
@@ -9526,11 +9647,11 @@
     }
     return enabled;
   }
-  function messageContent(content, allowNull, messageIndex, images) {
-    if (typeof content === "string") return content;
-    if (content === null && allowNull) return null;
-    if (!Array.isArray(content)) bad("Message content must be text or an array of text and image_url parts. Only assistant content may be null.", "invalid_content");
-    return content.map((part, partIndex) => {
+  function messageContent(content2, allowNull, messageIndex, images) {
+    if (typeof content2 === "string") return content2;
+    if (content2 === null && allowNull) return null;
+    if (!Array.isArray(content2)) bad("Message content must be text or an array of text and image_url parts. Only assistant content may be null.", "invalid_content");
+    return content2.map((part, partIndex) => {
       const location2 = `messages[${messageIndex}].content[${partIndex}]`;
       if (!isObject(part)) bad(`${location2} must be a content part object.`, "invalid_content_part");
       if (part.type === "text") {
@@ -9644,7 +9765,7 @@
         choice === "required" ? `You MUST request at least one function${forcedName ? `, specifically ${forcedName}` : ""}.` : "Tool choice is auto: request functions when needed to advance the task. Do not request unnecessary functions for a direct answer, an already completed task, or a genuine question or blocker that only the user can resolve."
       ].join("\n") : "Reply with the ordinary assistant answer inside exactly one outer text code block. Use an opening line of FIVE backticks followed by text (`````text), then your complete answer, then a closing line of FIVE backticks (`````). Put no extra text outside this outer block. This outer fence protects the exact answer from webpage Markdown rendering; inside it, preserve normal answer text, Markdown formatting, source code, backslashes, backticks, and any normal triple-backtick code blocks. Do not use a JSON envelope. The block contents are the ordinary assistant answer."
     ].filter(Boolean).join("\n");
-    return { prompt, images, reasoning, includeUsage: body.stream_options?.include_usage === true, stream: body.stream === true, toolsEnabled, choice, forcedName, definitions };
+    return { prompt, messages, images, reasoning, includeUsage: body.stream_options?.include_usage === true, stream: body.stream === true, toolsEnabled, choice, forcedName, definitions };
   }
   function parseToolResponse(text, request) {
     const invalid2 = (message) => {
@@ -9865,10 +9986,10 @@
     for (const character of text) units += HAN_CHARACTER.test(character) ? 8 : 3;
     return units;
   }
-  function estimateUsage({ prompt = "", content = "", reasoning = "", images } = {}) {
+  function estimateUsage({ prompt = "", content: content2 = "", reasoning = "", images } = {}) {
     const promptTokens = Math.ceil(weightedUnits(prompt) / 12);
     const reasoningUnits = weightedUnits(reasoning);
-    const completionTokens = Math.ceil((weightedUnits(content) + reasoningUnits) / 12);
+    const completionTokens = Math.ceil((weightedUnits(content2) + reasoningUnits) / 12);
     const reasoningTokens = Math.ceil(reasoningUnits / 12);
     void images;
     return {
@@ -9899,10 +10020,10 @@
     }
     return "bridge_" + name.replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 44) + "_" + (hash >>> 0).toString(16).padStart(8, "0");
   }
-  function parts(content) {
-    if (typeof content === "string") return [{ type: "text", text: content }];
-    if (!Array.isArray(content)) invalid("Message content must be text or an array of content blocks.");
-    return content.map((block) => {
+  function parts(content2) {
+    if (typeof content2 === "string") return [{ type: "text", text: content2 }];
+    if (!Array.isArray(content2)) invalid("Message content must be text or an array of content blocks.");
+    return content2.map((block) => {
       if (!object(block)) invalid("Content blocks must be objects.");
       if (block.type === "text" && typeof block.text === "string") return { type: "text", text: block.text };
       if (block.type === "image") {
@@ -9977,9 +10098,9 @@
           if (block.type === "tool_result") {
             flush();
             if (typeof block.tool_use_id !== "string" || !block.tool_use_id) invalid("tool_result requires tool_use_id.");
-            const content = parts(block.content ?? "");
-            if (block.is_error) content.unshift({ type: "text", text: "[Tool execution failed]" });
-            messages.push({ role: "tool", tool_call_id: block.tool_use_id, content });
+            const content2 = parts(block.content ?? "");
+            if (block.is_error) content2.unshift({ type: "text", text: "[Tool execution failed]" });
+            messages.push({ role: "tool", tool_call_id: block.tool_use_id, content: content2 });
           } else pending2.push(...parts([block]));
         }
         flush();
@@ -9998,6 +10119,7 @@
     if (input.stop_sequences !== void 0) body.stop = input.stop_sequences;
     if (input.web_search !== void 0) body.web_search = input.web_search;
     else if (delegatedSearch) body.web_search = true;
+    for (const field of ["conversation_id", "reset_conversation", "metadata"]) if (input[field] !== void 0) body[field] = input[field];
     if (input.thinking !== void 0) {
       if (!object(input.thinking) || !["enabled", "disabled", "adaptive"].includes(input.thinking.type)) invalid("thinking.type must be enabled, disabled or adaptive.");
       body.thinking = { type: input.thinking.type === "disabled" ? "disabled" : "enabled" };
@@ -10017,18 +10139,18 @@
     const initial = estimateUsage({ prompt: JSON.stringify(conversion.body) }).prompt_tokens;
     const meta = (extra) => ({ ...usageMeta, ...extra });
     const responseName = (name) => conversion.names.get(name) || name;
-    const message = (content, finish2, stats2, extra) => ({
+    const message = (content2, finish2, stats2, extra) => ({
       id,
       type: "message",
       role: "assistant",
       model,
-      content,
+      content: content2,
       stop_reason: finish2,
       stop_sequence: null,
       usage: usage(stats2),
       usage_meta: meta(extra)
     });
-    let started = false, finished = false, failed = false, block = null, nextIndex = 0, finish = "end_turn", stats;
+    let started = false, finished = false, failed = false, block = null, nextIndex = 0, finish = "end_turn", stats, statsMeta;
     const calls = /* @__PURE__ */ new Map();
     function emit(kind, payload, send) {
       const event = (type, fields = {}) => send("data", { text: `event: ${type}
@@ -10073,18 +10195,18 @@ data: ${JSON.stringify({ type, ...fields })}
           event("content_block_delta", { index, delta: { type: "input_json_delta", partial_json: JSON.stringify(args) } });
           event("content_block_stop", { index });
         }
-        event("message_delta", { delta: { stop_reason: calls.size ? "tool_use" : finish, stop_sequence: null }, usage: usage(stats), usage_meta: meta() });
+        event("message_delta", { delta: { stop_reason: calls.size ? "tool_use" : finish, stop_sequence: null }, usage: usage(stats), usage_meta: meta(statsMeta) });
         event("message_stop");
         finished = true;
       };
       if (kind === "response") {
         if (payload.status >= 400 || payload.body.error) return send("response", { status: payload.status, body: anthropicError(payload.body, payload.status) });
         if (payload.body.object !== "chat.completion") return send(kind, payload);
-        const choice = payload.body.choices[0], answer = choice.message, content = [];
-        if (conversion.showThinking && answer.reasoning_content) content.push({ type: "thinking", thinking: answer.reasoning_content, signature: "" });
-        if (answer.content) content.push({ type: "text", text: answer.content });
-        for (const call of answer.tool_calls || []) content.push({ type: "tool_use", id: call.id, name: responseName(call.function.name), input: JSON.parse(call.function.arguments) });
-        return send("response", { status: payload.status, body: message(content, stopReason(choice.finish_reason), payload.body.usage, payload.body.usage_meta) });
+        const choice = payload.body.choices[0], answer = choice.message, content2 = [];
+        if (conversion.showThinking && answer.reasoning_content) content2.push({ type: "thinking", thinking: answer.reasoning_content, signature: "" });
+        if (answer.content) content2.push({ type: "text", text: answer.content });
+        for (const call of answer.tool_calls || []) content2.push({ type: "tool_use", id: call.id, name: responseName(call.function.name), input: JSON.parse(call.function.arguments) });
+        return send("response", { status: payload.status, body: message(content2, stopReason(choice.finish_reason), payload.body.usage, payload.body.usage_meta) });
       }
       if (kind === "stream") return start();
       if (kind === "end") {
@@ -10113,6 +10235,7 @@ data: ${JSON.stringify({ type, ...fields })}
           continue;
         }
         if (chunk.usage) stats = chunk.usage;
+        if (chunk.usage_meta) statsMeta = chunk.usage_meta;
         for (const item of chunk.choices || []) {
           if (item.finish_reason) finish = stopReason(item.finish_reason);
           append("thinking", item.delta?.reasoning_content);
@@ -10129,6 +10252,114 @@ data: ${JSON.stringify({ type, ...fields })}
     }
     return { emit, error: anthropicError };
   }
+
+  // js/conversations.js
+  var object2 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+  var stable = (value) => JSON.stringify(value, (_key, item) => object2(item) ? Object.fromEntries(Object.keys(item).sort().map((key) => [key, item[key]])) : item);
+  async function digest(value) {
+    const bytes = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(stable(value)));
+    return [...new Uint8Array(bytes)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
+  }
+  function content(value) {
+    if (value == null) return "";
+    if (typeof value === "string") return value;
+    if (Array.isArray(value) && value.every((part) => part?.type === "text")) return value.map((part) => part.text).join("");
+    return value;
+  }
+  function canonical(message) {
+    const result = { role: message.role, content: content(message.content) };
+    if (message.tool_call_id) result.tool_call_id = message.tool_call_id;
+    if (message.tool_calls?.length) result.tool_calls = message.tool_calls.map((call) => {
+      let args = call.function.arguments;
+      try {
+        args = JSON.parse(args);
+      } catch {
+      }
+      return { id: call.id, name: call.function.name, arguments: args };
+    });
+    return result;
+  }
+  function conversationOptions(body) {
+    const key = body.conversation_id ?? body.metadata?.conversation_id;
+    if (key !== void 0 && (typeof key !== "string" || !key.trim() || key.length > 128)) throw new BridgeError(400, "invalid_conversation_id", "conversation_id \u5FC5\u987B\u662F 1\u2013128 \u5B57\u7B26\u7684\u975E\u7A7A\u5B57\u7B26\u4E32\u3002");
+    if (body.reset_conversation !== void 0 && typeof body.reset_conversation !== "boolean") throw new BridgeError(400, "invalid_reset_conversation", "reset_conversation \u5FC5\u987B\u662F true \u6216 false\u3002");
+    return { key, reset: body.reset_conversation === true };
+  }
+  var ConversationPool = class {
+    constructor({ max = 8, onChange = () => {
+    } } = {}) {
+      this.max = max;
+      this.records = /* @__PURE__ */ new Map();
+      this.onChange = onChange;
+      this.created = 0;
+      this.reused = 0;
+      this.sequence = 0;
+    }
+    state() {
+      return { enabled: true, tracked: this.records.size, created: this.created, reused: this.reused, lastAction: this.lastAction || "ready" };
+    }
+    publish() {
+      this.onChange(this.state());
+    }
+    reset() {
+      this.records.clear();
+      this.lastAction = "reset";
+      this.publish();
+    }
+    async plan(body) {
+      const { key, reset } = conversationOptions(body);
+      const messages = body.messages.map(canonical), toolsHash = await digest(body.tools || []);
+      if (reset) {
+        if (key === void 0) this.records.clear();
+        else for (const [id, record] of this.records) if (record.key === key) this.records.delete(id);
+      }
+      const prefixHashes = /* @__PURE__ */ new Map();
+      const candidates = [...this.records.values()].filter((record) => record.key === key && messages.length > record.length).sort((a, b) => b.length - a.length || b.used - a.used);
+      let matched;
+      for (const record of candidates) {
+        if (matched && record.length < matched.length) break;
+        if (!prefixHashes.has(record.length)) prefixHashes.set(record.length, await digest(messages.slice(0, record.length)));
+        if (prefixHashes.get(record.length) === record.digest) {
+          if (matched) return { messages, toolsHash, key, offset: 0, reuse: false, reason: "ambiguous_history" };
+          matched = record;
+        }
+      }
+      if (matched) return { record: matched, messages, toolsHash, key, offset: matched.length, reuse: true };
+      return { messages, toolsHash, key, offset: 0, reuse: false };
+    }
+    continuation(prepared, plan) {
+      if (!plan.reuse) return prepared.prompt;
+      let prompt = prepared.prompt.replace(
+        "<conversation_json>\n" + JSON.stringify(prepared.messages) + "\n</conversation_json>",
+        "<conversation_json>\n" + JSON.stringify(prepared.messages.slice(plan.offset)) + "\n</conversation_json>"
+      );
+      if (plan.record.toolsHash === plan.toolsHash) prompt = prompt.replace(
+        /<available_tools_json>\n[\s\S]*?\n<\/available_tools_json>/,
+        "The available function names, descriptions and JSON Schemas are UNCHANGED from the previous request in this webpage conversation. Use those same definitions."
+      );
+      return "CONTINUATION OF THE SAME EXTERNAL TASK. Earlier history is already present above. The conversation_json below contains ONLY NEW external messages after the last validated assistant turn. Consume real tool results, continue the original task, and follow the current output protocol. Do not repeat or re-execute completed actions.\n" + prompt;
+    }
+    async commit(plan, answer, handle, reused) {
+      if (plan.record) this.records.delete(plan.record.id);
+      if (!handle || typeof handle.path !== "string") {
+        this.publish();
+        return;
+      }
+      const history = [...plan.messages, canonical(answer)];
+      const id = ++this.sequence;
+      this.records.set(id, { id, key: plan.key, digest: await digest(history), length: history.length, toolsHash: plan.toolsHash, handle, used: Date.now() });
+      const continued = reused && plan.record?.handle.path === handle.path;
+      if (continued) this.reused++;
+      else this.created++;
+      this.lastAction = continued ? "reused" : "created";
+      while (this.records.size > this.max) this.records.delete(this.records.keys().next().value);
+      this.publish();
+    }
+    invalidate(plan) {
+      if (plan?.record) this.records.delete(plan.record.id);
+      this.publish();
+    }
+  };
 
   // js/engine.js
   function errorPayload(error) {
@@ -10150,6 +10381,7 @@ data: ${JSON.stringify({ type, ...fields })}
   }
   function createEngine(backend2, emitNative, options = {}) {
     const config = { model: "deepseek-web", timeoutMs: 6e5, heartbeatMs: 1e4, maxQueue: 8, defaultWebSearch: () => true, ...options };
+    const conversations = new ConversationPool({ onChange: config.onConversationState });
     const jobs = /* @__PURE__ */ new Map();
     const waiting = [];
     let active = null;
@@ -10180,6 +10412,7 @@ data: ${JSON.stringify({ type, ...fields })}
       let heartbeat;
       let started = false;
       let roleSent = false;
+      let conversationPlan, conversationHandle, conversationReused = false;
       const { signal } = job.controller;
       const id = "chatcmpl-" + randomUUID().replaceAll("-", "");
       const created = Math.floor(Date.now() / 1e3);
@@ -10215,7 +10448,11 @@ data: ${JSON.stringify({ type, ...fields })}
         if ("web_search" in job.body && typeof job.body.web_search !== "boolean") throw new BridgeError(400, "invalid_web_search", "web_search \u5FC5\u987B\u662F true \u6216 false\u3002");
         const webSearch = job.body.web_search ?? config.defaultWebSearch();
         const images = resolveDataImages(prepared.images);
-        let output = "", reasoning = "", published = "", currentPrompt = prepared.prompt;
+        conversationPlan = await conversations.plan(job.body);
+        if (signal.aborted) throw signal.reason;
+        let output = "", reasoning = "", published = "", currentPrompt = conversations.continuation(prepared, conversationPlan);
+        let conversation = { ...conversationPlan.record?.handle || {}, reuse: conversationPlan.reuse, fullPrompt: prepared.prompt, fullImages: images };
+        let attemptImages = conversationPlan.reuse ? images.filter((image) => prepared.images[image.sourceIndex].messageIndex >= conversationPlan.offset) : images;
         let formatRetries = 0, emptyRetries = 0, finishReason = "stop", result;
         const prompts = [], outputs = [];
         const ready = () => {
@@ -10231,7 +10468,8 @@ data: ${JSON.stringify({ type, ...fields })}
           const attemptReasoning = prepared.reasoning && formatRetries === 0;
           output = "";
           prompts.push(currentPrompt);
-          iterator = backend2.generate({ prompt: currentPrompt, images, reasoning: attemptReasoning, webSearch, signal })[Symbol.asyncIterator]();
+          conversationHandle = void 0;
+          iterator = backend2.generate({ prompt: currentPrompt, images: attemptImages, reasoning: attemptReasoning, webSearch, conversation, signal })[Symbol.asyncIterator]();
           try {
             for (; ; ) {
               const next = await abortable(iterator.next(), signal);
@@ -10243,6 +10481,8 @@ data: ${JSON.stringify({ type, ...fields })}
               }
               if (event.type === "done") {
                 if (event.finishReason === "length") finishReason = "length";
+                conversationHandle = event.conversation;
+                conversationReused = event.reused === true;
                 continue;
               }
               if (event.type === "reasoning") {
@@ -10286,6 +10526,9 @@ data: ${JSON.stringify({ type, ...fields })}
           if (generationError) {
             if (generationError.code === "UPSTREAM_NO_OUTPUT" && attempt === 0 && !output && !reasoning && !published && !signal.aborted) {
               emptyRetries++;
+              currentPrompt = prepared.prompt;
+              attemptImages = images;
+              conversation = { reuse: false, fullPrompt: prepared.prompt, fullImages: images };
               continue;
             }
             throw generationError;
@@ -10302,15 +10545,35 @@ data: ${JSON.stringify({ type, ...fields })}
           } catch (error) {
             if (error.code === "invalid_tool_response" && attempt === 0 && finishReason !== "length" && !signal.aborted) {
               formatRetries++;
-              currentPrompt = buildToolRetryPrompt(prepared, output, published);
+              if (conversationHandle) {
+                currentPrompt = buildToolRetryPrompt({ prompt: "Repair the immediately preceding assistant turn in this SAME conversation. The external task, new messages and tool schemas above are unchanged." }, output, published);
+                conversation = { ...conversationHandle, reuse: true, fullPrompt: buildToolRetryPrompt(prepared, output, published), fullImages: images };
+                attemptImages = [];
+              } else {
+                currentPrompt = buildToolRetryPrompt(prepared, output, published);
+                conversation = { reuse: false, fullPrompt: currentPrompt, fullImages: images };
+                attemptImages = images;
+              }
               continue;
             }
             throw error;
           }
         }
         if (reasoning) result.message.reasoning_content = reasoning;
-        const usage2 = estimateUsage({ prompt: prompts.join("\n"), content: outputs.join("\n"), reasoning, images });
-        const usageMeta2 = { estimated: true, method: "unicode_han_1.5_chars_per_token_other_4_chars_per_token", image_tokens_included: false, cache: { status: "unknown", source: "not_exposed_by_web_ui", tokens_reported: false }, format_retries: formatRetries, empty_response_retries: emptyRetries };
+        if (signal.aborted) throw signal.reason;
+        await conversations.commit(conversationPlan, result.message, conversationHandle, conversationReused);
+        const usage2 = estimateUsage({ prompt: [prepared.prompt, ...prompts.slice(1)].join("\n"), content: outputs.join("\n"), reasoning, images });
+        const continued = conversationReused && conversationPlan.record?.handle.path === conversationHandle?.path;
+        const usageMeta2 = {
+          estimated: true,
+          method: "unicode_han_1.5_chars_per_token_other_4_chars_per_token",
+          prompt_basis: "logical_api_history",
+          image_tokens_included: false,
+          cache: { status: "unknown", source: "not_exposed_by_web_ui", tokens_reported: false },
+          format_retries: formatRetries,
+          empty_response_retries: emptyRetries,
+          conversation: { reused: continued, history_messages: job.body.messages.length, sent_messages: continued ? job.body.messages.length - conversationPlan.offset : job.body.messages.length }
+        };
         if (!prepared.stream) return respond(job, 200, { id, object: "chat.completion", created, model: config.model, choices: [{ index: 0, message: result.message, finish_reason: result.finishReason }], usage: usage2, usage_meta: usageMeta2 });
         if (prepared.toolsEnabled) {
           const finalText = result.message.content || "";
@@ -10322,6 +10585,7 @@ data: ${JSON.stringify({ type, ...fields })}
         emit(job, "data", { text: "data: [DONE]\n\n" });
         emit(job, "end");
       } catch (error) {
+        conversations.invalidate(conversationPlan);
         const actual = signal.aborted ? signal.reason : error;
         if (started) {
           emit(job, "data", { text: `data: ${JSON.stringify(errorPayload(actual))}
@@ -10396,7 +10660,12 @@ data: [DONE]
         jobs.delete(id);
       }
     }
-    return { receive, cancel, activity: () => ({ busy: active !== null, queued: waiting.length }) };
+    function resetConversations() {
+      if (active || waiting.length) return false;
+      conversations.reset();
+      return true;
+    }
+    return { receive, cancel, resetConversations, conversationState: () => conversations.state(), activity: () => ({ busy: active !== null, queued: waiting.length }) };
   }
 
   // js/entry.js
@@ -10436,7 +10705,7 @@ data: [DONE]
     if (!document.getElementById("app")) return;
     const $ = (id) => document.getElementById(id);
     document.querySelectorAll("[data-icon]").forEach((node) => icon(node, node.dataset.icon));
-    let state = { ready: false, running: false, loggedIn: false, hasInspection: false, inspecting: false, busy: false, testStatus: "untested", reasoningMode: { enabled: null }, activities: [], version: "0.3.0" };
+    let state = { ready: false, running: false, loggedIn: false, hasInspection: false, inspecting: false, busy: false, testStatus: "untested", reasoningMode: { enabled: null }, activities: [], version: "0.4.0" };
     let tab = "home", toastTimer, modal = false, previousFocus;
     let theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
     try {
@@ -10571,10 +10840,26 @@ data: [DONE]
       ], "globe");
     }
     function diagnostics() {
-      sheet("\u8FDE\u63A5\u8BCA\u65AD", [row("\u5E94\u7528\u7248\u672C", state.version || "0.3.0"), row("\u672C\u673A\u670D\u52A1", state.running ? "\u5DF2\u542F\u52A8" : "\u672A\u542F\u52A8"), row("\u7F51\u9875\u767B\u5F55", state.hasInspection ? state.loggedIn ? "\u5DF2\u767B\u5F55" : "\u9700\u8981\u767B\u5F55\u6216\u9A8C\u8BC1" : "\u5C1A\u672A\u68C0\u6D4B"), row("\u601D\u8003\u5F00\u5173", state.reasoningMode?.source || "\u5F85\u68C0\u6D4B"), row("\u63A5\u53E3\u8BF7\u6C42", String(state.requests || 0) + " \u6B21"), row("\u5F53\u524D\u4EFB\u52A1", state.busy ? "\u5904\u7406\u4E2D" : "\u7A7A\u95F2"), paragraph(state.lastError || "\u8BCA\u65AD\u4E0D\u5305\u542B API \u5BC6\u94A5\u3001\u9A8C\u8BC1\u7801\u548C\u804A\u5929\u6B63\u6587\u3002")], [{ label: "\u590D\u5236\u8BCA\u65AD\u4FE1\u606F", run: () => native("copy", { field: "diagnostics" }) }, { label: "\u91CD\u65B0\u68C0\u6D4B", disabled: state.inspecting, run: () => {
+      sheet("\u8FDE\u63A5\u8BCA\u65AD", [row("\u5E94\u7528\u7248\u672C", state.version || "0.4.0"), row("\u672C\u673A\u670D\u52A1", state.running ? "\u5DF2\u542F\u52A8" : "\u672A\u542F\u52A8"), row("\u7F51\u9875\u767B\u5F55", state.hasInspection ? state.loggedIn ? "\u5DF2\u767B\u5F55" : "\u9700\u8981\u767B\u5F55\u6216\u9A8C\u8BC1" : "\u5C1A\u672A\u68C0\u6D4B"), row("\u601D\u8003\u5F00\u5173", state.reasoningMode?.source || "\u5F85\u68C0\u6D4B"), row("\u63A5\u53E3\u8BF7\u6C42", String(state.requests || 0) + " \u6B21"), row("\u5F53\u524D\u4EFB\u52A1", state.busy ? "\u5904\u7406\u4E2D" : "\u7A7A\u95F2"), paragraph(state.lastError || "\u8BCA\u65AD\u4E0D\u5305\u542B API \u5BC6\u94A5\u3001\u9A8C\u8BC1\u7801\u548C\u804A\u5929\u6B63\u6587\u3002")], [{ label: "\u590D\u5236\u8BCA\u65AD\u4FE1\u606F", run: () => native("copy", { field: "diagnostics" }) }, { label: "\u91CD\u65B0\u68C0\u6D4B", disabled: state.inspecting, run: () => {
         closeSheet();
         native("inspect");
       } }], "activity");
+    }
+    function conversationSheet() {
+      const usage2 = state.conversations || {};
+      sheet("\u4F1A\u8BDD\u590D\u7528", [
+        row("\u5DE5\u4F5C\u65B9\u5F0F", "\u540C\u4E00\u4EFB\u52A1\u81EA\u52A8\u7EED\u63A5"),
+        row("\u5DF2\u590D\u7528", String(usage2.reused || 0) + " \u6B21"),
+        row("\u5DF2\u5173\u8054\u7684\u65B0\u4F1A\u8BDD", String(usage2.created || 0) + " \u4E2A"),
+        paragraph("\u5DE5\u5177\u6267\u884C\u540E\u7684\u4E0B\u4E00\u8F6E\u3001\u540C\u4E00\u804A\u5929\u4E2D\u7684\u8FFD\u95EE\uFF0C\u4F1A\u6CBF\u7528\u5BF9\u5E94\u7684\u7F51\u9875\u5BF9\u8BDD\uFF0C\u53EA\u53D1\u9001\u65B0\u589E\u6D88\u606F\u3002\u4E0D\u540C\u4EFB\u52A1\u5206\u522B\u4FDD\u7559\u4F1A\u8BDD\u5173\u8054\u3002"),
+        paragraph("\u5BA2\u6237\u7AEF\u6539\u5199\u6216\u538B\u7F29\u5386\u53F2\u3001\u7F51\u9875\u4F1A\u8BDD\u4E0D\u53EF\u6062\u590D\u65F6\uFF0C\u9700\u8981\u91CD\u65B0\u5F00\u59CB\u3002\u91CD\u7F6E\u53EA\u6E05\u9664\u5173\u8054\uFF0C\u4E0D\u4F1A\u5220\u9664\u7F51\u9875\u5386\u53F2\uFF1B\u5E94\u7528\u8FDB\u7A0B\u7ED3\u675F\u540E\u5173\u8054\u4E0D\u4FDD\u7559\u3002")
+      ], [
+        { label: "\u4E0B\u6B21\u5F00\u59CB\u65B0\u4F1A\u8BDD", disabled: state.busy || state.probeRunning || !state.ready, run: () => {
+          native("reset-conversations");
+          closeSheet();
+        } },
+        { label: "\u7EE7\u7EED\u81EA\u52A8\u590D\u7528", run: closeSheet }
+      ], "message");
     }
     function result(result2) {
       const ok = result2.passed === true;
@@ -10611,7 +10896,8 @@ data: [DONE]
       $("web-status").textContent = state.busy ? "\u6B63\u5728\u5904\u7406\u8BF7\u6C42\uFF0C\u8BF7\u4FDD\u6301\u7F51\u9875\u8FDE\u63A5" : "\u5728\u8FD9\u91CC\u767B\u5F55\u5E76\u7BA1\u7406\u4F60\u7684\u7F51\u9875\u4F1A\u8BDD";
       $("web-login-chip").textContent = loggedIn ? "\u7F51\u9875\u767B\u5F55\u6709\u6548" : state.needsVerification ? "\u9700\u8981\u624B\u52A8\u9A8C\u8BC1" : "\u767B\u5F55\u72B6\u6001\u5F85\u786E\u8BA4";
       $("web-think-chip").textContent = typeof thought.enabled === "boolean" ? thought.enabled ? "\u6DF1\u5EA6\u601D\u8003\u5DF2\u5F00\u542F" : "\u6DF1\u5EA6\u601D\u8003\u5DF2\u5173\u95ED" : "\u68C0\u6D4B\u6DF1\u5EA6\u601D\u8003";
-      $("app-version").textContent = state.version || "0.3.0";
+      $("app-version").textContent = state.version || "0.4.0";
+      $("conversation-summary").textContent = state.conversations?.reused ? "\u5DF2\u590D\u7528 " + state.conversations.reused + " \u6B21\uFF0C\u51CF\u5C11\u91CD\u590D\u65B0\u5EFA" : "\u540C\u4E00\u4EFB\u52A1\u8FDE\u7EED\u8C03\u7528\u6CBF\u7528\u4E00\u4E2A\u5BF9\u8BDD";
       const activities = (state.activities || []).slice(-4).reverse();
       if (activities.length) {
         $("activity-list").replaceChildren(...activities.map((item) => {
@@ -10633,6 +10919,7 @@ data: [DONE]
       if (action === "help") help();
       else if (action === "reasoning") reasoningSheet();
       else if (action === "search") searchSheet();
+      else if (action === "conversations") conversationSheet();
       else if (action === "diagnostics") diagnostics();
       else if (action === "test") {
         if (!state.running) toast("\u8BF7\u5148\u542F\u52A8\u670D\u52A1");
@@ -10716,12 +11003,16 @@ data: [DONE]
   });
   var backend = new MobileBrowser(rpc);
   var engine = createEngine(backend, (id, kind, payload) => NativeBridge.response(id, kind, JSON.stringify(payload)), {
-    defaultWebSearch: () => NativeBridge.searchDefault?.() ?? true
+    defaultWebSearch: () => NativeBridge.searchDefault?.() ?? true,
+    onConversationState: (state) => NativeBridge.reportUi?.("conversations", JSON.stringify(state))
   });
   var inspecting = false;
   globalThis.AndroidEngine = {
     receive: (request) => engine.receive(request),
     cancel: (id) => engine.cancel(id),
+    resetConversations() {
+      NativeBridge.reportUi?.("conversationReset", JSON.stringify({ ok: engine.resetConversations() }));
+    },
     async inspect() {
       if (inspecting) return;
       inspecting = true;

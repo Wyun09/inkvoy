@@ -74,6 +74,8 @@ test('streamed text/thinking events have ordered block lifecycle and a final mes
   assert.equal(all.filter(e => e.delta?.type === 'text_delta').map(e => e.delta.text).join(''), 'hello');
   assert.equal(all.filter(e => e.delta?.type === 'thinking_delta').map(e => e.delta.thinking).join(''), 'think');
   assert.equal(all.find(e => e.type === 'message_delta').delta.stop_reason, 'end_turn');
+  assert.equal(all.find(e => e.type === 'message_delta').usage_meta.conversation.reused, false);
+  assert.equal(all.find(e => e.type === 'message_delta').usage_meta.prompt_basis, 'logical_api_history');
 });
 test('omitted thinking is not exposed in Anthropic output', async () => {
   const all = events(await run({ ...base, stream: true, thinking: { type: 'enabled', display: 'omitted' } }, async function* () { yield { type: 'reasoning', delta: 'not displayed' }; yield { type: 'text', delta: 'answer' }; }));

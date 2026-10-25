@@ -14,8 +14,9 @@ test('packaged engine boots under its CSP and completes a round trip through the
     document.querySelector('textarea').addEventListener('keydown', event => { if(event.key==='Enter')window.enterPresses++; });
     document.querySelector('#send').addEventListener('click', () => {
       window.sendClicks++;document.querySelector('textarea').value='';
-      document.querySelector('#reply').innerHTML='<div class="ds-message"><div class="ds-markdown ds-assistant-message-main-content"><pre>MOBILE_</pre></div></div>';
-      setTimeout(() => { document.querySelector('pre').textContent='MOBILE_RUNTIME_OK'; document.querySelector('#reply').insertAdjacentHTML('beforeend','<div role="button" aria-label="朗读">done</div>'); }, 180);
+      if(location.pathname==='/'){const n=Number(sessionStorage.getItem('created')||0)+1;sessionStorage.setItem('created',n);history.pushState({},'','/a/chat/s/bundle-'+n);}
+      const message=document.createElement('div');message.className='ds-message';message.innerHTML='<div class="ds-markdown ds-assistant-message-main-content"><pre>MOBILE_</pre></div>';document.querySelector('#reply').append(message);
+      setTimeout(() => { message.querySelector('pre').textContent='MOBILE_RUNTIME_OK'; document.querySelector('#reply').insertAdjacentHTML('beforeend','<div role="button" aria-label="朗读">done</div>'); }, 180);
     });
   </script>`;
   await remote.route('https://chat.deepseek.com/**', route => route.fulfill({ contentType: 'text/html; charset=utf-8', body: fixture }));
@@ -66,6 +67,13 @@ test('packaged engine boots under its CSP and completes a round trip through the
   assert.equal(inspection.webSearchMode.enabled, true);
   assert.equal(await remote.evaluate(() => sendClicks), 1);
   assert.equal(await remote.evaluate(() => enterPresses), 0);
+  await engine.evaluate(() => AndroidEngine.receive({ id: 'bundle-continuation', path: '/v1/chat/completions', body: { model: 'deepseek-web', messages: [{ role: 'user', content: 'Fixture response only.' }, { role: 'assistant', content: 'MOBILE_RUNTIME_OK' }, { role: 'user', content: 'Continuation only.' }] } }));
+  await engine.waitForFunction(() => window.nativeFrames.some(frame => frame.id === 'bundle-continuation' && frame.kind === 'response'), null, { timeout: 15000 });
+  const continuation = await engine.evaluate(() => window.nativeFrames.find(frame => frame.id === 'bundle-continuation' && frame.kind === 'response'));
+  assert.equal(continuation.payload.status, 200); assert.equal(continuation.payload.body.choices[0].message.content, 'MOBILE_RUNTIME_OK');
+  assert.equal(continuation.payload.body.usage_meta.conversation.reused, true); assert.equal(continuation.payload.body.usage_meta.conversation.sent_messages, 1);
+  assert.equal(await remote.evaluate(() => Number(sessionStorage.getItem('created'))), 1);
+  assert.equal(await remote.evaluate(() => sendClicks), 2); assert.equal(await remote.evaluate(() => enterPresses), 0);
   await engine.evaluate(() => AndroidEngine.receive({ id: 'bundle-anthropic', path: '/v1/messages', body: { model: 'deepseek-web', max_tokens: 256, messages: [{ role: 'user', content: 'Fixture response only.' }], stream: true } }));
   await engine.waitForFunction(() => window.nativeFrames.some(frame => frame.id === 'bundle-anthropic' && (frame.kind === 'end' || frame.kind === 'response')), null, { timeout: 15000 });
   const anthropic = await engine.evaluate(() => window.nativeFrames.filter(frame => frame.id === 'bundle-anthropic'));
@@ -74,6 +82,7 @@ test('packaged engine boots under its CSP and completes a round trip through the
   assert.equal(events[0].type, 'message_start');
   assert.equal(events.filter(event => event.type === 'content_block_delta').map(event => event.delta.text || '').join(''), 'MOBILE_RUNTIME_OK');
   assert.equal(events.at(-1).type, 'message_stop');
+  assert.equal(await remote.evaluate(() => Number(sessionStorage.getItem('created'))), 2, 'Independent history starts its own conversation');
   assert.equal(await remote.evaluate(() => sendClicks), 1, 'Each new fixture navigation submits exactly once');
   assert.equal(await remote.evaluate(() => enterPresses), 0);
   await engine.evaluate(() => AndroidEngine.receive({ id: 'bundle-count', path: '/v1/messages/count_tokens', body: { model: 'deepseek-web', messages: [{ role: 'user', content: 'Count without opening the webpage.' }] } }));

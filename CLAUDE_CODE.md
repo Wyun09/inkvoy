@@ -1,6 +1,6 @@
 # Claude Code 直接连接安卓桥
 
-APK v0.3.0 内置 Anthropic Messages 适配，无需额外模型或第二个协议代理。
+APK v0.4.0 内置 Anthropic Messages 适配与任务会话复用，无需额外模型或第二个协议代理。
 
 ## 同一部手机调用
 
@@ -42,6 +42,7 @@ adb forward tcp:18787 tcp:8787
 2. 桥返回 `tool_use` 及参数，Claude Code 实际写入 `bridge-client-smoke.txt`。
 3. 第二次请求传回真实 `tool_result`；模型夹具读取结果并返回 `end_turn`。
 4. 进程退出码为 0，文件内容与预期相同。
+5. 两次调用使用一个模型夹具会话，第二轮只提交新增工具结果；工具 Schema 未变时不重复发送。
 
 证据见 `claude-smoke-results.json`。这验证客户端协议与实际工具执行，不代表安卓真机、真实 DeepSeek 账号或所有 Claude Code 功能已验收。
 
@@ -51,6 +52,8 @@ adb forward tcp:18787 tcp:8787
 
 thinking enabled/adaptive 映射为网页深度思考。网页没有 Anthropic 的真实思考签名，不保证依赖签名透传的功能。结构化输出和服务端代码执行未实现，明确报错。客户端的自定义工具由客户端执行。
 
-token 使用量为估算，缓存统计为 unknown。不能作为 DeepSeek 官方账单或缓存命中证明。
+同一 Claude Code 任务按返回的完整历史自动续接；无需额外设置会话 ID。切换任务会分别保留关联。历史压缩/改写、应用进程退出或网页会话失效可能需要新建；概览中可以主动重置。详见 FIX_0.4.0.md。
+
+token 按逻辑 API 历史估算，缓存统计为 unknown。不能作为网页累计上下文、DeepSeek 官方账单或缓存命中证明。
 
 对照文档：[Claude Code 网关协议](https://code.claude.com/docs/en/llm-gateway-protocol)、[网关配置](https://code.claude.com/docs/en/llm-gateway-connect)、[Anthropic 流式协议](https://platform.claude.com/docs/en/build-with-claude/streaming)。

@@ -106,6 +106,7 @@ public final class MainActivity extends Activity {
         }
         if (action.equals("theme")) { applyTheme(argument.optBoolean("dark")); return; }
         if (action.equals("search-policy")) { service.runtime.setWebSearchDefault(argument.optBoolean("enabled")); return; }
+        if (action.equals("reset-conversations")) { service.runtime.resetConversations(); return; }
         if (action.equals("start")) startForegroundService(new Intent(this, BridgeService.class));
         else if (action.equals("stop")) service.stopBridge();
         else if (action.equals("inspect")) service.runtime.inspectPage();

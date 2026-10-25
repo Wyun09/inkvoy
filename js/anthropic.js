@@ -101,6 +101,7 @@ export function fromAnthropic(input, { countOnly = false } = {}) {
   if (input.stop_sequences !== undefined) body.stop = input.stop_sequences;
   if (input.web_search !== undefined) body.web_search = input.web_search;
   else if (delegatedSearch) body.web_search = true;
+  for (const field of ['conversation_id', 'reset_conversation', 'metadata']) if (input[field] !== undefined) body[field] = input[field];
   if (input.thinking !== undefined) {
     if (!object(input.thinking) || !['enabled', 'disabled', 'adaptive'].includes(input.thinking.type)) invalid('thinking.type must be enabled, disabled or adaptive.');
     body.thinking = { type: input.thinking.type === 'disabled' ? 'disabled' : 'enabled' };
@@ -127,7 +128,7 @@ export function anthropicChannel(input, conversion) {
   const responseName = name => conversion.names.get(name) || name;
   const message = (content, finish, stats, extra) => ({ id, type: 'message', role: 'assistant', model, content, stop_reason: finish, stop_sequence: null,
     usage: usage(stats), usage_meta: meta(extra) });
-  let started = false, finished = false, failed = false, block = null, nextIndex = 0, finish = 'end_turn', stats;
+  let started = false, finished = false, failed = false, block = null, nextIndex = 0, finish = 'end_turn', stats, statsMeta;
   const calls = new Map();
   function emit(kind, payload, send) {
     const event = (type, fields = {}) => send('data', { text: `event: ${type}\ndata: ${JSON.stringify({ type, ...fields })}\n\n` });
@@ -157,7 +158,7 @@ export function anthropicChannel(input, conversion) {
         event('content_block_delta', { index, delta: { type: 'input_json_delta', partial_json: JSON.stringify(args) } });
         event('content_block_stop', { index });
       }
-      event('message_delta', { delta: { stop_reason: calls.size ? 'tool_use' : finish, stop_sequence: null }, usage: usage(stats), usage_meta: meta() });
+      event('message_delta', { delta: { stop_reason: calls.size ? 'tool_use' : finish, stop_sequence: null }, usage: usage(stats), usage_meta: meta(statsMeta) });
       event('message_stop'); finished = true;
     };
     if (kind === 'response') {
@@ -181,6 +182,7 @@ export function anthropicChannel(input, conversion) {
       const chunk = JSON.parse(raw);
       if (chunk.error) { closeBlock(); const error = anthropicError(chunk, 502); event('error', { error: error.error }); failed = true; continue; }
       if (chunk.usage) stats = chunk.usage;
+      if (chunk.usage_meta) statsMeta = chunk.usage_meta;
       for (const item of chunk.choices || []) {
         if (item.finish_reason) finish = stopReason(item.finish_reason);
         append('thinking', item.delta?.reasoning_content); append('text', item.delta?.content);
