@@ -39,7 +39,7 @@ final class ProviderGateway {
                 if(account){if(accounts==null)throw new IOException("账号登录通道不可用");job.accountId=input.getString("accountId");key=accounts.call().access(job.accountId);}else key=input.optString("key");if(key.length()>16384||key.indexOf('\r')>=0||key.indexOf('\n')>=0)throw new IOException("API 凭据格式不正确");
                 URL url=account?new URL(OpenAiAccounts.RESOURCE+(models?"/models":"/responses")):endpoint(input.getString("endpoint"),models);
                 host=url.getHost();
-                HttpURLConnection connection=(HttpURLConnection)url.openConnection();job.connection=connection;connection.setInstanceFollowRedirects(false);connection.setConnectTimeout(20000);connection.setReadTimeout(45000);
+                HttpURLConnection connection=NetworkSettings.open(url);job.connection=connection;connection.setInstanceFollowRedirects(false);connection.setConnectTimeout(20000);connection.setReadTimeout(45000);
                 connection.setRequestProperty("Accept",models?"application/json":"text/event-stream, application/json");if(!key.isEmpty())connection.setRequestProperty("Authorization","Bearer "+key);
                 if(job.cancelled.get())throw new InterruptedIOException("请求已停止");
                 if(!models){JSONObject requestBody=input.getJSONObject("body");if(account){requestBody.put("store",false).put("stream",true);}byte[] body=requestBody.toString().getBytes(StandardCharsets.UTF_8);if(body.length>4000000)throw new IOException("API 请求超过 4 MB");connection.setRequestMethod("POST");connection.setRequestProperty("Content-Type","application/json; charset=utf-8");connection.setDoOutput(true);connection.setFixedLengthStreamingMode(body.length);try(OutputStream out=connection.getOutputStream()){out.write(body);}}

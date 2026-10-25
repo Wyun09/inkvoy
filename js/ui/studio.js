@@ -13,6 +13,7 @@ import {createAttachments} from './attachments.js';
 import {createSettingsHub} from './settings-hub.js';
 import {createComposer} from './composer.js';
 import {createWorkView} from './workflows.js';
+import {createSetupJourney} from './setup-journey.js';
 import {installBrowserScripts} from './browser-scripts.js';
 
 const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -29,7 +30,7 @@ export function initStudio({client,native,providers,agentTools,extensions}) {
   const $=id=>document.getElementById(id);const toast=t=>window.BridgeDashboard?.toast(t);
   const wrap=fn=>async event=>{const button=event?.currentTarget?.tagName==='BUTTON'?event.currentTarget:null;const disabled=button?.disabled;if(button){button.disabled=true;button.setAttribute('aria-busy','true');}try{await fn(event);}catch(e){toast(e?.message||'操作失败，请检查环境状态');}finally{if(button){button.disabled=!!disabled;button.removeAttribute('aria-busy');}}};
   const click=(id,fn)=>$(id).addEventListener('click',wrap(fn));
-  let changeView,modelView,mediaView,workspaceView,composerView,workView,browserScriptView,cached,renderFingerprint='',dir='',file='',dirty=false,currentTerm,terminalSerial=0,activePage='chat',runtimeCurrent={},runtimeRevision=0,showArchived=false;const terminals=new Map();
+  let journeyView,changeView,modelView,mediaView,workspaceView,composerView,workView,browserScriptView,cached,renderFingerprint='',dir='',file='',dirty=false,currentTerm,terminalSerial=0,activePage='chat',runtimeCurrent={},runtimeRevision=0,showArchived=false;const terminals=new Map();
   const scrim=mountWorkspaceDrawer(icons);
   $('app').append(scrim);$('drawer-sessions').append($('session-picker'));$('session-picker').hidden=false;
   const search=document.createElement('div');search.className='drawer-search';search.innerHTML=icons.search+'<input id="session-search" type="search" placeholder="搜索会话…" aria-label="搜索本机会话">';$('drawer-new').after(search);$('drawer-new').innerHTML='<span>＋</span> 新建会话';
@@ -46,7 +47,7 @@ export function initStudio({client,native,providers,agentTools,extensions}) {
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('composer-modes').hidden){closeOptions();$('composer-options').focus();e.preventDefault();}});
   document.addEventListener('visibilitychange',()=>{document.body.toggleAttribute('data-ui-paused',document.hidden);});
   let drawerFocus;
-  function closeDrawer(){if(workView?.close())return true;if(browserScriptView?.close())return true;if(composerView?.close())return true;if(workspaceView?.close())return true;if(mediaView?.close())return true;if(modelView?.close())return true;if(changeView?.close())return true;if(scrim.hidden)return false;scrim.hidden=true;$('session-menu').setAttribute('aria-expanded','false');document.querySelectorAll('.page,.topbar,.bottom-nav').forEach(n=>n.inert=false);drawerFocus?.focus();return true;}
+  function closeDrawer(){if(journeyView?.close())return true;if(workView?.close())return true;if(browserScriptView?.close())return true;if(composerView?.close())return true;if(workspaceView?.close())return true;if(mediaView?.close())return true;if(modelView?.close())return true;if(changeView?.close())return true;if(scrim.hidden)return false;scrim.hidden=true;$('session-menu').setAttribute('aria-expanded','false');document.querySelectorAll('.page,.topbar,.bottom-nav').forEach(n=>n.inert=false);drawerFocus?.focus();return true;}
   function openDrawer(event){closeOptions();drawerFocus=event?.currentTarget||document.activeElement;scrim.hidden=false;$('session-menu').setAttribute('aria-expanded','true');document.querySelectorAll('.page,.topbar,.bottom-nav').forEach(n=>n.inert=true);$('drawer-close').focus();}
   click('drawer-close',closeDrawer);click('drawer-new',()=>{if($('chat-new').disabled)return;$('chat-new').click();closeDrawer();});click('drawer-theme',()=>$('theme').click());$('display-orientation').onchange=e=>NativeBridge.uiAction('orientation',JSON.stringify({mode:e.target.value}));
   scrim.addEventListener('click',event=>{if(event.target===scrim)closeDrawer();});
@@ -71,7 +72,7 @@ export function initStudio({client,native,providers,agentTools,extensions}) {
   const replyView=createReplyView({container:$('chat-messages'),copy:text=>NativeBridge.uiAction('copy-text',JSON.stringify({text})),openFile:openProjectFile,openImage:image=>mediaView.openImage(image),showChange:(p,id)=>changeView.show(p,id),openLink:url=>NativeBridge.uiAction('open-link',JSON.stringify({url})),notify:toast});
   click('task-companion',()=>{const pet=$('task-companion');pet.classList.remove('is-greeting');requestAnimationFrame(()=>pet.classList.add('is-greeting'));replyView.revealCurrent();});$('task-companion').addEventListener('animationend',event=>{if(event.animationName==='pet-greet')$('task-companion').classList.remove('is-greeting');});
   function render(state) {
-    cached=state;const s=client.current(),isActive=state.active===s?.id;mediaView?.render();
+    cached=state;const s=client.current(),isActive=state.active===s?.id;journeyView?.render(state,s);mediaView?.render();
     $('session-current').textContent=s?.title||'新会话';if(document.activeElement!==$('session-title'))$('session-title').value=s?.title||'';$('session-pin').textContent=s?.pinned?'★':'☆';
     $('session-manage').hidden=!s;$('session-pin').hidden=!s;$('chat-stage').classList.toggle('is-empty',!s?.messages.length);
     $('drawer-new').disabled=!!state.active;
@@ -188,6 +189,7 @@ export function initStudio({client,native,providers,agentTools,extensions}) {
   workspaceView=enhanceWorkspace({openDrawer,closeDrawer,client,providers,notify:toast,selectSession(id){if(dirty)throw new Error('先保存或关闭文件改动，再切换项目');client.select(id);dir='';file='';$('file-editor').hidden=true;renderFingerprint='';BridgeDashboard.navigate('chat');}});
   composerView=createComposer({reasoning:arg=>modelView?.reasoning(arg),client,native,extensions,attachments:mediaView,notify:toast,navigate:page=>BridgeDashboard.navigate(page),openModel:()=>modelView.open(),openWork:section=>workView?.open(section),newChat:()=>{if(client.snapshot().active)throw new Error('请先停止当前任务。');$('chat-new').click();BridgeDashboard.navigate('chat');}});
   workView=createWorkView({client,providers,notify:toast,closeDrawer});
-  window.StudioUI={render,openWork:section=>workView?.open(section),extensionState:value=>settingsHub?.extensionState(value),questionState:value=>questionView?.render(value),platformState,closeDrawer,providerState:()=>{modelView?.render();composerView?.render(client.snapshot());},nativeEvent(event){settingsHub?.event(event);if(event.type==='process'){processView.changed();}else if(event.type==='computer'){computerView.render(event.value);}else if(event.type==='runtime'){runtimeRevision++;runtimeState(event.value);}else if(event.type==='clipboard'){terminals.get(currentTerm)?.term.paste(event.text||'');}else if(event.type==='terminal'){const t=terminals.get(event.id);if(t){if(event.data)t.term.write(Uint8Array.from(atob(event.data),c=>c.charCodeAt(0)));if(event.exitCode!==undefined){t.exitCode=event.exitCode;t.term.writeln('\r\n[进程退出：'+event.exitCode+']');renderTermTabs();}}}else if(event.type==='import'){toast(event.error||'已导入 '+event.path);if(!event.error){void mediaView.imported(event);void loadFiles().catch(()=>{});}}}};
+  journeyView=createSetupJourney({native,client,providers,openModel:()=>modelView.open(),closeDrawer,notify:toast});
+  window.StudioUI={render,openSetup:section=>journeyView.open(section),openWork:section=>workView?.open(section),extensionState:value=>settingsHub?.extensionState(value),questionState:value=>questionView?.render(value),platformState,closeDrawer,providerState:()=>{modelView?.render();composerView?.render(client.snapshot());},nativeEvent(event){journeyView?.event(event);settingsHub?.event(event);if(event.type==='process'){processView.changed();}else if(event.type==='computer'){computerView.render(event.value);}else if(event.type==='runtime'){runtimeRevision++;runtimeState(event.value);}else if(event.type==='clipboard'){terminals.get(currentTerm)?.term.paste(event.text||'');}else if(event.type==='terminal'){const t=terminals.get(event.id);if(t){if(event.data)t.term.write(Uint8Array.from(atob(event.data),c=>c.charCodeAt(0)));if(event.exitCode!==undefined){t.exitCode=event.exitCode;t.term.writeln('\r\n[进程退出：'+event.exitCode+']');renderTermTabs();}}}else if(event.type==='import'){toast(event.error||'已导入 '+event.path);if(!event.error){void mediaView.imported(event);void loadFiles().catch(()=>{});}}}};
   client.publish();void refreshRuntime().catch(()=>{});
 }

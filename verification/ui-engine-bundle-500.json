@@ -26,7 +26,8 @@
     "js/ui/atelier5/details.css",
     "js/ui/atelier5/logo.css",
     "js/ui/atelier5/workflows.css",
-    "js/ui/atelier5/stream.css"
+    "js/ui/atelier5/stream.css",
+    "js/ui/atelier5/journey.css"
   ],
   "legacyStylesBundled": false,
   "reactRuntimeBundled": false,
@@ -2385,6 +2386,7 @@
     "js/ui/settings-hub.js",
     "js/ui/composer.js",
     "js/ui/workflows.js",
+    "js/ui/setup-journey.js",
     "js/ui/browser-scripts.js",
     "js/ui/studio.js",
     "js/client-stream.js",
@@ -2751,7 +2753,7 @@
           "bytesInOutput": 11860
         },
         "js/entry.js": {
-          "bytesInOutput": 10534
+          "bytesInOutput": 10566
         },
         "js/ui/dashboard.js": {
           "bytesInOutput": 42636
@@ -2766,7 +2768,7 @@
           "bytesInOutput": 4036
         },
         "js/client.js": {
-          "bytesInOutput": 36416
+          "bytesInOutput": 38359
         },
         "js/agent-tools.js": {
           "bytesInOutput": 8299
@@ -3030,7 +3032,7 @@
           "bytesInOutput": 1450
         },
         "js/ui/companion.js": {
-          "bytesInOutput": 2390
+          "bytesInOutput": 2452
         },
         "js/ui/stream-reveal.js": {
           "bytesInOutput": 2966
@@ -3042,7 +3044,7 @@
           "bytesInOutput": 73289
         },
         "js/ui/reply-model.js": {
-          "bytesInOutput": 6674
+          "bytesInOutput": 6719
         },
         "js/ui/attachments.js": {
           "bytesInOutput": 5611
@@ -3083,11 +3085,14 @@
         "js/ui/workflows.js": {
           "bytesInOutput": 15977
         },
+        "js/ui/setup-journey.js": {
+          "bytesInOutput": 31580
+        },
         "js/ui/browser-scripts.js": {
           "bytesInOutput": 5410
         },
         "js/ui/studio.js": {
-          "bytesInOutput": 41232
+          "bytesInOutput": 41566
         },
         "js/client-stream.js": {
           "bytesInOutput": 2581
@@ -3102,7 +3107,7 @@
           "bytesInOutput": 11570
         }
       },
-      "bytes": 1606306
+      "bytes": 1640331
     }
   }
 }

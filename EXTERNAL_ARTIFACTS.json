@@ -1,5 +1,5 @@
 {
-  "version": "5.0.0",
+  "version": "5.1.0",
   "files": [
     {
       "path": "app/src/main/assets/runtime/debian-arm64.tar.gz",
@@ -35,6 +35,11 @@
       "path": "preview/5.0.0/studio-working-motion.webm",
       "bytes": 416745,
       "sha256": "adaf5b9a7e8168ba87e96498f3e2482fe20fb5a0b5a0385ab19cf6dd105193a0"
+    },
+    {
+      "path": "preview/5.1.0/studio-onboarding-motion.webm",
+      "bytes": 1037178,
+      "sha256": "9857009aadcda5432acd14a4074b82aaad6a2736032eae429513ded864f7c2dc"
     },
     {
       "path": "test/android-runtime/lib/espresso.jar",

@@ -1,0 +1,20 @@
+{
+  "scope": "Rebuildable intermediate APK files only",
+  "files": [
+    {
+      "path": "C:\\CodexBuild\\inkvoy-5.0.0\\final\\aligned.apk",
+      "bytes": 616104636
+    },
+    {
+      "path": "C:\\CodexBuild\\inkvoy-5.0.0\\final\\unsigned.apk",
+      "bytes": 616104621
+    },
+    {
+      "path": "C:\\CodexBuild\\inkvoy-5.0.0\\final\\resources.apk",
+      "bytes": 615816217
+    }
+  ],
+  "releasedBytes": 1848025474,
+  "publishedReleasesDeleted": false,
+  "sourceDeleted": false
+}

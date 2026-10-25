@@ -1,0 +1,167 @@
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for io.github.deepseekbridge:android-startup-regression:jar:5.1.0
+[WARNING] 'dependencies.dependency.systemPath' for local.androidx:monitor-classes:jar should not point at files within the project directory, ${project.basedir}/lib/monitor.jar will be unresolvable by dependent projects @ line 10, column 147
+[WARNING] 'dependencies.dependency.systemPath' for local.androidx:espresso-idling-classes:jar should not point at files within the project directory, ${project.basedir}/lib/espresso.jar will be unresolvable by dependent projects @ line 11, column 155
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] 
+[INFO] --------< io.github.deepseekbridge:android-startup-regression >---------
+[INFO] Building android-startup-regression 5.1.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ android-startup-regression ---
+[INFO] skip non existing resourceDirectory C:\Users\admin\Documents\Codex\2026-10-15\new-chat\outputs\deepseek-android-studio\test\android-runtime\src\main\resources
+[INFO] 
+[INFO] --- compiler:3.14.0:compile (default-compile) @ android-startup-regression ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ android-startup-regression ---
+[INFO] skip non existing resourceDirectory C:\Users\admin\Documents\Codex\2026-10-15\new-chat\outputs\deepseek-android-studio\test\android-runtime\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.14.0:testCompile (default-testCompile) @ android-startup-regression ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.3:test (default-test) @ android-startup-regression ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junit4.JUnit4Provider
+[WARNING] System property [robolectric.dependency.repo.url] overwritten by user properties from Maven session
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running io.github.deepseekbridge.AccessSettingsTest
+[Robolectric] WARN: Android SDK 36 requires Java 21 (have Java 17). Tests won't be run on SDK 36 unless explicitly requested.
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.511 s -- in io.github.deepseekbridge.AccessSettingsTest
+[INFO] Running io.github.deepseekbridge.AppControlServiceTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.895 s -- in io.github.deepseekbridge.AppControlServiceTest
+[INFO] Running io.github.deepseekbridge.BrowserImeRegressionTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.896 s -- in io.github.deepseekbridge.BrowserImeRegressionTest
+[INFO] Running io.github.deepseekbridge.ChatMediaTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.289 s -- in io.github.deepseekbridge.ChatMediaTest
+[INFO] Running io.github.deepseekbridge.CommandCaptureTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in io.github.deepseekbridge.CommandCaptureTest
+[INFO] Running io.github.deepseekbridge.ComputerBrowserTest
+[INFO] Tests run: 34, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.571 s -- in io.github.deepseekbridge.ComputerBrowserTest
+[INFO] Running io.github.deepseekbridge.DisplayModeTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.711 s -- in io.github.deepseekbridge.DisplayModeTest
+[INFO] Running io.github.deepseekbridge.ExtensionHubTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.442 s -- in io.github.deepseekbridge.ExtensionHubTest
+[INFO] Running io.github.deepseekbridge.ExtensionImportTest
+System.logW: A resource was acquired at attached stack trace but never released. See java.io.Closeable for information on avoiding resource leaks.
+java.lang.Throwable: Explicit termination method 'Surface.release' not called
+	at dalvik.system.CloseGuard.$$robo$$dalvik_system_CloseGuard$openWithCallSite(CloseGuard.java:288)
+	at dalvik.system.CloseGuard.openWithCallSite(CloseGuard.java)
+	at dalvik.system.CloseGuard.$$robo$$dalvik_system_CloseGuard$open(CloseGuard.java:257)
+	at jdk.internal.reflect.GeneratedMethodAccessor57.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.robolectric.shadows.ShadowCloseGuard$CloseGuardReflector$$Reflector89.open(Unknown Source)
+	at org.robolectric.shadows.ShadowCloseGuard.open(ShadowCloseGuard.java:38)
+	at dalvik.system.CloseGuard.open(CloseGuard.java)
+	at android.view.Surface.$$robo$$android_view_Surface$setNativeObjectLocked(Surface.java:760)
+	at android.view.Surface.setNativeObjectLocked(Surface.java)
+	at android.view.Surface.$$robo$$android_view_Surface$updateNativeObject(Surface.java:599)
+	at android.view.Surface.updateNativeObject(Surface.java)
+	at android.view.Surface.$$robo$$android_view_Surface$copyFrom(Surface.java:626)
+	at android.view.Surface.copyFrom(Surface.java)
+	at android.view.ViewRootImpl.$$robo$$android_view_ViewRootImpl$relayoutWindow(ViewRootImpl.java:8093)
+	at android.view.ViewRootImpl.relayoutWindow(ViewRootImpl.java)
+	at android.view.ViewRootImpl.$$robo$$android_view_ViewRootImpl$performTraversals(ViewRootImpl.java:2977)
+	at android.view.ViewRootImpl.performTraversals(ViewRootImpl.java)
+	at android.view.ViewRootImpl.$$robo$$android_view_ViewRootImpl$doTraversal(ViewRootImpl.java:2286)
+	at android.view.ViewRootImpl.doTraversal(ViewRootImpl.java)
+	at android.view.ViewRootImpl$TraversalRunnable.$$robo$$android_view_ViewRootImpl_TraversalRunnable$run(ViewRootImpl.java:8948)
+	at android.view.ViewRootImpl$TraversalRunnable.run(ViewRootImpl.java)
+	at android.view.Choreographer$CallbackRecord.$$robo$$android_view_Choreographer_CallbackRecord$run(Choreographer.java:1231)
+	at android.view.Choreographer$CallbackRecord.run(Choreographer.java)
+	at android.view.Choreographer$CallbackRecord.$$robo$$android_view_Choreographer_CallbackRecord$run(Choreographer.java:1239)
+	at android.view.Choreographer$CallbackRecord.run(Choreographer.java)
+	at android.view.Choreographer.$$robo$$android_view_Choreographer$doCallbacks(Choreographer.java:899)
+	at android.view.Choreographer.doCallbacks(Choreographer.java)
+	at android.view.Choreographer.$$robo$$android_view_Choreographer$doFrame(Choreographer.java:832)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.robolectric.shadows.ShadowChoreographer$ChoreographerReflector$$Reflector125.doFrame(Unknown Source)
+	at org.robolectric.shadows.ShadowChoreographer.lambda$doFrame$1(ShadowChoreographer.java:208)
+	at org.robolectric.util.PerfStatsCollector.measure(PerfStatsCollector.java:83)
+	at org.robolectric.shadows.ShadowChoreographer.doFrame(ShadowChoreographer.java:208)
+	at android.view.Choreographer.doFrame(Choreographer.java)
+	at android.view.Choreographer$FrameDisplayEventReceiver.$$robo$$android_view_Choreographer_FrameDisplayEventReceiver$run(Choreographer.java:1214)
+	at android.view.Choreographer$FrameDisplayEventReceiver.run(Choreographer.java)
+	at android.os.Handler.$$robo$$android_os_Handler$handleCallback(Handler.java:942)
+	at android.os.Handler.handleCallback(Handler.java)
+	at android.os.Handler.$$robo$$android_os_Handler$dispatchMessage(Handler.java:99)
+	at android.os.Handler.dispatchMessage(Handler.java)
+	at org.robolectric.shadows.ShadowPausedLooper$IdlingRunnable.doRun(ShadowPausedLooper.java:677)
+	at org.robolectric.shadows.ShadowPausedLooper$ControlRunnable.run(ShadowPausedLooper.java:599)
+	at org.robolectric.shadows.ShadowPausedLooper$HandlerExecutor.execute(ShadowPausedLooper.java:849)
+	at org.robolectric.shadows.ShadowPausedLooper.executeOnLooper(ShadowPausedLooper.java:765)
+	at org.robolectric.shadows.ShadowPausedLooper.idle(ShadowPausedLooper.java:109)
+	at org.robolectric.shadows.ShadowPausedLooper.idleIfPaused(ShadowPausedLooper.java:193)
+	at org.robolectric.android.controller.ActivityController.visible(ActivityController.java:233)
+	at org.robolectric.android.controller.ActivityController.setup(ActivityController.java:340)
+	at io.github.deepseekbridge.DisplayModeTest.invalidModeDoesNotReplacePersistedPreference(DisplayModeTest.java:18)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:524)
+	at org.robolectric.internal.SandboxTestRunner.executeInSandbox(SandboxTestRunner.java:494)
+	at org.robolectric.internal.SandboxTestRunner.access$900(SandboxTestRunner.java:67)
+	at org.robolectric.internal.SandboxTestRunner$7.evaluate(SandboxTestRunner.java:442)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at org.robolectric.internal.SandboxTestRunner.access$600(SandboxTestRunner.java:67)
+	at org.robolectric.internal.SandboxTestRunner$6.evaluate(SandboxTestRunner.java:333)
+	at org.robolectric.internal.SandboxTestRunner$3.evaluate(SandboxTestRunner.java:233)
+	at org.robolectric.internal.SandboxTestRunner$5.lambda$evaluate$0(SandboxTestRunner.java:317)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:101)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.617 s -- in io.github.deepseekbridge.ExtensionImportTest
+[INFO] Running io.github.deepseekbridge.FileRevisionsTest
+[INFO] Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.265 s -- in io.github.deepseekbridge.FileRevisionsTest
+[INFO] Running io.github.deepseekbridge.ManagedTasksTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.678 s -- in io.github.deepseekbridge.ManagedTasksTest
+[INFO] Running io.github.deepseekbridge.NetworkSettingsTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.241 s -- in io.github.deepseekbridge.NetworkSettingsTest
+[INFO] Running io.github.deepseekbridge.OpenAiAccountsTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.549 s -- in io.github.deepseekbridge.OpenAiAccountsTest
+[INFO] Running io.github.deepseekbridge.ProviderGatewayTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.312 s -- in io.github.deepseekbridge.ProviderGatewayTest
+[INFO] Running io.github.deepseekbridge.ResponsivenessTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.795 s -- in io.github.deepseekbridge.ResponsivenessTest
+[INFO] Running io.github.deepseekbridge.RuntimeAssetsTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.519 s -- in io.github.deepseekbridge.RuntimeAssetsTest
+[INFO] Running io.github.deepseekbridge.RuntimeHardLinkTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.267 s -- in io.github.deepseekbridge.RuntimeHardLinkTest
+[INFO] Running io.github.deepseekbridge.StartupRegressionTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.570 s -- in io.github.deepseekbridge.StartupRegressionTest
+[INFO] Running io.github.deepseekbridge.VersionFiveFeaturesTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.292 s -- in io.github.deepseekbridge.VersionFiveFeaturesTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 218, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  37.212 s
+[INFO] Finished at: 2026-10-25T11:09:10+08:00
+[INFO] ------------------------------------------------------------------------

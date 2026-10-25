@@ -1,0 +1,27 @@
+{
+  "title": "Inkvoy · In your pocket",
+  "version": "preview-1",
+  "durationSeconds": 25,
+  "dimensions": [
+    1080,
+    1920
+  ],
+  "fps": 30,
+  "frames": 750,
+  "codec": "H.264 / AAC",
+  "repository": "https://github.com/Wyun09/inkvoy",
+  "realProductionUi": true,
+  "uiData": "Explicit demonstration tasks and model fixtures, not a phone recording or a real account/model run",
+  "soundtrack": "Original procedural synthesizer score in render-promo.mjs",
+  "bytes": 3614031,
+  "sha256": "01d75fef0619418c0b03ee71fb63c2f5c56757ba4bf6a462150c7a1149d9f5b7",
+  "javascriptErrors": [],
+  "source": "branding/promo.html + scripts/render-promo.mjs",
+  "all750FramesDecoded": true,
+  "decodedFrameImagesInspected": [
+    "decoded-terminal.png",
+    "decoded-ending.png"
+  ],
+  "captionOverlapCorrected": true,
+  "publiclyUploaded": false
+}

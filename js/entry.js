@@ -27,7 +27,7 @@ const pending = new Map();
 const workspacePending = new Map(), clientRequests = new Map();
 const workspace = (operation, argument = {}) => new Promise((resolve, reject) => {
   const id = ++sequence;
-  const timer = setTimeout(() => { workspacePending.delete(id); reject(new Error('本机操作等待超时，请检查工具记录再重试。')); }, ['runtime.ensure', 'runtime.test', 'tool.execute','extension.stdio.open'].includes(operation) ? 1200000 : operation.startsWith('account.')?120000:20000);
+  const timer = setTimeout(() => { workspacePending.delete(id); reject(new Error('本机操作等待超时，请检查工具记录再重试。')); }, ['runtime.ensure', 'runtime.test', 'tool.execute','extension.stdio.open'].includes(operation) ? 1200000 : (operation.startsWith('account.')||operation==='network.test')?120000:20000);
   workspacePending.set(id, {resolve,reject,timer});
   if (!NativeBridge.workspaceRequest) { clearTimeout(timer); workspacePending.delete(id); reject(new Error('此界面需要 v2 原生运行时')); return; }
   NativeBridge.workspaceRequest(id, operation, JSON.stringify(argument));

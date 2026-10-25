@@ -66,7 +66,7 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
     public final String apiKey;
 
     public BridgeRuntime(Context context) {
-        this.context = context;
+        this.context = context; NetworkSettings.install(context);
         SharedPreferences prefs = context.getSharedPreferences("local-bridge", Context.MODE_PRIVATE);
         localState = new LocalState(context); agentStrict = prefs.getBoolean("agent-strict", true);
         clientState = new LocalState(context,"studio-client-state-v2","deepseek-studio-client-v2");
@@ -387,6 +387,8 @@ public final class BridgeRuntime implements LoopbackServer.Dispatcher {
         private final int epoch = engineEpoch;
         private boolean current() { return epoch == engineEpoch && !destroyed; }
         @JavascriptInterface public String loadState() { return current() ? localState.load() : "{}"; }
+        @JavascriptInterface public boolean onboardingDone(){return context.getSharedPreferences("studio-first-use",Context.MODE_PRIVATE).getBoolean("done",false);}
+        @JavascriptInterface public int onboardingStep(){return context.getSharedPreferences("studio-first-use",Context.MODE_PRIVATE).getInt("step",0);}
         @JavascriptInterface public int uiScale(){return context.getSharedPreferences("studio-display",Context.MODE_PRIVATE).getInt("scale",90);}
         @JavascriptInterface public boolean fullscreen(){return DisplayMode.fullscreen(context);}
         @JavascriptInterface public String loadClientState() { return current() ? clientState.load() : "{}"; }

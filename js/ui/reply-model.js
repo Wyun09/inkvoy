@@ -1,4 +1,4 @@
-export const TOOL_LABELS={update_plan:'更新计划',report_goal:'报告验收',delegate:'委派子代理',team_dispatch:'团队并行任务',terminal:'运行命令',process:'常驻任务',read_file:'读取文件',write_file:'修改文件',list_files:'查看目录',search_files:'搜索文件',view_image:'查看图片',browser:'操作浏览器',web_search:'网页搜索',ask_user:'问答交互'};
+export const TOOL_LABELS={app_control:'操控手机 App',update_plan:'更新计划',report_goal:'报告验收',delegate:'委派子代理',team_dispatch:'团队并行任务',terminal:'运行命令',process:'常驻任务',read_file:'读取文件',write_file:'修改文件',list_files:'查看目录',search_files:'搜索文件',view_image:'查看图片',browser:'操作浏览器',web_search:'网页搜索',ask_user:'问答交互'};
 export const STATUS_LABELS={idle:'准备就绪',preparing:'准备工作区',compacting:'正在压缩上下文',generating:'正在生成',tools:'正在执行',cancelling:'正在停止',completed:'已完成',needs_input:'等你补充',budget:'等待继续',failed:'运行遇到问题',interrupted:'运行中断',cancelled:'已停止'};
 export function parseJSON(value){try{return JSON.parse(value);}catch{return null;}}
 const parsed=new WeakMap();

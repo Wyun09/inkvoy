@@ -42,7 +42,7 @@ export function createReplyView({container,copy,openFile,showChange,openImage=()
     const thinking=manualDetails('reply-thinking','思考过程'),thought=el('div','reply-thought');thinking.details.append(thought);smoothThoughtDisclosure(thinking.details,thought);
     const process=manualDetails('reply-process','执行过程'),notes=el('div','reply-notes'),steps=el('div','reply-steps');process.details.append(notes,steps);
     const answer=el('div','markdown reply-body'),pending=el('div','reply-pending'),footer=el('footer','reply-footer'),cp=action('复制回复',()=>copy(root.copyText||''),'reply-copy');footer.append(cp);
-    root.append(header,thinking.details,process.details,answer,pending,footer);return {root,brand,status,thinking,thought,process,notes,steps,answer,pending,footer,toolNodes:new Map(),messageNodes:new Map()};
+    root.setAttribute('aria-label','AI 回复');root.append(header,thinking.details,process.details,answer,pending,footer);return {root,brand,status,thinking,thought,process,notes,steps,answer,pending,footer,toolNodes:new Map(),messageNodes:new Map()};
   }
   function workerReports(node,reports){
     const labels={queued:'排队',running:'运行中',completed:'已完成',failed:'失败',budget:'预算已用完',cancelled:'已停止',interrupted:'已中断'};
@@ -71,6 +71,10 @@ export function createReplyView({container,copy,openFile,showChange,openImage=()
       node.append(action('管理常驻任务',()=>window.BridgeDashboard?.navigate('terminal'),'reply-change-open'));
       for(const job of r.jobs||[])node.append(el('p','reply-result-meta',[job.title,job.state,job.previewUrl].filter(Boolean).join(' · ')));
     }
+    if(tool.call.function?.name==='app_control'){
+      node.append(el('p','reply-result-meta',[r.package,r.action,r.actionAccepted===true?'系统已接受操作；请核对后续界面':'',r.notice].filter(Boolean).join(' · ')),action('查看 App 操控与权限',()=>window.StudioUI?.openSetup('device'),'reply-change-open'));
+      if(Array.isArray(r.nodes)){node.append(el('p','reply-result-meta','当前返回 '+r.nodes.length+' 个界面元素'+(r.truncated?'，已截断':'')));const list=el('ul','reply-file-list');for(const item of r.nodes.slice(0,12))list.append(el('li','',[item.text||item.label||item.resourceId||item.class,item.editable?'可输入':item.clickable?'可点击':item.scrollable?'可滚动':''].filter(Boolean).join(' · ')));node.append(list);}
+    }
     if(tool.call.function?.name==='browser'){
       node.append(el('p','reply-browser-meta',[r.title,r.url].filter(Boolean).join(' · ')));
       node.append(action('打开 AI 浏览器',()=>window.BridgeDashboard?.navigate('computer'),'reply-change-open'));
@@ -92,7 +96,7 @@ export function createReplyView({container,copy,openFile,showChange,openImage=()
     const raw=manualDetails('reply-raw','原始结果');raw.details.addEventListener('toggle',()=>{if(raw.details.open&&!raw.loaded){raw.loaded=true;raw.details.append(code(String(tool.resultMessage.content||''),'JSON'));}});node.append(raw.details);
   }
   function updateTurn(v,turn,session){
-    v.root.dataset.status=turn.status;v.root.dataset.logoForm=logoForm({...session,status:turn.status},turn.live,{phase:turn.phase,content:turn.final?.message.content,reasoning:turn.reasoning});v.root.dataset.brandState=turn.status==='tools'?'tools':['generating','preparing'].includes(turn.status)?'thinking':turn.status==='completed'?'done':['needs_input','budget','cancelling'].includes(turn.status)?'waiting':['failed','interrupted'].includes(turn.status)?'error':'idle';v.status.textContent=turn.draft==='partial'?'部分输出 · 未完成':turn.draft==='live'?'正在回复':STATUS_LABELS[turn.status]||'已返回';
+    v.root.setAttribute('aria-busy',String(turn.live));v.root.dataset.status=turn.status;v.root.dataset.logoForm=logoForm({...session,status:turn.status},turn.live,{phase:turn.phase,content:turn.final?.message.content,reasoning:turn.reasoning});v.root.dataset.brandState=turn.status==='tools'?'tools':['generating','preparing'].includes(turn.status)?'thinking':turn.status==='completed'?'done':['needs_input','budget','cancelling'].includes(turn.status)?'waiting':['failed','interrupted'].includes(turn.status)?'error':'idle';v.status.textContent=turn.draft==='partial'?'部分输出 · 未完成':turn.draft==='live'?'正在回复':STATUS_LABELS[turn.status]||'已返回';
     v.brand.textContent=turn.messages.find(m=>m.message.model_label)?.message.model_label||session.modelLabel||'DeepSeek';
     v.root.copyText=turn.final?.message.content||turn.messages.map(m=>m.message.content||'').filter(Boolean).join('\n\n');v.footer.hidden=!v.root.copyText;
     v.thinking.details.hidden=!turn.reasoning;const liveThought=turn.live&&!turn.final?.message.content;v.thinking.details.dataset.live=String(liveThought);v.thinking.summary.textContent=liveThought?'思考中':'思考过程';if(v.thought.textContent!==turn.reasoning){const nearEnd=v.thought.scrollHeight-v.thought.scrollTop-v.thought.clientHeight<40;if(turn.live)revealStream(v.thought,turn.reasoning);else{finishStream(v.thought);v.thought.textContent=turn.reasoning;}if(nearEnd&&v.thinking.details.open)requestAnimationFrame(()=>{v.thought.scrollTop=v.thought.scrollHeight;});}

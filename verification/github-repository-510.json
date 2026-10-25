@@ -1,0 +1,12 @@
+{
+  "repository": "Wyun09/inkvoy",
+  "url": "https://github.com/Wyun09/inkvoy",
+  "public": true,
+  "description": "在 Android 手机上独立运行的 AI 工作台，面向编程、安全研究与逆向分析，集成终端、AI 浏览器、MCP 与多模型协作。An on-device Android AI workspace for coding, security research, and reverse engineering, with a terminal, AI browser, MCP, and multi-model agents.",
+  "createdAt": "2026-10-25T02:26:30Z",
+  "defaultBranch": "main",
+  "sizeKiB": 0,
+  "emptyVerified": false,
+  "verifiedBy": "GitHub public REST API",
+  "sourceUploadedByThisTask": false
+}

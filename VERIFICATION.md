@@ -1,42 +1,19 @@
-# Inkvoy 5.0.0 验收记录
+# Inkvoy 5.1.0 验收记录
 
-验收时间：2026-10-24。包名 io.github.deepseekbridge；versionCode 23；minSdk 26；targetSdk 35；ARM64 完整离线测试版。
+时间：2026-10-25T11:11:43.442894+08:00。包名 io.github.deepseekbridge，versionCode 24，minSdk 26，targetSdk 35，ARM64 完整离线版。
 
-## 最终产物
+APK：deepseek-android-bridge-v5.1.0.apk，616,114,511 bytes，SHA-256 `de100ddec8bc9f6a993dab658330419cce6854489c8ef3ac156253239b273c7d`。签名延续旧版；19 项资源和原生负载逐项匹配源码，原生 ELF 满足 16 KiB 对齐。最终包的 Debian 镜像和权限声明已检查。
 
-APK：deepseek-android-bridge-v5.0.0.apk，616,089,858 bytes。SHA-256：`a5fbccb1b5530283c3d091d7266aec5a627a50e15d7853da031ee32b9a19ec36`。
+JavaScript 全量 390/390；Android API 26/33 框架与 Java 管道采集 218 项。失败、取消、跳过均为 0。35 项已安装依赖与锁文件匹配。完整计数、分类和日志哈希见 verification/regression-510.json。
 
-签名与旧版相同。v2/v3、ZIP 路径、DEX、原生 ELF 对齐和 19 项源码负载匹配。AssetManager 从最终签名 APK 校验完整 Debian 镜像；尚未在用户手机验收覆盖安装。
+新增覆盖：实际引导入口与 API 编辑器、跳过和进度、示例不自动发送、网络配置保存、两域名独立诊断、原生 HTTP CONNECT 在目标 DNS 不可解析时仍交给代理、本机地址绕过代理；实际 AccessibilityNodeInfo 输入与点击、密码隐藏、过期 ref、允许 App 范围、取消和暂停、截图期间界面改变拒绝、项目截图可重开及不可变聊天像素、App 截图进入下一次模型请求；字号、对比度、44px 点击区域、焦点、手机/横屏与缩放补偿。
 
-## 自动检查
+早期 UI 超时已定位为测试在设置面板关闭前尝试向 inert 背景输入；测试改为等待实际关闭状态。另一个布局检查等待字体和真实可见的 Native 布局回调后再计数。不把测试输入时序问题写成产品草稿修复。
 
-- JavaScript：381 / 381 通过；失败、取消、跳过均为 0。
-- 全量回归后仅调整 Logo 的 CSS 摆动幅度；随后 22 项动效、流式、回复与目录针对检查通过。前后 APK 的代码与原生负载相同，仅 assets/app.css 不同，见 verification/post-style-delta-500.json。
-- Android API 26/33 框架与 Java 管道采集：196 通过；失败、错误、跳过均为 0。其中管道检查 3 项；另以真实本机 HTTP 套接字验证 3 个端点和目录读取可以同时收到请求。
-- 35 项已安装依赖与锁文件逐项匹配；其他平台的可选二进制未装入本机是预期结果。
-- 真实控件覆盖自动模型目录、1M 容量展示、精确推理档位请求、模型默认参数省略、命令与引用、文件摘录进入模型输入、收起与恢复草稿、页面脚本路由、账号 DNS 重试和最新命令输出。
-- 日志验证覆盖 stdout/stderr 的进行中显示、重复/错项目事件拒绝、手动折叠保留、最终失败退出码、复制、预览不持久化及 UTF-8 跨块。
-- 新增目标/计划/协作验证：计划执行权限、人工批准、验收证据、跨端点并发与同连接排队、子代理读写边界、全体停止、失败保留、容量预算、窄屏与横屏控件。
-- 启动、全屏、IME 主线程、文件/媒体、MCP、HTTP 协议与持久化等回归保留。
+10 张当前生产资源截图、1 段界面录屏和 FFmpeg 解码帧已查看；界面数据使用明确的 Native/model 测试夹具。保留 5.0 的完整 Logo 呼吸、560ms 状态过渡、即时流式增量和 280ms 思考展开。该录屏不是手机真机录屏。
 
-完整分类与可校验日志：verification/regression-500.json。测试使用生产界面资源以及明确的 Native/model 夹具，Java 框架测试不等同于物理手机执行。
+未连接物理 Android 手机，未验证用户 VPN/DNS、真实 OpenAI/DeepSeek 账号、其他 App 实际操控、覆盖安装或锁屏后台。原生框架测试不等同于手机验收。诊断不能单凭 UnknownHost 判定 DNS 污染，HTTP 401 只说明匿名 HTTPS 可达；账号权限仍以真实授权接口返回为准。显式代理需填写 VPN 实际提供的 HTTP 端口，TLS 校验保持启用。
 
-## 视觉与动效
+5.1 没有新增手机帧率或速度提升测量；保留的 5.0 桌面数据只作历史记录。新版不会宣称已经修复手机系统 DNS。
 
-29 张生产页面截图，覆盖 390×844、844×390 与 1440×960。WebM 是实际页面操作录屏；使用 FFmpeg 解码多个时点，确认 Logo 形态、Inky 姿态和命令日志变化，并查看解码帧。页面没有 JavaScript 异常。
-
-截图中的浏览器区域是 Native 表面占位，并非手机网页截屏。命令与账号数据为明确的测试夹具。记录见 verification/ui-previews-500.json 与 verification/ui-motion-500.json。
-
-## 性能
-
-Desktop Edge, 390 x 844 CSS pixels, 4x CPU throttle. Synthetic 60-turn history. This is not a physical Android frame-rate measurement.
-
-60 轮历史、4 倍 CPU 降速、每版 50 样本；采样时没有并发回归套件。4.0 中位 3.00 ms、P95 4.50 ms；5.0 中位 4.20 ms、P95 7.90 ms。不将单次桌面基准视为手机速度提升证据。两版重复 Native 布局调用均为 0；新 UI 挂载最近 20 轮，历史日志按需展开。
-
-该数据不能换算为 Android 13 帧率或用户手机的点击延迟。日志事件有频率和长度上限，预览不触发整份会话持久化；动画后台暂停。手机流畅度仍需实测。
-
-## 明确边界
-
-没有连接物理 Android 手机，没有真实 DeepSeek/OpenAI 账号调用、锁屏后台、真实 Android MCP 进程或覆盖安装验收。网络分类与重试界面已修复，无法替手机修复系统 DNS / VPN 分流。模型目录没有公开元数据时不猜测容量或推理档位。模型容量与本地记录保存上限分开，详见 DESIGN_5.0.md。
-
-Harness 功能仍有差距，见 HARNESS_PARITY.md。GitHub 目标地址尚未提供；本轮只清点历史，没有推送或删除旧源码。
+仓库已从 GitHub 公开 API 查到 https://github.com/Wyun09/inkvoy；本轮没有上传源码或创建远端提交，也没有删除旧源码。仅清理可重建的中间 APK，见 verification/build-cleanup-510.json。

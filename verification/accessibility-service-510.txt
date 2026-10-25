@@ -1,0 +1,11 @@
+N: android=http://schemas.android.com/apk/res/android (line=1)
+  E: accessibility-service (line=1)
+    A: http://schemas.android.com/apk/res/android:description(0x01010020)=@0x7f030000
+    A: http://schemas.android.com/apk/res/android:settingsActivity(0x01010225)="io.github.deepseekbridge.MainActivity" (Raw: "io.github.deepseekbridge.MainActivity")
+    A: http://schemas.android.com/apk/res/android:accessibilityEventTypes(0x01010380)=0x00401020
+    A: http://schemas.android.com/apk/res/android:accessibilityFeedbackType(0x01010382)=0x00000010
+    A: http://schemas.android.com/apk/res/android:notificationTimeout(0x01010383)=150
+    A: http://schemas.android.com/apk/res/android:accessibilityFlags(0x01010384)=0x00000050
+    A: http://schemas.android.com/apk/res/android:canRetrieveWindowContent(0x01010385)=true
+    A: http://schemas.android.com/apk/res/android:canPerformGestures(0x0101050d)=true
+    A: http://schemas.android.com/apk/res/android:canTakeScreenshot(0x0101060f)=true

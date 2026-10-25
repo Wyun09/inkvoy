@@ -1,0 +1,20 @@
+{
+  "version": "5.1.0",
+  "date": "2026-10-25T03:06:21.238Z",
+  "productionAssets": true,
+  "fixture": "Production bundle in desktop Edge with deterministic Native callbacks. No phone or actual VPN/account connection. App control service is exercised separately by Android framework tests.",
+  "files": [
+    "preview/5.1.0/studio-onboarding.png",
+    "preview/5.1.0/studio-onboarding-environment.png",
+    "preview/5.1.0/studio-app-control.png",
+    "preview/5.1.0/studio-app-control-active.png",
+    "preview/5.1.0/studio-network-settings.png",
+    "preview/5.1.0/studio-network-report.png",
+    "preview/5.1.0/studio-reading-controls.png",
+    "preview/5.1.0/studio-device-dark.png",
+    "preview/5.1.0/studio-onboarding-motion.webm",
+    "preview/5.1.0/studio-onboarding-desktop.png",
+    "preview/5.1.0/studio-network-landscape.png"
+  ],
+  "javascriptErrors": []
+}

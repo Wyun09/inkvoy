@@ -9,7 +9,7 @@ if output.exists():raise SystemExit('Preserve the existing release ZIP')
 files=[]
 for name in ['app','js','scripts','test','preview','branding','third_party','verification']:
     files.extend(p for p in (root/name).rglob('*') if p.is_file())
-for name in ['.gitignore','package.json','package-lock.json','README.md','CLAUDE_CODE.md','VERIFICATION.md','CORE_PROVENANCE.json','THIRD_PARTY_NOTICES.md','release.json','DESIGN_4.0.md','DESIGN_5.0.md','HARNESS_PARITY.md','GITHUB_MIGRATION.md']:files.append(root/name)
+for name in ['.gitignore','package.json','package-lock.json','README.md','CLAUDE_CODE.md','VERIFICATION.md','CORE_PROVENANCE.json','THIRD_PARTY_NOTICES.md','release.json','DESIGN_4.0.md','DESIGN_5.0.md','DESIGN_5.1.md','HARNESS_PARITY.md','GITHUB_MIGRATION.md','GITHUB_REPOSITORY_PROMPT.md']:files.append(root/name)
 fix=root/f'FIX_{version}.md'
 if fix.exists():files.append(fix)
 # Ship only the final version's documented previews; keep rejected local drafts intact.

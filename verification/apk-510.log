@@ -1,0 +1,41 @@
+
+> deepseek-android-bridge@5.1.0 build:assets
+> node scripts/build-assets.mjs
+
+Included dependency licenses in source and APK assets.
+Built isolated Android engine assets.
+Normalized 2 raw ZIP entry paths: resources.apk
+ע: ĳЩ�����ļ�ʹ�û򸲸����ѹ�ʱ�� API��
+ע: �й���ϸ��Ϣ, ��ʹ�� -Xlint:deprecation ���±��롣
+Verifies
+Verified using v1 scheme (JAR signing): false
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): true
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+Verified for SourceStamp: false
+Number of signers: 1
+Signer #1 certificate DN: CN=DeepSeek Android Bridge Test Build
+Signer #1 certificate SHA-256 digest: cc8f15b569d5e813c68d49f4fa17d19afbe6f7526ef5dbdade88e317116c2b59
+Signer #1 certificate SHA-1 digest: 696f50978fb119b127c566a114dd76886dee4cf8
+Signer #1 certificate MD5 digest: ff81406ed5c334c99d0b861f5880827c
+Signer #1 key algorithm: RSA
+Signer #1 key size (bits): 3072
+Signer #1 public key SHA-256 digest: 9f772486ab47d3036ab3ed1338026f32028e9325a1822f3b7f468a15ac370795
+Signer #1 public key SHA-1 digest: 91560e538110a71758384bbd2d0a660d6dbc41a0
+Signer #1 public key MD5 digest: 3636784a83927af902e781c25c615171
+package: name='io.github.deepseekbridge' versionCode='24' versionName='5.1.0' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
+minSdkVersion:'26'
+targetSdkVersion:'35'
+uses-permission: name='android.permission.INTERNET'
+uses-permission: name='android.permission.ACCESS_NETWORK_STATE'
+uses-permission: name='android.permission.FOREGROUND_SERVICE'
+uses-permission: name='android.permission.FOREGROUND_SERVICE_SPECIAL_USE'
+uses-permission: name='android.permission.POST_NOTIFICATIONS'
+uses-permission: name='android.permission.WAKE_LOCK'
+uses-permission: name='android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS'
+uses-permission: name='android.permission.MANAGE_EXTERNAL_STORAGE'
+uses-permission: name='android.permission.READ_EXTERNAL_STORAGE' maxSdkVersion='29'
+uses-permission: name='android.permission.WRITE_EXTERNAL_STORAGE' maxSdkVersion='29'
+application-label:'Inkvoy'
+{"apk":"C:\\CodexBuild\\inkvoy-5.1.0\\delivery\\deepseek-android-bridge-v5.1.0.apk","bytes":616114511,"sha256":"DE100DDEC8BC9F6A993DAB658330419CCE6854489C8EF3AC156253239B273C7D","minSdk":26,"targetSdk":35,"version":"5.1.0","signing":"local test identity"}

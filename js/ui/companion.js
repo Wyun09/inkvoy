@@ -7,6 +7,7 @@ const tools = {
   process: ['terminal','管理常驻任务'],
   write_file: ['writing', '写入文件'],
   browser:['reading','操作浏览器'],
+  app_control:['reading','操控手机 App'],
   web_search:['reading','网页搜索'],
   ask_user:['waiting','等你回答'],
   view_image:['reading','查看图片'],

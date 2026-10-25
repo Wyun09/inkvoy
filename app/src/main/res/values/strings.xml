@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_control_name">Inkvoy App 操控</string>
+    <string name="app_control_description">由你选择允许的 App，并在 Inkvoy 中开启本次操控后，AI 可读取可见界面、点击、输入和滚动。屏幕内容可能发送给当前所选模型。操作期间提供悬浮暂停按钮；可随时停止或在系统中关闭服务。系统授权界面由你手动操作。</string>
+</resources>

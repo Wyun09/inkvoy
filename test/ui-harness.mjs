@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises';
-export async function uiHarness(browser, viewport = { width: 390, height: 844 }, { storage = 'enabled', failStartup = false, initialPage = 'home', studio = false, holdTools=false, clientState = {}, providerState={}, providerCatalog, mediaFiles={}, fileChanges={}, saveDelay=0, assetsDirectory, recordVideo, runtimeTools = [{name:'JADX',version:'1.5.6',kind:'APK / DEX'},{name:'radare2',version:'6.2.4',kind:'ELF / SO'}] } = {}) {
+export async function uiHarness(browser, viewport = { width: 390, height: 844 }, { storage = 'enabled', failStartup = false, initialPage = 'home', studio = false, holdTools=false, clientState = {}, providerState={}, providerCatalog, mediaFiles={}, fileChanges={}, saveDelay=0, assetsDirectory, recordVideo, firstRun=false, deviceFixture={}, networkFixture={}, runtimeTools = [{name:'JADX',version:'1.5.6',kind:'APK / DEX'},{name:'radare2',version:'6.2.4',kind:'ELF / SO'}] } = {}) {
   const context = await browser.newContext({ viewport, deviceScaleFactor: 1,...(recordVideo?{recordVideo}:{}) });
   const page = await context.newPage();
   const assets = assetsDirectory || new URL('../app/src/main/assets/', import.meta.url);
@@ -8,7 +8,7 @@ export async function uiHarness(browser, viewport = { width: 390, height: 844 },
     if (!['engine.html', 'engine.bundle.js', 'compute.worker.js', 'mcp.worker.js', 'app.css', 'logo.png', 'companion.png','Geist.ttf'].includes(name)) return route.abort();
     return route.fulfill({ contentType: name.endsWith('.ttf')?'font/ttf':name.endsWith('.png') ? 'image/png' : name.endsWith('.js') ? 'application/javascript' : name.endsWith('.css') ? 'text/css' : 'text/html; charset=utf-8', body: await readFile(new URL(name, assets)) });
   });
-  await page.addInitScript(({ storage, failStartup, studio, holdTools, clientState, providerState, providerCatalog, mediaFiles, fileChanges, runtimeTools, saveDelay }) => {
+  await page.addInitScript(({ storage, failStartup, studio, holdTools, clientState, providerState, providerCatalog, mediaFiles, fileChanges, runtimeTools, saveDelay, firstRun, deviceFixture, networkFixture }) => {
     if (failStartup) window.ResizeObserver = class { constructor() { throw new Error('ResizeObserver unavailable'); } };
     if (storage === 'disabled') Object.defineProperty(window, 'localStorage', { get: () => null });
     if (storage === 'blocked') Object.defineProperty(window, 'localStorage', { get: () => { throw new DOMException('Storage access denied', 'SecurityError'); } });
@@ -17,13 +17,15 @@ export async function uiHarness(browser, viewport = { width: 390, height: 844 },
     window.nativeActions = []; window.nativeLayouts = []; window.nativeStartupErrors = [];
     const files = { 'hello.py': 'print("fixture")\n' };for(const change of Object.values(fileChanges))files[change.path]=change.current??change.after;let term=0;
     window.workspaceCalls=[];window.clientSaved=[];window.providerSaved=[];window.providerCalls=[];window.providerCancels=[];
-    const managedJobs=[];
+    const managedJobs=[];window.fixtureOnboardingDone=!firstRun;window.fixtureDevice={enabled:false,connected:false,armed:false,allowedPackages:[],screenshotSupported:true,...deviceFixture};window.fixtureNetwork={mode:'system',host:'127.0.0.1',port:0,...networkFixture};
     let computerState={url:'',title:'AI 浏览器',enabled:true,canBack:false,canForward:false,loading:false,phase:'就绪'};
     window.NativeBridge = {
       ready() { window.nativeReady = true; },
+      onboardingDone(){return window.fixtureOnboardingDone;},
+      onboardingStep(){return 0;},
       timer(id, ms) { timers.set(id, set(() => { timers.delete(id); AndroidEngine.timer(id); }, ms)); },
       clearTimer(id) { clear(timers.get(id)); timers.delete(id); },
-      uiAction(action, raw) { window.nativeActions.push({ action, payload: JSON.parse(raw) }); },
+      uiAction(action, raw) { window.nativeActions.push({ action, payload: JSON.parse(raw) });if(action==='onboarding-finish')window.fixtureOnboardingDone=true; },
       uiLayout(raw) { window.nativeLayouts.push(JSON.parse(raw)); },
       startupError(message) { window.nativeStartupErrors.push(message); },
       searchDefault() { return true; },
@@ -46,7 +48,14 @@ export async function uiHarness(browser, viewport = { width: 390, height: 844 },
         if(operation==='process.stop'){const j=managedJobs.find(j=>j.id===a.id&&j.project===a.project);if(j){j.state='exited';j.exitCode=0;}value=j||{};set(()=>AndroidEngine.workspaceRpc(id,{ok:true,value}),20);return;}
         if(operation==='tool.execute'&&a.name==='process'&&a.args.action==='start'){value={id:a.id,project:a.project,title:a.args.title||'开发服务',command:a.args.command,cwd:a.args.cwd,previewUrl:a.args.preview_url,state:'running',stdout:'Serving HTTP on 127.0.0.1 port 8899',stderr:''};managedJobs.push(value);set(()=>AndroidEngine.workspaceRpc(id,{ok:true,value}),20);return;}
         if(operation==='tool.execute'&&holdTools)return;
-        if(operation==='account.list')value={accounts:[],authorizing:false,notice:''};
+        if(operation==='device.status')value={...fixtureDevice};
+        else if(operation==='device.apps')value={status:{...fixtureDevice},apps:[{package:'example.notes',label:'笔记'},{package:'example.calculator',label:'计算器'}]};
+        else if(operation==='device.configure'){fixtureDevice.allowedPackages=a.packages;fixtureDevice.armed=false;value={...fixtureDevice};}
+        else if(operation==='device.arm'||operation==='device.pause'){fixtureDevice.armed=operation==='device.arm';value={...fixtureDevice};}
+        else if(operation==='network.status')value={...fixtureNetwork};
+        else if(operation==='network.save'){fixtureNetwork={...a};value={...fixtureNetwork};}
+        else if(operation==='network.test'){const proxy=fixtureNetwork.mode==='http_proxy';value={ok:proxy,apiReachable:proxy,mode:fixtureNetwork.mode,message:proxy?'诊断夹具：代理 HTTPS 已连通；可重试模型目录。':'诊断夹具：API 域名尚未连通，授权保留。',targets:[{host:'auth.openai.com',system:{reachable:true,httpStatus:200},selected:{reachable:true,httpStatus:200},dns:{addresses:['192.0.2.1']}},{host:'api.openai.com',system:{reachable:false,code:'dns_resolution',message:'系统未返回可用地址'},selected:proxy?{reachable:true,httpStatus:401}:{reachable:false,code:'dns_resolution',message:'系统未返回可用地址'},dns:{code:'dns_resolution'}}]};}
+        else if(operation==='account.list')value={accounts:[],authorizing:false,notice:''};
         else if(operation==='extension.list')value={servers:[],plugins:[]};
         else if(operation==='runtime.status'||operation==='runtime.ensure')value={ready:true,verified:false,tools:runtimeTools};
         else if(operation==='file.list')value={entries:Object.entries(files).map(([name,content])=>({name,bytes:content.length,directory:false}))};
@@ -60,7 +69,7 @@ export async function uiHarness(browser, viewport = { width: 390, height: 844 },
       },
       request() {}, response() {}, reportUi() {},
     };
-  }, { storage, failStartup, studio, holdTools, clientState, providerState, providerCatalog, mediaFiles, fileChanges, runtimeTools, saveDelay });
+  }, { storage, failStartup, studio, holdTools, clientState, providerState, providerCatalog, mediaFiles, fileChanges, runtimeTools, saveDelay, firstRun, deviceFixture, networkFixture });
   await page.goto('https://bridge.local/engine.html');
   await page.waitForFunction(failStartup => failStartup ? window.nativeStartupErrors?.length > 0 : window.nativeReady && window.BridgeDashboard, failStartup, { timeout: 5000 });
   if(!failStartup)await page.evaluate(tab=>BridgeDashboard.navigate(tab),initialPage);

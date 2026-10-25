@@ -3,11 +3,12 @@ import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
 import {uiHarness,readyState,navigateStudio} from './ui-harness.mjs';
 const launch=()=>chromium.launch({headless:true,channel:process.platform==='win32'?'msedge':undefined});
+
 test('unchanged refreshes do not flood native layout, including web page geometry',async t=>{
  const browser=await launch();t.after(()=>browser.close());const {page,context}=await uiHarness(browser,{width:390,height:844},{studio:true,initialPage:'chat'});t.after(()=>context.close());
  await page.waitForTimeout(100);const before=await page.evaluate(()=>nativeLayouts.length);
  await page.evaluate(s=>{for(let i=0;i<150;i++){BridgeDashboard.render(s);window.dispatchEvent(new Event('resize'));}},readyState);await page.waitForTimeout(100);
- assert.ok(await page.evaluate(n=>nativeLayouts.length-n<=1,before));await navigateStudio(page,'web');await page.waitForTimeout(300);const web=await page.evaluate(()=>nativeLayouts.length);
+ assert.ok(await page.evaluate(n=>nativeLayouts.length-n<=1,before));await navigateStudio(page,'web');await page.evaluate(()=>document.fonts.ready);await page.waitForFunction(()=>nativeLayouts.at(-1)?.visible===true&&nativeLayouts.at(-1)?.height>0);const web=await page.evaluate(()=>nativeLayouts.length);
  await page.evaluate(s=>{for(let i=0;i<80;i++)BridgeDashboard.render(s);},readyState);await page.waitForTimeout(100);assert.equal(await page.evaluate(()=>nativeLayouts.length),web);
 });
 test('empty conversation controls react while encrypted persistence is still pending',async t=>{

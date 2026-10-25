@@ -1,8 +1,24 @@
-# Inkvoy 5.0
+# Inkvoy 5.1
 
-面向网络安全研究、授权测试、逆向分析与编程的 Android AI 工作区。手机独立运行，内置 Debian 13 ARM64、PTY 终端、项目文件、AI 浏览器、MCP、技能与模型连接。
+Android 手机上独立运行的 AI 工作台，面向编程、安全研究与逆向分析，集成 Debian 终端、文件、AI 浏览器、MCP、技能与多模型协作。
 
-从输入栏的模型按钮或抽屉「模型与 API」填写自定义地址、密钥与模型 ID。已有连接自动读取目录；公开的推理档位与上下文容量按当前模型展示。未公布时保持默认、明确估算，不将所有模型假定为 1M。DeepSeek 网页连接继续使用页面实际支持的开关。
+An on-device Android AI workspace for coding, security research, and reverse engineering, with a terminal, AI browser, MCP, and multi-model agents.
+
+仓库：https://github.com/Wyun09/inkvoy 。完整版本历史迁移尚未执行。
+
+## 5.1 更新
+
+- 抽屉「开始使用」：四步连接与工作环境引导，可跳过并随时重开；自定义 API 打开真实地址、密钥、模型编辑表单。
+- 抽屉「App 操控」：由用户启用系统无障碍服务、选择 App 和允许本次操控。悬浮按钮可立即暂停。节点读取、点击、输入、清空、滚动、手势与 Android 11+ 系统截图；截图进入对话和模型图像输入，也保存在项目 captures/ 中。
+- 抽屉或账号页「网络与代理」：跟随系统/VPN，或填写实际 HTTP 代理主机和端口；分别诊断授权与 API 域名，保留已授权身份。不预设 VPN 端口，不关闭 TLS 校验，不宣称已修复手机 DNS。
+- 「阅读与辅助」：回复/思考字号、增强对比度、大点击区域、TalkBack 阶段通知及减少动态效果。手机面板适配界面缩放。
+- 延续完整 Logo 动效、即时流式、命令实时输出、上下文、计划/目标、子代理和端点集群。
+
+完整离线 APK 约 588 MiB，含 Debian ARM64；包名和签名延续旧版，供覆盖安装使用。尚未进行实体手机覆盖安装和其他 App 操控验收。
+
+构建：npm ci → npm run build:assets；完整安装包使用 scripts/build-apk.ps1 与本机 Android 工具链/自行配置的签名。公开源码不含私钥、账号令牌或浏览器会话。检查见 VERIFICATION.md，设计见 DESIGN_5.1.md，上游差距见 HARNESS_PARITY.md。
+
+历史快照与安全清理条件见 GITHUB_MIGRATION.md；已确认仓库后，仍须验证远端和全新 clone 恢复，再清理重复旧源码。宣传片源稿在 branding/promo.html 和 scripts/render-promo.mjs；界面素材是注明的示例任务演示。
 
 ## 5.0 更新
 

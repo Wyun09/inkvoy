@@ -60,6 +60,13 @@ public final class StudioRuntime {
         String project=a.optString("project");
         if(operation.equals("extension.tool.begin")){extensions().server(a.getString("server"));files.project(project);JSONObject key=new JSONObject().put("server",a.getString("server")).put("project",project).put("name",a.getString("name")).put("args",a.getJSONObject("args"));JSONObject cached=journal().claim(a.getString("id"),canonical(key));if(cached!=null)return new JSONObject().put("cached",true).put("value",cached);journal().running(a.getString("id"));return new JSONObject().put("claimed",true);}
         if(operation.equals("extension.tool.finish")){JSONObject result=a.getJSONObject("result");if(result.toString().length()>524288)throw new IOException("MCP 工具结果超过 512 KB");journal().finish(a.getString("id"),result);return result;}
+        if(operation.equals("network.status"))return NetworkSettings.config(context);
+        if(operation.equals("network.save"))return NetworkSettings.configure(context,a);
+        if(operation.equals("network.test"))return NetworkSettings.diagnose(context);
+        if(operation.equals("device.status"))return AppControlService.status(context);
+        if(operation.equals("device.apps"))return AppControlService.applications(context);
+        if(operation.equals("device.configure"))return AppControlService.configure(context,a.getJSONArray("packages"));
+        if(operation.equals("device.arm")||operation.equals("device.pause")){JSONObject state=AppControlService.setArmed(context,operation.equals("device.arm"));emit("device",state);return state;}
         if(operation.startsWith("account."))return accounts().handle(operation,a);
         if(operation.equals("extension.import"))return extensions().importServers(a.getJSONArray("servers"));
         if(operation.startsWith("extension.")||operation.startsWith("plugin."))return extensions().handle(operation,a);
@@ -77,7 +84,7 @@ public final class StudioRuntime {
             case "file.change":return revisions.get(project,a.getString("id"));
             case "file.revert":return revisions.revert(project,a.getString("id"));
             case "file.search":return files.search(project,a.optString("path"),a.getString("query"));
-            case "command.cancel":{String id=a.getString("id");journal().cancel(id);Command c=commands.get(id);if(c!=null)c.cancel();managed.cancelStart(id);if(browserTool!=null)browserTool.cancel();return new JSONObject().put("cancelled",true);}
+            case "command.cancel":{String id=a.getString("id");journal().cancel(id);AppControlService.cancel(id);Command c=commands.get(id);if(c!=null)c.cancel();managed.cancelStart(id);if(browserTool!=null)browserTool.cancel();return new JSONObject().put("cancelled",true);}
             case "process.list":return managed.list(project,a.optBoolean("logs"));
             case "process.status":return managed.status(project,a.getString("id"));
             case "process.stop":return managed.stop(project,a.getString("id"));
@@ -116,11 +123,20 @@ public final class StudioRuntime {
             case "list_files":result=files.list(project,args.optString("path"));break;
             case "search_files":result=files.search(project,args.optString("path"),args.getString("query"));break;
             case "view_image":{JSONObject attachment=media.attach(files.resolve(project,args.getString("path")),project,args.getString("path"));if(!attachment.optBoolean("image"))throw new IOException("文件不是可解码的图片");result=new JSONObject().put("ok",true).put("attachment",attachment).put("notice","图片像素将在下一次模型请求中作为图像消息提供");break;}
+            case "app_control":{result=attachAppCapture(project,AppControlService.tool(context,id,args));break;}
             case "browser":if(browserTool==null)throw new IOException("AI 浏览器尚未就绪");result=browserTool.run(id,args);break;
             default:throw new IOException("Unknown built-in tool");
         }if(!result.has("ok"))result.put("ok",true);}catch(Exception e){result=new JSONObject().put("ok",false).put("error",e.getMessage()==null?"工具执行已中断":e.getMessage());}
         if(result.toString().getBytes(StandardCharsets.UTF_8).length>524288){for(String key:new String[]{"stdout","stderr"})if(result.has(key)){String value=result.optString(key);result.put(key,value.substring(0,Math.min(16384,value.length())));}result.put("truncated",true);}
         journal().finish(id,result);return result;
+    }
+    JSONObject attachAppCapture(String project,JSONObject result)throws Exception{
+        String capture=result.optString("captureFile");result.remove("captureFile");if(capture.isEmpty())return result;
+        File image=new File(capture);String path="captures/app-"+UUID.randomUUID()+".png";File saved=files.resolve(project,path);boolean committed=false;
+        try{
+            File parent=saved.getParentFile();if(!parent.isDirectory()&&!parent.mkdirs())throw new IOException("无法创建项目截图目录");
+            java.nio.file.Files.copy(image.toPath(),saved.toPath());result.put("attachment",media.attach(saved,project,path));committed=true;return result;
+        }finally{image.delete();if(!committed)saved.delete();}
     }
     private void managedChanged(){emit("work",work.get()+managed.activeCount());emit("process",true);}
     private JSONObject managedTool(String id,String project,JSONObject args)throws Exception{

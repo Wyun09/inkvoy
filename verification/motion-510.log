@@ -1,0 +1,27 @@
+{
+  "version": "5.1.0",
+  "method": "FFmpeg decodes the production UI video at 30/58/88 percent, after startup; exported frames require visual inspection. Native/account/app data are fixtures, not a connected phone.",
+  "records": [
+    {
+      "video": "preview/5.1.0/studio-onboarding-motion.webm",
+      "contactSheet": "preview/5.1.0/studio-onboarding-motion-contact.png",
+      "frames": [
+        "preview/5.1.0/studio-onboarding-motion-frame-1.png",
+        "preview/5.1.0/studio-onboarding-motion-frame-2.png",
+        "preview/5.1.0/studio-onboarding-motion-frame-3.png"
+      ],
+      "durationSeconds": 9.32,
+      "times": [
+        2.796,
+        5.4056,
+        8.201600000000001
+      ],
+      "frameHashes": [
+        "efcd71f7933ea78592adc8676dd71925c2351bc29037657ca6dc9ab04fe46972",
+        "d0f01136856710c9c570950979389cf47edf3bcdb472b12cd88e4fb86f8fef6a",
+        "129a53d70ba40da8e3115706a2021832befc666ec940e07a90713610d55ef592"
+      ],
+      "distinctFrames": 3
+    }
+  ]
+}

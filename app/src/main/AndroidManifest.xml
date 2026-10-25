@@ -1,5 +1,6 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="io.github.deepseekbridge" android:versionCode="23" android:versionName="5.0.0">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="io.github.deepseekbridge" android:versionCode="24" android:versionName="5.1.0">
     <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="35" />
+    <queries><intent><action android:name="android.intent.action.MAIN" /><category android:name="android.intent.category.LAUNCHER" /></intent></queries>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -14,6 +15,10 @@
         <activity android:name=".MainActivity" android:exported="true" android:launchMode="singleTask" android:configChanges="orientation|screenSize|keyboardHidden|uiMode" android:windowSoftInputMode="adjustResize">
             <intent-filter><action android:name="android.intent.action.MAIN" /><category android:name="android.intent.category.LAUNCHER" /></intent-filter>
         </activity>
+        <service android:name=".AppControlService" android:label="@string/app_control_name" android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" android:exported="true">
+            <intent-filter><action android:name="android.accessibilityservice.AccessibilityService" /></intent-filter>
+            <meta-data android:name="android.accessibilityservice" android:resource="@xml/app_control_service" />
+        </service>
         <service android:name=".BridgeService" android:exported="false" android:foregroundServiceType="specialUse">
             <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE" android:value="User-started local loopback API gateway using an authenticated WebView session, with visible controls and notification." />
         </service>

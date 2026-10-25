@@ -1,15 +1,15 @@
 {
-  "version": "5.0.0",
+  "version": "5.1.0",
   "restoredAt": "2026-10-25T12:54:46.173796+08:00",
-  "source": "deepseek-android-bridge-v5.0.0-source.zip",
-  "sourceTreeSha256": "45a61907df8960de3e9742061902b7699997a874fa4fd685cff7ed462b9d829b",
-  "sourceFiles": 1200,
+  "source": "deepseek-android-bridge-v5.1.0-source.zip",
+  "sourceTreeSha256": "2de95f6d0721c9dcd1a88f3738e623313372e016c9b1bec23af447baf3a2d08d",
+  "sourceFiles": 1245,
   "license": "GPL-3.0-only for project-owned code; third-party notices retained",
   "history": "Recovered release snapshot, imported on the actual restoration date. These are not fabricated original development commits.",
   "privatePathsExcluded": [
     "third_party/termux-build/scripts/llvm-snapshot.gpg.key"
   ],
   "sourceEdits": [],
-  "externalArtifactCount": 1654,
+  "externalArtifactCount": 1655,
   "externalArtifactPolicy": "Large offline images, corresponding-source archives, JARs, APKs and media are kept outside ordinary Git history. See EXTERNAL_ARTIFACTS.json and the original source-archive manifest."
 }
