@@ -7,6 +7,7 @@ import { initStudio } from './ui/studio.js';
 import { setTimeout, clearTimeout, fireTimer } from './native-clock.js';
 import { createClientStream } from './client-stream.js';
 import { createProviders } from './providers.js';
+import {createAgentTools,createWebSearch} from './agent-tools.js';
 globalThis.Buffer = MobileBuffer;
 let sequence = 0;
 const statePending = new Map();
@@ -64,15 +65,18 @@ const engine = createEngine(backend, (id, kind, payload) => {
 });
 let clientState = {};
 try { clientState = JSON.parse(NativeBridge.loadClientState?.() || '{}'); } catch {}
+const requestWeb=(id,body,onProgress,requestKey)=>new Promise((resolve,reject)=>{clientRequests.set(id,{resolve,reject,onProgress,stream:createClientStream()});engine.receive({id,path:'/v1/chat/completions',body,requestKey});});
+const agentTools=createAgentTools({search:createWebSearch({request:requestWeb,cancel:id=>engine.cancel(id,false),evidence:text=>backend.searchEvidence(text)}),onQuestion:value=>window.StudioUI?.questionState(value)});
 const client = createClient({
   modelInfo:()=>providers.current()?{name:providers.current().name,model:providers.current().model,source:'api',provider:{...providers.current()}}:{name:'DeepSeek',model:'deepseek-web',source:'web'},
-  initialState:clientState, native:workspace,
-  request:(id,body,onProgress,connection)=>connection?.source==='api'?providers.request(id,body,onProgress,connection.provider):new Promise((resolve,reject)=>{clientRequests.set(id,{resolve,reject,onProgress,stream:createClientStream()});engine.receive({id,path:'/v1/chat/completions',body});}),
+  initialState:clientState, native:workspace,agentTools,
+  request:(id,body,onProgress,connection)=>connection?.source==='api'?providers.request(id,body,onProgress,connection.provider):requestWeb(id,body,onProgress),
   cancel:id=>{if(!providers.cancel(id))engine.cancel(id,false);},saveState:raw=>saveLocal('client', raw),
   onChange:state=>window.StudioUI?.render(state),
 });
 let inspecting = false;
 globalThis.AndroidEngine = {
+  computerOpen:()=>window.BridgeDashboard?.navigate('computer'),
   receive: request => engine.receive(request), cancel: id => engine.cancel(id), cancelAll: () => { void client.stop(); engine.cancelAll(); },
   resetConversations() { NativeBridge.reportUi?.('conversationReset', JSON.stringify({ ok: engine.resetConversations() })); },
   async taskAction(action, id) {
@@ -107,7 +111,7 @@ globalThis.AndroidEngine = {
   },
 };
 try {
-  initStudio({client,native:workspace,providers});
+  initStudio({client,native:workspace,providers,agentTools});
   initDashboard();
   BridgeDashboard.navigate('chat');
   NativeBridge.ready();

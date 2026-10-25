@@ -1,11 +1,11 @@
 {
-  "version": "2.2.0",
-  "versionCode": 13,
-  "buildDate": "2026-10-19",
+  "version": "2.3.0",
+  "versionCode": 14,
+  "buildDate": "2026-10-20",
   "package": "io.github.deepseekbridge",
-  "apk": "deepseek-android-bridge-v2.2.0.apk",
-  "bytes": 615794532,
-  "sha256": "fe554434e51af4a7efefc5dd19bcc0e463e5ee435bfe561e2618c61d66191a79",
+  "apk": "deepseek-android-bridge-v2.3.0.apk",
+  "bytes": 615823279,
+  "sha256": "52f1608fe747a667a7517e4e6ab416b1c8fa89d399db5220b39818c4d44d724d",
   "signerSha256": "cc8f15b569d5e813c68d49f4fa17d19afbe6f7526ef5dbdade88e317116c2b59",
   "minSdk": 26,
   "targetSdk": 35,
@@ -89,7 +89,7 @@
     }
   },
   "verification": {
-    "javascript": 263,
+    "javascript": 280,
     "transportHost": 35,
     "storageHost": 11,
     "workspaceHost": 23,
@@ -103,7 +103,7 @@
     "lockScreenBackground": false,
     "androidFrameworkNativeSqlite": 12,
     "physicalAndroidDevice": false,
-    "androidFrameworkRegression": 69,
+    "androidFrameworkRegression": 91,
     "androidRuntimeAssets": 10,
     "androidPermissions": 5,
     "rawZipPathsPortable": true,
@@ -112,20 +112,22 @@
     "androidHardLinkCompatibility": 8,
     "androidFileRevisions": 20,
     "androidResponsiveness": 6,
-    "androidProviderHttp": 8
+    "androidProviderHttp": 8,
+    "androidComputerUse": 16,
+    "androidChatMedia": 6
   },
   "debianSources": {
     "packages": 465,
     "files": 2145,
     "bytes": 1134408545
   },
-  "fix": "Nonblocking encrypted persistence, deduplicated native layout, revisable live replies, search completion recovery, chronological execution chain, transparent 32-frame companion and encrypted custom OpenAI-compatible providers.",
+  "fix": "Explicit webpage search, computer-use browser, submitted user questions, discoverable custom providers and actual image messages with chat attachment previews.",
   "ui": {
     "reference": "https://github.com/assistant-ui/assistant-ui",
     "commit": "e97f7c61365ef0f73686c7b596751802f1a1ddd2",
     "license": "MIT",
-    "adaptation": "Compact chronological execution chain, lazy tool output, paged history, revisable streaming drafts, transparent raster animations and private API connection settings",
-    "desktopRenderedPreviews": 22,
+    "adaptation": "Compact chronological execution chain, lazy output, revisable streaming drafts, private API settings, bounded user questions and attachment previews.",
+    "desktopRenderedPreviews": 27,
     "physicalAndroidDevice": false,
     "originalGeneratedCompanion": true,
     "companionPoses": 8,
@@ -134,14 +136,19 @@
       "reply-model.js",
       "replies.js",
       "changes.js",
-      "model-settings.js"
+      "model-settings.js",
+      "attachments.js",
+      "questions.js",
+      "computer.js"
     ],
     "companionFrames": 32,
     "companionGrid": [
       4,
       8
     ],
-    "companionBackground": "transparent"
+    "companionBackground": "transparent",
+    "currentVersionNewDesktopPreviews": 5,
+    "historicalDesktopPreviews": 22
   },
   "hardLinks": {
     "deniedErrnos": [
@@ -264,13 +271,75 @@
           9.100000000093132
         ]
       }
-    ]
+    ],
+    "historicalMeasurementVersion": "2.2.0"
   },
   "harnessSourceReview": {
     "repository": "https://github.com/deepseek-ai/deepseek-harness",
     "commit": "687f282e8625c6b8d11ff58211a90524be2e4317",
-    "filesReviewed": 13,
+    "filesReviewed": 16,
     "upstreamCodeImported": false,
     "notes": "verification/harness-source-review.md"
-  }
+  },
+  "computerUse": {
+    "actions": [
+      "open",
+      "observe",
+      "move",
+      "click",
+      "type",
+      "key",
+      "scroll",
+      "back",
+      "forward",
+      "reload"
+    ],
+    "separateRemoteWebView": true,
+    "lazyCreated": true,
+    "domGrounding": true,
+    "captures": 8,
+    "nativeJavascriptInterface": false,
+    "latestObservationRequired": true,
+    "nativeMouseEvents": true,
+    "takeoverCancelsPendingActions": true,
+    "journaled": true,
+    "browserScreenshotVision": "Custom API only; explicit profile opt-in",
+    "physicalDeviceVerified": false
+  },
+  "webSearch": {
+    "tool": "web_search",
+    "provider": "Logged-in built-in DeepSeek webpage",
+    "externalSearchModelRequired": false,
+    "usableFromCustomApi": true,
+    "returnsAnswerAndSources": true,
+    "checksCurrentAnswerSources": true,
+    "realAccountVerified": false
+  },
+  "userQuestions": {
+    "tool": "ask_user",
+    "maximumQuestions": 3,
+    "maximumOptions": 6,
+    "multipleChoice": true,
+    "customText": true,
+    "explicitSubmit": true,
+    "explicitSkip": true,
+    "stopDoesNotAnswer": true
+  },
+  "attachments": {
+    "imageMessageParts": true,
+    "existingImageTool": "view_image",
+    "maxPerSend": 8,
+    "maxImageInputBytes": 20971520,
+    "maxPixelCount": 100000000,
+    "maxImageDimension": 1600,
+    "maxNormalizedBytes": 900000,
+    "immutablePrivateCopies": true,
+    "persistentStateStoresBase64": false,
+    "chatExportBundlesPixels": false,
+    "filesAreCards": true,
+    "physicalDeviceVerified": false
+  },
+  "knownIssues": [
+    "Background servers started with nohup/setsid/& inside the one-shot terminal tool can be killed when its PRoot session ends. Managed persistent tasks are not included in this build."
+  ]
 }

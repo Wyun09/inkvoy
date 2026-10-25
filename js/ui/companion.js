@@ -5,6 +5,10 @@ const tools = {
   search_files: ['reading', '搜索文件'],
   terminal: ['terminal', '运行命令'],
   write_file: ['writing', '写入文件'],
+  browser:['reading','操作浏览器'],
+  web_search:['reading','网页搜索'],
+  ask_user:['waiting','等你回答'],
+  view_image:['reading','查看图片'],
 };
 
 export function companionState(session, active) {

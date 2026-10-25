@@ -1,0 +1,17 @@
+{
+  "productionUi": true,
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "nativeAndroidSurface": false,
+  "remoteModelAndWebpage": "explicit fixtures",
+  "physicalAndroidDevice": false,
+  "previews": [
+    "computer-230-welcome.png",
+    "computer-230-dark.png",
+    "computer-230-sidebar.png",
+    "computer-230-api-settings.png",
+    "computer-230-question.png"
+  ]
+}

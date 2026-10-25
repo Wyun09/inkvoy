@@ -112,6 +112,8 @@ public final class MainActivity extends Activity {
         BridgeRuntime runtime = service.runtime;
         JSONObject layout = runtime.uiLayout;
         boolean visible = layout.optBoolean("visible");
+        boolean useComputer="computer".equals(layout.optString("surface"));
+        runtime.computer.setVisible(visible&&useComputer);
         if (!visible) {
             if (root.getChildAt(root.getChildCount() - 1) != runtime.engine) runtime.engine.bringToFront();
             if (runtime.browser.hasFocus()) {
@@ -128,9 +130,11 @@ public final class MainActivity extends Activity {
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, height);
         params.leftMargin = Math.max(0, (int) Math.round(layout.optDouble("left") * scale));
         params.topMargin = Math.max(0, (int) Math.round(layout.optDouble("top") * scale));
-        FrameLayout.LayoutParams previous = (FrameLayout.LayoutParams) runtime.browser.getLayoutParams();
-        if (previous.width != params.width || previous.height != params.height || previous.leftMargin != params.leftMargin || previous.topMargin != params.topMargin) runtime.browser.setLayoutParams(params);
-        if (root.getChildAt(root.getChildCount() - 1) != runtime.browser) runtime.browser.bringToFront();
+        View target=useComputer?runtime.computer.surface():runtime.browser;
+        if(target.getParent()!=root)attach(target);
+        FrameLayout.LayoutParams previous = (FrameLayout.LayoutParams) target.getLayoutParams();
+        if (previous.width != params.width || previous.height != params.height || previous.leftMargin != params.leftMargin || previous.topMargin != params.topMargin) target.setLayoutParams(params);
+        if (root.getChildAt(root.getChildCount() - 1) != target) target.bringToFront();
     }
     private void handleAction(String action, JSONObject argument) {
         if (!available()) return;
@@ -154,7 +158,7 @@ public final class MainActivity extends Activity {
         }
         if (action.equals("import-file")) {
             importProject=argument.optString("project");
-            Intent picker=new Intent(Intent.ACTION_OPEN_DOCUMENT).setType("*/*").addCategory(Intent.CATEGORY_OPENABLE);
+            Intent picker=new Intent(Intent.ACTION_OPEN_DOCUMENT).setType("*/*").addCategory(Intent.CATEGORY_OPENABLE).putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
             try{startActivityForResult(picker,21);}catch(ActivityNotFoundException e){service.runtime.toast("系统文件选择器不可用");}return;
         }
         if (action.equals("export-file")) {
@@ -171,7 +175,8 @@ public final class MainActivity extends Activity {
         if (action.equals("open-link")) {
             String value=argument.optString("url");android.net.Uri url=android.net.Uri.parse(value);
             if(value.length()>4096||!("https".equalsIgnoreCase(url.getScheme())||"http".equalsIgnoreCase(url.getScheme()))||url.getHost()==null){service.runtime.toast("此链接无法打开");return;}
-            try{startActivity(new Intent(Intent.ACTION_VIEW,url).addCategory(Intent.CATEGORY_BROWSABLE));}catch(ActivityNotFoundException e){service.runtime.toast("没有可用的浏览器");}return;
+            service.runtime.engine.evaluateJavascript("AndroidEngine.computerOpen()",null);
+            try{service.runtime.computer.ui(new JSONObject().put("action","open").put("url",value),(ok,result)->{});}catch(JSONException ignored){}return;
         }
         if (action.equals("copy-text")) {
             String text=argument.optString("text");if(text.length()>2097152){service.runtime.toast("复制内容超过限制");return;}
@@ -260,8 +265,9 @@ public final class MainActivity extends Activity {
         service.runtime.engine.evaluateJavascript("BridgeDashboard.back()", result -> { if (!"true".equals(result)) finish(); });
     }
     @Override protected void onSaveInstanceState(Bundle state){super.onSaveInstanceState(state);state.putString("importProject",importProject);state.putString("exportProject",exportProject);state.putString("exportPath",exportPath);state.putString("exportSessionId",exportSessionId);}
-    @Override protected void onActivityResult(int request,int result,Intent data){super.onActivityResult(request,result,data);if(result!=RESULT_OK||data==null||data.getData()==null||!available())return;
-        if(request==21&&importProject!=null)service.runtime.studio.importFile(data.getData(),importProject);
+    @Override protected void onActivityResult(int request,int result,Intent data){super.onActivityResult(request,result,data);if(result!=RESULT_OK||data==null||!available())return;
+        if(request==21&&importProject!=null){if(data.getClipData()!=null){for(int i=0;i<Math.min(8,data.getClipData().getItemCount());i++)service.runtime.studio.importFile(data.getClipData().getItemAt(i).getUri(),importProject);}else if(data.getData()!=null)service.runtime.studio.importFile(data.getData(),importProject);return;}
+        if(data.getData()==null)return;
         if(request==22&&exportSessionId!=null)service.runtime.exportClientSession(data.getData(),exportSessionId);
         else if(request==22&&exportProject!=null&&exportPath!=null)service.runtime.studio.exportFile(data.getData(),exportProject,exportPath);
     }

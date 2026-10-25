@@ -142,6 +142,8 @@ export function extractDomTexts({ selectors, inspectPage }) {
     const generating = allVisible('button[aria-label],[role="button"][aria-label]').some(element => /^(?:停止(?:生成|回答|响应|输出)?|Stop(?: generating| response| generation)?)$/i.test(label(element)));
     const searchBusy = allVisible('[role="status"],[aria-busy="true"],[data-state="searching"],[data-testid="search-status"]').some(element => !oldAnswers.some(old => old.contains(element)) && /^(?:正在搜索|搜索中|正在检索|正在阅读|Searching|Reading (?:web|sources)|Browsing)/i.test(textOf(element).trim()));
     const alerts = allVisible('[role="alert"], .ds-toast, [data-testid="error-message"], [data-testid="input-error"]');
+    const sourceRoot=answer?.closest('.ds-message')||answer;
+    const sources=sourceRoot?[...sourceRoot.querySelectorAll('a[href]')].filter(visible).map(a=>({title:(a.innerText||a.getAttribute('title')||a.href).trim().slice(0,240),url:a.href})).filter(a=>/^https?:\/\//i.test(a.url)&&!/^https:\/\/chat\.deepseek\.com(?:\/|$)/i.test(a.url)).filter((a,i,list)=>list.findIndex(b=>b.url===a.url)===i).slice(0,20):[];
     const challenge = allVisible('[class*="captcha" i], [id*="captcha" i], [data-testid*="captcha" i], iframe[src*="captcha" i], iframe[title*="challenge" i], iframe[src*="challenges.cloudflare.com" i]');
     results.page = {
       originMatches: location.origin === inspectPage.origin,
@@ -160,6 +162,7 @@ export function extractDomTexts({ selectors, inspectPage }) {
       answerCount: answers.length,
       reasoningCount: thoughts.length,
       generating, searching: searchBusy,
+      sources,sourceCards:sourceRoot?.querySelectorAll(searchResult).length||0,
       completed: Boolean(answer) && !generating && !searchBusy && (readAloud.some(visible) || copyReady && retryReady),
       readAloudFound: readAloud.length > 0,
       readAloudRawCount: readAloud.length,

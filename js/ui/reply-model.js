@@ -1,4 +1,4 @@
-export const TOOL_LABELS={terminal:'运行命令',read_file:'读取文件',write_file:'修改文件',list_files:'查看目录',search_files:'搜索文件'};
+export const TOOL_LABELS={terminal:'运行命令',read_file:'读取文件',write_file:'修改文件',list_files:'查看目录',search_files:'搜索文件',view_image:'查看图片',browser:'操作浏览器',web_search:'网页搜索',ask_user:'问答交互'};
 export const STATUS_LABELS={idle:'准备就绪',preparing:'准备工作区',generating:'正在生成',tools:'正在执行',cancelling:'正在停止',completed:'已完成',needs_input:'等你补充',budget:'等待继续',failed:'运行遇到问题',interrupted:'运行中断',cancelled:'已停止'};
 export function parseJSON(value){try{return JSON.parse(value);}catch{return null;}}
 const parsed=new WeakMap();

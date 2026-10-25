@@ -56,20 +56,20 @@ export function initDashboard() {
     if (layoutFrame) return;
     layoutFrame = requestAnimationFrame(() => {
       layoutFrame = 0;
-      const visible = tab === 'web' && !modal;
-      const slot = visible ? $('web-slot').getBoundingClientRect() : null;
+      const visible = (tab === 'web'||tab === 'computer') && !modal;
+      const slot = visible ? $(tab==='computer'?'computer-slot':'web-slot').getBoundingClientRect() : null;
       const rounded = value => Math.round(value * 2) / 2;
-      const raw = JSON.stringify(visible ? { visible, top: rounded(slot.top), left: rounded(slot.left), width: rounded(slot.width), height: rounded(slot.height), viewportWidth: innerWidth } : { visible: false });
+      const raw = JSON.stringify(visible ? { visible, ...(tab==='computer'?{surface:'computer'}:{}), top: rounded(slot.top), left: rounded(slot.left), width: rounded(slot.width), height: rounded(slot.height), viewportWidth: innerWidth } : { visible: false });
       if (raw === lastLayout) return;
       lastLayout = raw; NativeBridge.uiLayout?.(raw);
     });
   }
   function navigate(value) {
-    if (!['home', 'tasks', 'web', 'connect', 'chat', 'files', 'terminal', 'tools'].includes(value) || !$('page-' + value)) return;
+    if (!['home', 'tasks', 'web', 'connect', 'chat', 'files', 'terminal', 'tools','computer'].includes(value) || !$('page-' + value)) return;
     tab = value;
     document.body.dataset.page=value;
     window.StudioUI?.closeDrawer();
-    for (const name of ['home', 'tasks', 'web', 'connect', 'chat', 'files', 'terminal', 'tools']) if ($('page-' + name)) $('page-' + name).hidden = name !== value;
+    for (const name of ['home', 'tasks', 'web', 'connect', 'chat', 'files', 'terminal', 'tools','computer']) if ($('page-' + name)) $('page-' + name).hidden = name !== value;
     document.querySelectorAll('.bottom-nav [data-navigate]').forEach(button => {
       button.classList.toggle('active', button.dataset.navigate === value);
       if (button.dataset.navigate === value) button.setAttribute('aria-current', 'page'); else button.removeAttribute('aria-current');

@@ -1,0 +1,16 @@
+✔ imported images and files render in the composer and conversation, image pixels reach the API and preview closes with back (10049.4176ms)
+✔ computer-use UI opens independently, sends manual navigation, stops the agent and keeps its native slot visible (9037.5999ms)
+✔ computer-use toolbar fits narrow screens and optional visual input is explicit in model settings (8764.462ms)
+✔ image attachment becomes an actual image message part; files keep a readable project reference (0.9841ms)
+✔ client sends user images and view_image pixels while saving only immutable references (5.743ms)
+✔ the image window is bounded and missing pixel data stops instead of claiming visual input (0.6759ms)
+✔ the production question card waits for submission, then sends answers and continues the tool loop (8583.1689ms)
+✔ stopping a question removes it without sending an answer, and model configuration is visible at the first sidebar level (8904.5469ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 28371.5359

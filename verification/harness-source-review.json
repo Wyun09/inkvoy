@@ -2,7 +2,7 @@
   "repository": "https://github.com/deepseek-ai/deepseek-harness",
   "commit": "687f282e8625c6b8d11ff58211a90524be2e4317",
   "license": "MIT",
-  "date": "2026-10-19",
+  "date": "2026-10-20",
   "mode": "read-only source review; no upstream source incorporated into the APK",
   "files": [
     {
@@ -82,6 +82,24 @@
       "bytes": 1403,
       "sha256": "7ffcba377583018aa1a7f86c6d757b7dd6c1955ad8252103e2f33a4ceb90a741",
       "url": "https://github.com/deepseek-ai/deepseek-harness/blob/687f282e8625c6b8d11ff58211a90524be2e4317/packages/llm/llm-deepseek/src/sse.ts"
+    },
+    {
+      "path": "packages/client/ui-user-questions/README.md",
+      "bytes": 12715,
+      "sha256": "422961925cde308ff4cf572a088592007da683fc5535eaf680d4debc82e6857e",
+      "url": "https://github.com/deepseek-ai/deepseek-harness/blob/687f282e8625c6b8d11ff58211a90524be2e4317/packages/client/ui-user-questions/README.md"
+    },
+    {
+      "path": "packages/client/ui-user-questions/src/client/question-reply.ts",
+      "bytes": 7494,
+      "sha256": "2ce7aa0e8b469412b68a61c7ffee7007c6cc66600bfdf3d19904774040d512fe",
+      "url": "https://github.com/deepseek-ai/deepseek-harness/blob/687f282e8625c6b8d11ff58211a90524be2e4317/packages/client/ui-user-questions/src/client/question-reply.ts"
+    },
+    {
+      "path": "packages/client/ui-tool/src/client/tool/models/ask-question-card-model.ts",
+      "bytes": 587,
+      "sha256": "0b499f55a4e81aa21602502e28eb8fc68fef026557e31bfdcfd95a2958e98198",
+      "url": "https://github.com/deepseek-ai/deepseek-harness/blob/687f282e8625c6b8d11ff58211a90524be2e4317/packages/client/ui-tool/src/client/tool/models/ask-question-card-model.ts"
     }
   ]
 }

@@ -7,7 +7,7 @@ export function normalizeEndpoint(value,models=false){
  const u=new URL(String(value).trim());if(!['http:','https:'].includes(u.protocol)||!u.hostname||u.username||u.password||u.hash||u.href.length>4096)throw new Error('请输入完整的 HTTP(S) API 地址');
  let path=u.pathname.replace(/\/+$/,'');if(!path)path='/v1';if(path.endsWith('/chat/completions'))path=path.slice(0,-17);u.pathname=path+(models?'/models':'/chat/completions');return u.href;
 }
-export function validateProfile(value){const p={id:String(value.id||randomUUID()),name:String(value.name||'自定义 API').trim().slice(0,50),endpoint:String(value.endpoint||'').trim(),model:String(value.model||'').trim(),key:String(value.key||'').trim(),reasoning:!!value.reasoning};normalizeEndpoint(p.endpoint);if(!p.model||p.model.length>160)throw new Error('请填写模型 ID');if(p.key.length>4096||/[\r\n]/.test(p.key))throw new Error('API 密钥格式不正确');return p;}
+export function validateProfile(value){const p={id:String(value.id||randomUUID()),name:String(value.name||'自定义 API').trim().slice(0,50),endpoint:String(value.endpoint||'').trim(),model:String(value.model||'').trim(),key:String(value.key||'').trim(),reasoning:!!value.reasoning,vision:!!value.vision};normalizeEndpoint(p.endpoint);if(!p.model||p.model.length>160)throw new Error('请填写模型 ID');if(p.key.length>4096||/[\r\n]/.test(p.key))throw new Error('API 密钥格式不正确');return p;}
 let validators;
 export function validateProviderCompletion(response,requestId){
  const message=response?.choices?.[0]?.message;if(!message||message.role!=='assistant'||message.content!=null&&typeof message.content!=='string')throw new Error('接口没有返回有效的 assistant 消息');

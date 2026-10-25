@@ -1,11 +1,11 @@
 # DeepSeek Harness 源码对照
 
-审阅日期：2026-10-19。
+审阅日期：2026-10-19 至 2026-10-20。
 
 - 官方仓库：https://github.com/deepseek-ai/deepseek-harness
 - 固定提交：`687f282e8625c6b8d11ff58211a90524be2e4317`。
 - 上游许可：MIT，Copyright (c) 2026 DeepSeek。实际移植代码时须随分发保留版权和许可；第三方依赖分别核对。
-- 本轮范围：下载并审阅 13 个指定文档/源码文件，记录 SHA-256；没有运行上游代码、安装依赖、改动已安装桌面 Harness 或复制上游源码到 APK。参考清单见同目录 JSON。
+- 本轮范围：下载并审阅 16 个指定文档/源码文件，记录 SHA-256；没有运行上游代码、安装依赖、改动已安装桌面 Harness 或复制上游源码到 APK。参考清单见同目录 JSON。
 
 ## 对照结果
 
@@ -28,3 +28,7 @@
 - 许可：https://github.com/deepseek-ai/deepseek-harness/blob/687f282e8625c6b8d11ff58211a90524be2e4317/LICENSE
 
 当前 APK 的 263 项 JS/UI 和 69 项 Android 框架结果仅覆盖本项目的实现；没有运行上游测试，也没有把上述差距标成已经完成。
+
+## 2.3.0 问答参考
+
+另审阅 ui-user-questions README、question-reply.ts 和 ask-question-card-model.ts，参考待选草稿与明确提交的区分、受限高度的问答区、跳过与答案记录。手机端为独立实现，未复制上游源码；实际哈希见 JSON。上文 2.2.0 数量为历史结果，当前验收见 VERIFICATION.md。

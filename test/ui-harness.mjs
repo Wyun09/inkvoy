@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises';
-export async function uiHarness(browser, viewport = { width: 390, height: 844 }, { storage = 'enabled', failStartup = false, initialPage = 'home', studio = false, holdTools=false, clientState = {}, providerState={}, fileChanges={}, saveDelay=0, assetsDirectory, runtimeTools = [{name:'JADX',version:'1.5.6',kind:'APK / DEX'},{name:'radare2',version:'6.2.4',kind:'ELF / SO'}] } = {}) {
+export async function uiHarness(browser, viewport = { width: 390, height: 844 }, { storage = 'enabled', failStartup = false, initialPage = 'home', studio = false, holdTools=false, clientState = {}, providerState={}, mediaFiles={}, fileChanges={}, saveDelay=0, assetsDirectory, runtimeTools = [{name:'JADX',version:'1.5.6',kind:'APK / DEX'},{name:'radare2',version:'6.2.4',kind:'ELF / SO'}] } = {}) {
   const context = await browser.newContext({ viewport, deviceScaleFactor: 1 });
   const page = await context.newPage();
   const assets = assetsDirectory || new URL('../app/src/main/assets/', import.meta.url);
@@ -8,7 +8,7 @@ export async function uiHarness(browser, viewport = { width: 390, height: 844 },
     if (!['engine.html', 'engine.bundle.js', 'app.css', 'logo.png', 'companion.png'].includes(name)) return route.abort();
     return route.fulfill({ contentType: name.endsWith('.png') ? 'image/png' : name.endsWith('.js') ? 'application/javascript' : name.endsWith('.css') ? 'text/css' : 'text/html; charset=utf-8', body: await readFile(new URL(name, assets)) });
   });
-  await page.addInitScript(({ storage, failStartup, studio, holdTools, clientState, providerState, fileChanges, runtimeTools, saveDelay }) => {
+  await page.addInitScript(({ storage, failStartup, studio, holdTools, clientState, providerState, mediaFiles, fileChanges, runtimeTools, saveDelay }) => {
     if (failStartup) window.ResizeObserver = class { constructor() { throw new Error('ResizeObserver unavailable'); } };
     if (storage === 'disabled') Object.defineProperty(window, 'localStorage', { get: () => null });
     if (storage === 'blocked') Object.defineProperty(window, 'localStorage', { get: () => { throw new DOMException('Storage access denied', 'SecurityError'); } });
@@ -17,6 +17,7 @@ export async function uiHarness(browser, viewport = { width: 390, height: 844 },
     window.nativeActions = []; window.nativeLayouts = []; window.nativeStartupErrors = [];
     const files = { 'hello.py': 'print("fixture")\n' };for(const change of Object.values(fileChanges))files[change.path]=change.current??change.after;let term=0;
     window.workspaceCalls=[];window.clientSaved=[];window.providerSaved=[];window.providerCalls=[];window.providerCancels=[];
+    let computerState={url:'',title:'AI 浏览器',enabled:true,canBack:false,canForward:false,loading:false,phase:'就绪'};
     window.NativeBridge = {
       ready() { window.nativeReady = true; },
       timer(id, ms) { timers.set(id, set(() => { timers.delete(id); AndroidEngine.timer(id); }, ms)); },
@@ -30,9 +31,10 @@ export async function uiHarness(browser, viewport = { width: 390, height: 844 },
       loadClientState(){return JSON.stringify(clientState);},
       loadProviders(){return JSON.stringify(providerState);},
       providerCancel(id){window.providerCancels.push(id);},
-      providerRequest(id,raw){const p=JSON.parse(raw);window.providerCalls.push({id,...p});if(p.operation==='models'){set(()=>AndroidEngine.providerEvent(id,{type:'response',body:{data:[{id:'fixture-custom-model'},{id:'fixture-model-2'}]}}),20);return;}const first='data: '+JSON.stringify({choices:[{delta:{content:'CUSTOM_STREAM_FIRST'}}]})+'\n\n';const last='data: '+JSON.stringify({choices:[{delta:{content:' + final'},finish_reason:'stop'}]})+'\n\ndata: [DONE]\n\n';set(()=>AndroidEngine.providerEvent(id,{type:'data',text:first}),40);set(()=>{AndroidEngine.providerEvent(id,{type:'data',text:last});AndroidEngine.providerEvent(id,{type:'end'});},1200);},
+      providerRequest(id,raw){const p=JSON.parse(raw);window.providerCalls.push({id,...p});if(window.providerFixtureResponses?.length){const body=window.providerFixtureResponses.shift();set(()=>AndroidEngine.providerEvent(id,{type:'response',body}),30);return;}if(p.operation==='models'){set(()=>AndroidEngine.providerEvent(id,{type:'response',body:{data:[{id:'fixture-custom-model'},{id:'fixture-model-2'}]}}),20);return;}const first='data: '+JSON.stringify({choices:[{delta:{content:'CUSTOM_STREAM_FIRST'}}]})+'\n\n';const last='data: '+JSON.stringify({choices:[{delta:{content:' + final'},finish_reason:'stop'}]})+'\n\ndata: [DONE]\n\n';set(()=>AndroidEngine.providerEvent(id,{type:'data',text:first}),40);set(()=>{AndroidEngine.providerEvent(id,{type:'data',text:last});AndroidEngine.providerEvent(id,{type:'end'});},1200);},
       workspaceRequest(id,operation,raw) {window.workspaceCalls.push({id,operation,args:JSON.parse(raw)});if(!studio)return;const a=JSON.parse(raw);let value=true;
-        if(operation==='file.change'||operation==='file.revert'){
+        if(operation==='browser.ui'){if(a.action==='open')computerState={...computerState,url:a.url,title:'测试网页',enabled:false};if(a.action==='takeover')computerState.enabled=false;if(a.action==='allow')computerState.enabled=true;value={...computerState};set(()=>AndroidEngine.workspaceRpc(id,{ok:true,value}),20);return;}
+        if(operation==='file.attachment'){value={...(mediaFiles[a.path]||{name:a.path,path:a.path,bytes:12,image:false}),project:a.project};set(()=>AndroidEngine.workspaceRpc(id,{ok:true,value}),20);return;}if(operation==='media.data'){value='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+j7F8AAAAASUVORK5CYII=';set(()=>AndroidEngine.workspaceRpc(id,{ok:true,value}),20);return;}if(operation==='file.change'||operation==='file.revert'){
           const change=fileChanges[a.id];if(!change){set(()=>AndroidEngine.workspaceRpc(id,{ok:false,error:{message:'快照已过期'}}),20);return;}
           const canRevert=!change.reverted&&files[change.path]===change.after;
           if(operation==='file.revert'){if(!canRevert){set(()=>AndroidEngine.workspaceRpc(id,{ok:false,error:{message:'文件已有后续修改'}}),20);return;}if(change.existed)files[change.path]=change.before;else delete files[change.path];change.reverted=true;value={ok:true};}
@@ -52,7 +54,7 @@ export async function uiHarness(browser, viewport = { width: 390, height: 844 },
       },
       request() {}, response() {}, reportUi() {},
     };
-  }, { storage, failStartup, studio, holdTools, clientState, providerState, fileChanges, runtimeTools, saveDelay });
+  }, { storage, failStartup, studio, holdTools, clientState, providerState, mediaFiles, fileChanges, runtimeTools, saveDelay });
   await page.goto('https://bridge.local/engine.html');
   await page.waitForFunction(failStartup => failStartup ? window.nativeStartupErrors?.length > 0 : window.nativeReady && window.BridgeDashboard, failStartup, { timeout: 5000 });
   if(!failStartup)await page.evaluate(tab=>BridgeDashboard.navigate(tab),initialPage);

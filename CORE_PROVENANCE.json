@@ -1,5 +1,5 @@
 {
-  "version": "2.2.0",
+  "version": "2.3.0",
   "source": "deepseek-web-bridge v0.2.2",
   "method": "Supplied Android sources include mobile page hooks, validated tool protocol, current-turn DOM boundaries and stable output buffering. No desktop bridge or Harness was modified.",
   "modules": {
@@ -15,7 +15,7 @@
     },
     "dom-text.js": {
       "sourceSha256": "d9775fe3bafb5d99726b9aeffb45f5f844bbae09c9ade63b9d526fe96a1358cd",
-      "localSha256": "28793edd7d3a3a3e5b5f8d8bf77f2076b75c853fc8cee8a1eb3b16c2b1d8eb90",
+      "localSha256": "771b34e51562b74556bece2204537e664684173e2139da75c4735548e8064b74",
       "unchanged": false
     },
     "streaming.js": {
@@ -33,21 +33,27 @@
     "reasoning-control.js": "6ac924148d674b08e44238053fc49d2841b18cd640a61c68dee598b93bb21e79"
   },
   "platformExtensions": {
+    "js/media.js": "3ea7757dbb6a1c9f574ba78a3ac5eebb63d20b92b0b3086a630a6ac38e1dd747",
+    "js/ui/attachments.js": "222d19993ff56d12fa11234cf989bb59e4d6cc7a4e896e0713b1b0bb31f97b16",
+    "js/agent-tools.js": "b47ec91fc17c5da6e433565d67ce93b9a3b6ee9bdb3058113729ed1fafa8ad80",
+    "js/ui/questions.js": "4942858d92c2f04c6a520cf2cc079e5f2289585c5fd02f12c229e1497e73dfa3",
+    "js/browser-observation.js": "51b48c0ab8725c8221a7aaaac9095e9e41b0249c5eed05908f625a6fd5a7ee16",
+    "js/ui/computer.js": "96adf7c28b38ccabe75a5a066fc9e776ec3769b7d390b8c9a3f53a5ec7903bff",
     "js/native-clock.js": "f1441294ae3ec55c3bba1b3a431bd3f36669e42d70f7548a0d41a543cd6dc6c4",
     "js/client-stream.js": "fe612964032138291120d1a549947a724bfa6ed8242e3c3d5700e377fc6cff7b",
-    "js/providers.js": "3e29598848901912b808a5d1a3b61a628b82d52603c06b024aee442979d233af",
-    "js/ui/model-settings.js": "1a958e3c8a4df0d91a668d5e3de80477940d5097a9ae6a5339f1366522a850c5",
+    "js/providers.js": "0443d84b98a23e2a54a7b8dd1f416ae50d7fdfd109d94390979ddf3b371046ef",
+    "js/ui/model-settings.js": "23f0dae3d215d2a675d7043ed3f08af674c8454fe877765850bfdd592a259237",
     "js/send-control.js": "a3650c214fde83974679d970cf34d6cdd1fd585fda5b483ee7bccf7580d57f54",
     "js/anthropic.js": "6e772d47571a674a4d96405dd1a7e91759cd8591b8e7c88bc1991b35398fd5ce",
     "js/conversations.js": "190ebc5cdc899b57366cbab8478609b56f9dca0c26a3267116896277966cce86",
     "js/conversation-dom.js": "a898404f1372a7e39b02e14698c45e24219b5928dafc7eaa80808b2cf63c5ab8",
     "js/tasks.js": "1567d992f13df107d3a260fd65e6fdc23af33fb72c6b10a3a74960647fa53892",
     "js/engine.js": "5b2772972d7801148d7991f4da1cd4917acce5d66fd671895968ed49f4d4c5e7",
-    "js/client.js": "87c94d1d7a69afef4f0da0a6563f3a1e1eb4a0b8699739305f5fdbef6634a415",
-    "js/ui/studio.js": "325a9e1a43ba14fcf59870a1aa44e489054377756f9c1ddc0002c785c23d5706",
-    "js/ui/companion.js": "91721fb447fa0277beec1e93b35be335ee3829fcac030d53b1775e33118710b6",
-    "js/ui/reply-model.js": "677c127479b4753764ce1f15bc8178731ff6e23ff7b008837b576ca922f6cedc",
-    "js/ui/replies.js": "b9cff72fdb6b5e47b64fb32512afbed632a37750b962ce31fa2911fb2487a57d",
+    "js/client.js": "1580180d349a2642f808916e1c21ec822613beaae0df47b598534665a990daa7",
+    "js/ui/studio.js": "a0876e8d4cc7f29121390d2cdcd8db725a18d84e23cd48d056c550d0680766d7",
+    "js/ui/companion.js": "d635eb567599266d26c0304fbb9e8487799d96be993e9fe6472059d9d75e70f9",
+    "js/ui/reply-model.js": "a4edd40b4ec16ebc4532fce5b654005727590ca9959458ca85deefbd95ff2e38",
+    "js/ui/replies.js": "943e06d21b19440499bc30eccb0e73b8b4c68e1615458a933e1a6bacd6ccad4d",
     "js/ui/changes.js": "ad0fbb6f98e582ce81daf8eb83ec2eec59b7a9dbd2804357a40dac3bfae334a6"
   },
   "domTextPatch": [

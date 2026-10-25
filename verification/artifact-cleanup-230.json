@@ -1,0 +1,315 @@
+{
+  "date": "2026-10-20",
+  "removedEntries": [
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v0.1.0-SHA256SUMS.txt",
+      "bytes": 211,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v0.1.0-source.zip",
+      "bytes": 174966,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v0.1.0.apk",
+      "bytes": 115366,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v0.1.0.apk.idsig",
+      "bytes": 6045,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v0.2.0-SHA256SUMS.txt",
+      "bytes": 211,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v0.2.0-source.zip",
+      "bytes": 583735,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v0.2.0.apk",
+      "bytes": 131807,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v0.2.0.apk.idsig",
+      "bytes": 6045,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v0.2.1-SHA256SUMS.txt",
+      "bytes": 211,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v0.2.1-source.zip",
+      "bytes": 1749196,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v0.2.1.apk",
+      "bytes": 414999,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v0.2.1.apk.idsig",
+      "bytes": 6045,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v0.2.2.apk",
+      "bytes": 419092,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v0.2.2.apk.idsig",
+      "bytes": 6045,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v0.3.0-SHA256SUMS.txt",
+      "bytes": 211,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v0.3.0-source.zip",
+      "bytes": 1845561,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v0.3.0-verification.json",
+      "bytes": 418,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v0.3.0.apk",
+      "bytes": 427286,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v0.3.0.apk.idsig",
+      "bytes": 6045,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v0.4.0-SHA256SUMS.txt",
+      "bytes": 211,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v0.4.0-source.zip",
+      "bytes": 1917368,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v0.4.0-verification.json",
+      "bytes": 418,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v0.4.0.apk",
+      "bytes": 431382,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v0.4.0.apk.idsig",
+      "bytes": 6045,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v1.0.0-SHA256SUMS.txt",
+      "bytes": 211,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v1.0.0-source.zip",
+      "bytes": 2140362,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v1.0.0-verification.json",
+      "bytes": 685,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v1.0.0.apk",
+      "bytes": 447765,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v1.0.0.apk.idsig",
+      "bytes": 6045,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v2.0.0-artifacts.json",
+      "bytes": 429,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v2.0.0-SHA256SUMS.txt",
+      "bytes": 211,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v2.0.0-source.zip",
+      "bytes": 1813030276,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v2.0.0.apk",
+      "bytes": 614709027,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v2.0.0.apk.idsig",
+      "bytes": 4851613,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v2.0.1-artifacts.json",
+      "bytes": 429,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v2.0.1-SHA256SUMS.txt",
+      "bytes": 211,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v2.0.1-source.zip",
+      "bytes": 1813170413,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v2.0.1.apk",
+      "bytes": 614713125,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v2.0.1.apk.idsig",
+      "bytes": 4851613,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v2.0.2-artifacts.json",
+      "bytes": 429,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v2.0.2-SHA256SUMS.txt",
+      "bytes": 211,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v2.0.2-source.zip",
+      "bytes": 1813362063,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v2.0.2.apk",
+      "bytes": 614725410,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v2.0.2.apk.idsig",
+      "bytes": 4851613,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v2.0.3-artifacts.json",
+      "bytes": 501,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-bridge-v2.0.3-SHA256SUMS.txt",
+      "bytes": 211,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-2.0.3",
+      "bytes": 6748488602,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-2.1.0",
+      "bytes": 6749092047,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-2.2.0\\candidate-1",
+      "bytes": 620642049,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-2.2.0\\candidate-2",
+      "bytes": 620642049,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-2.2.0\\candidate-3",
+      "bytes": 2437210703,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-2.2.0\\build",
+      "bytes": 1848043466,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-2.2.0\\build-final",
+      "bytes": 1848043468,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-2.2.0\\build-ship",
+      "bytes": 1848482771,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-studio\\build\\aligned.apk",
+      "bytes": 614716263,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-studio\\build\\unsigned.apk",
+      "bytes": 614716250,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\Codex\\2026-10-15\\new-chat\\outputs\\deepseek-android-studio\\build\\resources.apk",
+      "bytes": 614514410,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-2.3.0\\build\\aligned.apk",
+      "bytes": 615813145,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-2.3.0\\build\\unsigned.apk",
+      "bytes": 615813134,
+      "confirmedAbsent": true
+    },
+    {
+      "path": "D:\\CodexBuild\\deepseek-studio-2.3.0\\build\\resources.apk",
+      "bytes": 615585165,
+      "confirmedAbsent": true
+    }
+  ],
+  "removedBytes": 33720915294,
+  "physicalDeleteConfirmed": true,
+  "preserved": [
+    "Active source and its Debian/GPL assets",
+    "Current 2.3.0 final APK",
+    "2.2.0 rollback release",
+    "Android/Maven/NDK/VM toolchains",
+    "Desktop bridge and installed Harness",
+    "Signing identity and user projects"
+  ]
+}

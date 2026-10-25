@@ -10,11 +10,12 @@ import xml from 'highlight.js/lib/languages/xml';
 import css from 'highlight.js/lib/languages/css';
 import java from 'highlight.js/lib/languages/java';
 import {replyTurns,TOOL_LABELS,STATUS_LABELS} from './reply-model.js';
+import {attachmentCards} from './attachments.js';
 for(const [name,definition]of Object.entries({javascript,typescript,python,bash,json,xml,css,java}))hljs.registerLanguage(name,definition);
 
 const el=(tag,className,text)=>{const n=document.createElement(tag);if(className)n.className=className;if(text!==undefined)n.textContent=text;return n;};
 const clock=ms=>ms>=60000?Math.floor(ms/60000)+'分'+Math.floor(ms%60000/1000)+'秒':Math.max(0,ms/1000).toFixed(ms<1000?1:0)+'秒';
-export function createReplyView({container,copy,openFile,showChange,openLink=()=>{},notify=()=>{}}){
+export function createReplyView({container,copy,openFile,showChange,openImage=()=>{},openLink=()=>{},notify=()=>{}}){
   let selected,previousUsers=0,startIndex=0,lastSession,lastActive,lastDraft;const nodes=new Map();
   const earlier=el('button','reply-earlier','加载更早的对话');earlier.type='button';
   earlier.onclick=()=>{const anchor=container.querySelector('[data-reply-key]'),oldY=anchor?.getBoundingClientRect().top;const users=(lastSession?.messages||[]).map((m,i)=>m.role==='user'&&!m.internal?i:-1).filter(i=>i>=0&&i<startIndex);startIndex=users.at(-20)??0;render(lastSession,lastActive,lastDraft,true);if(anchor?.isConnected)container.scrollTop+=anchor.getBoundingClientRect().top-oldY;};
@@ -53,11 +54,24 @@ export function createReplyView({container,copy,openFile,showChange,openLink=()=
     if(!tool.resultMessage){node.append(el('p','reply-result-empty',tool.status==='running'?'命令和文件操作由本机执行，结果返回后会显示在这里。':tool.status==='queued'?'等待执行':'没有已确认的执行结果'));return;}
     if(!r||typeof r!=='object'){node.append(code(String(tool.resultMessage.content||''),'返回内容'));return;}
     if(r.error)node.append(el('p','reply-error',String(r.error)));
+    if(r.attachment)node.append(attachmentCards([r.attachment],{openImage,openFile}));
+    if(tool.call.function?.name==='web_search'){
+      if(r.content){const answer=el('div','markdown');markdown(answer,r.content);node.append(answer);}
+      if(r.notice)node.append(el('p','reply-result-meta',r.notice));
+      const sources=el('div','reply-search-sources');for(const source of r.sources||[])if(/^https?:\/\//i.test(source.url))sources.append(action(source.title||source.url,()=>openLink(source.url)));node.append(sources);
+    }
+    if(tool.call.function?.name==='ask_user')for(const answer of r.answers||[])node.append(el('p','reply-question-answer',answer.question+'\n'+(answer.skipped?'已跳过':[...(answer.selected||[]),answer.custom].filter(Boolean).join('；'))));
+    if(tool.call.function?.name==='browser'){
+      node.append(el('p','reply-browser-meta',[r.title,r.url].filter(Boolean).join(' · ')));
+      node.append(action('打开 AI 浏览器',()=>window.BridgeDashboard?.navigate('computer'),'reply-change-open'));
+      if(r.screenshot?.url&&/^https:\/\/bridge\.local\/browser-capture\/[a-f0-9-]{36}\.jpg$/.test(r.screenshot.url)){const figure=el('figure','reply-browser-capture'),image=el('img');image.src=r.screenshot.url;image.alt='本次操作后的浏览器截图';image.loading='lazy';figure.append(image);node.append(figure);}
+      if(r.text)node.append(el('pre','reply-browser-observation',String(r.text).slice(0,10000)));
+    }
     const meta=[];if(Number.isFinite(r.exitCode))meta.push('退出码 '+r.exitCode);if(Number.isFinite(r.durationMs))meta.push(clock(r.durationMs));if(r.truncated)meta.push('输出有截断');if(r.timedOut)meta.push('已超时');if(r.outputIncomplete)meta.push('输出未完全收集');
     if(meta.length)node.append(el('p','reply-result-meta',meta.join(' · ')));
     if(typeof r.stdout==='string'&&r.stdout)node.append(code(r.stdout,'标准输出'));
     if(typeof r.stderr==='string'&&r.stderr){const block=code(r.stderr,'错误输出');block.classList.add('stderr');node.append(block);}
-    if(typeof r.content==='string')node.append(code(r.content,tool.args.path||'文件内容'));
+    if(typeof r.content==='string'&&tool.call.function?.name!=='web_search')node.append(code(r.content,tool.args.path||'文件内容'));
     if(Array.isArray(r.entries)){const list=el('ul','reply-file-list');for(const entry of r.entries.slice(0,100)){const li=el('li','',String(entry.name)+(entry.directory?'/':''));list.append(li);}node.append(list);if(r.entries.length>100)node.append(el('p','reply-result-meta','仅展示前 100 项'));if(!r.entries.length)node.append(el('p','reply-result-meta','目录为空'));}
     if(Array.isArray(r.matches)){const list=el('div','reply-matches');for(const hit of r.matches.slice(0,50)){const b=action(String(hit.path)+':'+hit.line,()=>openFile(project,String(hit.path)));b.append(el('span','',String(hit.text||'')));list.append(b);}node.append(list);if(!r.matches.length)node.append(el('p','reply-result-meta','没有找到匹配内容'));}
     if(r.change?.id&&typeof r.change.path==='string'){
@@ -78,7 +92,7 @@ export function createReplyView({container,copy,openFile,showChange,openLink=()=
     v.notes.hidden=true;
     const keep=new Set();for(const tool of turn.tools){keep.add(tool.key);let row=v.toolNodes.get(tool.key);if(!row){const d=manualDetails('reply-step','');const icon=el('span','reply-step-icon'),title=el('span','reply-step-title'),label=el('span'),target=el('small'),status=el('span','reply-step-status'),body=el('div','reply-step-body'),input=el('div','reply-step-input'),result=el('div','reply-step-result');title.append(label,target);d.summary.append(icon,title,status);body.append(input,result);d.details.append(body);row={root:d.details,title,label,target,status,input,result};d.summary.addEventListener('click',()=>{if(!row.root.open)row.populate?.();});row.root.addEventListener('toggle',()=>{if(row.root.open)row.populate?.();});v.toolNodes.set(tool.key,row);v.steps.append(row.root);}
       row.root.dataset.state=tool.status;row.label.textContent=TOOL_LABELS[tool.call.function?.name]||tool.call.function?.name||'工具';
-      const target=tool.args.path||tool.args.query||tool.args.command||'';row.title.title=target;row.target.hidden=!target;row.target.textContent=target.length>100?target.slice(0,100)+'…':target;
+      const target=tool.args.path||tool.args.query||tool.args.command||tool.args.url||tool.args.action||'';row.title.title=target;row.target.hidden=!target;row.target.textContent=target.length>100?target.slice(0,100)+'…':target;
       row.status.textContent={running:'执行中',queued:'等待',completed:'完成',failed:'失败',cancelled:'已停止',returned:'已返回',interrupted:'待确认'}[tool.status];
       row.populate=()=>{const inputSignature=tool.call.function?.arguments;if(row.inputSignature!==inputSignature){row.inputSignature=inputSignature;row.input.replaceChildren();if(tool.call.function?.name==='terminal'&&tool.args.command)row.input.append(code(tool.args.command,'Bash'));else if(tool.args.path)row.input.append(el('p','reply-result-meta','路径：'+tool.args.path));}const resultSignature=tool.resultMessage?.content??tool.status;if(row.resultSignature!==resultSignature){row.resultSignature=resultSignature;resultContent(row.result,tool,session.project);}};
       if(row.root.open)row.populate();
@@ -114,7 +128,7 @@ export function createReplyView({container,copy,openFile,showChange,openLink=()=
     if(!items.length){if(!container.querySelector('.chat-welcome')){container.replaceChildren();const welcome=el('section','chat-welcome'),pet=el('span','welcome-companion');pet.dataset.pose='idle';pet.setAttribute('aria-hidden','true');pet.append(el('span','companion-sprite'));welcome.append(pet,el('h2','','有什么可以帮你？'),el('p','','从一个问题、一段想法，或当前项目开始。'));container.append(welcome);}jump.hidden=true;return;}
     container.querySelector('.chat-welcome')?.remove();if(startIndex>0){container.prepend(earlier);earlier.textContent='加载更早的对话 · '+userIndices.filter(i=>i<startIndex).length+' 轮';}else earlier.remove();const keep=new Set();let cursor=earlier.isConnected?earlier.nextSibling:container.firstChild;
     for(const item of items){keep.add(item.key);let view=nodes.get(item.key);if(!view){view=item.type==='assistant'?makeTurn():{root:el('article','chat-message user'),body:el('div','markdown')};if(item.type==='user')view.root.append(view.body);view.root.dataset.replyKey=item.key;nodes.set(item.key,view);}
-      if(item.type==='assistant')updateTurn(view,item,session);else if(view.body.textContent!==String(item.message.content||''))view.body.textContent=String(item.message.content||'');
+      if(item.type==='assistant')updateTurn(view,item,session);else {if(view.body.textContent!==String(item.message.content||''))view.body.textContent=String(item.message.content||'');const key=JSON.stringify(item.message.attachments||[]);if(view.attachmentKey!==key){view.attachmentKey=key;view.attachments?.remove();if(item.message.attachments?.length){view.attachments=attachmentCards(item.message.attachments,{openImage,openFile});view.root.append(view.attachments);}}}
       if(view.root!==cursor)container.insertBefore(view.root,cursor);cursor=view.root.nextSibling;
     }
     for(const [key,v]of nodes)if(!keep.has(key)){v.root.querySelectorAll('.reply-code').forEach(n=>highlighter.unobserve(n));v.root.remove();nodes.delete(key);}

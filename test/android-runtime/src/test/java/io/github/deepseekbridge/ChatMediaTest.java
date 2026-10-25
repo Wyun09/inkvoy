@@ -1,0 +1,12 @@
+package io.github.deepseekbridge;
+import android.app.Application;import android.content.Context;import android.graphics.*;import org.json.*;import java.io.*;import java.nio.file.Files;import org.junit.*;import org.junit.runner.RunWith;import org.robolectric.*;import org.robolectric.annotation.*;import static org.junit.Assert.*;
+@RunWith(RobolectricTestRunner.class) @Config(sdk={26,33},manifest=Config.NONE,application=Application.class)
+public class ChatMediaTest {
+ Context context;ChatMedia media;
+ @Before public void setup(){context=RuntimeEnvironment.getApplication();media=new ChatMedia(context);}
+ @Test public void imageCopiesRemainStableAfterTheProjectImageChanges()throws Exception{
+  File source=new File(context.getCacheDir(),"photo.png");Files.copy(new File("../../js/ui/logo.png").toPath(),source.toPath(),java.nio.file.StandardCopyOption.REPLACE_EXISTING);JSONObject attachment=media.attach(source,"p-fixture","photo.png");assertTrue(attachment.toString(),attachment.getBoolean("image"));String id=attachment.getString("id"),before=media.data(id);assertTrue(before.startsWith("data:image/jpeg;base64,"));Files.write(source.toPath(),new byte[]{1,2,3});assertEquals(before,media.data(id));assertEquals("https://bridge.local/chat-media/"+id,attachment.getString("url"));
+ }
+ @Test public void ordinaryFilesStayFileAttachmentsAndDoNotBecomeFakeImages()throws Exception{File source=new File(context.getCacheDir(),"report.txt");Files.write(source.toPath(),"a plain report".getBytes("UTF-8"));JSONObject attachment=media.attach(source,"p-fixture","report.txt");assertFalse(attachment.getBoolean("image"));assertEquals(14,attachment.getLong("bytes"));assertFalse(attachment.has("id"));}
+ @Test public void mediaIdsCannotReadOtherPrivateFiles()throws Exception{for(String id:new String[]{"../secret","../../preferences.xml","","file:///secret"})try{media.file(id);fail("unsafe media ID accepted");}catch(IOException expected){}try{media.data(String.join("",java.util.Collections.nCopies(64,"f")));fail("missing image accepted");}catch(IOException expected){}}
+}

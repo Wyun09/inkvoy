@@ -94,6 +94,7 @@ export class MobilePage {
 }
 
 export class MobileBrowser extends DeepSeekBrowser {
+  async searchEvidence(expected){if(!this._page||this._active)return {sources:[],sourceCards:0};const value=await this._readState(this._page);return value.text?.trim()===expected.trim()?{sources:value.sources||[],sourceCards:value.sourceCards||0}:{sources:[],sourceCards:0};}
   constructor(rpc, config = {}) {
     super({ profileDir: 'android-app-private-webview', timeoutMs: 600000, firstOutputTimeoutMs: 120000, pollMs: 180, ...config });
     this.rpc = rpc;

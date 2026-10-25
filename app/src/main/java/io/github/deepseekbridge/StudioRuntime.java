@@ -20,6 +20,8 @@ import java.util.concurrent.*;
 public final class StudioRuntime {
     public interface Events{void event(JSONObject event);}
     public interface Reply{void done(boolean ok,Object value);}
+    public interface BrowserTool{JSONObject run(String id,JSONObject args)throws Exception;void cancel();}
+    public BrowserTool browserTool;
     private final Context context;
     private final Events events;
     private final ExecutorService workers=Executors.newFixedThreadPool(4);
@@ -27,11 +29,12 @@ public final class StudioRuntime {
     private final Map<String,Pty> terminals=new ConcurrentHashMap<>();
     private final RuntimeInstaller installer;
     public final ProjectFiles files;
+    public final ChatMedia media;
     private final FileRevisions revisions;
     private volatile ToolJournal journal;
     private volatile boolean closed,bootVerified;
     private final java.util.concurrent.atomic.AtomicInteger work=new java.util.concurrent.atomic.AtomicInteger();
-    public StudioRuntime(Context context,Events events){this.context=context;this.events=events;files=new ProjectFiles(new File(context.getFilesDir(),"projects"));revisions=new FileRevisions(files,new File(context.getFilesDir(),"file-revisions"));installer=new RuntimeInstaller(context,s->emit("runtime",s));}
+    public StudioRuntime(Context context,Events events){this.context=context;this.events=events;media=new ChatMedia(context);files=new ProjectFiles(new File(context.getFilesDir(),"projects"));revisions=new FileRevisions(files,new File(context.getFilesDir(),"file-revisions"));installer=new RuntimeInstaller(context,s->emit("runtime",s));}
     private synchronized ToolJournal journal()throws IOException{if(closed)throw new IOException("运行时已关闭");if(journal==null)journal=new ToolJournal(context);return journal;}
     private void emit(String type,Object value){try{events.event(new JSONObject().put("type",type).put("value",value));}catch(JSONException ignored){}}
     private void event(JSONObject value){events.event(value);}
@@ -53,11 +56,13 @@ public final class StudioRuntime {
             case "runtime.test":ensure(project);return selfTest(project);
             case "file.list":return files.list(project,a.optString("path"));
             case "file.read":return files.read(project,a.getString("path"),a.optInt("offset"),a.optInt("limit",65536));
+            case "file.attachment":return media.attach(files.resolve(project,a.getString("path")),project,a.getString("path"));
+            case "media.data":return media.data(a.getString("id"));
             case "file.write":return revisions.write(project,a.getString("path"),a.getString("content"));
             case "file.change":return revisions.get(project,a.getString("id"));
             case "file.revert":return revisions.revert(project,a.getString("id"));
             case "file.search":return files.search(project,a.optString("path"),a.getString("query"));
-            case "command.cancel":{String id=a.getString("id");journal().cancel(id);Command c=commands.get(id);if(c!=null)c.cancel();return new JSONObject().put("cancelled",true);}
+            case "command.cancel":{String id=a.getString("id");journal().cancel(id);Command c=commands.get(id);if(c!=null)c.cancel();if(browserTool!=null)browserTool.cancel();return new JSONObject().put("cancelled",true);}
             case "terminal.open":return openTerminal(project,a.optInt("rows",24),a.optInt("cols",80));
             case "terminal.list":{JSONArray list=new JSONArray();for(Pty t:terminals.values())if(t.project.equals(project))list.put(new JSONObject().put("id",t.id).put("exited",t.exited));return new JSONObject().put("sessions",list);}
             case "terminal.attach":{Pty t=terminal(a);synchronized(t){String buffer=Base64.encodeToString(t.pending.toByteArray(),Base64.NO_WRAP);boolean truncated=t.pendingTruncated;t.pending.reset();t.pendingTruncated=false;t.attached=true;return new JSONObject().put("buffer",buffer).put("truncated",truncated).put("exited",t.exited).put("exitCode",t.exitCode);}}
@@ -91,6 +96,8 @@ public final class StudioRuntime {
             case "write_file":result=revisions.write(project,args.getString("path"),args.getString("content"));break;
             case "list_files":result=files.list(project,args.optString("path"));break;
             case "search_files":result=files.search(project,args.optString("path"),args.getString("query"));break;
+            case "view_image":{JSONObject attachment=media.attach(files.resolve(project,args.getString("path")),project,args.getString("path"));if(!attachment.optBoolean("image"))throw new IOException("文件不是可解码的图片");result=new JSONObject().put("ok",true).put("attachment",attachment).put("notice","图片像素将在下一次模型请求中作为图像消息提供");break;}
+            case "browser":if(browserTool==null)throw new IOException("AI 浏览器尚未就绪");result=browserTool.run(id,args);break;
             default:throw new IOException("Unknown built-in tool");
         }if(!result.has("ok"))result.put("ok",true);}catch(Exception e){result=new JSONObject().put("ok",false).put("error",e.getMessage()==null?"工具执行已中断":e.getMessage());}
         if(result.toString().getBytes(StandardCharsets.UTF_8).length>524288){for(String key:new String[]{"stdout","stderr"})if(result.has(key)){String value=result.optString(key);result.put(key,value.substring(0,Math.min(16384,value.length())));}result.put("truncated",true);}
@@ -141,7 +148,7 @@ public final class StudioRuntime {
         String script="/opt/studio/selftest/run.sh";
         JSONObject result=command("selftest-"+UUID.randomUUID(),project,script,"",600);installer.verified(result.optBoolean("ok"));return result;
     }
-    public void importFile(Uri uri,String project){workers.submit(()->{JSONObject event=new JSONObject();try{String name="imported-file";try(Cursor c=context.getContentResolver().query(uri,new String[]{OpenableColumns.DISPLAY_NAME},null,null,null)){if(c!=null&&c.moveToFirst())name=c.getString(0);}name=name.replaceAll("[\\\\/\\x00-\\x1f]","_");if(name.isEmpty()||name.equals(".")||name.equals(".."))name="imported-file";File target=files.resolve(project,name);if(target.exists()){String base=name;for(int i=1;target.exists();i++){name="import-"+i+"-"+base;target=files.resolve(project,name);}}File temp=File.createTempFile(".studio-import-",".tmp",files.project(project));boolean saved=false;try{try(InputStream in=context.getContentResolver().openInputStream(uri);FileOutputStream out=new FileOutputStream(temp)){if(in==null)throw new IOException("无法读取所选文件");byte[] b=new byte[65536];long total=0;int n;while((n=in.read(b))!=-1){total+=n;if(total>536870912L)throw new IOException("导入文件超过 512 MiB");out.write(b,0,n);}out.getFD().sync();}if(!temp.renameTo(target))throw new IOException("文件导入提交失败");saved=true;}finally{if(!saved)temp.delete();}event.put("path",name);}catch(Exception e){try{event.put("error",e.getMessage());}catch(JSONException ignored){}}try{event.put("type","import");}catch(JSONException ignored){}event(event);});}
+    public void importFile(Uri uri,String project){workers.submit(()->{JSONObject event=new JSONObject();try{String name="imported-file";try(Cursor c=context.getContentResolver().query(uri,new String[]{OpenableColumns.DISPLAY_NAME},null,null,null)){if(c!=null&&c.moveToFirst())name=c.getString(0);}name=name.replaceAll("[\\\\/\\x00-\\x1f]","_");if(name.isEmpty()||name.equals(".")||name.equals(".."))name="imported-file";File target=files.resolve(project,name);if(target.exists()){String base=name;for(int i=1;target.exists();i++){name="import-"+i+"-"+base;target=files.resolve(project,name);}}File temp=File.createTempFile(".studio-import-",".tmp",files.project(project));boolean saved=false;try{try(InputStream in=context.getContentResolver().openInputStream(uri);FileOutputStream out=new FileOutputStream(temp)){if(in==null)throw new IOException("无法读取所选文件");byte[] b=new byte[65536];long total=0;int n;while((n=in.read(b))!=-1){total+=n;if(total>536870912L)throw new IOException("导入文件超过 512 MiB");out.write(b,0,n);}out.getFD().sync();}if(!temp.renameTo(target))throw new IOException("文件导入提交失败");saved=true;}finally{if(!saved)temp.delete();}event.put("path",name).put("project",project);}catch(Exception e){try{event.put("error",e.getMessage());}catch(JSONException ignored){}}try{event.put("type","import");}catch(JSONException ignored){}event(event);});}
     public void exportFile(Uri uri,String project,String path){workers.submit(()->{try{File source=files.resolve(project,path);if(!source.isFile())throw new IOException("请先保存要导出的文件");try(InputStream in=new FileInputStream(source);OutputStream out=context.getContentResolver().openOutputStream(uri,"wt")){if(out==null)throw new IOException("无法写入目标");byte[] b=new byte[65536];int n;while((n=in.read(b))!=-1)out.write(b,0,n);}event(new JSONObject().put("type","import").put("path","导出完成"));}catch(Exception e){try{event(new JSONObject().put("type","import").put("error",e.getMessage()));}catch(JSONException ignored){}}});}
     public void cancelAll(){for(Command c:commands.values())c.cancel();for(Pty t:terminals.values())t.close();terminals.clear();}
     public void detachTerminals(){for(Pty t:terminals.values())synchronized(t){t.attached=false;}}
