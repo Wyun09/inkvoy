@@ -1,0 +1,21 @@
+✔ computer-use UI opens independently, sends manual navigation, stops the agent and keeps its native slot visible (9171.2681ms)
+✔ computer-use toolbar fits narrow screens and optional visual input is explicit in model settings (8991.7573ms)
+✔ split workspace keeps the same chat and browser on rotation, supports resizing, zoom and native overlay suspension (9324.4348ms)
+✔ unchanged refreshes do not flood native layout, including web page geometry (9977.9556ms)
+✔ empty conversation controls react while encrypted persistence is still pending (8870.7205ms)
+✔ long history mounts a page of turns and defers hidden logs until expanded (8719.9574ms)
+✔ existing connections discover model tiers and one-million capacity automatically (3119.105ms)
+✔ commands execute locally and the compact composer keeps its draft and referenced file (2944.7835ms)
+✔ file reference content reaches model input and the reasoning selector sends the exact catalog tier (4170.3599ms)
+✔ model discovery shows real metadata and saving retains per-model manual declarations (3126.1767ms)
+✔ browser script editor sends actual source, suspends the native surface, and closes without losing the page (2962.3728ms)
+✔ account DNS failures remain inline while identity authorization and retry controls survive (4127.2748ms)
+✔ commands show live stdout and stderr without claiming completion and keep confirmed exit results visible (3438.092ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 62277.2869

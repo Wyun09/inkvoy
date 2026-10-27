@@ -151,9 +151,14 @@ export function initStudio({client,native,providers,agentTools,extensions}) {
   document.querySelectorAll('[data-key]').forEach(b=>b.addEventListener('click',wrap(async()=>{if(!currentTerm)return;await native('terminal.input',{id:currentTerm,data:b.dataset.key});terminals.get(currentTerm)?.term.focus();})));
   click('terminal-clear',()=>terminals.get(currentTerm)?.term.clear());click('terminal-copy',()=>{const text=terminals.get(currentTerm)?.term.getSelection();if(!text)throw new Error('长按并选中要复制的终端文本');NativeBridge.uiAction('copy-text',JSON.stringify({text}));});
   new ResizeObserver(()=>{if(activePage==='terminal')for(const t of terminals.values())if(!t.host.hidden)try{t.fit.fit();}catch{}}).observe($('terminal-host'));
+  const runtimeImport=document.createElement('button');runtimeImport.id='runtime-import';runtimeImport.textContent='导入工具包';runtimeImport.onclick=()=>NativeBridge.uiAction('runtime-import','{}');
+  const runtimePackages=document.createElement('button');runtimePackages.id='runtime-packages';runtimePackages.textContent='工具包发布页';runtimePackages.onclick=()=>NativeBridge.uiAction('runtime-packages','{}');$('runtime-install').after(runtimeImport,runtimePackages);
   function runtimeState(r) {
     runtimeCurrent=r;
     $('runtime-state').textContent=r.error?'初始化需要处理':r.installing?'正在初始化':r.ready?'离线环境已就绪':'首次使用需要解压环境';$('runtime-detail').textContent=r.error||r.message||'必需工具已包含在安装包中';$('runtime-progress').hidden=!r.installing;$('runtime-progress').value=r.progress||0;$('runtime-install').disabled=!!r.installing;$('runtime-test').disabled=!r.ready||!!r.testing;$('runtime-install').textContent=r.error?'重试初始化':r.ready?'校验环境':'初始化环境';
+    runtimeImport.hidden=r.imageAvailable!==false;runtimePackages.hidden=r.imageAvailable!==false;runtimeImport.disabled=!!r.installing;
+    if(r.phase==='importing')$('runtime-state').textContent='正在校验工具包';
+    if(r.imageAvailable===false&&!r.ready&&!r.installing){$('runtime-state').textContent='轻量版 · 工具包待准备';$('runtime-detail').textContent=r.error||'聊天和浏览器可直接使用。终端与本机 MCP 需要导入对应工具包，或覆盖安装离线完整版。';$('runtime-install').disabled=true;$('runtime-install').textContent='先导入工具包';}
     $('runtime-tools').replaceChildren(...(r.tools||[]).map(t=>{const n=document.createElement('div');n.className='tool-tile';n.innerHTML=`<span>${escapeHTML(t.kind||'CLI')}</span><strong>${escapeHTML(t.name)}</strong><p>${escapeHTML(t.version||'镜像内置')}</p><small>${r.verified?'✓ 自检通过':r.ready?'已解压 · 待自检':'离线收录'}</small>`;return n;}));
   }
   const formatTime=ms=>{const sec=Math.max(0,Math.floor(ms/1000));return sec>=60?Math.floor(sec/60)+'分'+sec%60+'秒':sec+'秒';};
@@ -172,7 +177,7 @@ export function initStudio({client,native,providers,agentTools,extensions}) {
   setInterval(()=>{if(!document.hidden&&activePage==='chat'&&cached?.active)updateWorkStatus();},1000);
   async function refreshRuntime(){const revision=++runtimeRevision;const value=await native('runtime.status',{});if(revision===runtimeRevision)runtimeState(value);}
   const diagnostic=document.createElement('button');diagnostic.id='runtime-diagnostic';diagnostic.textContent='复制诊断';$('runtime-test').after(diagnostic);
-  click('runtime-diagnostic',async()=>{await refreshRuntime();NativeBridge.uiAction('copy-text',JSON.stringify({text:JSON.stringify({appVersion:'5.0.0',runtime:runtimeCurrent},null,2)}));toast('环境诊断已复制');});
+  click('runtime-diagnostic',async()=>{await refreshRuntime();NativeBridge.uiAction('copy-text',JSON.stringify({text:JSON.stringify({appVersion:document.getElementById('app-version')?.textContent||'5.2.0',runtime:runtimeCurrent},null,2)}));toast('环境诊断已复制');});
   click('runtime-refresh',refreshRuntime);click('runtime-install',async()=>{try{await native('runtime.ensure',{project:project()});toast('环境校验完成');}finally{await refreshRuntime();}});
   click('runtime-test',async()=>{$('runtime-test').disabled=true;$('runtime-report').hidden=false;$('runtime-report').textContent='正在运行真实工具自检…';try{const r=await native('runtime.test',{project:project()});$('runtime-report').textContent=JSON.stringify(r,null,2);}finally{await refreshRuntime();}});
   document.querySelectorAll('[data-analysis]').forEach(b=>b.addEventListener('click',wrap(async()=>{

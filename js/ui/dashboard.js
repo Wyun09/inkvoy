@@ -315,6 +315,7 @@ export function initDashboard() {
   new MutationObserver(layout).observe($('app'),{subtree:true,attributes:true,attributeFilter:['hidden','inert']});
   $('app').addEventListener('animationend',event=>{if(event.target.classList.contains('page'))layout();});
   window.addEventListener('resize', layout);
+  window.addEventListener('studio:viewport',layout);
   window.BridgeDashboard = { render, navigate, layout, toast, result, showResult, back() { if (window.StudioUI?.closeDrawer()) return true; if (modal) { closeSheet(); return true; } if (tab !== 'home') { navigate('home'); return true; } return false; }, setTheme };
   setTheme(theme); render(state);
 }

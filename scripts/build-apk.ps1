@@ -1,14 +1,17 @@
-param([string]$Toolchain, [string]$SigningDirectory, [switch]$CompileOnly, [string]$BuildDirectory, [string]$ArtifactDirectory)
+param([string]$Toolchain, [string]$SigningDirectory, [switch]$CompileOnly, [string]$BuildDirectory, [string]$ArtifactDirectory, [ValidateSet('offline','lite')][string]$Flavor='offline', [string]$RuntimeArchive)
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 $androidProject = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $releaseVersion = (Get-Content -LiteralPath (Join-Path $androidProject 'package.json') -Encoding UTF8 -Raw | ConvertFrom-Json).version
 if(-not $CompileOnly){
     $runtimeManifest=Join-Path $androidProject 'app/src/main/assets/runtime/manifest.json'
-    $runtimeArchive=Join-Path $androidProject 'app/src/main/assets/runtime/debian-arm64.tar.gz'
-    if(-not(Test-Path -LiteralPath $runtimeManifest) -or -not(Test-Path -LiteralPath $runtimeArchive)){throw 'The offline Debian image is required for a distributable v2 APK. Build the runtime image first; use -CompileOnly for development compilation.'}
+    $imageArchive=if($RuntimeArchive){[IO.Path]::GetFullPath($RuntimeArchive)}else{Join-Path $androidProject 'app/src/main/assets/runtime/debian-arm64.tar.gz'}
+    if(-not(Test-Path -LiteralPath $runtimeManifest)){throw 'The pinned runtime manifest is required in both APK variants.'}
     $runtimeInfo=Get-Content -LiteralPath $runtimeManifest -Encoding UTF8 -Raw | ConvertFrom-Json
-    if((Get-Item -LiteralPath $runtimeArchive).Length -ne $runtimeInfo.compressedBytes -or (Get-FileHash -LiteralPath $runtimeArchive -Algorithm SHA256).Hash.ToLowerInvariant() -ne $runtimeInfo.sha256){throw 'Offline runtime image verification failed.'}
+    if($Flavor -eq 'offline'){
+        if(-not(Test-Path -LiteralPath $imageArchive)){throw 'The offline variant requires a runtime archive; specify -RuntimeArchive or build a lite APK.'}
+        if((Get-Item -LiteralPath $imageArchive).Length -ne $runtimeInfo.compressedBytes -or (Get-FileHash -LiteralPath $imageArchive -Algorithm SHA256).Hash.ToLowerInvariant() -ne $runtimeInfo.sha256){throw 'Offline runtime image verification failed.'}
+    }
 }
 if (-not $Toolchain) { $Toolchain = Join-Path $androidProject '..\..\work\android-toolchain\toolchain.json' }
 if (-not $SigningDirectory) { $SigningDirectory = Join-Path $androidProject '..\..\work\android-signing' }
@@ -26,11 +29,23 @@ function Assert-AndroidExit($stage) { if ($LASTEXITCODE -ne 0) { throw ('Android
 Push-Location -LiteralPath $androidProject
 try {
     & npm.cmd run build:assets; Assert-AndroidExit 'JavaScript assets'
+    # Each package gets an isolated asset view. The source archive is never moved or deleted.
+    $assetRoot=[IO.Path]::GetFullPath((Join-Path $androidProject 'app/src/main/assets'))
+    $packageAssets=Join-Path $buildPath ('assets-'+$Flavor+'-'+[Guid]::NewGuid().ToString('N').Substring(0,8))
+    New-Item -ItemType Directory -Path $packageAssets | Out-Null
+    foreach($asset in (Get-ChildItem -LiteralPath $assetRoot -File -Recurse)){
+        $relative=$asset.FullName.Substring($assetRoot.Length).TrimStart([char[]]'\/')
+        if($relative.Replace('\','/') -eq 'runtime/debian-arm64.tar.gz'){continue}
+        $target=Join-Path $packageAssets $relative
+        New-Item -ItemType Directory -Force -Path (Split-Path -Parent $target) | Out-Null
+        Copy-Item -LiteralPath $asset.FullName -Destination $target
+    }
+    if($Flavor -eq 'offline' -and -not $CompileOnly){Copy-Item -LiteralPath $imageArchive -Destination (Join-Path $packageAssets 'runtime/debian-arm64.tar.gz')}
     $aapt = Join-Path $toolchainConfig.buildTools 'aapt2.exe'
     $resourceZip = Join-Path $buildPath 'resources.zip'
     & $aapt compile --dir 'app\src\main\res' -o $resourceZip; Assert-AndroidExit 'compile resources'
     $resourceApk = Join-Path $buildPath 'resources.apk'
-    & $aapt link -o $resourceApk -I $toolchainConfig.androidJar --manifest 'app\src\main\AndroidManifest.xml' -A 'app\src\main\assets' $resourceZip; Assert-AndroidExit 'link resources'
+    & $aapt link -o $resourceApk -I $toolchainConfig.androidJar --manifest 'app\src\main\AndroidManifest.xml' -A $packageAssets $resourceZip; Assert-AndroidExit 'link resources'
     & py.exe 'scripts\normalize-apk-paths.py' $resourceApk --build-root $buildPath; Assert-AndroidExit 'portable APK asset paths'
     $sources = @(Get-ChildItem -LiteralPath 'app\src\main\java' -Filter '*.java' -Recurse | ForEach-Object FullName)
     & $javacTool --release 8 -encoding UTF-8 -classpath $toolchainConfig.androidJar -d $classesPath @sources; Assert-AndroidExit 'javac'
@@ -60,7 +75,7 @@ try {
     if (-not (Test-Path -LiteralPath $keystore)) {
         & $keyTool -genkeypair -keystore $keystore -alias $signing.alias -storepass $signing.password -keypass $signing.password -keyalg RSA -keysize 3072 -validity 3650 -dname 'CN=DeepSeek Android Bridge Test Build'; Assert-AndroidExit 'test signing identity'
     }
-    $artifact = Join-Path $artifactPath ('deepseek-android-bridge-v' + $releaseVersion + '.apk')
+    $artifact = Join-Path $artifactPath ('inkvoy-' + $releaseVersion + '-' + $Flavor + '.apk')
     if(Test-Path -LiteralPath $artifact){throw 'Preserve the existing release APK; use a new version or artifact directory.'}
     & $javaTool -jar (Join-Path $toolchainConfig.buildTools 'lib\apksigner.jar') sign --ks $keystore --ks-key-alias $signing.alias --ks-pass ('pass:' + $signing.password) --key-pass ('pass:' + $signing.password) --out $artifact $aligned; Assert-AndroidExit 'APK signing'
     & $javaTool -jar (Join-Path $toolchainConfig.buildTools 'lib\apksigner.jar') verify --verbose --print-certs $artifact; Assert-AndroidExit 'signature verification'

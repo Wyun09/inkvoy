@@ -14,7 +14,7 @@ import java.security.MessageDigest;
 import java.util.*;
 import java.util.zip.GZIPInputStream;
 
-/** Installs only the signed APK's pinned, offline image. No network installs. */
+/** Installs the APK's pinned image, bundled or imported with size and SHA-256 verification. */
 public final class RuntimeInstaller {
     public interface Progress { void update(JSONObject state); }
     private final Context context;
@@ -36,13 +36,21 @@ public final class RuntimeInstaller {
             loaded.getJSONArray("tools");manifest=loaded;
             root=new File(environments,version);
             boolean installed=hasReadyMarker();
-            setState(new JSONObject().put("ready",installed).put("installed",installed).put("phase",installed?"installed":"idle").put("image",version).put("assetSource",assets.source()).put("tools",manifest.getJSONArray("tools")).put("deviceAbis",new JSONArray(Arrays.asList(Build.SUPPORTED_ABIS))));
+            boolean available=assets.imageAvailable();
+            setState(new JSONObject().put("ready",installed).put("installed",installed).put("phase",installed?"installed":"idle").put("image",version).put("imageAvailable",available).put("compressedBytes",manifest.getLong("compressedBytes")).put("assetSource",assets.source()).put("tools",manifest.getJSONArray("tools")).put("deviceAbis",new JSONArray(Arrays.asList(Build.SUPPORTED_ABIS))));
             return true;
         } catch(Exception e){manifest=null;root=null;setError("manifest_unavailable","读取离线镜像清单失败",e);return false;}
     }
     public JSONObject status(){try{return new JSONObject(state);}catch(JSONException e){return new JSONObject();}}
     public File root(){return root;}
     public JSONObject manifest(){return manifest;}
+    public synchronized JSONObject importImage(InputStream input)throws Exception {
+        if(manifest==null&&!loadManifest())throw new IOException("工具包清单不可用");
+        try{
+            RuntimeImages.importImage(context,manifest,input,(done,total)->{try{JSONObject s=status();s.put("phase","importing").put("installing",true).put("progress",(int)(done*100/Math.max(1,total))).put("message","正在校验并导入工具包："+done/1048576+" / "+total/1048576+" MiB");s.remove("error");s.remove("errorCode");setState(s);}catch(JSONException ignored){}});
+            JSONObject s=status();s.put("installing",false).put("imageAvailable",true).put("phase",hasReadyMarker()?"installed":"idle").put("message","工具包已校验，可初始化 Debian 环境");s.remove("error");s.remove("errorCode");setState(s);return status();
+        }catch(Exception e){setError("image_import","工具包导入失败",e);throw e;}
+    }
     private void setState(JSONObject value){state=value.toString();try{if(progress!=null)progress.update(status());}catch(RuntimeException ignored){/* A UI listener cannot invalidate an installed image. */}}
     public void setError(String message){setError("runtime_failed",message,null);}
     private void setError(String code,String message,Exception cause){try{JSONObject s=status();String detail=cause==null?"":cause.getClass().getSimpleName()+": "+String.valueOf(cause.getMessage());s.put("error",message+(detail.isEmpty()?"":"："+detail)).put("errorCode",code).put("phase","failed").put("installing",false).put("ready",false).put("assetSource",assets.source());s.remove("message");s.remove("verified");setState(s);}catch(JSONException ignored){}}
@@ -56,6 +64,8 @@ public final class RuntimeInstaller {
         try {
             if(!Arrays.asList(Build.SUPPORTED_ABIS).contains("arm64-v8a"))throw new IOException("此离线镜像仅支持 ARM64；当前系统 ABI："+Arrays.toString(Build.SUPPORTED_ABIS));
             if(hasReadyMarker())return root;
+            step="image_required";
+            if(!assets.imageAvailable())throw new IOException("此安装包未附带工具镜像。请在工具页导入 debian-arm64.tar.gz，或覆盖安装离线完整版");
             if(!environments.isDirectory()&&!environments.mkdirs())throw new IOException("无法创建环境目录");
             long unpacked=manifest.getLong("unpackedBytes");
             File stage=new File(environments,manifest.getString("id")+".staging");

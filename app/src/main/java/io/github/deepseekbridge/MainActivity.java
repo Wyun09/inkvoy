@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.*;
 import android.content.*;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.*;
 import android.view.*;
 import android.view.inputmethod.InputMethodManager;
@@ -154,6 +155,8 @@ public final class MainActivity extends Activity {
         if(action.equals("ui-scale")){int value=argument.optInt("value",90);if(value>=30&&value<=110&&value%10==0)getSharedPreferences("studio-display",MODE_PRIVATE).edit().putInt("scale",value).apply();return;}
         if(action.equals("account-usage")){try{startActivity(new Intent(Intent.ACTION_VIEW,android.net.Uri.parse("https://chatgpt.com/settings/usage")));}catch(ActivityNotFoundException e){service.runtime.toast("系统浏览器不可用");}return;}
         if(action.equals("import-plugin")){try{startActivityForResult(new Intent(Intent.ACTION_OPEN_DOCUMENT).setType("*/*").addCategory(Intent.CATEGORY_OPENABLE),43);}catch(ActivityNotFoundException e){service.runtime.toast("系统文件选择器不可用");}return;}
+        if(action.equals("runtime-import")){try{startActivityForResult(new Intent(Intent.ACTION_OPEN_DOCUMENT).setType("*/*").addCategory(Intent.CATEGORY_OPENABLE),44);}catch(ActivityNotFoundException e){service.runtime.toast("系统文件选择器不可用");}return;}
+        if(action.equals("runtime-packages")){try{startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse("https://github.com/Wyun09/inkvoy/releases")));}catch(ActivityNotFoundException e){service.runtime.toast("请使用浏览器访问 github.com/Wyun09/inkvoy/releases");}return;}
         if(action.equals("account-auth")){String url=service.runtime.studio.accountAuthUrl();if(url!=null)try{startActivity(new Intent(Intent.ACTION_VIEW,android.net.Uri.parse(url)));}catch(ActivityNotFoundException e){service.runtime.toast("请安装可用的系统浏览器");}return;}
         if(action.equals("permission-files")||action.equals("permission-battery")||action.equals("permission-notifications")||action.equals("permission-app-settings")){AccessSettings.request(this,action);return;}
         if (action.equals("startupError")) {
@@ -286,6 +289,7 @@ public final class MainActivity extends Activity {
         if(request==21&&importProject!=null){if(data.getClipData()!=null){for(int i=0;i<Math.min(8,data.getClipData().getItemCount());i++)service.runtime.studio.importFile(data.getClipData().getItemAt(i).getUri(),importProject);}else if(data.getData()!=null)service.runtime.studio.importFile(data.getData(),importProject);return;}
         if(data.getData()==null)return;
         if(request==43){service.runtime.studio.importPlugin(data.getData());return;}
+        if(request==44){try{service.runtime.studio.request("runtime.import",new JSONObject().put("uri",data.getData().toString()),(ok,value)->runOnUiThread(()->{if(available())service.runtime.toast(ok?"工具包已校验，可在工具页初始化环境":"导入未完成："+(value instanceof JSONObject?((JSONObject)value).optString("message"):String.valueOf(value)));}));}catch(JSONException e){service.runtime.toast("无法读取工具包地址");}return;}
         if(request==22&&exportSessionId!=null)service.runtime.exportClientSession(data.getData(),exportSessionId);
         else if(request==22&&exportProject!=null&&exportPath!=null)service.runtime.studio.exportFile(data.getData(),exportProject,exportPath);
     }

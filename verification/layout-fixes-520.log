@@ -1,0 +1,33 @@
+✔ a portrait keyboard keeps phone navigation, draft and send control in the visual viewport (3368.7943ms)
+✔ all supported content scales preserve a usable dock and a bounded API dialog (4410.2047ms)
+✔ native browser slot follows split-pane geometry when the keyboard changes aspect ratio (2829.1029ms)
+✔ rotation and narrow screens keep the same composer without a horizontal page spill (2825.8502ms)
+✔ phone navigation stays below the conversation and desktop gains the persistent rail; starters preserve the draft (9989.8063ms)
+✔ command palette opens a bounded rounded API editor with editable fields on phones (8531.8167ms)
+✔ appearance sections preserve scale controls and reduced motion stops the explicit animation preview (5904.7717ms)
+✔ display ratios stay within both orientations and native browser bounds track the scaled DOM (37340.6902ms)
+✔ account sign-in, model catalog and native-only registration are available from the first drawer level (5464.4861ms)
+✔ MCP configuration fields are directly editable, persisted and removable without hidden menus (5035.4194ms)
+✔ first launch introduces real setup steps, supports skipping, and never sends an example task (5583.6971ms)
+✔ the connection guide opens the actual API editor and returns to the saved guide step (8964.3103ms)
+✔ network controls save a real native proxy configuration and show separate host results without auth calls (8793.3986ms)
+✔ app control requires the system service, selected apps and one explicit session grant, then pauses (4481.9191ms)
+✔ reading controls change actual text size and touch targets, modal focus is contained and back restores it (8832.6337ms)
+✔ journey tabs load their native data and retain entered device choices when returning from system settings (9218.7074ms)
+✔ phone guide fills the viewport at every supported density without a scaled letterbox (8845.5092ms)
+✔ Studio buttons change modes, create sessions, edit and save files, and drive PTY input (12392.5817ms)
+✔ Studio layout fits 320px, exposes controls, and renders model HTML inert (9887.5354ms)
+✔ compact chat sidebar owns sessions and permissions, closes with Escape/back and restores focus (10124.1007ms)
+✔ compact thread has usable touch targets, animated sidebar and no promotional cards (8716.4291ms)
+✔ pet uses actual pending terminal tool, pauses away from chat, and respects reduced motion (8820.6892ms)
+✔ every workspace page can open the grouped drawer and return focus to its own menu (8617.7933ms)
+✔ model editor becomes two panes on a wide screen and retains unsaved fields across rotation (8554.3034ms)
+✔ small display ratios keep the restore controls readable and chat actions inside their surfaces (11091.7547ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 121108.0363

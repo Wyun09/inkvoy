@@ -1,0 +1,21 @@
+{
+  "version": "5.2.0",
+  "versionCode": 26,
+  "javascriptChecks": 395,
+  "androidFrameworkChecks": 244,
+  "variants": {
+    "lite": {
+      "file": "inkvoy-5.2.0-lite.apk",
+      "bytes": 2214214,
+      "sha256": "dde5ad2cc5b0e6af6803f77414e596ec7baa6dd5b667c9327cb89e79bd8e4395",
+      "runtimeImageBundled": false
+    },
+    "offline": {
+      "file": "inkvoy-5.2.0-offline.apk",
+      "bytes": 616135062,
+      "sha256": "6904dd12acdddf2f5dfb0525d634b07c8faac2458ffdfe8a7fee2bc807d6c5b0",
+      "runtimeImageBundled": true
+    }
+  },
+  "delivery": "D:\\CodexBuild\\inkvoy-5.2.0\\delivery"
+}

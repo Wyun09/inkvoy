@@ -3,6 +3,7 @@ import { MobileBrowser } from './mobile-browser.js';
 import { createEngine } from './engine.js';
 import { MobileBuffer } from './platform.js';
 import { initDashboard } from './ui/dashboard.js';
+import {installViewport} from './ui/viewport.js';
 import { createClient,LOCAL_TOOLS } from './client.js';
 import {createExtensions} from './extensions.js';
 import { initStudio } from './ui/studio.js';
@@ -120,6 +121,7 @@ globalThis.AndroidEngine = {
 };
 try {
   initStudio({client,native:workspace,providers,agentTools,extensions});
+  installViewport();
   initDashboard();
   BridgeDashboard.navigate('chat');
   NativeBridge.ready();

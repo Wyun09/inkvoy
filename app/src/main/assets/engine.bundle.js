@@ -11989,6 +11989,7 @@ data: [DONE]
       if (event.target.classList.contains("page")) layout();
     });
     window.addEventListener("resize", layout);
+    window.addEventListener("studio:viewport", layout);
     window.BridgeDashboard = { render, navigate, layout, toast, result, showResult, back() {
       if (window.StudioUI?.closeDrawer()) return true;
       if (modal) {
@@ -12003,6 +12004,49 @@ data: [DONE]
     }, setTheme };
     setTheme(theme);
     render(state);
+  }
+
+  // js/ui/viewport.js
+  var editable = (node4) => node4?.matches?.('textarea,input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),[contenteditable="true"]');
+  function installViewport() {
+    if (window.StudioViewport) return window.StudioViewport;
+    const root = document.documentElement, baselines = /* @__PURE__ */ new Map();
+    let frame = 0, last = "", snapshot;
+    function measure() {
+      frame = 0;
+      const v3 = window.visualViewport, scale = Number(getComputedStyle(root).getPropertyValue("--ui-scale")) || 0.9;
+      const width = Math.round(Math.min(innerWidth, v3?.width || innerWidth)), height = Math.round(Math.min(innerHeight, v3?.height || innerHeight)), key = Math.round(width / 20) * 20;
+      const previous = baselines.get(key) || height, baseline = Math.max(previous, height);
+      baselines.set(key, baseline);
+      const keyboard = !!editable(document.activeElement) && baseline - height > Math.max(140, baseline * 0.22);
+      const layout = width >= 1e3 ? "wide" : width >= 600 && width > baseline * 1.15 && height <= 560 ? "landscape" : "phone";
+      const editTarget = document.activeElement?.closest("#page-computer") ? "browser" : document.activeElement?.closest(".model-dialog,.journey-dialog") ? "dialog" : "chat";
+      const top = Math.max(0, v3?.offsetTop || 0), left = Math.max(0, v3?.offsetLeft || 0), stamp = [width, height, scale, keyboard, layout, top, left, editTarget].join("|");
+      if (stamp === last) return;
+      last = stamp;
+      snapshot = Object.freeze({ width, height, scale, keyboard, layout, top, left });
+      root.style.setProperty("--viewport-width", width + "px");
+      root.style.setProperty("--viewport-height", height + "px");
+      root.style.setProperty("--viewport-top", top + "px");
+      root.style.setProperty("--viewport-left", left + "px");
+      document.body.dataset.keyboard = String(keyboard);
+      document.body.dataset.layout = layout;
+      document.body.dataset.editTarget = editTarget;
+      window.dispatchEvent(new CustomEvent("studio:viewport", { detail: snapshot }));
+    }
+    function schedule() {
+      if (!frame) frame = requestAnimationFrame(measure);
+    }
+    const observer = new MutationObserver(schedule);
+    observer.observe(root, { attributes: true, attributeFilter: ["style"] });
+    for (const name of ["resize", "orientationchange"]) window.addEventListener(name, schedule, { passive: true });
+    window.visualViewport?.addEventListener("resize", schedule, { passive: true });
+    window.visualViewport?.addEventListener("scroll", schedule, { passive: true });
+    document.addEventListener("focusin", schedule);
+    document.addEventListener("focusout", schedule);
+    window.StudioViewport = { refresh: schedule, snapshot: () => snapshot };
+    measure();
+    return window.StudioViewport;
   }
 
   // js/workflow.js
@@ -29038,7 +29082,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
       ratio = Math.max(30, Math.min(70, Number(localStorage.getItem("computer-ratio")) || 55));
     } catch {
     }
-    const landscape = () => matchMedia("(min-aspect-ratio: 1/1)").matches;
+    const landscape = () => window.StudioViewport?.snapshot()?.layout === "landscape" || window.StudioViewport?.snapshot()?.layout === "wide" || !window.StudioViewport && matchMedia("(min-aspect-ratio: 1/1)").matches;
     const layout = () => {
       workspace2.style.setProperty("--computer-ratio", ratio + "%");
       divider.setAttribute("aria-orientation", landscape() ? "vertical" : "horizontal");
@@ -29109,6 +29153,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     });
     window.addEventListener("resize", layout);
     new ResizeObserver(layout).observe($4("computer-slot"));
+    window.addEventListener("studio:viewport", layout);
     const render = (value) => {
       renderRevision++;
       state = value;
@@ -30660,8 +30705,8 @@ Please report this to https://github.com/markedjs/marked.`, e) {
       }
       if (step === 1) {
         body.append(paragraph("\u4EC5\u804A\u5929\u53EF\u4EE5\u7A0D\u540E\u51C6\u5907\u3002\u547D\u4EE4\u884C\u3001\u672C\u673A MCP \u8FDB\u7A0B\u548C\u5206\u6790\u5DE5\u5177\u9700\u8981\u79BB\u7EBF Debian \u73AF\u5883\u3002"));
-        row("\u79BB\u7EBF\u5DE5\u5177\u73AF\u5883", runtime.ready ? "\u5DF2\u5C31\u7EEA\uFF0C\u53EF\u4F7F\u7528\u7EC8\u7AEF\u4E0E\u9884\u88C5\u5DE5\u5177\u3002" : runtime.error || "\u7B49\u5F85\u4F60\u521D\u59CB\u5316\uFF1B\u4E0D\u4F1A\u5728\u6253\u5F00\u5F15\u5BFC\u65F6\u81EA\u52A8\u89E3\u538B\u3002", button(runtime.ready ? "\u67E5\u770B\u5DE5\u5177" : "\u521D\u59CB\u5316\u73AF\u5883", async () => {
-          if (runtime.ready) {
+        row("\u79BB\u7EBF\u5DE5\u5177\u73AF\u5883", runtime.ready ? "\u5DF2\u5C31\u7EEA\uFF0C\u53EF\u4F7F\u7528\u7EC8\u7AEF\u4E0E\u9884\u88C5\u5DE5\u5177\u3002" : runtime.error || "\u7B49\u5F85\u4F60\u521D\u59CB\u5316\uFF1B\u4E0D\u4F1A\u5728\u6253\u5F00\u5F15\u5BFC\u65F6\u81EA\u52A8\u89E3\u538B\u3002", button(runtime.ready ? "\u67E5\u770B\u5DE5\u5177" : runtime.imageAvailable === false ? "\u51C6\u5907\u5DE5\u5177\u5305" : "\u521D\u59CB\u5316\u73AF\u5883", async () => {
+          if (runtime.ready || runtime.imageAvailable === false) {
             route("tools");
             return;
           }
@@ -31682,6 +31727,15 @@ Please report this to https://github.com/markedjs/marked.`, e) {
         }
       }
     }).observe($4("terminal-host"));
+    const runtimeImport = document.createElement("button");
+    runtimeImport.id = "runtime-import";
+    runtimeImport.textContent = "\u5BFC\u5165\u5DE5\u5177\u5305";
+    runtimeImport.onclick = () => NativeBridge.uiAction("runtime-import", "{}");
+    const runtimePackages = document.createElement("button");
+    runtimePackages.id = "runtime-packages";
+    runtimePackages.textContent = "\u5DE5\u5177\u5305\u53D1\u5E03\u9875";
+    runtimePackages.onclick = () => NativeBridge.uiAction("runtime-packages", "{}");
+    $4("runtime-install").after(runtimeImport, runtimePackages);
     function runtimeState(r) {
       runtimeCurrent = r;
       $4("runtime-state").textContent = r.error ? "\u521D\u59CB\u5316\u9700\u8981\u5904\u7406" : r.installing ? "\u6B63\u5728\u521D\u59CB\u5316" : r.ready ? "\u79BB\u7EBF\u73AF\u5883\u5DF2\u5C31\u7EEA" : "\u9996\u6B21\u4F7F\u7528\u9700\u8981\u89E3\u538B\u73AF\u5883";
@@ -31691,6 +31745,16 @@ Please report this to https://github.com/markedjs/marked.`, e) {
       $4("runtime-install").disabled = !!r.installing;
       $4("runtime-test").disabled = !r.ready || !!r.testing;
       $4("runtime-install").textContent = r.error ? "\u91CD\u8BD5\u521D\u59CB\u5316" : r.ready ? "\u6821\u9A8C\u73AF\u5883" : "\u521D\u59CB\u5316\u73AF\u5883";
+      runtimeImport.hidden = r.imageAvailable !== false;
+      runtimePackages.hidden = r.imageAvailable !== false;
+      runtimeImport.disabled = !!r.installing;
+      if (r.phase === "importing") $4("runtime-state").textContent = "\u6B63\u5728\u6821\u9A8C\u5DE5\u5177\u5305";
+      if (r.imageAvailable === false && !r.ready && !r.installing) {
+        $4("runtime-state").textContent = "\u8F7B\u91CF\u7248 \xB7 \u5DE5\u5177\u5305\u5F85\u51C6\u5907";
+        $4("runtime-detail").textContent = r.error || "\u804A\u5929\u548C\u6D4F\u89C8\u5668\u53EF\u76F4\u63A5\u4F7F\u7528\u3002\u7EC8\u7AEF\u4E0E\u672C\u673A MCP \u9700\u8981\u5BFC\u5165\u5BF9\u5E94\u5DE5\u5177\u5305\uFF0C\u6216\u8986\u76D6\u5B89\u88C5\u79BB\u7EBF\u5B8C\u6574\u7248\u3002";
+        $4("runtime-install").disabled = true;
+        $4("runtime-install").textContent = "\u5148\u5BFC\u5165\u5DE5\u5177\u5305";
+      }
       $4("runtime-tools").replaceChildren(...(r.tools || []).map((t) => {
         const n = document.createElement("div");
         n.className = "tool-tile";
@@ -31741,7 +31805,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     $4("runtime-test").after(diagnostic);
     click("runtime-diagnostic", async () => {
       await refreshRuntime();
-      NativeBridge.uiAction("copy-text", JSON.stringify({ text: JSON.stringify({ appVersion: "5.0.0", runtime: runtimeCurrent }, null, 2) }));
+      NativeBridge.uiAction("copy-text", JSON.stringify({ text: JSON.stringify({ appVersion: document.getElementById("app-version")?.textContent || "5.2.0", runtime: runtimeCurrent }, null, 2) }));
       toast("\u73AF\u5883\u8BCA\u65AD\u5DF2\u590D\u5236");
     });
     click("runtime-refresh", refreshRuntime);
@@ -32576,6 +32640,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
   };
   try {
     initStudio({ client, native: workspace, providers, agentTools, extensions });
+    installViewport();
     initDashboard();
     BridgeDashboard.navigate("chat");
     NativeBridge.ready();
