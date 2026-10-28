@@ -20,7 +20,7 @@ export function mountWorkspacePages(nav){
  </main>
  <main class="page studio-terminal" id="page-terminal" hidden>
   <div class="terminal-heading"><div><span class="terminal-led"></span><strong>Debian 终端</strong><small id="terminal-state">尚未启动</small></div><button id="terminal-add" aria-label="新建终端">＋</button><button id="terminal-close" aria-label="关闭当前终端">×</button></div><div id="terminal-tabs" class="terminal-tabs" role="group" aria-label="终端会话"></div>
-  <div id="terminal-host" class="terminal-host"><div id="terminal-empty"><span class="terminal-glyph" aria-hidden="true">›_</span><span class="overline">LOCAL COMPUTE</span><h2>你的随身开发环境</h2><p>Bash、Python、Node、Git 与 AI 共用同一个项目。</p><button id="terminal-start">启动 Debian</button><small>首次使用会准备应用内的离线环境</small></div></div>
+  <div id="terminal-host" class="terminal-host"><div id="terminal-empty"><span class="terminal-glyph" aria-hidden="true">›_</span><h2>终端尚未启动</h2><p>Bash · Python · Node · Git<br>与当前项目共用文件</p><button id="terminal-start">启动终端</button><small>首次使用需要准备工具环境</small></div></div>
   <div class="terminal-keys"><button data-key="\u0003">Ctrl C</button><button data-key="\u0004">Ctrl D</button><button data-key="\t">Tab</button><button data-key="\u001b">Esc</button><button data-key="\u001b[A">↑</button><button data-key="\u001b[B">↓</button><button data-key="\u001b[D">←</button><button data-key="\u001b[C">→</button></div><div class="terminal-footer"><span>ARM64 <i>·</i> /workspace</span><button id="terminal-copy">复制选中</button><button id="terminal-clear">清屏</button></div>
  </main>
  <main class="page studio-tools" id="page-tools" hidden>

@@ -83,11 +83,20 @@ export async function navigateLegacy(page, tab) {
     await page.locator('#page-home [data-navigate="'+tab+'"]').first().click();
   } else await page.locator('.bottom-nav [data-navigate="'+tab+'"]').click();
 }
+export async function toolbarAction(page,id){
+ const target=page.locator('#'+id),menu=page.locator('#app-menu');
+ if(await menu.count()&&await target.evaluate(n=>!!n.closest('#app-menu'))){
+  await page.waitForFunction(()=>document.getElementById('app-menu').dataset.closing!=='true'||document.getElementById('app-menu').hidden);
+  if(!await menu.isVisible())await page.locator('#app-more').click();
+  await target.click();await menu.waitFor({state:'hidden'});
+ }else await target.click();
+}
 export async function navigateStudio(page,tab) {
   if(await page.locator('#page-'+tab).isVisible())return;
   if(tab==='settings'&&await page.locator('#rail-settings').isVisible()){await page.locator('#rail-settings').click();return;}
   const rail=page.locator('[data-rail-page="'+tab+'"]');if(await rail.count()&&await rail.isVisible()){await rail.click();return;}
   const direct=page.locator('.bottom-nav [data-navigate="'+tab+'"]');if(await direct.count()&&await direct.isVisible()){await direct.click();return;}
+  if(['files','terminal','computer'].includes(tab)&&await page.locator('#app-more').count()){await page.locator('#app-more').click();await page.locator('#app-menu-'+tab).click();await page.locator('#app-menu').waitFor({state:'hidden'});return;}
   if(await page.locator('#workspace-menu').count()){
     if(await page.locator('#session-menu').isVisible())await page.locator('#session-menu').click();else if(await page.locator('#workspace-menu').isVisible())await page.locator('#workspace-menu').click();else await page.locator('#rail-sessions').click();
     const extra=page.locator('#studio-drawer [data-drawer-page="'+tab+'"]');if(await extra.count()&&!(await extra.isVisible()))await page.locator('#drawer-more>summary').click();

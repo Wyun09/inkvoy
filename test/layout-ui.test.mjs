@@ -11,13 +11,13 @@ test('a portrait keyboard keeps phone navigation, draft and send control in the 
  const page=await setup(t);await page.locator('#chat-input').fill('保留输入草稿');await page.setViewportSize({width:390,height:344});await page.waitForFunction(()=>document.body.dataset.keyboard==='true');
  assert.equal(await page.locator('body').getAttribute('data-layout'),'phone');assert.equal(await page.locator('.workspace-rail').isVisible(),false);assert.equal(await page.locator('.bottom-nav').isVisible(),false);
  contained(await box(page.locator('#chat-input')),390,344,'input');contained(await box(page.locator('#chat-send')),390,344,'send');assert.equal(await page.locator('#chat-input').inputValue(),'保留输入草稿');
- await page.setViewportSize({width:390,height:844});await page.waitForFunction(()=>document.body.dataset.keyboard==='false');assert.equal(await page.locator('.bottom-nav').isVisible(),true);assert.equal(await page.locator('#chat-input').inputValue(),'保留输入草稿');
+ await page.setViewportSize({width:390,height:844});await page.waitForFunction(()=>document.body.dataset.keyboard==='false');assert.equal(await page.locator('.bottom-nav').isVisible(),false);assert.equal(await page.locator('#chat-input').inputValue(),'保留输入草稿');await page.evaluate(()=>BridgeDashboard.navigate('files'));assert.equal(await page.locator('.bottom-nav').isVisible(),true);
 });
 
 test('all supported content scales preserve a usable dock and a bounded API dialog',async t=>{
  const page=await setup(t);for(const percent of [30,40,50,60,70,80,90,100,110]){
   await page.evaluate(n=>document.documentElement.style.setProperty('--ui-scale',n/100),percent);await page.waitForFunction(n=>StudioViewport.snapshot().scale===n/100,percent);
-  const app=await box(page.locator('#app')),dock=await box(page.locator('.bottom-nav'));contained(app,390,844,'app at '+percent);assert.ok(dock.height>=47,'dock collapsed at '+percent);
+  const app=await box(page.locator('#app'));contained(app,390,844,'app at '+percent);await page.evaluate(()=>BridgeDashboard.navigate('files'));const dock=await box(page.locator('.bottom-nav'));assert.ok(dock.height>=47,'dock collapsed at '+percent);await page.evaluate(()=>BridgeDashboard.navigate('chat'));
   await page.locator('#model-picker').click();contained(await box(page.locator('.model-dialog')),390,844,'dialog at '+percent);await page.locator('#provider-endpoint').fill('https://example.test/v1');await page.locator('#provider-model').fill('model-with-a-long-descriptive-name');await page.locator('#provider-save').scrollIntoViewIfNeeded();contained(await box(page.locator('#provider-save')),390,844,'save at '+percent);await page.keyboard.press('Escape');
  }
 });

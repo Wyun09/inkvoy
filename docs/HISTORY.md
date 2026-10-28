@@ -23,6 +23,13 @@
 | 5.1.0 | [release/5.1.0](https://github.com/Wyun09/inkvoy/tree/release/5.1.0) | [339934da](https://github.com/Wyun09/inkvoy/commit/339934daf271c7700ab3d01b2753f1f42b0752d0) |
 | 5.1.1 | [release/5.1.1](https://github.com/Wyun09/inkvoy/tree/release/5.1.1) | [465e0c79](https://github.com/Wyun09/inkvoy/commit/465e0c79415c42f44d55da7730ad261247d81aad) |
 
+## 恢复历史后的开发版本
+
+- 5.2.0：本地 `release/5.2.0`，提交 `bb4afb2`。完成视口边界、工具包导入与验证。
+- 5.3.0：本地 `release/5.3.0`。重构应用界面层级与输入区，详见 [版本说明](RELEASE-5.3.0.md) 和 [验证记录](../VERIFICATION.md)。
+
+这两个分支与安装包的本地生成不代表远端已发布；本轮尚未上传 GitHub Release。
+
 ## 缺少完整源码的版本
 
 2.0.0、2.0.1、2.0.2、2.0.3、2.1.0 和 2.3.2 的完整原始源码未在本次本地清单中找到。保留的发布说明或安装包不等于完整源码；没有为这些版本伪造源码提交或版本分支。

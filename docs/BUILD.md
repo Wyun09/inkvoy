@@ -10,6 +10,8 @@ npm run build:assets
 npm test
 ```
 
+发布资源默认压缩 JavaScript 和 CSS。定位界面错误时可用 `node scripts/build-assets.mjs --debug` 生成便于调试的 JavaScript；打包 APK 前重新运行默认构建。核心布局在 `js/ui/app-shell/`，构建时剔除旧业务样式中的核心选择器，记录在对应版本的 `verification/ui-engine-bundle-*.json`。
+
 ## Android
 
 当前完整包面向 ARM64，minSdk 26、targetSdk 35。源代码中的预编译原生库保留其来源和许可证。
@@ -41,7 +43,7 @@ Windows 构建工具准备：
   -ArtifactDirectory "$PWD/dist"
 ```
 
-轻量包使用 `-Flavor lite`，无需先取得镜像。产物名称分别为 `inkvoy-5.2.0-lite.apk` 和 `inkvoy-5.2.0-offline.apk`。构建过程中使用独立的临时资产目录，不移动或删除源码目录中的镜像。
+轻量包使用 `-Flavor lite`，无需先取得镜像。产物名称分别为 `inkvoy-版本号-lite.apk` 和 `inkvoy-版本号-offline.apk`。构建过程中使用独立的临时资产目录，不移动或删除源码目录中的镜像。
 
 工具包通过 Android 系统文件选择器导入，流式写入应用私有目录。只有文件大小和 SHA-256 均匹配 APK 内固定清单时才替换缓存；失败或取消会清除临时文件，保留之前验证的工具包。应用内“工具包发布页”打开 GitHub Releases；当前没有自动下载器，发布附件上传完成前请使用本地提供的工具包或完整版。
 

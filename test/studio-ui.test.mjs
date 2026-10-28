@@ -30,7 +30,7 @@ test('compact chat sidebar owns sessions and permissions, closes with Escape/bac
  const browser=await chromium.launch({headless:true,channel:process.platform==='win32'?'msedge':undefined});t.after(()=>browser.close());const {page,context}=await uiHarness(browser,{width:390,height:844},{studio:true,initialPage:'chat'});t.after(()=>context.close());
  await page.evaluate(s=>BridgeDashboard.render(s),{...readyState,version:'2.0.2',permissions:{allFiles:false,notifications:true,batteryUnrestricted:false}});
  assert.equal(await page.locator('.topbar').isVisible(),true);assert.ok((await page.locator('.topbar').boundingBox()).height<=62);
- assert.equal(await page.locator('.bottom-nav').isVisible(),true);assert.equal(await page.locator('.welcome-suggestions').count(),0);assert.ok((await page.locator('#chat-form').boundingBox()).y<760);
+ assert.equal(await page.locator('.bottom-nav').isVisible(),false);assert.equal(await page.locator('.welcome-suggestions').count(),0);assert.ok((await page.locator('#chat-form').boundingBox()).y<760);
  assert.equal(await page.locator('#studio-drawer-scrim').isVisible(),false);await page.locator('#session-menu').click();assert.equal(await page.locator('#studio-drawer').isVisible(),true);
  assert.equal(await page.locator('#permission-files-status').textContent(),'去开启 ›');assert.equal(await page.locator('#permission-notifications-status').textContent(),'已开启 ✓');
  await page.locator('#drawer-settings summary').click();
@@ -46,7 +46,7 @@ test('compact chat sidebar owns sessions and permissions, closes with Escape/bac
 test('compact thread has usable touch targets, animated sidebar and no promotional cards',async t=>{
  const browser=await chromium.launch({headless:true,channel:process.platform==='win32'?'msedge':undefined});t.after(()=>browser.close());const {page,context}=await uiHarness(browser,{width:320,height:700},{studio:true,initialPage:'chat'});t.after(()=>context.close());
  await page.emulateMedia({reducedMotion:'no-preference'});
- assert.equal(await page.locator('.chat-welcome h2').textContent(),'从线索，到答案。');
+ assert.equal(await page.locator('.chat-welcome h2').textContent(),'开始一项新任务');
  const bad=await page.evaluate(()=>[...document.querySelectorAll('button')].filter(n=>n.getClientRects().length).filter(n=>n.getBoundingClientRect().width<24||n.getBoundingClientRect().height<24).map(n=>n.id));assert.deepEqual(bad,[]);
  await page.locator('#composer-options').click();assert.equal(await page.locator('#composer-modes').isVisible(),true);await page.keyboard.press('Escape');assert.equal(await page.locator('#composer-modes').isVisible(),false);
  await page.locator('#session-menu').click();assert.equal(await page.locator('#studio-drawer').isVisible(),true);assert.ok(await page.locator('#studio-drawer').evaluate(n=>n.getBoundingClientRect().width>200));

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
-import { uiHarness, readyState, navigateLegacy } from './ui-harness.mjs';
+import { uiHarness, readyState, navigateLegacy, toolbarAction } from './ui-harness.mjs';
 test('packaged UI routes, real state labels, private-key handling and touch sizes work on narrow phones', async t => {
   const browser = await chromium.launch({ headless: true, ...(process.platform === 'win32' ? { channel: 'msedge' } : {}) });
   t.after(() => browser.close());
@@ -45,7 +45,7 @@ test('packaged UI routes, real state labels, private-key handling and touch size
   await page.locator('.health-strip [data-action="reasoning"]').click();
   assert.ok((await page.locator('#sheet-body').innerText()).includes('人机验证'));
   await page.locator('#close-sheet').click();
-  await page.locator('#theme').click(); assert.equal(await page.locator('body').getAttribute('class'), 'dark');
+  await toolbarAction(page,'theme'); assert.equal(await page.locator('body').getAttribute('class'), 'dark');
 });
 test('UI treats unknown state and test failures as such and renders report text without HTML execution', async t => {
   const browser = await chromium.launch({ headless: true, ...(process.platform === 'win32' ? { channel: 'msedge' } : {}) }); t.after(() => browser.close());

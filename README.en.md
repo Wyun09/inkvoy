@@ -10,7 +10,7 @@ The product image uses demonstration task data.
 
 Inkvoy brings streaming conversation, visible tool results, a Debian ARM64 terminal, project files and a shared browser into one Android workspace. It includes custom model connections, MCP, plugins and skills, context management, planning, goals and coordinated agents. App control is bounded by the user's selected applications, explicit session consent and pause controls.
 
-Version 5.2.0 aligns keyboard, rotation, split panes and content scaling around one visual viewport. It fixes overlapping density controls and overflowing dialogs, refines conversation and settings surfaces, and offers lightweight and offline APKs. Lightweight installs accept a separate runtime package only after checking its size and SHA-256 against the manifest pinned inside the APK. See [release notes](docs/RELEASE-5.2.0.md).
+Version 5.3.0 rebuilds the mobile app shell, contextual header actions, action sheet and unified composer. It refines messages, files, terminal and settings while retaining the live controls and existing connections. The build removes conflicting legacy core selectors and uses explicit CSS layers. Lightweight and offline APKs retain verified runtime package import. See [release notes](docs/RELEASE-5.3.0.md).
 
 ```sh
 npm ci

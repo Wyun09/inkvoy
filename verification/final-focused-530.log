@@ -1,0 +1,22 @@
+✔ phone conversation has a unified composer, two header actions and working access to every workspace (3635.2856ms)
+✔ more actions retain real theme and command handlers and trap focus while open (3415.5025ms)
+✔ menu motion can reverse during dismissal without losing focus or leaving a native overlay blocker (2922.0833ms)
+✔ native browser is suspended by the action sheet and returns to the same slot after dismissal (2845.0154ms)
+✔ repeated stream renders do not rewrite unchanged header and shell state (2495.0878ms)
+✔ the intact logo transitions from its current pose and keeps one continuous breathing phase (12090.13ms)
+✔ stream chunks appear immediately without a cursor or replaying settled text, then retain exact final copy (9659.4309ms)
+✔ reasoning disclosure can reverse during motion and reduced motion shows new chunks without animation (9279.8641ms)
+✔ the phone-sized logo visibly moves while its state stays constant, pauses in background and resumes (5979.3567ms)
+✔ Studio buttons change modes, create sessions, edit and save files, and drive PTY input (12177.2741ms)
+✔ Studio layout fits 320px, exposes controls, and renders model HTML inert (9368.045ms)
+✔ compact chat sidebar owns sessions and permissions, closes with Escape/back and restores focus (9192.2388ms)
+✔ compact thread has usable touch targets, animated sidebar and no promotional cards (8291.0857ms)
+✔ pet uses actual pending terminal tool, pauses away from chat, and respects reduced motion (8888.5981ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 72900.7169

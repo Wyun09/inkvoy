@@ -1,0 +1,100 @@
+{
+  "version": "5.3.0",
+  "versionCode": 27,
+  "recordedAt": "2026-10-28T15:16:02.652Z",
+  "javascript": {
+    "tests": 402,
+    "passed": 402,
+    "failed": 0,
+    "log": "regression-js-final-530.log"
+  },
+  "android": {
+    "tests": 244,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "apis": [
+      26,
+      33
+    ],
+    "log": "regression-android-530.log"
+  },
+  "finalSignedResources": {
+    "tests": 22,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "log": "android-final-payload-530.log",
+    "includedInFrameworkTestCount": true
+  },
+  "layout": {
+    "routeSnapshots": 36,
+    "viewports": 7,
+    "horizontalOverflow": 0
+  },
+  "assets": {
+    "coreStyleOwner": "js/ui/app-shell",
+    "engineMinified": true,
+    "engineBytes": 1067554,
+    "cssBytes": 178234,
+    "removedLegacyCoreSelectors": 225
+  },
+  "performance": {
+    "log": "ui-performance-530.json",
+    "environment": "Desktop Edge, 390 x 844 CSS pixels, 4x CPU throttle. Synthetic 60-turn history. This is not a physical Android frame-rate measurement.",
+    "combined": [
+      {
+        "name": "5.2.0 signed APK",
+        "renderMedianMs": 3.599999999627471,
+        "renderP95Ms": 5.400000000372529,
+        "samples": 50,
+        "repeatedLayouts": [
+          0,
+          0
+        ],
+        "mountedTurns": [
+          20,
+          20
+        ],
+        "chatElements": [
+          845,
+          845
+        ]
+      },
+      {
+        "name": "5.3.0 current bundle",
+        "renderMedianMs": 3.8999999999068677,
+        "renderP95Ms": 6.199999999720603,
+        "samples": 50,
+        "repeatedLayouts": [
+          0,
+          0
+        ],
+        "mountedTurns": [
+          20,
+          20
+        ],
+        "chatElements": [
+          905,
+          905
+        ]
+      }
+    ]
+  },
+  "variants": {
+    "lite": {
+      "file": "inkvoy-5.3.0-lite.apk",
+      "bytes": 2152774,
+      "sha256": "95bf267731db4581fceb779c3071163480406c4c66f67dbd951113e9263c4024",
+      "runtimeImageBundled": false
+    },
+    "offline": {
+      "file": "inkvoy-5.3.0-offline.apk",
+      "bytes": 616073622,
+      "sha256": "6b92871bd044c677034792c0d1b1037013c7a6c56388838d5c7b1838945cec8a",
+      "runtimeImageBundled": true
+    }
+  },
+  "physicalAndroidDeviceVerified": false,
+  "releaseAttachmentsUploaded": false
+}

@@ -6,6 +6,7 @@ import {highlightCode} from '../background.js';
 import {replyTurns,TOOL_LABELS,STATUS_LABELS} from './reply-model.js';
 import {attachmentCards} from './attachments.js';
 import {createWelcome} from './v4/welcome.js';
+import {uiIcon} from './icon-system.js';
 const languages=new Set(['javascript','typescript','python','bash','json','xml','css','java']);
 
 const el=(tag,className,text)=>{const n=document.createElement(tag);if(className)n.className=className;if(text!==undefined)n.textContent=text;return n;};
@@ -41,7 +42,7 @@ export function createReplyView({container,copy,openFile,showChange,openImage=()
     const root=el('article','chat-message assistant reply-turn'),header=el('header','reply-header'),brand=el('span','reply-brand','DeepSeek'),status=el('span','reply-status');header.append(createLivingMark(),brand,status);
     const thinking=manualDetails('reply-thinking','思考过程'),thought=el('div','reply-thought');thinking.details.append(thought);smoothThoughtDisclosure(thinking.details,thought);
     const process=manualDetails('reply-process','执行过程'),notes=el('div','reply-notes'),steps=el('div','reply-steps');process.details.append(notes,steps);
-    const answer=el('div','markdown reply-body'),pending=el('div','reply-pending'),footer=el('footer','reply-footer'),cp=action('复制回复',()=>copy(root.copyText||''),'reply-copy');footer.append(cp);
+    const answer=el('div','markdown reply-body'),pending=el('div','reply-pending'),footer=el('footer','reply-footer'),cp=action('复制回复',()=>copy(root.copyText||''),'reply-copy');cp.prepend(uiIcon('copy'));footer.append(cp);
     root.setAttribute('aria-label','AI 回复');root.append(header,thinking.details,process.details,answer,pending,footer);return {root,brand,status,thinking,thought,process,notes,steps,answer,pending,footer,toolNodes:new Map(),messageNodes:new Map()};
   }
   function workerReports(node,reports){

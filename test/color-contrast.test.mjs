@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
-import {uiHarness,readyState} from './ui-harness.mjs';
+import {uiHarness,readyState,toolbarAction} from './ui-harness.mjs';
 
 test('the actual service action remains legible and operational in light and dark overview themes',async t=>{
   const browser=await chromium.launch({headless:true,channel:process.platform==='win32'?'msedge':undefined});
@@ -32,6 +32,6 @@ test('the actual service action remains legible and operational in light and dar
     const before=await page.evaluate(()=>nativeActions.filter(a=>a.action==='stop').length);
     await page.locator('#service-toggle').click();
     assert.equal(await page.evaluate(()=>nativeActions.filter(a=>a.action==='stop').length),before+1);
-    if(!dark)await page.locator('#theme').click();
+    if(!dark)await toolbarAction(page,'theme');
   }
 });
