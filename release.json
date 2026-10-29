@@ -1,11 +1,11 @@
 {
-  "version": "5.3.0",
-  "versionCode": 27,
-  "buildDate": "2026-10-28",
+  "version": "5.3.1",
+  "versionCode": 28,
+  "buildDate": "2026-10-30",
   "package": "io.github.deepseekbridge",
-  "apk": "inkvoy-5.3.0-offline.apk",
+  "apk": "inkvoy-5.3.1-offline.apk",
   "bytes": 616073622,
-  "sha256": "6b92871bd044c677034792c0d1b1037013c7a6c56388838d5c7b1838945cec8a",
+  "sha256": "b490d22bf32f7c9ef7dae10e8311929ae0a630bbcba5d43a6cc03d88626a1e69",
   "signerSha256": "cc8f15b569d5e813c68d49f4fa17d19afbe6f7526ef5dbdade88e317116c2b59",
   "minSdk": 26,
   "targetSdk": 35,
@@ -90,27 +90,25 @@
     }
   },
   "androidFrameworkTests": 244,
-  "javascriptChecksValidated": 402,
+  "javascriptChecksValidated": 403,
   "physicalAndroidDeviceVerified": false,
-  "verification": "verification/regression-530.json",
+  "verification": "verification/regression-531.json",
   "changes": [
-    "Rebuild mobile headers, contextual actions and the unified message composer.",
-    "Introduce a reversible action sheet with focus handling and native browser suspension.",
-    "Refine conversation, files, terminal, model and settings surfaces.",
-    "Remove conflicting core selectors at build time and minimize production assets.",
-    "Keep long reasoning bounded and reverse disclosure motion in the correct zoom coordinates."
+    "Fix OpenAI Responses streaming text, reasoning, refusal and function-call argument aggregation.",
+    "Fall back to confirmed output items when a completed event omits the final output array.",
+    "Keep lite and offline APKs on the original package and signing identity."
   ],
   "variants": {
     "lite": {
-      "file": "inkvoy-5.3.0-lite.apk",
+      "file": "inkvoy-5.3.1-lite.apk",
       "bytes": 2152774,
-      "sha256": "95bf267731db4581fceb779c3071163480406c4c66f67dbd951113e9263c4024",
+      "sha256": "f62665717db2347a3b05729622f80bda95dc6052a3e938a3e3f475da2f3710fc",
       "runtimeImageBundled": false
     },
     "offline": {
-      "file": "inkvoy-5.3.0-offline.apk",
+      "file": "inkvoy-5.3.1-offline.apk",
       "bytes": 616073622,
-      "sha256": "6b92871bd044c677034792c0d1b1037013c7a6c56388838d5c7b1838945cec8a",
+      "sha256": "b490d22bf32f7c9ef7dae10e8311929ae0a630bbcba5d43a6cc03d88626a1e69",
       "runtimeImageBundled": true
     }
   },

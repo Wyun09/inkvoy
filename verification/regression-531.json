@@ -1,0 +1,56 @@
+{
+  "version": "5.3.1",
+  "versionCode": 28,
+  "recordedAt": "2026-10-29T17:46:36.956Z",
+  "javascript": {
+    "tests": 403,
+    "passed": 403,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "log": "regression-js-531.log"
+  },
+  "android": {
+    "tests": 244,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "apis": [
+      26,
+      33
+    ],
+    "log": "regression-android-531.log"
+  },
+  "finalSignedResources": {
+    "tests": 22,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "logs": [
+      "verify-lite-531.log",
+      "verify-offline-531.log"
+    ]
+  },
+  "openaiResponses": {
+    "tests": 16,
+    "passed": 16,
+    "failed": 0,
+    "log": "openai-responses-531.log"
+  },
+  "variants": {
+    "lite": {
+      "file": "inkvoy-5.3.1-lite.apk",
+      "bytes": 2152774,
+      "sha256": "f62665717db2347a3b05729622f80bda95dc6052a3e938a3e3f475da2f3710fc",
+      "runtimeImageBundled": false
+    },
+    "offline": {
+      "file": "inkvoy-5.3.1-offline.apk",
+      "bytes": 616073622,
+      "sha256": "b490d22bf32f7c9ef7dae10e8311929ae0a630bbcba5d43a6cc03d88626a1e69",
+      "runtimeImageBundled": true
+    }
+  },
+  "physicalAndroidDeviceVerified": false,
+  "releaseAttachmentsUploaded": false
+}
