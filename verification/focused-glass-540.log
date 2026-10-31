@@ -1,0 +1,19 @@
+✔ a portrait keyboard keeps phone navigation, draft and send control in the visual viewport (3672.1698ms)
+✔ all supported content scales preserve a usable dock and a bounded API dialog (4106.03ms)
+✔ native browser slot follows split-pane geometry when the keyboard changes aspect ratio (2601.7356ms)
+✔ rotation and narrow screens keep the same composer without a horizontal page spill (2641.9495ms)
+✔ phone conversation reserves its footer for input, work pages keep navigation and desktop gains the persistent rail (10752.248ms)
+✔ command palette opens a bounded rounded API editor with editable fields on phones (8524.7219ms)
+✔ appearance sections preserve scale controls and reduced motion stops the explicit animation preview (11048.1548ms)
+✔ the intact logo transitions from its current pose and keeps one continuous breathing phase (7702.0982ms)
+✔ stream chunks appear immediately without a cursor or replaying settled text, then retain exact final copy (9994.6092ms)
+✔ reasoning disclosure can reverse during motion and reduced motion shows new chunks without animation (9470.8104ms)
+✔ the phone-sized logo visibly moves while its state stays constant, pauses in background and resumes (11023.1451ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 38611.2485

@@ -1,0 +1,40 @@
+✔ a portrait keyboard keeps phone navigation, draft and send control in the visual viewport (3681.9537ms)
+✔ all supported content scales preserve a usable dock and a bounded API dialog (4021.3508ms)
+✖ native browser slot follows split-pane geometry when the keyboard changes aspect ratio (2571.5383ms)
+✔ rotation and narrow screens keep the same composer without a horizontal page spill (2591.1075ms)
+✔ phone conversation has a unified composer, two header actions and working access to every workspace (4354.0502ms)
+✔ more actions retain real theme and command handlers and trap focus while open (3891.0784ms)
+✔ menu motion can reverse during dismissal without losing focus or leaving a native overlay blocker (3265.2377ms)
+✔ native browser is suspended by the action sheet and returns to the same slot after dismissal (2852.6515ms)
+✔ repeated stream renders do not rewrite unchanged header and shell state (2491.3986ms)
+✔ phone conversation reserves its footer for input, work pages keep navigation and desktop gains the persistent rail (10626.1637ms)
+✔ command palette opens a bounded rounded API editor with editable fields on phones (8270.4362ms)
+✔ appearance sections preserve scale controls and reduced motion stops the explicit animation preview (10694.4729ms)
+✔ the intact logo transitions from its current pose and keeps one continuous breathing phase (7602.4661ms)
+✔ stream chunks appear immediately without a cursor or replaying settled text, then retain exact final copy (9757.1387ms)
+✔ reasoning disclosure can reverse during motion and reduced motion shows new chunks without animation (9325.3717ms)
+✔ the phone-sized logo visibly moves while its state stays constant, pauses in background and resumes (11024.0017ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 15
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 38155.3991
+
+✖ failing tests:
+
+test at test\layout-ui.test.mjs:25:1
+✖ native browser slot follows split-pane geometry when the keyboard changes aspect ratio (2571.5383ms)
+  AssertionError [ERR_ASSERTION]: native coordinates must match rendered slot
+      at TestContext.<anonymous> (file:///C:/Users/admin/Documents/Codex/2026-10-15/new-chat/work/inkvoy-history-import/recovered-inkvoy/test/layout-ui.test.mjs:30:68)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

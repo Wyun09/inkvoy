@@ -8,6 +8,10 @@ export function createAppShell({client,providers,closeOverlays}){
  document.body.dataset.appShell='native';document.body.dataset.uiVersion='5.3';
  brand.querySelector('strong').setAttribute('role','heading');brand.querySelector('strong').setAttribute('aria-level','1');
  topbar.prepend($('session-menu'));const actions=topbar.querySelector('.top-actions'),more=node('button','icon-button');more.id='app-more';more.type='button';more.append(uiIcon('more'));more.setAttribute('aria-label','更多操作');more.setAttribute('aria-haspopup','dialog');more.setAttribute('aria-controls','app-menu');more.setAttribute('aria-expanded','false');
+ const modeSwitch=node('div','mode-switch');modeSwitch.setAttribute('role','group');modeSwitch.setAttribute('aria-label','工作区模式');
+ const modeChat=node('button','mode-switch-option','聊天'),modeWork=node('button','mode-switch-option','工作');
+ modeChat.type='button';modeWork.type='button';modeChat.dataset.mode='chat';modeWork.dataset.mode='work';modeSwitch.append(modeChat,modeWork);topbar.insertBefore(modeSwitch,actions);
+ modeChat.onclick=()=>window.BridgeDashboard?.navigate('chat');modeWork.onclick=()=>window.BridgeDashboard?.navigate('home');
  const scrim=node('div','app-menu-scrim workspace-overlay');scrim.id='app-menu';scrim.hidden=true;
  const panel=node('section','app-menu-panel');panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');panel.setAttribute('aria-labelledby','app-menu-title');
  const heading=node('header'),title=node('h2','','工作区操作'),dismiss=node('button','icon-button');title.id='app-menu-title';dismiss.id='app-menu-close';dismiss.setAttribute('aria-label','关闭更多操作');dismiss.append(uiIcon('close'));heading.append(title,dismiss);panel.append(heading);
@@ -59,6 +63,7 @@ export function createAppShell({client,providers,closeOverlays}){
   document.body.dataset.taskState=session?.status||'idle';document.body.dataset.hasMessages=String(hasMessages);brand.dataset.hasTitle=String(hasMessages||route!=='chat');
   $('chat-new').hidden=route!=='chat';routeTools.hidden=!routeButtons.has(route);for(const [page,button]of routeButtons)button.hidden=page!==route;
   if(text!==lastTitle){lastTitle=text;const label=brand.querySelector('strong');label.textContent=text;label.title=text;if(!reduced())label.animate([{opacity:.3,transform:'translateY(3px)'},{opacity:1,transform:'translateY(0)'}],{duration:200,easing:'ease-out'});}
+  const work=route!=='chat';modeChat.setAttribute('aria-pressed',String(!work));modeWork.setAttribute('aria-pressed',String(work));
   more.title=(profile?.name||'DeepSeek 网页')+' · 工作区操作';
  }
  window.addEventListener('bridge:navigate',event=>{close();route=event.detail;render();});render();
