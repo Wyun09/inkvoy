@@ -2,7 +2,7 @@
   "apk": "inkvoy-5.4.0-offline.apk",
   "flavor": "offline",
   "bytes": 616077718,
-  "sha256": "b7adfdf80cfe1aec82f36fe56ab5b01895e0e9f0d706ed933050bf56e877a564",
+  "sha256": "8c5c8a5722ac0ef1d552dd7718b51a024c57f038288f5a8dbaebaa390d87f0c3",
   "rawZipPathsPortable": true,
   "sourcePayloadsMatched": [
     "assets/app.css",

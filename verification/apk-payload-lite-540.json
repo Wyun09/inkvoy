@@ -2,7 +2,7 @@
   "apk": "inkvoy-5.4.0-lite.apk",
   "flavor": "lite",
   "bytes": 2156870,
-  "sha256": "6c958e8f9cb1912b48c3f202cbb65c763ec580c3c3fb9f2c765a1ee636175b6e",
+  "sha256": "f75ce0c455562897ec7971ad5d94091de6f0f839e45c2c4129c55af9c10e3024",
   "rawZipPathsPortable": true,
   "sourcePayloadsMatched": [
     "assets/app.css",
