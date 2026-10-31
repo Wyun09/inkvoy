@@ -30,7 +30,8 @@
     "js/ui/app-shell/layout.css",
     "js/ui/v4/motion.css",
     "js/ui/app-shell/motion.css",
-    "js/ui/app-shell/visual-language.css"
+    "js/ui/app-shell/visual-language.css",
+    "js/ui/app-shell/glass-material.css"
   ],
   "cssLayers": {
     "features": [
@@ -62,6 +63,9 @@
     ],
     "visual": [
       "js/ui/app-shell/visual-language.css"
+    ],
+    "material": [
+      "js/ui/app-shell/glass-material.css"
     ]
   },
   "prunedFeatures": [
@@ -102,7 +106,7 @@
       "removedSelectors": 3
     }
   ],
-  "cssBytes": 190260,
+  "cssBytes": 200753,
   "coreStyleOwner": "js/ui/app-shell",
   "legacyCoreStylesBundled": false,
   "reactRuntimeBundled": false,

@@ -1,0 +1,396 @@
+/*
+ * Inkvoy glass material
+ *
+ * This is the physical material layer for the mobile conversation surface.
+ * It is deliberately separate from layout and conversation semantics: the
+ * composer can change its appearance without changing focus, geometry,
+ * native browser slots, or the command handlers that own its controls.
+ */
+
+:root {
+  --glass-radius: 30px;
+  --glass-border: color-mix(in srgb, var(--line-strong) 56%, transparent);
+  --glass-fill: color-mix(in srgb, var(--surface) 48%, transparent);
+  --glass-fill-strong: color-mix(in srgb, var(--surface) 72%, transparent);
+  --glass-highlight: #ffffffb8;
+  --glass-shadow: 0 22px 64px #15221e17, 0 4px 14px #15221e0b;
+  --glass-inset: inset 0 1px 0 #ffffffb5, inset 0 -1px 0 #09110d12;
+  --glass-blur: blur(34px) saturate(1.62) contrast(1.045);
+  --glass-accent: color-mix(in srgb, var(--brand) 68%, transparent);
+}
+
+body.dark {
+  --glass-border: color-mix(in srgb, var(--line-strong) 76%, transparent);
+  --glass-fill: color-mix(in srgb, var(--surface) 68%, transparent);
+  --glass-fill-strong: color-mix(in srgb, var(--surface) 86%, transparent);
+  --glass-highlight: #ffffff22;
+  --glass-shadow: 0 24px 72px #00000068, 0 5px 18px #00000044;
+  --glass-inset: inset 0 1px 0 #ffffff32, inset 0 -1px 0 #0000003d;
+  --glass-blur: blur(38px) saturate(1.5) contrast(1.05);
+}
+
+/* A quiet, moving light field gives the translucent surface something to
+ * refract. The page stays white/neutral; the color is visible only at low
+ * opacity around the edges of the conversation. */
+.studio-chat {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse 42% 34% at 14% 9%, color-mix(in srgb, var(--brand) 10%, transparent), transparent 70%),
+    radial-gradient(ellipse 34% 38% at 92% 58%, color-mix(in srgb, #8bb7ff 8%, transparent), transparent 74%),
+    var(--bg);
+}
+
+.studio-chat::before,
+.studio-chat::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 999px;
+  filter: blur(52px);
+  opacity: .45;
+  transform: translate3d(0, 0, 0);
+}
+
+.studio-chat::before {
+  width: 38vw;
+  height: 22vw;
+  min-width: 180px;
+  min-height: 120px;
+  left: -15vw;
+  bottom: 16%;
+  background: color-mix(in srgb, var(--brand) 13%, transparent);
+  animation: glass-orbit-a 18s ease-in-out infinite alternate;
+}
+
+.studio-chat::after {
+  width: 32vw;
+  height: 28vw;
+  min-width: 160px;
+  min-height: 140px;
+  right: -13vw;
+  top: 12%;
+  background: color-mix(in srgb, #abc7ff 10%, transparent);
+  animation: glass-orbit-b 22s ease-in-out infinite alternate;
+}
+
+.chat-stage,
+.chat-messages,
+.command-deck { position: relative; z-index: 1; }
+
+.chat-messages {
+  scrollbar-color: color-mix(in srgb, var(--line-strong) 65%, transparent) transparent;
+}
+
+/* The deck is a floating piece of material rather than a colored footer. */
+.command-deck {
+  padding-top: 12px;
+  background:
+    radial-gradient(ellipse 42% 150% at 10% 110%, color-mix(in srgb, var(--brand) 14%, transparent), transparent 72%),
+    radial-gradient(ellipse 34% 130% at 92% 74%, color-mix(in srgb, #8eb4ff 10%, transparent), transparent 76%),
+    linear-gradient(180deg, transparent, color-mix(in srgb, var(--bg) 74%, transparent) 24%, color-mix(in srgb, var(--bg) 94%, transparent));
+}
+
+.command-deck::before {
+  content: '';
+  position: absolute;
+  inset: 0 -10vw -18px;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--bg) 90%, transparent) 34%);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  mask-image: linear-gradient(180deg, transparent 0, #000 36%);
+}
+
+.composer-surface {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 112px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius);
+  background:
+    radial-gradient(ellipse 62% 110% at 8% -25%, #ffffff80, transparent 64%),
+    radial-gradient(ellipse 48% 130% at 94% 118%, color-mix(in srgb, var(--brand) 16%, transparent), transparent 68%),
+    var(--glass-fill);
+  box-shadow: var(--glass-shadow), var(--glass-inset);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  transform: translateZ(0);
+  transition: border-color .28s ease, box-shadow .28s ease, transform .28s var(--ease);
+}
+
+/* The inner rim and reflected highlight are separate layers. One flat
+ * gradient cannot create a glass edge, especially on a plain white page. */
+.composer-surface::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  z-index: -1;
+  border: 1px solid #ffffff80;
+  border-radius: calc(var(--glass-radius) - 1px);
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 66% 88% at 17% -42%, #ffffffb8, transparent 58%),
+    radial-gradient(ellipse 45% 120% at 96% 111%, color-mix(in srgb, var(--brand) 17%, transparent), transparent 66%),
+    linear-gradient(124deg, transparent 14%, #ffffff20 48%, transparent 73%);
+  opacity: .92;
+  animation: glass-refraction 12s ease-in-out infinite alternate;
+}
+
+.composer-surface::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: -80%;
+  left: -22%;
+  width: 42%;
+  height: 260%;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, #ffffff38 45%, transparent);
+  transform: rotate(17deg) translateX(-130%);
+  mix-blend-mode: screen;
+  animation: glass-sheen 9s cubic-bezier(.4, 0, .2, 1) infinite;
+}
+
+.composer-surface:focus-within {
+  border-color: color-mix(in srgb, var(--brand) 48%, var(--line-strong));
+  box-shadow:
+    0 25px 74px color-mix(in srgb, var(--brand) 14%, transparent),
+    0 4px 18px #15221e14,
+    0 0 0 3px color-mix(in srgb, var(--brand) 9%, transparent),
+    var(--glass-inset);
+  transform: translateY(-1px) translateZ(0);
+}
+
+.chat-composer {
+  position: relative;
+  z-index: 1;
+  padding: 17px 17px 5px;
+  background: transparent;
+}
+
+.chat-composer textarea {
+  min-height: 52px;
+  padding: 2px 5px 11px;
+  color: var(--ink);
+  caret-color: var(--brand);
+}
+
+.chat-composer textarea::selection { background: color-mix(in srgb, var(--brand) 24%, transparent); }
+
+.composer-bottom {
+  min-height: 40px;
+  gap: 6px;
+}
+
+.composer-bottom > button {
+  width: 38px;
+  min-width: 38px;
+  height: 38px;
+  min-height: 38px;
+  border: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
+  background: color-mix(in srgb, var(--surface) 40%, transparent);
+  box-shadow: inset 0 1px 0 #ffffff86;
+  transition: transform .2s var(--ease-spring), background-color .2s ease, border-color .2s ease;
+}
+
+.composer-bottom > button:hover {
+  border-color: color-mix(in srgb, var(--brand) 35%, var(--line));
+  background: color-mix(in srgb, var(--brand-soft) 65%, transparent);
+  transform: translateY(-1px);
+}
+
+.composer-bottom > button:active { transform: scale(.94); }
+
+.composer-bottom > .composer-model {
+  align-self: center;
+  height: 34px;
+  min-height: 34px;
+  padding: 7px 12px;
+  border: 1px solid transparent;
+  border-radius: 17px;
+  background: color-mix(in srgb, var(--surface) 36%, transparent);
+  color: var(--muted);
+  transition: background-color .2s ease, color .2s ease;
+}
+
+.composer-bottom > .composer-model:hover {
+  background: color-mix(in srgb, var(--surface) 76%, transparent);
+  color: var(--ink);
+}
+
+.composer-model::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin: 0 6px 1px 1px;
+  border-radius: 50%;
+  background: var(--brand);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 13%, transparent);
+}
+
+.composer-bottom > #chat-send {
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  min-height: 40px;
+  border: 1px solid color-mix(in srgb, var(--brand) 70%, #ffffff);
+  background: linear-gradient(145deg, color-mix(in srgb, var(--brand) 84%, #ffffff), var(--brand));
+  box-shadow: inset 0 1px 0 #ffffff80, 0 6px 16px color-mix(in srgb, var(--brand) 25%, transparent);
+}
+
+.composer-toolbar {
+  position: relative;
+  z-index: 2;
+  min-height: 31px;
+  padding: 0 17px 8px;
+}
+
+.composer-toolbar > button {
+  border: 1px solid transparent;
+  background: transparent;
+  transition: background-color .18s ease, color .18s ease, transform .18s var(--ease-spring);
+}
+
+.composer-toolbar > button:hover {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--surface) 55%, transparent);
+  transform: translateY(-1px);
+}
+
+.composer-toolbar #context-meter { opacity: .68; }
+
+/* The reference keeps the composer visually quiet. The controls remain
+ * keyboard accessible through their aria-labels; only the duplicate captions
+ * are removed from the narrow strip beneath the text field. */
+.composer-hint { display: none !important; }
+.composer-toolbar > #composer-slash,
+.composer-toolbar > #composer-mention,
+.composer-toolbar > #composer-collapse,
+.composer-toolbar > #work-open { font-size: 0; }
+.composer-toolbar > #composer-slash::before,
+.composer-toolbar > #composer-mention::before,
+.composer-toolbar > #composer-collapse::before {
+  display: block;
+  font: 17px/1 Geist, sans-serif;
+  color: currentColor;
+}
+.composer-toolbar > #composer-slash::before { content: '/'; }
+.composer-toolbar > #composer-mention::before { content: '@'; }
+.composer-toolbar > #composer-collapse::before { content: '⌄'; }
+.composer-toolbar > #work-open::before {
+  content: '◈';
+  display: block;
+  font: 15px/1 Geist, sans-serif;
+  color: currentColor;
+}
+
+/* Top chrome uses the same material but remains lighter and smaller than the
+ * composer, so the input stays visually dominant. */
+.topbar {
+  background: color-mix(in srgb, var(--bg) 72%, transparent);
+  backdrop-filter: blur(20px) saturate(1.25);
+  -webkit-backdrop-filter: blur(20px) saturate(1.25);
+}
+
+.topbar :is(.icon-button,#session-menu,#workspace-menu,#chat-new,#app-more) {
+  border-color: color-mix(in srgb, var(--line) 62%, transparent);
+  background: color-mix(in srgb, var(--surface) 52%, transparent);
+  box-shadow: inset 0 1px 0 #ffffffa0, 0 4px 20px #00000008;
+}
+
+.mode-switch {
+  border-color: color-mix(in srgb, var(--line-strong) 62%, transparent);
+  background: color-mix(in srgb, var(--surface) 48%, transparent);
+  box-shadow: inset 0 1px 0 #ffffff9f, 0 6px 24px #0000000b;
+}
+
+.mode-switch-option[aria-pressed=true] {
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
+  box-shadow: inset 0 1px 0 #ffffffc0, 0 2px 8px #0000000a;
+}
+
+.app-menu-panel,
+.model-dialog,
+.sheet,
+.command-dialog {
+  background: color-mix(in srgb, var(--surface) 84%, transparent);
+  backdrop-filter: blur(28px) saturate(1.28);
+  -webkit-backdrop-filter: blur(28px) saturate(1.28);
+  box-shadow: 0 28px 90px #00000020, inset 0 1px 0 #ffffffa6;
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .composer-surface,
+  .topbar,
+  .mode-switch,
+  .app-menu-panel,
+  .model-dialog,
+  .sheet,
+  .command-dialog { background: var(--surface); }
+}
+
+@keyframes glass-sheen {
+  0%, 32% { transform: rotate(17deg) translateX(-130%); opacity: 0; }
+  44% { opacity: .7; }
+  64%, 100% { transform: rotate(17deg) translateX(420%); opacity: 0; }
+}
+
+@keyframes glass-refraction {
+  0% { transform: translate3d(-1px, 0, 0) scale(1); filter: blur(0); }
+  100% { transform: translate3d(2px, -1px, 0) scale(1.012); filter: blur(.2px); }
+}
+
+@keyframes glass-orbit-a {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  100% { transform: translate3d(16vw, -7vh, 0) scale(1.22); }
+}
+
+@keyframes glass-orbit-b {
+  0% { transform: translate3d(0, 0, 0) scale(1.08); }
+  100% { transform: translate3d(-13vw, 8vh, 0) scale(.88); }
+}
+
+@media (max-width: 700px) {
+  :root { --glass-radius: 28px; }
+  .studio-chat {
+    background:
+      radial-gradient(ellipse 58% 24% at 8% 9%, color-mix(in srgb, var(--brand) 13%, transparent), transparent 74%),
+      radial-gradient(ellipse 52% 30% at 96% 62%, color-mix(in srgb, #9dbfff 8%, transparent), transparent 74%),
+      var(--bg);
+  }
+  .studio-chat::before { width: 68vw; height: 34vw; left: -28vw; bottom: 15%; filter: blur(42px); }
+  .studio-chat::after { width: 56vw; height: 42vw; right: -24vw; top: 20%; filter: blur(42px); }
+  .command-deck { padding-inline: 10px; padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)); }
+  .composer-surface { min-height: 116px; }
+  .chat-composer { padding: 15px 14px 5px; }
+  .chat-composer textarea { min-height: 54px; }
+  .composer-toolbar { padding-inline: 14px; }
+  .composer-bottom > button { width: 36px; min-width: 36px; height: 36px; min-height: 36px; }
+  .composer-bottom > #chat-send { width: 39px; min-width: 39px; height: 39px; min-height: 39px; }
+  .composer-bottom > .composer-model { max-width: 130px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .studio-chat::before,
+  .studio-chat::after,
+  .composer-surface::before,
+  .composer-surface::after { animation: none; }
+  .composer-surface,
+  .composer-bottom > button,
+  .composer-toolbar > button { transition: none; }
+}
+
+@media (forced-colors: active) {
+  .composer-surface,
+  .mode-switch,
+  .topbar :is(.icon-button,#session-menu,#workspace-menu,#chat-new,#app-more) { background: Canvas; border: 1px solid CanvasText; box-shadow: none; }
+  .composer-surface::before,
+  .composer-surface::after,
+  .studio-chat::before,
+  .studio-chat::after { display: none; }
+}
