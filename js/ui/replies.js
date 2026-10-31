@@ -78,7 +78,7 @@ export function createReplyView({container,copy,openFile,showChange,openImage=()
     }
     if(tool.call.function?.name==='browser'){
       node.append(el('p','reply-browser-meta',[r.title,r.url].filter(Boolean).join(' · ')));
-      node.append(action('打开 AI 浏览器',()=>window.BridgeDashboard?.navigate('computer'),'reply-change-open'));
+      node.append(action('打开浏览器',()=>window.BridgeDashboard?.navigate('computer'),'reply-change-open'));
       if(r.screenshot?.url&&/^https:\/\/bridge\.local\/browser-capture\/[a-f0-9-]{36}\.jpg$/.test(r.screenshot.url)){const figure=el('figure','reply-browser-capture'),image=el('img');image.src=r.screenshot.url;image.alt='本次操作后的浏览器截图';image.loading='lazy';figure.append(image);node.append(figure);}
       if(r.text)node.append(el('pre','reply-browser-observation',String(r.text).slice(0,10000)));
     }

@@ -1,0 +1,44 @@
+{
+  "version": "5.4.0",
+  "versionCode": 29,
+  "javascript": {
+    "tests": 403,
+    "passed": 403,
+    "failed": 0,
+    "log": "regression-js-final-540-v2.log"
+  },
+  "layout": {
+    "routeSnapshots": 36,
+    "viewports": 7,
+    "horizontalOverflow": 0,
+    "log": "layout-after-540.log"
+  },
+  "assets": {
+    "bundle": "ui-engine-bundle-540.json"
+  },
+  "apk": {
+    "lite": {
+      "file": "inkvoy-5.4.0-lite.apk",
+      "bytes": 2156870,
+      "sha256": "6c958e8f9cb1912b48c3f202cbb65c763ec580c3c3fb9f2c765a1ee636175b6e",
+      "runtimeImageBundled": false
+    },
+    "offline": {
+      "file": "inkvoy-5.4.0-offline.apk",
+      "bytes": 616077718,
+      "sha256": "b7adfdf80cfe1aec82f36fe56ab5b01895e0e9f0d706ed933050bf56e877a564",
+      "runtimeImageBundled": true
+    }
+  },
+  "android": {
+    "package": "io.github.deepseekbridge",
+    "minSdk": 26,
+    "targetSdk": 35,
+    "signerVerified": true,
+    "deviceVerified": false
+  },
+  "performance": {
+    "log": "ui-performance-540.json",
+    "environment": "Desktop Edge synthetic benchmark; not Android frame rate"
+  }
+}

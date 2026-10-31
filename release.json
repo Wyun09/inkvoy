@@ -1,11 +1,11 @@
 {
-  "version": "5.3.1",
-  "versionCode": 28,
-  "buildDate": "2026-10-30",
+  "version": "5.4.0",
+  "versionCode": 29,
+  "buildDate": "2026-10-31",
   "package": "io.github.deepseekbridge",
-  "apk": "inkvoy-5.3.1-offline.apk",
-  "bytes": 616073622,
-  "sha256": "b490d22bf32f7c9ef7dae10e8311929ae0a630bbcba5d43a6cc03d88626a1e69",
+  "apk": "inkvoy-5.4.0-offline.apk",
+  "bytes": 616077718,
+  "sha256": "b7adfdf80cfe1aec82f36fe56ab5b01895e0e9f0d706ed933050bf56e877a564",
   "signerSha256": "cc8f15b569d5e813c68d49f4fa17d19afbe6f7526ef5dbdade88e317116c2b59",
   "minSdk": 26,
   "targetSdk": 35,
@@ -94,21 +94,23 @@
   "physicalAndroidDeviceVerified": false,
   "verification": "verification/regression-531.json",
   "changes": [
-    "Fix OpenAI Responses streaming text, reasoning, refusal and function-call argument aggregation.",
-    "Fall back to confirmed output items when a completed event omits the final output array.",
-    "Keep lite and offline APKs on the original package and signing identity."
+    "ChatGPT mobile inspired neutral light and dark surfaces.",
+    "Circular navigation and white rounded composer.",
+    "Text first quick actions instead of a four pill home grid.",
+    "Existing model, browser, terminal and workflow handlers retained.",
+    "OpenAI Responses streaming fixes retained from 5.3.1."
   ],
   "variants": {
     "lite": {
-      "file": "inkvoy-5.3.1-lite.apk",
-      "bytes": 2152774,
-      "sha256": "f62665717db2347a3b05729622f80bda95dc6052a3e938a3e3f475da2f3710fc",
+      "file": "inkvoy-5.4.0-lite.apk",
+      "bytes": 2156870,
+      "sha256": "6c958e8f9cb1912b48c3f202cbb65c763ec580c3c3fb9f2c765a1ee636175b6e",
       "runtimeImageBundled": false
     },
     "offline": {
-      "file": "inkvoy-5.3.1-offline.apk",
-      "bytes": 616073622,
-      "sha256": "b490d22bf32f7c9ef7dae10e8311929ae0a630bbcba5d43a6cc03d88626a1e69",
+      "file": "inkvoy-5.4.0-offline.apk",
+      "bytes": 616077718,
+      "sha256": "b7adfdf80cfe1aec82f36fe56ab5b01895e0e9f0d706ed933050bf56e877a564",
       "runtimeImageBundled": true
     }
   },

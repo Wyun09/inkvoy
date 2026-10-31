@@ -21,9 +21,9 @@ An Android AI workspace for coding, security research and reverse engineering.
 
 具体接口可用性受实际模型、网页状态、账号权限与手机系统影响。实体设备和真实账号验证范围见 [VERIFICATION.md](VERIFICATION.md)。
 
-## 当前版本：5.3.1
+## 当前版本：5.4.0
 
-重构手机页面层级、标题栏、操作面板与消息输入区，统一回复、文件、终端和设置页面的视觉规则，并修复 OpenAI Responses 流式文本、推理和工具参数解析。提供轻量版与离线完整版，继续支持校验后导入独立工具包。详见 [5.3.1 说明](docs/RELEASE-5.3.1.md)。
+参考 ChatGPT 手机端重做中性白灰界面、圆形导航、白色圆角输入区和回复层级，统一文件、终端、模型和设置页面，保留原有工具与工作流。包含 5.3.1 的 OpenAI Responses 修复。提供轻量版与离线完整版。详见 [5.4.0 说明](docs/RELEASE-5.4.0.md)。
 
 ## 开发
 

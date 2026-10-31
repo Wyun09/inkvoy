@@ -10,7 +10,7 @@ The product image uses demonstration task data.
 
 Inkvoy brings streaming conversation, visible tool results, a Debian ARM64 terminal, project files and a shared browser into one Android workspace. It includes custom model connections, MCP, plugins and skills, context management, planning, goals and coordinated agents. App control is bounded by the user's selected applications, explicit session consent and pause controls.
 
-Version 5.3.1 keeps the rebuilt mobile app shell and fixes OpenAI Responses streaming for text, reasoning and function-call arguments. Lightweight and offline APKs retain verified runtime package import. See [release notes](docs/RELEASE-5.3.1.md).
+Version 5.4.0 follows the supplied ChatGPT mobile references with neutral surfaces, circular navigation, a rounded white composer and clearer answer hierarchy. Existing tools and workflows remain connected, including the 5.3.1 OpenAI Responses fixes. Lightweight and offline APKs retain verified runtime package import. See [release notes](docs/RELEASE-5.4.0.md).
 
 ```sh
 npm ci
