@@ -1,0 +1,6 @@
+
+> deepseek-android-bridge@5.2.0 build:assets
+> node scripts/build-assets.mjs
+
+Included dependency licenses in source and APK assets.
+Built isolated Android engine assets.

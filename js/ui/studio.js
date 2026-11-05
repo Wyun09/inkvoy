@@ -15,6 +15,7 @@ import {createComposer} from './composer.js';
 import {createWorkView} from './workflows.js';
 import {createSetupJourney} from './setup-journey.js';
 import {installBrowserScripts} from './browser-scripts.js';
+import {createAppShell} from './app-shell.js';
 
 const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const shellQuote=s=>"'"+String(s).replaceAll("'","'\\''")+"'";
@@ -30,12 +31,13 @@ export function initStudio({client,native,providers,agentTools,extensions}) {
   const $=id=>document.getElementById(id);const toast=t=>window.BridgeDashboard?.toast(t);
   const wrap=fn=>async event=>{const button=event?.currentTarget?.tagName==='BUTTON'?event.currentTarget:null;const disabled=button?.disabled;if(button){button.disabled=true;button.setAttribute('aria-busy','true');}try{await fn(event);}catch(e){toast(e?.message||'操作失败，请检查环境状态');}finally{if(button){button.disabled=!!disabled;button.removeAttribute('aria-busy');}}};
   const click=(id,fn)=>$(id).addEventListener('click',wrap(fn));
-  let journeyView,changeView,modelView,mediaView,workspaceView,composerView,workView,browserScriptView,cached,renderFingerprint='',dir='',file='',dirty=false,currentTerm,terminalSerial=0,activePage='chat',runtimeCurrent={},runtimeRevision=0,showArchived=false;const terminals=new Map();
+  let appShell,journeyView,changeView,modelView,mediaView,workspaceView,composerView,workView,browserScriptView,cached,renderFingerprint='',dir='',file='',dirty=false,currentTerm,terminalSerial=0,activePage='chat',runtimeCurrent={},runtimeRevision=0,showArchived=false;const terminals=new Map();
   const scrim=mountWorkspaceDrawer(icons);
   $('app').append(scrim);$('drawer-sessions').append($('session-picker'));$('session-picker').hidden=false;
   const search=document.createElement('div');search.className='drawer-search';search.innerHTML=icons.search+'<input id="session-search" type="search" placeholder="搜索会话…" aria-label="搜索本机会话">';$('drawer-new').after(search);$('drawer-new').innerHTML='<span>＋</span> 新建会话';
   $('session-search').addEventListener('input',()=>render(client.snapshot()));
   $('client-agent').innerHTML=icons.code+'Agent';$('client-thinking').innerHTML=icons.spark+'思考';$('client-search').innerHTML=icons.search+'搜索';$('chat-send').innerHTML=icons.send;
+  $('composer-options').setAttribute('aria-label','打开工具与模式');
   const attach=document.createElement('button');attach.type='button';attach.id='composer-import';attach.textContent='＋';attach.setAttribute('aria-label','导入文件到当前项目');$('composer-options').before(attach);click('composer-import',()=>NativeBridge.uiAction('import-file',JSON.stringify({project:project()})));
   const sessionManage=document.createElement('details');sessionManage.id='session-manage';
   sessionManage.innerHTML='<summary>管理当前对话</summary>';
@@ -47,7 +49,7 @@ export function initStudio({client,native,providers,agentTools,extensions}) {
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('composer-modes').hidden){closeOptions();$('composer-options').focus();e.preventDefault();}});
   document.addEventListener('visibilitychange',()=>{document.body.toggleAttribute('data-ui-paused',document.hidden);});
   let drawerFocus;
-  function closeDrawer(){if(journeyView?.close())return true;if(workView?.close())return true;if(browserScriptView?.close())return true;if(composerView?.close())return true;if(workspaceView?.close())return true;if(mediaView?.close())return true;if(modelView?.close())return true;if(changeView?.close())return true;if(scrim.hidden)return false;scrim.hidden=true;$('session-menu').setAttribute('aria-expanded','false');document.querySelectorAll('.page,.topbar,.bottom-nav').forEach(n=>n.inert=false);drawerFocus?.focus();return true;}
+  function closeDrawer(){if(appShell?.close())return true;if(journeyView?.close())return true;if(workView?.close())return true;if(browserScriptView?.close())return true;if(composerView?.close())return true;if(workspaceView?.close())return true;if(mediaView?.close())return true;if(modelView?.close())return true;if(changeView?.close())return true;if(scrim.hidden)return false;scrim.hidden=true;$('session-menu').setAttribute('aria-expanded','false');document.querySelectorAll('.page,.topbar,.bottom-nav').forEach(n=>n.inert=false);drawerFocus?.focus();return true;}
   function openDrawer(event){closeOptions();drawerFocus=event?.currentTarget||document.activeElement;scrim.hidden=false;$('session-menu').setAttribute('aria-expanded','true');document.querySelectorAll('.page,.topbar,.bottom-nav').forEach(n=>n.inert=true);$('drawer-close').focus();}
   click('drawer-close',closeDrawer);click('drawer-new',()=>{if($('chat-new').disabled)return;$('chat-new').click();closeDrawer();});click('drawer-theme',()=>$('theme').click());$('display-orientation').onchange=e=>NativeBridge.uiAction('orientation',JSON.stringify({mode:e.target.value}));
   scrim.addEventListener('click',event=>{if(event.target===scrim)closeDrawer();});
@@ -92,7 +94,7 @@ export function initStudio({client,native,providers,agentTools,extensions}) {
     $('chat-send').disabled=!!state.active&&!/^\//.test($('chat-input').value.trim());$('chat-input').disabled=false;$('chat-new').disabled=!!state.active;
     $('client-stop').disabled=s?.status==='cancelling';
     for(const [id,key]of [['client-agent','agent'],['client-thinking','thinking'],['client-search','search']]){const enabled=s?.settings?.[key]??key!=='thinking';$(id).classList.toggle('selected',enabled);$(id).setAttribute('aria-pressed',String(enabled));$(id).disabled=!!state.active;}
-    modelView?.render();workspaceView?.render(state,s,companion);composerView?.render(state);workView?.render(state);
+    modelView?.render();workspaceView?.render(state,s,companion);composerView?.render(state);workView?.render(state);appShell?.render(state,s);
   }
   click('chat-new',()=>{if(dirty)throw new Error('先保存或关闭文件改动，再新建项目');client.create();dir='';$('file-editor').hidden=true;});
   click('session-menu',openDrawer);
@@ -151,9 +153,14 @@ export function initStudio({client,native,providers,agentTools,extensions}) {
   document.querySelectorAll('[data-key]').forEach(b=>b.addEventListener('click',wrap(async()=>{if(!currentTerm)return;await native('terminal.input',{id:currentTerm,data:b.dataset.key});terminals.get(currentTerm)?.term.focus();})));
   click('terminal-clear',()=>terminals.get(currentTerm)?.term.clear());click('terminal-copy',()=>{const text=terminals.get(currentTerm)?.term.getSelection();if(!text)throw new Error('长按并选中要复制的终端文本');NativeBridge.uiAction('copy-text',JSON.stringify({text}));});
   new ResizeObserver(()=>{if(activePage==='terminal')for(const t of terminals.values())if(!t.host.hidden)try{t.fit.fit();}catch{}}).observe($('terminal-host'));
+  const runtimeImport=document.createElement('button');runtimeImport.id='runtime-import';runtimeImport.textContent='导入工具包';runtimeImport.onclick=()=>NativeBridge.uiAction('runtime-import','{}');
+  const runtimePackages=document.createElement('button');runtimePackages.id='runtime-packages';runtimePackages.textContent='工具包发布页';runtimePackages.onclick=()=>NativeBridge.uiAction('runtime-packages','{}');$('runtime-install').after(runtimeImport,runtimePackages);
   function runtimeState(r) {
     runtimeCurrent=r;
     $('runtime-state').textContent=r.error?'初始化需要处理':r.installing?'正在初始化':r.ready?'离线环境已就绪':'首次使用需要解压环境';$('runtime-detail').textContent=r.error||r.message||'必需工具已包含在安装包中';$('runtime-progress').hidden=!r.installing;$('runtime-progress').value=r.progress||0;$('runtime-install').disabled=!!r.installing;$('runtime-test').disabled=!r.ready||!!r.testing;$('runtime-install').textContent=r.error?'重试初始化':r.ready?'校验环境':'初始化环境';
+    runtimeImport.hidden=r.imageAvailable!==false;runtimePackages.hidden=r.imageAvailable!==false;runtimeImport.disabled=!!r.installing;
+    if(r.phase==='importing')$('runtime-state').textContent='正在校验工具包';
+    if(r.imageAvailable===false&&!r.ready&&!r.installing){$('runtime-state').textContent='轻量版 · 工具包待准备';$('runtime-detail').textContent=r.error||'聊天和浏览器可直接使用。终端与本机 MCP 需要导入对应工具包，或覆盖安装离线完整版。';$('runtime-install').disabled=true;$('runtime-install').textContent='先导入工具包';}
     $('runtime-tools').replaceChildren(...(r.tools||[]).map(t=>{const n=document.createElement('div');n.className='tool-tile';n.innerHTML=`<span>${escapeHTML(t.kind||'CLI')}</span><strong>${escapeHTML(t.name)}</strong><p>${escapeHTML(t.version||'镜像内置')}</p><small>${r.verified?'✓ 自检通过':r.ready?'已解压 · 待自检':'离线收录'}</small>`;return n;}));
   }
   const formatTime=ms=>{const sec=Math.max(0,Math.floor(ms/1000));return sec>=60?Math.floor(sec/60)+'分'+sec%60+'秒':sec+'秒';};
@@ -172,7 +179,7 @@ export function initStudio({client,native,providers,agentTools,extensions}) {
   setInterval(()=>{if(!document.hidden&&activePage==='chat'&&cached?.active)updateWorkStatus();},1000);
   async function refreshRuntime(){const revision=++runtimeRevision;const value=await native('runtime.status',{});if(revision===runtimeRevision)runtimeState(value);}
   const diagnostic=document.createElement('button');diagnostic.id='runtime-diagnostic';diagnostic.textContent='复制诊断';$('runtime-test').after(diagnostic);
-  click('runtime-diagnostic',async()=>{await refreshRuntime();NativeBridge.uiAction('copy-text',JSON.stringify({text:JSON.stringify({appVersion:'5.0.0',runtime:runtimeCurrent},null,2)}));toast('环境诊断已复制');});
+  click('runtime-diagnostic',async()=>{await refreshRuntime();NativeBridge.uiAction('copy-text',JSON.stringify({text:JSON.stringify({appVersion:document.getElementById('app-version')?.textContent||'5.2.0',runtime:runtimeCurrent},null,2)}));toast('环境诊断已复制');});
   click('runtime-refresh',refreshRuntime);click('runtime-install',async()=>{try{await native('runtime.ensure',{project:project()});toast('环境校验完成');}finally{await refreshRuntime();}});
   click('runtime-test',async()=>{$('runtime-test').disabled=true;$('runtime-report').hidden=false;$('runtime-report').textContent='正在运行真实工具自检…';try{const r=await native('runtime.test',{project:project()});$('runtime-report').textContent=JSON.stringify(r,null,2);}finally{await refreshRuntime();}});
   document.querySelectorAll('[data-analysis]').forEach(b=>b.addEventListener('click',wrap(async()=>{
@@ -190,6 +197,7 @@ export function initStudio({client,native,providers,agentTools,extensions}) {
   composerView=createComposer({reasoning:arg=>modelView?.reasoning(arg),client,native,extensions,attachments:mediaView,notify:toast,navigate:page=>BridgeDashboard.navigate(page),openModel:()=>modelView.open(),openWork:section=>workView?.open(section),newChat:()=>{if(client.snapshot().active)throw new Error('请先停止当前任务。');$('chat-new').click();BridgeDashboard.navigate('chat');}});
   workView=createWorkView({client,providers,notify:toast,closeDrawer});
   journeyView=createSetupJourney({native,client,providers,openModel:()=>modelView.open(),closeDrawer,notify:toast});
+  appShell=createAppShell({client,providers,closeOverlays:closeDrawer});
   window.StudioUI={render,openSetup:section=>journeyView.open(section),openWork:section=>workView?.open(section),extensionState:value=>settingsHub?.extensionState(value),questionState:value=>questionView?.render(value),platformState,closeDrawer,providerState:()=>{modelView?.render();composerView?.render(client.snapshot());},nativeEvent(event){journeyView?.event(event);settingsHub?.event(event);if(event.type==='process'){processView.changed();}else if(event.type==='computer'){computerView.render(event.value);}else if(event.type==='runtime'){runtimeRevision++;runtimeState(event.value);}else if(event.type==='clipboard'){terminals.get(currentTerm)?.term.paste(event.text||'');}else if(event.type==='terminal'){const t=terminals.get(event.id);if(t){if(event.data)t.term.write(Uint8Array.from(atob(event.data),c=>c.charCodeAt(0)));if(event.exitCode!==undefined){t.exitCode=event.exitCode;t.term.writeln('\r\n[进程退出：'+event.exitCode+']');renderTermTabs();}}}else if(event.type==='import'){toast(event.error||'已导入 '+event.path);if(!event.error){void mediaView.imported(event);void loadFiles().catch(()=>{});}}}};
   client.publish();void refreshRuntime().catch(()=>{});
 }

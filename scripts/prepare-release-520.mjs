@@ -1,0 +1,32 @@
+import {readFile,writeFile,stat,copyFile} from 'node:fs/promises';
+import {createReadStream} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {resolve,join} from 'node:path';
+import {fileURLToPath} from 'node:url';
+const root=fileURLToPath(new URL('../',import.meta.url)),delivery=resolve(process.argv[2]||'dist');
+const read=name=>readFile(join(root,name),'utf8'),json=async name=>JSON.parse(await read(name));
+const {version}=await json('package.json');if(version!=='5.2.0')throw Error('This release recorder is for 5.2.0');
+const javascript=await read('verification/regression-js-final-520.log'),native=await read('verification/regression-android-520.log'),finalNative=await read('verification/android-final-payload-520.log');
+const jsTests=Number(javascript.match(/ℹ tests (\d+)/)?.[1]);
+if(!jsTests||!javascript.includes('ℹ fail 0')||!native.includes('Tests run: 244, Failures: 0, Errors: 0, Skipped: 0')||!native.includes('BUILD SUCCESS')||!finalNative.includes('Tests run: 22, Failures: 0, Errors: 0, Skipped: 0')||!finalNative.includes('BUILD SUCCESS'))throw Error('Final regression results are not complete or did not pass');
+const digest=async path=>{const h=createHash('sha256');for await(const chunk of createReadStream(path))h.update(chunk);return h.digest('hex');};
+const variants={};
+for(const flavor of ['lite','offline']){
+ const payload=await json('verification/apk-payload-'+flavor+'-520.json'),path=join(delivery,payload.apk);
+ if(payload.sha256!==await digest(path)||!payload.compiledDexMatched||!payload.sameSignerAsV1||payload.versionCode!==26)throw Error('Verified APK report does not match delivery: '+flavor);
+ variants[flavor]={file:payload.apk,bytes:(await stat(path)).size,sha256:payload.sha256,runtimeImageBundled:flavor==='offline'};
+}
+const runtime=await json('app/src/main/assets/runtime/manifest.json'),runtimePath=join(delivery,'debian-arm64.tar.gz');
+if((await stat(runtimePath)).size!==runtime.compressedBytes||await digest(runtimePath)!==runtime.sha256)throw Error('Separate runtime package differs from the pinned image');
+const layout=await json('preview/5.2.0/after-layout.json');if(layout.length!==28||layout.some(row=>row.overflow))throw Error('Layout screenshot audit failed');
+const previous=await json('release.json');
+const changes=['Unify keyboard, rotation, density and native browser geometry around the visual viewport.','Prevent overlapping density buttons and retain usable toolbar and navigation targets.','Refine conversation, settings and bounded model dialogs without replacing live controls.','Provide lite and offline APKs plus a size- and SHA-256-verified runtime import.'];
+const buildDate=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+const release={...previous,version,versionCode:26,buildDate,apk:variants.offline.file,bytes:variants.offline.bytes,sha256:variants.offline.sha256,distribution:'local lite and offline builds',variants,runtime,androidFrameworkTests:244,javascriptChecksValidated:jsTests,focusedLayoutChecks:25,physicalAndroidDeviceVerified:false,verification:'verification/regression-520.json',changes};delete release.focusedSetupAndStartupChecks;
+const verification={version,versionCode:26,recordedAt:new Date().toISOString(),javascript:{tests:jsTests,passed:jsTests,failed:0,finalLog:'regression-js-final-520.log',initialRun:{tests:395,passed:388,failed:7,log:'regression-js-520.log'},layoutFixChecks:25},android:{tests:244,failed:0,errors:0,skipped:0,apis:[26,33],log:'regression-android-520.log',finalSignedApkResourceChecks:22,finalLog:'android-final-payload-520.log'},layout:{viewports:7,routeSnapshots:28,horizontalOverflow:0,report:'preview/5.2.0/after-layout.json'},performance:'verification/ui-performance-520.json',variants,runtimePackage:{file:'debian-arm64.tar.gz',bytes:runtime.compressedBytes,sha256:runtime.sha256},physicalAndroidDeviceVerified:false,releaseAttachmentsUploaded:false};
+await writeFile(join(root,'release.json'),JSON.stringify(release,null,2)+'\n');
+await writeFile(join(root,'verification/regression-520.json'),JSON.stringify(verification,null,2)+'\n');
+await writeFile(join(delivery,'artifacts.json'),JSON.stringify(release,null,2)+'\n');
+const sums=[...Object.values(variants),verification.runtimePackage].map(a=>a.sha256+'  '+a.file).join('\n')+'\n';await writeFile(join(delivery,'SHA256SUMS.txt'),sums);
+await copyFile(join(root,'docs/RELEASE-5.2.0.md'),join(delivery,'使用与更新说明.md'));
+console.log(JSON.stringify({version,versionCode:26,javascriptChecks:jsTests,androidFrameworkChecks:244,variants,delivery},null,2));

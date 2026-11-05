@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises';
-export async function uiHarness(browser, viewport = { width: 390, height: 844 }, { storage = 'enabled', failStartup = false, initialPage = 'home', studio = false, holdTools=false, clientState = {}, providerState={}, providerCatalog, mediaFiles={}, fileChanges={}, saveDelay=0, assetsDirectory, recordVideo, firstRun=false, deviceFixture={}, networkFixture={}, runtimeTools = [{name:'JADX',version:'1.5.6',kind:'APK / DEX'},{name:'radare2',version:'6.2.4',kind:'ELF / SO'}] } = {}) {
+export async function uiHarness(browser, viewport = { width: 390, height: 844 }, { storage = 'enabled', failStartup = false, initialPage = 'home', studio = false, holdTools=false, clientState = {}, providerState={}, providerCatalog, mediaFiles={}, fileChanges={}, saveDelay=0, assetsDirectory, recordVideo, firstRun=false, deviceFixture={}, networkFixture={}, runtimeFixture={}, runtimeTools = [{name:'JADX',version:'1.5.6',kind:'APK / DEX'},{name:'radare2',version:'6.2.4',kind:'ELF / SO'}] } = {}) {
   const context = await browser.newContext({ viewport, deviceScaleFactor: 1,...(recordVideo?{recordVideo}:{}) });
   const page = await context.newPage();
   const assets = assetsDirectory || new URL('../app/src/main/assets/', import.meta.url);
@@ -8,7 +8,7 @@ export async function uiHarness(browser, viewport = { width: 390, height: 844 },
     if (!['engine.html', 'engine.bundle.js', 'compute.worker.js', 'mcp.worker.js', 'app.css', 'logo.png', 'companion.png','Geist.ttf'].includes(name)) return route.abort();
     return route.fulfill({ contentType: name.endsWith('.ttf')?'font/ttf':name.endsWith('.png') ? 'image/png' : name.endsWith('.js') ? 'application/javascript' : name.endsWith('.css') ? 'text/css' : 'text/html; charset=utf-8', body: await readFile(new URL(name, assets)) });
   });
-  await page.addInitScript(({ storage, failStartup, studio, holdTools, clientState, providerState, providerCatalog, mediaFiles, fileChanges, runtimeTools, saveDelay, firstRun, deviceFixture, networkFixture }) => {
+  await page.addInitScript(({ storage, failStartup, studio, holdTools, clientState, providerState, providerCatalog, mediaFiles, fileChanges, runtimeTools, saveDelay, firstRun, deviceFixture, networkFixture, runtimeFixture }) => {
     if (failStartup) window.ResizeObserver = class { constructor() { throw new Error('ResizeObserver unavailable'); } };
     if (storage === 'disabled') Object.defineProperty(window, 'localStorage', { get: () => null });
     if (storage === 'blocked') Object.defineProperty(window, 'localStorage', { get: () => { throw new DOMException('Storage access denied', 'SecurityError'); } });
@@ -57,7 +57,7 @@ export async function uiHarness(browser, viewport = { width: 390, height: 844 },
         else if(operation==='network.test'){const proxy=fixtureNetwork.mode==='http_proxy';value={ok:proxy,apiReachable:proxy,mode:fixtureNetwork.mode,message:proxy?'诊断夹具：代理 HTTPS 已连通；可重试模型目录。':'诊断夹具：API 域名尚未连通，授权保留。',targets:[{host:'auth.openai.com',system:{reachable:true,httpStatus:200},selected:{reachable:true,httpStatus:200},dns:{addresses:['192.0.2.1']}},{host:'api.openai.com',system:{reachable:false,code:'dns_resolution',message:'系统未返回可用地址'},selected:proxy?{reachable:true,httpStatus:401}:{reachable:false,code:'dns_resolution',message:'系统未返回可用地址'},dns:{code:'dns_resolution'}}]};}
         else if(operation==='account.list')value={accounts:[],authorizing:false,notice:''};
         else if(operation==='extension.list')value={servers:[],plugins:[]};
-        else if(operation==='runtime.status'||operation==='runtime.ensure')value={ready:true,verified:false,tools:runtimeTools};
+        else if(operation==='runtime.status'||operation==='runtime.ensure')value={ready:true,verified:false,tools:runtimeTools,...runtimeFixture};
         else if(operation==='file.list')value={entries:Object.entries(files).map(([name,content])=>({name,bytes:content.length,directory:false}))};
         else if(operation==='file.read')value={content:files[a.path]||'',truncated:false};
         else if(operation==='file.write'){files[a.path]=a.content;value={ok:true};}
@@ -69,7 +69,7 @@ export async function uiHarness(browser, viewport = { width: 390, height: 844 },
       },
       request() {}, response() {}, reportUi() {},
     };
-  }, { storage, failStartup, studio, holdTools, clientState, providerState, providerCatalog, mediaFiles, fileChanges, runtimeTools, saveDelay, firstRun, deviceFixture, networkFixture });
+  }, { storage, failStartup, studio, holdTools, clientState, providerState, providerCatalog, mediaFiles, fileChanges, runtimeTools, saveDelay, firstRun, deviceFixture, networkFixture, runtimeFixture });
   await page.goto('https://bridge.local/engine.html');
   await page.waitForFunction(failStartup => failStartup ? window.nativeStartupErrors?.length > 0 : window.nativeReady && window.BridgeDashboard, failStartup, { timeout: 5000 });
   if(!failStartup)await page.evaluate(tab=>BridgeDashboard.navigate(tab),initialPage);
@@ -83,11 +83,20 @@ export async function navigateLegacy(page, tab) {
     await page.locator('#page-home [data-navigate="'+tab+'"]').first().click();
   } else await page.locator('.bottom-nav [data-navigate="'+tab+'"]').click();
 }
+export async function toolbarAction(page,id){
+ const target=page.locator('#'+id),menu=page.locator('#app-menu');
+ if(await menu.count()&&await target.evaluate(n=>!!n.closest('#app-menu'))){
+  await page.waitForFunction(()=>document.getElementById('app-menu').dataset.closing!=='true'||document.getElementById('app-menu').hidden);
+  if(!await menu.isVisible())await page.locator('#app-more').click();
+  await target.click();await menu.waitFor({state:'hidden'});
+ }else await target.click();
+}
 export async function navigateStudio(page,tab) {
   if(await page.locator('#page-'+tab).isVisible())return;
   if(tab==='settings'&&await page.locator('#rail-settings').isVisible()){await page.locator('#rail-settings').click();return;}
   const rail=page.locator('[data-rail-page="'+tab+'"]');if(await rail.count()&&await rail.isVisible()){await rail.click();return;}
   const direct=page.locator('.bottom-nav [data-navigate="'+tab+'"]');if(await direct.count()&&await direct.isVisible()){await direct.click();return;}
+  if(['files','terminal','computer'].includes(tab)&&await page.locator('#app-more').count()){await page.locator('#app-more').click();await page.locator('#app-menu-'+tab).click();await page.locator('#app-menu').waitFor({state:'hidden'});return;}
   if(await page.locator('#workspace-menu').count()){
     if(await page.locator('#session-menu').isVisible())await page.locator('#session-menu').click();else if(await page.locator('#workspace-menu').isVisible())await page.locator('#workspace-menu').click();else await page.locator('#rail-sessions').click();
     const extra=page.locator('#studio-drawer [data-drawer-page="'+tab+'"]');if(await extra.count()&&!(await extra.isVisible()))await page.locator('#drawer-more>summary').click();

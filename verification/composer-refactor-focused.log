@@ -1,0 +1,338 @@
+✖ computer-use UI opens independently, sends manual navigation, stops the agent and keeps its native slot visible (34610.3555ms)
+✖ computer-use toolbar fits narrow screens and optional visual input is explicit in model settings (33314.9873ms)
+✖ split workspace keeps the same chat and browser on rotation, supports resizing, zoom and native overlay suspension (33263.8201ms)
+✔ phone conversation has a unified composer, two header actions and working access to every workspace (6580.4726ms)
+✔ more actions retain real theme and command handlers and trap focus while open (4486.5763ms)
+✔ menu motion can reverse during dismissal without losing focus or leaving a native overlay blocker (3381.5985ms)
+✔ native browser is suspended by the action sheet and returns to the same slot after dismissal (3025.9782ms)
+✔ repeated stream renders do not rewrite unchanged header and shell state (2732.9663ms)
+✔ model settings save encrypted credentials separately, fetch IDs and drive real client SSE routing (7940.4782ms)
+✔ model dialog closes through app back and cancellation addresses custom HTTP transport (9629.3557ms)
+✔ sidebar, workbench and external-client settings open the API inputs directly without a hidden dropdown step (6691.6354ms)
+✔ unchanged refreshes do not flood native layout, including web page geometry (11653.3297ms)
+✖ empty conversation controls react while encrypted persistence is still pending (34191.3389ms)
+✔ long history mounts a page of turns and defers hidden logs until expanded (9531.5489ms)
+✖ Studio buttons change modes, create sessions, edit and save files, and drive PTY input (35673.5859ms)
+✔ Studio layout fits 320px, exposes controls, and renders model HTML inert (5836.1568ms)
+✔ compact chat sidebar owns sessions and permissions, closes with Escape/back and restores focus (10441.7262ms)
+✔ compact thread has usable touch targets, animated sidebar and no promotional cards (9359.4845ms)
+✔ pet uses actual pending terminal tool, pauses away from chat, and respects reduced motion (5329.8721ms)
+✖ goal and plan settings are reachable, persist per session and gate actual writes until explicit approval (34401.3381ms)
+✖ cluster dispatch calls both saved endpoints and live reports return to the leader without changing selected model (32600.2249ms)
+✖ global stop from the team board cancels every live worker and leaves cancelled records (32557.8617ms)
+✖ slash workflow commands and narrow screens retain usable controls, focus and draft (32862.2646ms)
+✖ existing connections discover model tiers and one-million capacity automatically (34520.6807ms)
+✖ commands execute locally and the compact composer keeps its draft and referenced file (32965.0207ms)
+✔ file reference content reaches model input and the reasoning selector sends the exact catalog tier (4872.1197ms)
+✔ model discovery shows real metadata and saving retains per-model manual declarations (3180.4394ms)
+✔ browser script editor sends actual source, suspends the native surface, and closes without losing the page (3743.0176ms)
+✔ account DNS failures remain inline while identity authorization and retry controls survive (4112.0852ms)
+✔ commands show live stdout and stderr without claiming completion and keep confirmed exit results visible (3821.3723ms)
+ℹ tests 30
+ℹ suites 0
+ℹ pass 19
+ℹ fail 11
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 133383.3239
+
+✖ failing tests:
+
+test at test\computer-ui.test.mjs:2:1
+✖ computer-use UI opens independently, sends manual navigation, stops the agent and keeps its native slot visible (34610.3555ms)
+  locator.click: Timeout 30000ms exceeded.
+  Call log:
+  [2m  - waiting for locator('#client-browser')[22m
+  [2m    - locator resolved to <button type="button" id="client-browser" aria-label="打开 浏览器" class="composer-browser">…</button>[22m
+  [2m  - attempting click action[22m
+  [2m    2 × waiting for element to be visible, enabled and stable[22m
+  [2m      - element is not visible[22m
+  [2m    - retrying click action[22m
+  [2m    - waiting 20ms[22m
+  [2m    2 × waiting for element to be visible, enabled and stable[22m
+  [2m      - element is not visible[22m
+  [2m    - retrying click action[22m
+  [2m      - waiting 100ms[22m
+  [2m    55 × waiting for element to be visible, enabled and stable[22m
+  [2m       - element is not visible[22m
+  [2m     - retrying click action[22m
+  [2m       - waiting 500ms[22m
+  
+      at TestContext.<anonymous> (C:\Users\admin\Documents\Codex\2026-10-15\new-chat\work\inkvoy-history-import\recovered-inkvoy\test\computer-ui.test.mjs:3:307) {
+    name: 'TimeoutError',
+    log: [ "  - waiting for locator('#client-browser')", '    - locator resolved to <button type="button" id="client-browser" aria-label="打开 浏览器" class="composer-browser">…</button>', '  - attempting click action', '    2 × waiting for element to be visible, enabled and stable', '      - element is not visible', '    - retrying click action', '    - waiting 20ms', '    2 × waiting for element to be visible, enabled and stable', '      - element is not visible', '    - retrying click action', '      - waiting 100ms', '    55 × waiting for element to be visible, enabled and stable', '       - element is not visible', '     - retrying click action', '       - waiting 500ms' ]
+  }
+
+test at test\computer-ui.test.mjs:8:1
+✖ computer-use toolbar fits narrow screens and optional visual input is explicit in model settings (33314.9873ms)
+  locator.click: Timeout 30000ms exceeded.
+  Call log:
+  [2m  - waiting for locator('#client-browser')[22m
+  [2m    - locator resolved to <button type="button" id="client-browser" aria-label="打开 浏览器" class="composer-browser">…</button>[22m
+  [2m  - attempting click action[22m
+  [2m    2 × waiting for element to be visible, enabled and stable[22m
+  [2m      - element is not visible[22m
+  [2m    - retrying click action[22m
+  [2m    - waiting 20ms[22m
+  [2m    2 × waiting for element to be visible, enabled and stable[22m
+  [2m      - element is not visible[22m
+  [2m    - retrying click action[22m
+  [2m      - waiting 100ms[22m
+  [2m    55 × waiting for element to be visible, enabled and stable[22m
+  [2m       - element is not visible[22m
+  [2m     - retrying click action[22m
+  [2m       - waiting 500ms[22m
+  
+      at TestContext.<anonymous> (C:\Users\admin\Documents\Codex\2026-10-15\new-chat\work\inkvoy-history-import\recovered-inkvoy\test\computer-ui.test.mjs:9:307) {
+    name: 'TimeoutError',
+    log: [ "  - waiting for locator('#client-browser')", '    - locator resolved to <button type="button" id="client-browser" aria-label="打开 浏览器" class="composer-browser">…</button>', '  - attempting click action', '    2 × waiting for element to be visible, enabled and stable', '      - element is not visible', '    - retrying click action', '    - waiting 20ms', '    2 × waiting for element to be visible, enabled and stable', '      - element is not visible', '    - retrying click action', '      - waiting 100ms', '    55 × waiting for element to be visible, enabled and stable', '       - element is not visible', '     - retrying click action', '       - waiting 500ms' ]
+  }
+
+test at test\computer-ui.test.mjs:12:1
+✖ split workspace keeps the same chat and browser on rotation, supports resizing, zoom and native overlay suspension (33263.8201ms)
+  locator.click: Timeout 30000ms exceeded.
+  Call log:
+  [2m  - waiting for locator('#client-browser')[22m
+  [2m    - locator resolved to <button type="button" id="client-browser" aria-label="打开 浏览器" class="composer-browser">…</button>[22m
+  [2m  - attempting click action[22m
+  [2m    2 × waiting for element to be visible, enabled and stable[22m
+  [2m      - element is not visible[22m
+  [2m    - retrying click action[22m
+  [2m    - waiting 20ms[22m
+  [2m    2 × waiting for element to be visible, enabled and stable[22m
+  [2m      - element is not visible[22m
+  [2m    - retrying click action[22m
+  [2m      - waiting 100ms[22m
+  [2m    55 × waiting for element to be visible, enabled and stable[22m
+  [2m       - element is not visible[22m
+  [2m     - retrying click action[22m
+  [2m       - waiting 500ms[22m
+  
+      at TestContext.<anonymous> (C:\Users\admin\Documents\Codex\2026-10-15\new-chat\work\inkvoy-history-import\recovered-inkvoy\test\computer-ui.test.mjs:16:40) {
+    name: 'TimeoutError',
+    log: [ "  - waiting for locator('#client-browser')", '    - locator resolved to <button type="button" id="client-browser" aria-label="打开 浏览器" class="composer-browser">…</button>', '  - attempting click action', '    2 × waiting for element to be visible, enabled and stable', '      - element is not visible', '    - retrying click action', '    - waiting 20ms', '    2 × waiting for element to be visible, enabled and stable', '      - element is not visible', '    - retrying click action', '      - waiting 100ms', '    55 × waiting for element to be visible, enabled and stable', '       - element is not visible', '     - retrying click action', '       - waiting 500ms' ]
+  }
+
+test at test\responsiveness-ui.test.mjs:14:1
+✖ empty conversation controls react while encrypted persistence is still pending (34191.3389ms)
+  locator.click: Timeout 30000ms exceeded.
+  Call log:
+  [2m  - waiting for locator('#client-thinking')[22m
+  [2m    - locator resolved to <button type="button" id="client-thinking" aria-pressed="false">…</button>[22m
+  [2m  - attempting click action[22m
+  [2m    2 × waiting for element to be visible, enabled and stable[22m
+  [2m      - element is not stable[22m
+  [2m    - retrying click action[22m
+  [2m    - waiting 20ms[22m
+  [2m    - waiting for element to be visible, enabled and stable[22m
+  [2m    - element is not stable[22m
+  [2m  2 × retrying click action[22m
+  [2m      - waiting 100ms[22m
+  [2m      - waiting for element to be visible, enabled and stable[22m
+  [2m      - element is visible, enabled and stable[22m
+  [2m      - scrolling into view if needed[22m
+  [2m      - done scrolling[22m
+  [2m      - <button type="button" data-starter="terminal">…</button> from <div role="log" aria-live="off" id="chat-messages" class="chat-messages" aria-relevant="additions text">…</div> subtree intercepts pointer events[22m
+  [2m  55 × retrying click action[22m
+  [2m       - waiting 500ms[22m
+  [2m       - waiting for element to be visible, enabled and stable[22m
+  [2m       - element is visible, enabled and stable[22m
+  [2m       - scrolling into view if needed[22m
+  [2m       - done scrolling[22m
+  [2m       - <button type="button" data-starter="terminal">…</button> from <div role="log" aria-live="off" id="chat-messages" class="chat-messages" aria-relevant="additions text">…</div> subtree intercepts pointer events[22m
+  [2m  - retrying click action[22m
+  [2m    - waiting 500ms[22m
+  
+      at TestContext.<anonymous> (C:\Users\admin\Documents\Codex\2026-10-15\new-chat\work\inkvoy-history-import\recovered-inkvoy\test\responsiveness-ui.test.mjs:17:89) {
+    name: 'TimeoutError',
+    log: [ "  - waiting for locator('#client-thinking')", '    - locator resolved to <button type="button" id="client-thinking" aria-pressed="false">…</button>', '  - attempting click action', '    2 × waiting for element to be visible, enabled and stable', '      - element is not stable', '    - retrying click action', '    - waiting 20ms', '    - waiting for element to be visible, enabled and stable', '    - element is not stable', '  2 × retrying click action', '      - waiting 100ms', '      - waiting for element to be visible, enabled and stable', '      - element is visible, enabled and stable', '      - scrolling into view if needed', '      - done scrolling', '      - <button type="button" data-starter="terminal">…</button> from <div role="log" aria-live="off" id="chat-messages" class="chat-messages" aria-relevant="additions text">…</div> subtree intercepts pointer events', '  55 × retrying click action', '       - waiting 500ms', '       - waiting for element to be visible, enabled and stable', '       - element is visible, enabled and stable', '       - scrolling into view if needed', '       - done scrolling', '       - <button type="button" data-starter="terminal">…</button> from <div role="log" aria-live="off" id="chat-messages" class="chat-messages" aria-relevant="additions text">…</div> subtree intercepts pointer events', '  - retrying click action', '    - waiting 500ms' ]
+  }
+
+test at test\studio-ui.test.mjs:5:1
+✖ Studio buttons change modes, create sessions, edit and save files, and drive PTY input (35673.5859ms)
+  locator.click: Timeout 30000ms exceeded.
+  Call log:
+  [2m  - waiting for locator('#client-agent')[22m
+  [2m    - locator resolved to <button type="button" class="selected" id="client-agent" aria-pressed="true">…</button>[22m
+  [2m  - attempting click action[22m
+  [2m    - waiting for element to be visible, enabled and stable[22m
+  [2m    - element is not stable[22m
+  [2m  - retrying click action[22m
+  [2m    - waiting for element to be visible, enabled and stable[22m
+  [2m    - element is visible, enabled and stable[22m
+  [2m    - scrolling into view if needed[22m
+  [2m    - done scrolling[22m
+  [2m    - <button type="button" data-starter="files">…</button> from <div role="log" aria-live="off" id="chat-messages" class="chat-messages" aria-relevant="additions text">…</div> subtree intercepts pointer events[22m
+  [2m  - retrying click action[22m
+  [2m    - waiting 20ms[22m
+  [2m    2 × waiting for element to be visible, enabled and stable[22m
+  [2m      - element is visible, enabled and stable[22m
+  [2m      - scrolling into view if needed[22m
+  [2m      - done scrolling[22m
+  [2m      - <button type="button" data-starter="files">…</button> from <div role="log" aria-live="off" id="chat-messages" class="chat-messages" aria-relevant="additions text">…</div> subtree intercepts pointer events[22m
+  [2m    - retrying click action[22m
+  [2m      - waiting 100ms[22m
+  [2m    54 × waiting for element to be visible, enabled and stable[22m
+  [2m       - element is visible, enabled and stable[22m
+  [2m       - scrolling into view if needed[22m
+  [2m       - done scrolling[22m
+  [2m       - <button type="button" data-starter="files">…</button> from <div role="log" aria-live="off" id="chat-messages" class="chat-messages" aria-relevant="additions text">…</div> subtree intercepts pointer events[22m
+  [2m     - retrying click action[22m
+  [2m       - waiting 500ms[22m
+  
+      at TestContext.<anonymous> (C:\Users\admin\Documents\Codex\2026-10-15\new-chat\work\inkvoy-history-import\recovered-inkvoy\test\studio-ui.test.mjs:8:126) {
+    name: 'TimeoutError',
+    log: [ "  - waiting for locator('#client-agent')", '    - locator resolved to <button type="button" class="selected" id="client-agent" aria-pressed="true">…</button>', '  - attempting click action', '    - waiting for element to be visible, enabled and stable', '    - element is not stable', '  - retrying click action', '    - waiting for element to be visible, enabled and stable', '    - element is visible, enabled and stable', '    - scrolling into view if needed', '    - done scrolling', '    - <button type="button" data-starter="files">…</button> from <div role="log" aria-live="off" id="chat-messages" class="chat-messages" aria-relevant="additions text">…</div> subtree intercepts pointer events', '  - retrying click action', '    - waiting 20ms', '    2 × waiting for element to be visible, enabled and stable', '      - element is visible, enabled and stable', '      - scrolling into view if needed', '      - done scrolling', '      - <button type="button" data-starter="files">…</button> from <div role="log" aria-live="off" id="chat-messages" class="chat-messages" aria-relevant="additions text">…</div> subtree intercepts pointer events', '    - retrying click action', '      - waiting 100ms', '    54 × waiting for element to be visible, enabled and stable', '       - element is visible, enabled and stable', '       - scrolling into view if needed', '       - done scrolling', '       - <button type="button" data-starter="files">…</button> from <div role="log" aria-live="off" id="chat-messages" class="chat-messages" aria-relevant="additions text">…</div> subtree intercepts pointer events', '     - retrying click action', '       - waiting 500ms' ]
+  }
+
+test at test\workflow-ui.test.mjs:14:1
+✖ goal and plan settings are reachable, persist per session and gate actual writes until explicit approval (34401.3381ms)
+  locator.click: Timeout 30000ms exceeded.
+  Call log:
+  [2m  - waiting for locator('#work-open')[22m
+  [2m    - locator resolved to <button type="button" id="work-open" data-mode="execute" title="设置目标、计划模式与团队协作" aria-label="目标、计划与协作设置">执行 · 独立</button>[22m
+  [2m  - attempting click action[22m
+  [2m    2 × waiting for element to be visible, enabled and stable[22m
+  [2m      - element is not visible[22m
+  [2m    - retrying click action[22m
+  [2m    - waiting 20ms[22m
+  [2m    2 × waiting for element to be visible, enabled and stable[22m
+  [2m      - element is not visible[22m
+  [2m    - retrying click action[22m
+  [2m      - waiting 100ms[22m
+  [2m    54 × waiting for element to be visible, enabled and stable[22m
+  [2m       - element is not visible[22m
+  [2m     - retrying click action[22m
+  [2m       - waiting 500ms[22m
+  
+      at saveGoal (C:\Users\admin\Documents\Codex\2026-10-15\new-chat\work\inkvoy-history-import\recovered-inkvoy\test\workflow-ui.test.mjs:11:79)
+      at TestContext.<anonymous> (C:\Users\admin\Documents\Codex\2026-10-15\new-chat\work\inkvoy-history-import\recovered-inkvoy\test\workflow-ui.test.mjs:14:155) {
+    name: 'TimeoutError',
+    log: [ "  - waiting for locator('#work-open')", '    - locator resolved to <button type="button" id="work-open" data-mode="execute" title="设置目标、计划模式与团队协作" aria-label="目标、计划与协作设置">执行 · 独立</button>', '  - attempting click action', '    2 × waiting for element to be visible, enabled and stable', '      - element is not visible', '    - retrying click action', '    - waiting 20ms', '    2 × waiting for element to be visible, enabled and stable', '      - element is not visible', '    - retrying click action', '      - waiting 100ms', '    54 × waiting for element to be visible, enabled and stable', '       - element is not visible', '     - retrying click action', '       - waiting 500ms' ]
+  }
+
+test at test\workflow-ui.test.mjs:15:1
+✖ cluster dispatch calls both saved endpoints and live reports return to the leader without changing selected model (32600.2249ms)
+  locator.click: Timeout 30000ms exceeded.
+  Call log:
+  [2m  - waiting for locator('#work-open')[22m
+  [2m    - locator resolved to <button type="button" id="work-open" data-mode="execute" title="设置目标、计划模式与团队协作" aria-label="目标、计划与协作设置">执行 · 独立</button>[22m
+  [2m  - attempting click action[22m
+  [2m    2 × waiting for element to be visible, enabled and stable[22m
+  [2m      - element is not visible[22m
+  [2m    - retrying click action[22m
+  [2m    - waiting 20ms[22m
+  [2m    2 × waiting for element to be visible, enabled and stable[22m
+  [2m      - element is not visible[22m
+  [2m    - retrying click action[22m
+  [2m      - waiting 100ms[22m
+  [2m    56 × waiting for element to be visible, enabled and stable[22m
+  [2m       - element is not visible[22m
+  [2m     - retrying click action[22m
+  [2m       - waiting 500ms[22m
+  
+      at TestContext.<anonymous> (C:\Users\admin\Documents\Codex\2026-10-15\new-chat\work\inkvoy-history-import\recovered-inkvoy\test\workflow-ui.test.mjs:15:191) {
+    name: 'TimeoutError',
+    log: [ "  - waiting for locator('#work-open')", '    - locator resolved to <button type="button" id="work-open" data-mode="execute" title="设置目标、计划模式与团队协作" aria-label="目标、计划与协作设置">执行 · 独立</button>', '  - attempting click action', '    2 × waiting for element to be visible, enabled and stable', '      - element is not visible', '    - retrying click action', '    - waiting 20ms', '    2 × waiting for element to be visible, enabled and stable', '      - element is not visible', '    - retrying click action', '      - waiting 100ms', '    56 × waiting for element to be visible, enabled and stable', '       - element is not visible', '     - retrying click action', '       - waiting 500ms' ]
+  }
+
+test at test\workflow-ui.test.mjs:16:1
+✖ global stop from the team board cancels every live worker and leaves cancelled records (32557.8617ms)
+  locator.click: Timeout 30000ms exceeded.
+  Call log:
+  [2m  - waiting for locator('#work-open')[22m
+  [2m    - locator resolved to <button type="button" id="work-open" data-mode="execute" title="设置目标、计划模式与团队协作" aria-label="目标、计划与协作设置">执行 · 独立</button>[22m
+  [2m  - attempting click action[22m
+  [2m    2 × waiting for element to be visible, enabled and stable[22m
+  [2m      - element is not visible[22m
+  [2m    - retrying click action[22m
+  [2m    - waiting 20ms[22m
+  [2m    2 × waiting for element to be visible, enabled and stable[22m
+  [2m      - element is not visible[22m
+  [2m    - retrying click action[22m
+  [2m      - waiting 100ms[22m
+  [2m    56 × waiting for element to be visible, enabled and stable[22m
+  [2m       - element is not visible[22m
+  [2m     - retrying click action[22m
+  [2m       - waiting 500ms[22m
+  
+      at TestContext.<anonymous> (C:\Users\admin\Documents\Codex\2026-10-15\new-chat\work\inkvoy-history-import\recovered-inkvoy\test\workflow-ui.test.mjs:16:164) {
+    name: 'TimeoutError',
+    log: [ "  - waiting for locator('#work-open')", '    - locator resolved to <button type="button" id="work-open" data-mode="execute" title="设置目标、计划模式与团队协作" aria-label="目标、计划与协作设置">执行 · 独立</button>', '  - attempting click action', '    2 × waiting for element to be visible, enabled and stable', '      - element is not visible', '    - retrying click action', '    - waiting 20ms', '    2 × waiting for element to be visible, enabled and stable', '      - element is not visible', '    - retrying click action', '      - waiting 100ms', '    56 × waiting for element to be visible, enabled and stable', '       - element is not visible', '     - retrying click action', '       - waiting 500ms' ]
+  }
+
+test at test\workflow-ui.test.mjs:17:1
+✖ slash workflow commands and narrow screens retain usable controls, focus and draft (32862.2646ms)
+  locator.click: Timeout 30000ms exceeded.
+  Call log:
+  [2m  - waiting for locator('#composer-collapse')[22m
+  [2m    - locator resolved to <button type="button" aria-label="收起输入框" aria-expanded="true" id="composer-collapse">⌄</button>[22m
+  [2m  - attempting click action[22m
+  [2m    2 × waiting for element to be visible, enabled and stable[22m
+  [2m      - element is not visible[22m
+  [2m    - retrying click action[22m
+  [2m    - waiting 20ms[22m
+  [2m    2 × waiting for element to be visible, enabled and stable[22m
+  [2m      - element is not visible[22m
+  [2m    - retrying click action[22m
+  [2m      - waiting 100ms[22m
+  [2m    56 × waiting for element to be visible, enabled and stable[22m
+  [2m       - element is not visible[22m
+  [2m     - retrying click action[22m
+  [2m       - waiting 500ms[22m
+  
+      at TestContext.<anonymous> (C:\Users\admin\Documents\Codex\2026-10-15\new-chat\work\inkvoy-history-import\recovered-inkvoy\test\workflow-ui.test.mjs:17:822) {
+    name: 'TimeoutError',
+    log: [ "  - waiting for locator('#composer-collapse')", '    - locator resolved to <button type="button" aria-label="收起输入框" aria-expanded="true" id="composer-collapse">⌄</button>', '  - attempting click action', '    2 × waiting for element to be visible, enabled and stable', '      - element is not visible', '    - retrying click action', '    - waiting 20ms', '    2 × waiting for element to be visible, enabled and stable', '      - element is not visible', '    - retrying click action', '      - waiting 100ms', '    56 × waiting for element to be visible, enabled and stable', '       - element is not visible', '     - retrying click action', '       - waiting 500ms' ]
+  }
+
+test at test\workspace5-ui.test.mjs:8:1
+✖ existing connections discover model tiers and one-million capacity automatically (34520.6807ms)
+  locator.click: Timeout 30000ms exceeded.
+  Call log:
+  [2m  - waiting for locator('#context-meter')[22m
+  [2m    - locator resolved to <button type="button" id="context-meter" aria-label="查看上下文容量" data-pressure="normal">…</button>[22m
+  [2m  - attempting click action[22m
+  [2m    2 × waiting for element to be visible, enabled and stable[22m
+  [2m      - element is not visible[22m
+  [2m    - retrying click action[22m
+  [2m    - waiting 20ms[22m
+  [2m    2 × waiting for element to be visible, enabled and stable[22m
+  [2m      - element is not visible[22m
+  [2m    - retrying click action[22m
+  [2m      - waiting 100ms[22m
+  [2m    54 × waiting for element to be visible, enabled and stable[22m
+  [2m       - element is not visible[22m
+  [2m     - retrying click action[22m
+  [2m       - waiting 500ms[22m
+  
+      at TestContext.<anonymous> (C:\Users\admin\Documents\Codex\2026-10-15\new-chat\work\inkvoy-history-import\recovered-inkvoy\test\workspace5-ui.test.mjs:8:706) {
+    name: 'TimeoutError',
+    log: [ "  - waiting for locator('#context-meter')", '    - locator resolved to <button type="button" id="context-meter" aria-label="查看上下文容量" data-pressure="normal">…</button>', '  - attempting click action', '    2 × waiting for element to be visible, enabled and stable', '      - element is not visible', '    - retrying click action', '    - waiting 20ms', '    2 × waiting for element to be visible, enabled and stable', '      - element is not visible', '    - retrying click action', '      - waiting 100ms', '    54 × waiting for element to be visible, enabled and stable', '       - element is not visible', '     - retrying click action', '       - waiting 500ms' ]
+  }
+
+test at test\workspace5-ui.test.mjs:9:1
+✖ commands execute locally and the compact composer keeps its draft and referenced file (32965.0207ms)
+  locator.click: Timeout 30000ms exceeded.
+  Call log:
+  [2m  - waiting for locator('#composer-collapse')[22m
+  [2m    - locator resolved to <button type="button" aria-label="收起输入框" aria-expanded="true" id="composer-collapse">⌄</button>[22m
+  [2m  - attempting click action[22m
+  [2m    2 × waiting for element to be visible, enabled and stable[22m
+  [2m      - element is not visible[22m
+  [2m    - retrying click action[22m
+  [2m    - waiting 20ms[22m
+  [2m    2 × waiting for element to be visible, enabled and stable[22m
+  [2m      - element is not visible[22m
+  [2m    - retrying click action[22m
+  [2m      - waiting 100ms[22m
+  [2m    56 × waiting for element to be visible, enabled and stable[22m
+  [2m       - element is not visible[22m
+  [2m     - retrying click action[22m
+  [2m       - waiting 500ms[22m
+  
+      at TestContext.<anonymous> (C:\Users\admin\Documents\Codex\2026-10-15\new-chat\work\inkvoy-history-import\recovered-inkvoy\test\workspace5-ui.test.mjs:9:664) {
+    name: 'TimeoutError',
+    log: [ "  - waiting for locator('#composer-collapse')", '    - locator resolved to <button type="button" aria-label="收起输入框" aria-expanded="true" id="composer-collapse">⌄</button>', '  - attempting click action', '    2 × waiting for element to be visible, enabled and stable', '      - element is not visible', '    - retrying click action', '    - waiting 20ms', '    2 × waiting for element to be visible, enabled and stable', '      - element is not visible', '    - retrying click action', '      - waiting 100ms', '    56 × waiting for element to be visible, enabled and stable', '       - element is not visible', '     - retrying click action', '       - waiting 500ms' ]
+  }

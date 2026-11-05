@@ -1,0 +1,28 @@
+✔ phone conversation has a unified composer, two header actions and working access to every workspace (3672.0677ms)
+✔ more actions retain real theme and command handlers and trap focus while open (3533.0802ms)
+✔ menu motion can reverse during dismissal without losing focus or leaving a native overlay blocker (3179.0796ms)
+✔ native browser is suspended by the action sheet and returns to the same slot after dismissal (2830.0314ms)
+✔ repeated stream renders do not rewrite unchanged header and shell state (2492.0174ms)
+✔ packaged app initializes and handles buttons when local storage is disabled (11805.9873ms)
+✔ packaged app initializes and handles buttons when local storage is blocked (11594.379ms)
+✔ packaged app initializes and handles buttons when local storage is read-only (11877.0637ms)
+✔ a fatal UI startup error is reported to the native fallback without claiming readiness (8089.4262ms)
+✔ goal and plan settings are reachable, persist per session and gate actual writes until explicit approval (4261.9127ms)
+✔ cluster dispatch calls both saved endpoints and live reports return to the leader without changing selected model (3354.2234ms)
+✔ global stop from the team board cancels every live worker and leaves cancelled records (3073.9075ms)
+✔ slash workflow commands and narrow screens retain usable controls, focus and draft (2802.7808ms)
+✔ existing connections discover model tiers and one-million capacity automatically (2934.8009ms)
+✔ commands execute locally and the compact composer keeps its draft and referenced file (2679.6077ms)
+✔ file reference content reaches model input and the reasoning selector sends the exact catalog tier (3959.3072ms)
+✔ model discovery shows real metadata and saving retains per-model manual declarations (2943.0813ms)
+✔ browser script editor sends actual source, suspends the native surface, and closes without losing the page (3050.2431ms)
+✔ account DNS failures remain inline while identity authorization and retry controls survive (3880.9676ms)
+✔ commands show live stdout and stderr without claiming completion and keep confirmed exit results visible (3174.6135ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 77796.963

@@ -1,0 +1,551 @@
+
+> deepseek-android-bridge@5.2.0 test
+> node --test --test-concurrency=3 test/*.test.mjs
+
+✔ explicit webpage search invokes the built-in webpage route, reuses its own session and returns actual content and sources (1.5352ms)
+✔ unobserved search is explicit and cancellation addresses the webpage request (1.0862ms)
+✔ question choices remain pending drafts until a valid explicit submission and late answers are rejected (2.4177ms)
+✔ question stop and explicit skip cannot silently become an approval (0.6881ms)
+✔ the client advertises search and question tools, runs web search without terminal and continues after a human answer (17.907ms)
+✔ Anthropic system blocks, text and cache markers normalize without inventing cache statistics (2.2151ms)
+✔ tool_use and tool_result IDs survive the complete history translation (0.4537ms)
+✔ Anthropic images become data URLs without fetching remote URLs (0.6288ms)
+✔ long MCP names have stable bounded aliases and retain an inverse mapping (0.3023ms)
+✔ Anthropic thinking maps to webpage mode: enabled (0.2671ms)
+✔ Anthropic thinking maps to webpage mode: adaptive (0.1575ms)
+✔ Anthropic thinking maps to webpage mode: disabled (0.0888ms)
+✔ server web search uses the built-in webpage search without an external provider (0.192ms)
+✔ server tool discovery is replaced by exposing all supplied deferred custom schemas (0.2604ms)
+✔ Anthropic invalid input returns a typed error: missing max_tokens (1.0043ms)
+✔ Anthropic invalid input returns a typed error: invalid stream (3.5281ms)
+✔ Anthropic invalid input returns a typed error: unsupported structured output (0.1347ms)
+✔ Anthropic invalid input returns a typed error: unsupported server execution tool (0.2305ms)
+✔ Anthropic invalid input returns a typed error: tool result without ID (0.1632ms)
+✔ nonstream Anthropic response contains content blocks and honest estimated usage (13.3237ms)
+✔ streamed text/thinking events have ordered block lifecycle and a final message_stop (2.5456ms)
+✔ omitted thinking is not exposed in Anthropic output (1.1211ms)
+✔ tool calls stream as input_json_delta and finish with tool_use (31.723ms)
+✔ a two-request Anthropic tool loop consumes the actual tool_result and continues (25.6452ms)
+✔ count_tokens is estimated and never opens or generates a webpage response (6.6601ms)
+✔ errors after streaming begins become an error event and do not claim normal completion (2.2372ms)
+✔ imported images and files render in the composer and conversation, image pixels reach the API and preview closes with back (5385.1607ms)
+✔ DOM editing bypasses framework value trackers, emits input, replaces and deletes Unicode at the caret (1427.6105ms)
+✔ contenteditable edits honor an actual selection and caret rather than always appending (1130.0861ms)
+✔ known targets survive unrelated page changes, scroll into the resized viewport and click once (1266.5574ms)
+✔ changed labels, covered controls, missing focus and previous document refs fail without side effects (965.0858ms)
+✔ page beforeinput cancellation prevents overwrites and password results never contain input text or length (1047.5284ms)
+✔ page scripts perform real DOM edits, await results and return bounded console output without a native bridge (1042.5336ms)
+✔ rejected scripts and cyclic results are serialized instead of claiming success or crashing (981.6018ms)
+✔ production client streams a revisable current answer before completion then commits validated SSE (14073.8054ms)
+✔ SSE client assembles split frames, usage and validated tool identity (2.5852ms)
+✔ SSE error and disconnected stream cannot become successful completions (0.6903ms)
+✔ extension catalog errors release the active run and a slow preparation can be stopped promptly (4.6802ms)
+✔ built-in agent uses local transport without exposing API keys and saves complete history (6.2405ms)
+✔ built-in agent executes real filesystem result and automatically continues using the same tool ID (127.6677ms)
+✔ restored pending tool does not run on startup; explicit continue retrieves its original identity (1.7952ms)
+✔ already persisted tool results are never executed again when continuing (1.1614ms)
+✔ step budget stops a continuously tool-calling model and can be explicitly extended (4.3357ms)
+✔ plain chat avoids initializing Debian or sending local tool definitions (0.7194ms)
+✔ native errors are real tool results and are sent back instead of claiming success (2.8746ms)
+✔ state save failure prevents any new model or tool execution (1.4561ms)
+✔ slow durable saves publish immediately and hold effects until the acknowledgment (3.4267ms)
+✔ asynchronous storage failure cannot release a tool call (2.0645ms)
+✔ revisable streaming drafts update before completion and stay outside saved/model history (204.5087ms)
+✔ cancellation signals the active model and keeps earlier user history (1.741ms)
+✔ tool cancellation addresses its actual execution ID and avoids another model request (3.8449ms)
+✔ session rename pin archive delete preserve project identity and do not touch webpage history (0.5724ms)
+✔ needs_input remains visible as a user decision instead of an automatic loop (0.7794ms)
+✔ schemas expose explicit terminal limits and reject additional properties (0.9792ms)
+✔ a progress-only promise does not stop the built-in task after two seconds (2.0243ms)
+✔ repeated empty progress is bounded and never reported as completed (2.124ms)
+✔ 30 built-in tool rounds and explicit continuation keep one conversation identity (601.4779ms)
+✔ managed process tool returns a persistent job, continues the model and never stops it on chat completion (2.459ms)
+✔ default agent continues beyond thirty tool rounds without manual resume (39.5366ms)
+✔ the actual service action remains legible and operational in light and dark overview themes (8788.398ms)
+✔ companion follows actual tool names and distinguishes terminal, writing and reading (1.0671ms)
+✔ completion, error, input, cancellation and inactive sessions have truthful states (0.278ms)
+✔ computer-use UI opens independently, sends manual navigation, stops the agent and keeps its native slot visible (8847.0163ms)
+✔ computer-use toolbar fits narrow screens and optional visual input is explicit in model settings (9371.2961ms)
+✔ split workspace keeps the same chat and browser on rotation, supports resizing, zoom and native overlay suspension (9196.8809ms)
+✔ browser address normalization keeps local preview local and rejects privileged schemes (2.9479ms)
+✔ page observations expose visible control coordinates, omit offscreen/hidden controls and private values (1003.7189ms)
+✔ client runs a complete observe-click-type-click-observe browser tool chain against a real renderer (1352.4068ms)
+✔ vision-enabled connections attach only the current screenshot to requests, without persisting base64 (2.9735ms)
+✔ stable control refs survive unrelated countdowns, exclude covered targets and track focused inputs without values (1051.6954ms)
+✔ browser tool schema exposes target refs, replace, clear, Unicode deletion and zoom (0.7392ms)
+✔ compaction preserves the transcript, recent turns and stable system prefix while requests use the checkpoint (25.6575ms)
+✔ compaction boundaries keep an entire tool batch with its results and do not split deferred image messages (0.5451ms)
+✔ failed or cancelled compaction leaves the previous projection and history usable (4.3788ms)
+✔ automatic pressure compacts once before inference and manual restore is durable (4.6735ms)
+✔ selected references and file snapshots become actual model input, and summary never contains token values (0.7795ms)
+✔ session forks copy conversation context but keep the actual project identity (4.8797ms)
+✔ partitioned summaries include the last old record instead of silently dropping the tail (0.8527ms)
+✔ an intermediate summary failure commits no partial checkpoint (2.1441ms)
+✔ catalog capacity including one million is used and manual overrides are scoped to a selected model (1.2208ms)
+✔ turn boundary excludes previous answers, thoughts and completion toolbars (751.4388ms)
+✔ shared wrapper cannot finish a new turn using an old toolbar (407.0009ms)
+✔ historical DOM remounts and edits do not invalidate a confirmed current answer node (435.0226ms)
+✔ new reasoning streams before its answer while historical reasoning stays excluded (350.958ms)
+✔ URL changes reject replies while temporarily missing anchors wait without exposing text (340.5832ms)
+✔ code toolbar changes during a full remount do not change content identity (358.8509ms)
+✔ hidden and virtualized historical messages cannot cancel the retained current answer (352.0632ms)
+✔ unconfirmed missing boundary suppresses foreign text then recovers from a remount (338.1237ms)
+✔ an initially empty turn binds its new chat path before accepting more output (383.0389ms)
+✔ restoring a conversation waits for delayed history instead of starting a new chat (457.3992ms)
+✔ an unsent user draft is preserved even when a new API task arrives (269.3502ms)
+✔ real DOM engine survives a saved-state restart, switches tasks and sends only new messages (5506.9533ms)
+✔ a task follow-up reuses only after matching the complete validated history (12.7432ms)
+✔ identical first questions, edited history and different system instructions never merge tasks (2.8146ms)
+✔ two identical independent histories remain ambiguous instead of choosing an arbitrary task (1.7745ms)
+✔ tool IDs, argument meaning and text blocks normalize across client representations (3.5153ms)
+✔ interleaved tasks recover their own webpage handles (1.6968ms)
+✔ explicit conversation IDs isolate matching histories and targeted reset keeps other tasks (1.6989ms)
+✔ pool bounds session metadata and global reset only drops local associations (1.5502ms)
+✔ unchanged tool schemas are omitted from continuations while changed schemas are sent (61.733ms)
+✔ manual reset cannot discard associations while the engine has active work (6.148ms)
+✔ production engine reuses a validated tool turn, sends only results, and keeps tool IDs (26.5034ms)
+✔ only new images are uploaded on reuse and full history remains available for recovery (5.587ms)
+✔ completed malformed envelopes repair in the same chat without dispatching rejected tools (12.3672ms)
+✔ failed continuation invalidates its association before a later retry (2.6507ms)
+✔ invalid conversation options fail before webpage generation: {"conversation_id":""} (0.7135ms)
+✔ invalid conversation options fail before webpage generation: {"conversation_id":5} (0.3799ms)
+✔ invalid conversation options fail before webpage generation: {"reset_conversation":"true"} (0.2665ms)
+✔ cluster makes real concurrent requests, balances endpoints and serializes each connection (16.1811ms)
+✔ subagent tool results go back into that worker request using real project and tool identity (2.6162ms)
+✔ a worker cannot execute commands, write files or recursively delegate even if a backend returns those calls (2.8908ms)
+✔ stop cancels in-flight models, releases queued slots and never starts the remaining requests (5.4993ms)
+✔ stop addresses a worker search tool while preserving all settled reports (1.2041ms)
+✔ worker budget exhaustion and empty or truncated reports are explicit failures (1.9701ms)
+✔ explicit connection choices are honored and unknown members fail before effects (1.4493ms)
+✔ web-only clusters work without API configuration and API model failures do not fake successful peers (1.1269ms)
+✔ durable task-board failure stops work before any request is dispatched (0.4272ms)
+✔ worker context respects the actual member capacity instead of assuming one million (3.7742ms)
+✔ stable output tolerates rewritten body and thought text until the final completed snapshot (307.7355ms)
+✔ temporary turn boundary reflow waits and never emits its unconfirmed text (405.2088ms)
+✔ streams only new text and waits for an explicit completion control (305.2397ms)
+✔ old conversation history is cleared before validating the new response layout (404.4997ms)
+✔ transient duplicate response containers settle without publishing ambiguous text (302.8751ms)
+✔ persistent ambiguous response containers fail with counts and never mix replies (1008.3904ms)
+✔ partial closing fences are never published as answer text (504.7829ms)
+✔ discarding the last persistent tab waits for its context before admitting another request (11.5305ms)
+✔ thought paragraphs stream before the answer while mutable inline Markdown stays private until stable (406.6165ms)
+✔ last thought paragraph can finish rendering after body starts without changing published reasoning (405.3895ms)
+✔ cancellation closes its tab and the next request gets a fresh page (203.8125ms)
+✔ ending a stream early closes the abandoned page (0.8054ms)
+✔ requires human verification without filling or sending a prompt (0.4629ms)
+✔ refuses old conversations instead of mixing history (0.5079ms)
+✔ times out when there is text but no trustworthy completion marker (1000.4828ms)
+✔ an accepted request with no raw answer or thought hits its first-output deadline and cleans up (169.516ms)
+✔ a buffered raw thought prevents an empty-response retry even before it can be streamed (416.3523ms)
+✔ rejects a rewrite of already streamed text (201.9139ms)
+✔ a transient empty protected pre is skipped while real committed changes still fail (166.6882ms)
+✔ forwards each of twenty actual DOM updates immediately, before completion (496.8522ms)
+✔ reasoning streams before the answer and remains a separate channel (185.8303ms)
+✔ does not fill or send text when even one image is not ready (1001.4005ms)
+✔ an incomplete attachment count never submits an otherwise ready thumbnail (1003.4387ms)
+✔ all images and quiet network are required before ready and Enter (579.9673ms)
+✔ upload failure remains a 400 before ready and text submission (1.3052ms)
+✔ the full prompt is checked and a shortened textarea produces explicit lengths (0.6898ms)
+✔ submission is confirmed before generating; an unaccepted Enter is never retried (5000.7384ms)
+✔ active diagnostics expose lengths and completion facts without prompt or response text (0.9954ms)
+✔ a stalled DOM observation uses the read budget while preserving the total deadline (122.1932ms)
+✔ a dedicated profile persists, while an unrelated existing profile is refused (16.5571ms)
+✔ real DOM: scoped completion, explicit mode, image decoding and transparent upload overlays (6835.9314ms)
+✔ protected pre text is forwarded immediately, and committed edits still fail (3.4892ms)
+✔ semantic fallback retracts only its bounded tail and flushes without waiting for completion (0.4096ms)
+✔ fallback holds complete UTF-16 pairs at its emission boundary (0.2115ms)
+✔ protected transport withholds only unfinished closing delimiters and preserves inner fences (0.4481ms)
+✔ captured DeepSeek DOM preserves fenced JSON and ignores language/copy/download UI (1547.4006ms)
+✔ Claude Code Write schema keeps its declared 2020-12 dialect and validates actual arguments (50.6989ms)
+✔ 2020-12 prefixItems and unevaluatedProperties are enforced rather than ignored (24.1259ms)
+✔ 2019-09 dependentRequired is enforced alongside draft-07 tools (31.4073ms)
+✔ retains more than 512 messages and more than 500000 prompt characters without trimming (9.2341ms)
+✔ image labels preserve every text part and the original image order across history (1.2019ms)
+✔ supports all eight image attachments and rejects a ninth without silently dropping history (0.6554ms)
+✔ invalid image URLs and unsupported content parts have explicit 400 codes (0.5442ms)
+✔ plain text, text parts and assistant null content keep their original content (0.3701ms)
+✔ reasoning defaults off and maps the supported effort values (0.4201ms)
+✔ explicit thinking type wins over conflicting reasoning effort (0.3224ms)
+✔ invalid reasoning and thinking values fail explicitly (0.4855ms)
+✔ usage inclusion requires the explicit stream option boolean and ignores unrelated tuning fields (1.2016ms)
+✔ tool schema validation and forced tool choice still apply with images and reasoning (15.8054ms)
+✔ decodes split Unicode escapes, surrogate pairs and JSON escapes at every boundary (3.182ms)
+✔ returns top-level content immediately before the JSON object is finished (0.2612ms)
+✔ holds a split high surrogate until its matching low surrogate is available (0.6489ms)
+✔ skips nested objects, arrays and strings containing content keys (0.3293ms)
+✔ tool-only and null content envelopes produce no visible content (0.1983ms)
+✔ accepts split Markdown fences and escaped top-level content keys (0.1832ms)
+✔ invalid escapes, raw control characters and duplicate streamed content fail with 502 (0.2911ms)
+✔ empty usage is zero and totals are integers with reasoning details (1.7066ms)
+✔ Chinese and other Unicode characters use the documented weights with ceiling (0.4911ms)
+✔ completion includes visible content and reasoning while details identify reasoning tokens (0.3331ms)
+✔ the full prompt is counted and image attachments do not invent token usage (104.3155ms)
+✔ all estimates are nonnegative, monotone, and total is strictly prompt plus completion (0.8923ms)
+✔ missing or non-text optional output fields cannot produce NaN or negative usage (0.2327ms)
+✔ Inky really follows a pointer drag, springs back to its own anchor and stops moving under reduced motion (4970.7267ms)
+✔ the reply logo follows the actual pending tool, then resolves to idle animation on stop (8819.4966ms)
+✔ quick MCP input accepts a URL or multiple desktop/VSCode configurations without manual JSON editing (2.1514ms)
+✔ launch command parsing preserves quotes, empty arguments and environment assignments (2.1914ms)
+✔ extra parameters and env fields accept ordinary lines and retain pasted JSON compatibility (0.6525ms)
+✔ invalid or unsupported MCP setup is rejected before saving (0.2917ms)
+✔ pasting only an MCP link connects with SDK negotiation and exposes actual tool count (4787.0455ms)
+✔ plain npx command automatically prepares the local runtime and preserves quoted arguments (9689.4125ms)
+✔ built-in skills enable in one click and a custom skill needs only a title and instructions (9778.7563ms)
+✔ GitHub install and general file import are reachable without constructing ZIP metadata (9786.8796ms)
+✔ durable MCP results replay once and uncertain persistence never silently executes again (4.0147ms)
+✔ cancellation during the durable claim cannot start the MCP effect later (2.4374ms)
+✔ MCP image blocks become real native attachments and base64 is removed before journaling (0.6403ms)
+✔ a portrait keyboard keeps phone navigation, draft and send control in the visual viewport (3242.1631ms)
+✔ all supported content scales preserve a usable dock and a bounded API dialog (4804.1519ms)
+✔ native browser slot follows split-pane geometry when the keyboard changes aspect ratio (2760.9805ms)
+✔ rotation and narrow screens keep the same composer without a horizontal page spill (2872.2628ms)
+✔ official MCP worker negotiates HTTP, discovers tools and resources, calls real server and cancels without replay (6705.3094ms)
+✔ official MCP worker uses persistent real stdio pipes across multiple tool calls (6386.9606ms)
+✔ app screenshots reach the next model request as actual pixels and remain project references in saved history (14.3351ms)
+✔ image attachment becomes an actual image message part; files keep a readable project reference (0.3243ms)
+✔ client sends user images and view_image pixels while saving only immutable references (2.4171ms)
+✔ the image window is bounded and missing pixel data stops instead of claiming visual input (1.1294ms)
+✔ image anchors follow every result of the same tool batch, including older persisted message order (1.2055ms)
+✔ packaged engine boots under its CSP and completes a round trip through the native adapter contract (5748.7784ms)
+✔ mobile locator facade preserves input, exact target selection, mode switches and actual image bytes (6102.794ms)
+✔ stable tool streams keep heartbeats but never publish an invalid draft before repair (97.6465ms)
+✔ invalid output policy is rejected before the webpage is touched (0.8683ms)
+✔ mobile nonstream response preserves reasoning, usage and unknown cache provenance (2.4486ms)
+✔ mobile SSE publishes real content and only validated function calls (20.9401ms)
+✔ mobile invalid envelopes regenerate once without repeating published progress (9.9258ms)
+✔ mobile no-output recovery preserves reasoning mode and cannot retry a third time (1.2775ms)
+✔ mobile login errors do not regenerate and never claim successful completion (9.2825ms)
+✔ mobile cancellation waits for generator cleanup before starting the next request (38.4191ms)
+✔ mobile queue limits and queue wait consume the same request deadline (60.9672ms)
+✔ mobile image data is real bytes and remote URLs are rejected without network requests (1.8355ms)
+✔ real image bytes upload in bounded chunks; anonymous composer thumbnails become ready and send exactly once (3221.2633ms)
+✔ invalid staged pixels never trigger the webpage upload or send handlers (6070.3508ms)
+✔ managed server remains listed across pages; logs, preview and explicit stop are available (7584.1019ms)
+✔ managed task panel is collapsed and leaves the terminal usable on a narrow phone (8474.9064ms)
+✔ model settings save encrypted credentials separately, fetch IDs and drive real client SSE routing (5878.1831ms)
+✔ model dialog closes through app back and cancellation addresses custom HTTP transport (9012.817ms)
+✔ sidebar, workbench and external-client settings open the API inputs directly without a hidden dropdown step (6300.1884ms)
+✔ base URLs and full completion URLs normalize once and preserve query parameters (1.9326ms)
+✔ profile summaries exclude secrets and encrypted save failure retains the old connection (1.5155ms)
+✔ custom SSE streams real text and accepts CRLF, then commits server usage without guessing cache (1.4499ms)
+✔ custom cancellation rejects promptly, calls native cancel and ignores late output (0.4285ms)
+✔ invalid or truncated tool arguments cannot reach native tools (175.172ms)
+✔ native API tool loop validates streamed arguments and keeps paired journal identity (105.1552ms)
+✔ a captured connection stays pinned while default selection changes (0.5674ms)
+✔ the production question card waits for submission, then sends answers and continues the tool loop (9282.7843ms)
+✔ stopping a question removes it without sending an answer, and model configuration is visible at the first sidebar level (9755.2915ms)
+✔ reasoning detection: pressed attribute with nested text (634.2351ms)
+✔ reasoning detection: checked switch with DeepThink R1 (282.2018ms)
+✔ reasoning detection: mobile component off without ARIA (285.9515ms)
+✔ reasoning detection: mobile component selected without ARIA (317.3691ms)
+✔ reasoning detection: explicit active data state (310.1662ms)
+✔ reasoning detection: inactive is not mistaken for active (313.4658ms)
+✔ reasoning detection: boolean selected marker (319.8918ms)
+✔ reasoning detection: native checkbox label (291.4605ms)
+✔ reasoning detection: native checkbox accessible name (273.9753ms)
+✔ reasoning detection: state carried by a nested span (279.6428ms)
+✔ reasoning detection: accessible name on icon button (280.9318ms)
+✔ reasoning detection: explicit selected class (286.54ms)
+✔ reasoning detection: explicit inactive class (279.0173ms)
+✔ reasoning detection: explicit label mode (283.0983ms)
+✔ reasoning detection: selected thinking tab (286.5655ms)
+✔ class-only mobile control switches both ways and repeated requests do not click again (269.365ms)
+✔ hidden copies, old messages and popup wrappers do not produce extra controls (305.6732ms)
+✔ the control closest to the unique composer is preferred over a separate toolbar copy (285.4988ms)
+✔ ambiguous controls are not clicked (255.6261ms)
+✔ colours and missing arbitrary classes never become a guessed false state (260.8946ms)
+✔ contradictory ARIA states fail closed (298.9802ms)
+✔ disabled controls are observed without clicking (289.7522ms)
+✔ late-rendered toggle is found before the initial mode check fails (432.2374ms)
+✔ an unresponsive toggle cannot claim a mode change (616.4602ms)
+✔ the same matching text outside an interactive control is not treated as a switch (224.6534ms)
+✔ disabling a thinking tab selects its explicit normal peer and confirms the final state (298.2063ms)
+✔ auto mode is not falsely treated as an explicit thinking-off tab (322.3133ms)
+✔ mixed ARIA and interactivity markers are not mistaken for reasoning on/off (246.4994ms)
+✔ catalog metadata survives profile persistence without guessing capabilities from model names (2.1338ms)
+✔ effort is scoped to connection and model and invalid values resolve to provider default (0.371ms)
+✔ manual declarations apply only to the explicitly configured model (0.2629ms)
+✔ custom requests and Responses both pass only supported explicit tiers; default omits the parameter (2.1525ms)
+✔ catalog discovery retains account tiers and custom metadata, without treating visibility as support (3.9424ms)
+✔ the agent request uses the selected model tier and retains the web toggle separately (4.6768ms)
+✔ automatic discovery persists actual capacities without changing the selected connection (1.6203ms)
+✔ a discovery response for old credentials cannot overwrite an edited profile (1.0412ms)
+✔ account catalogs accept the standard data envelope and retain remote effort metadata (0.8465ms)
+✔ reply chain keeps each commentary beside its actual tool and final answer follows the chain (8521.2651ms)
+✔ all automatic rounds stay in one reply with real matched outcomes (2.0969ms)
+✔ pending, running and interrupted are distinct, and no unpaired result fabricates a call (0.4118ms)
+✔ initial generating reply key remains stable when the first assistant message commits (0.1908ms)
+✔ failure before the first answer retains an incomplete reply without fabricating text (0.243ms)
+✔ line diff reconstructs exact text for inserts, deletes, empty and repeated lines (0.5431ms)
+✔ large diff is bounded and preserves exact sides (2.6046ms)
+✔ failure before any answer keeps an incomplete response and retry notice (8345.4093ms)
+✔ one response groups tool results, renders rich code/table, and copies exact code (9122.4281ms)
+✔ keyed replies keep expanded tools and code DOM while state changes, and preserve reading position (8756.5163ms)
+✔ file diff opens real snapshot contract, reverts via native operation, and closes with back/focus (8949.9213ms)
+✔ failed commands keep stderr visible in their own result and changed files cannot be reverted (8702.5725ms)
+✖ phone navigation stays below the conversation and desktop gains the persistent rail; starters preserve the draft (9682.8449ms)
+✖ command palette keyboard routing opens the live API editor and mobile form spans the viewport (33300.3972ms)
+✔ appearance sections preserve scale controls and reduced motion stops the explicit animation preview (11184.5991ms)
+✔ Responses receives real text before completion and never accepts an incomplete tool call (2.4553ms)
+✔ Responses preserves reasoning items and pairs renamed tool IDs across stateless turns (0.5101ms)
+✔ Responses reports late plan limits and incomplete status instead of claiming a finished reply (0.5356ms)
+✔ BOM, split CRLF and typed event lines produce text before completion (0.4154ms)
+✔ account JSON fallback goes through Responses validation rather than Chat Completions parsing (5.7726ms)
+✔ account provider sends only an opaque account ID, reads its catalog, and validates dynamic MCP calls (43.8748ms)
+✔ unchanged refreshes do not flood native layout, including web page geometry (9684.7043ms)
+✔ empty conversation controls react while encrypted persistence is still pending (8903.1748ms)
+✔ long history mounts a page of turns and defers hidden logs until expanded (8785.3255ms)
+✔ a lightweight install offers tool import while preserving chat and enabling initialization after verification (9510.0461ms)
+✔ actual outgoing requests keep a stable specialist identity while conversation history advances (16.2504ms)
+✔ mobile sends by clicking: Chinese text (663.7819ms)
+✔ mobile sends by clicking: English accessible name (324.3332ms)
+✔ mobile sends by clicking: title on nested icon (275.5398ms)
+✔ mobile sends by clicking: aria-labelledby (313.2918ms)
+✔ mobile sends by clicking: native submit (349.6534ms)
+✔ mobile sends by clicking: test id (298.2689ms)
+✔ mobile sends by clicking: observed unlabeled DeepSeek arrow component (282.9133ms)
+✔ a repeated operation with the same nonce cannot send twice (252.9422ms)
+✔ hidden copies and buttons outside the composer are ignored (261.8743ms)
+✔ mobile does not submit: ambiguous send controls (265.9277ms)
+✔ mobile does not submit: disabled native button (248.9806ms)
+✔ mobile does not submit: disabled DeepSeek class (240.074ms)
+✔ mobile does not submit: unknown icon-only control (254.933ms)
+✔ mobile does not submit: active stop control (287.833ms)
+✔ a changed draft is not submitted as the requested prompt (320.2488ms)
+✔ mobile adapter waits for a delayed enabled send control and never presses Enter (447.649ms)
+✔ cancelling before a send button becomes ready never clicks it (329.7807ms)
+✔ a click without webpage acceptance fails explicitly and is not retried (5334.5578ms)
+✖ display ratios stay within both orientations and native browser bounds track the scaled DOM (36373.9377ms)
+✔ account sign-in, model catalog and native-only registration are available from the first drawer level (10443.8751ms)
+✔ MCP configuration fields are directly editable, persisted and removable without hidden menus (10042.2881ms)
+✔ first launch introduces real setup steps, supports skipping, and never sends an example task (5586.3751ms)
+✔ the connection guide opens the actual API editor and returns to the saved guide step (9051.3769ms)
+✔ network controls save a real native proxy configuration and show separate host results without auth calls (8715.5395ms)
+✔ app control requires the system service, selected apps and one explicit session grant, then pauses (9750.2364ms)
+✔ reading controls change actual text size and touch targets, modal focus is contained and back restores it (8961.394ms)
+✔ journey tabs load their native data and retain entered device choices when returning from system settings (9247.444ms)
+✖ phone guide fills the viewport at every supported density without a scaled letterbox (8428.0181ms)
+✔ the intact logo transitions from its current pose and keeps one continuous breathing phase (12330.9213ms)
+✔ stream chunks appear immediately without a cursor or replaying settled text, then retain exact final copy (10002.5148ms)
+✔ reasoning disclosure can reverse during motion and reduced motion shows new chunks without animation (4861.5433ms)
+✔ the phone-sized logo visibly moves while its state stays constant, pauses in background and resumes (11405.5094ms)
+✔ Studio buttons change modes, create sessions, edit and save files, and drive PTY input (11739.851ms)
+✔ Studio layout fits 320px, exposes controls, and renders model HTML inert (9728.2479ms)
+✔ compact chat sidebar owns sessions and permissions, closes with Escape/back and restores focus (10120.2278ms)
+✖ compact thread has usable touch targets, animated sidebar and no promotional cards (8358.2103ms)
+✔ pet uses actual pending terminal tool, pauses away from chat, and respects reduced motion (9115.418ms)
+✔ strict Agent completion rejects progress, permits genuine tool requests and explicit needs_input (33.8278ms)
+✔ strict production engine repairs a progress-only reply once, compatible override accepts legacy finals (33.1486ms)
+✔ task phases and completion markers expose waiting tools and waiting user without false completion (16.7694ms)
+✔ validated history restores the same task and webpage handle across engine restarts (3.2487ms)
+✔ saved associations with invalid paths or digests are rejected before browser navigation (0.3615ms)
+✔ restored running requests become interrupted without automatic generation, completed tools never become retryable (0.5512ms)
+✔ idempotent JSON tool responses replay exact frames and call IDs without another generation (17.8341ms)
+✔ idempotent SSE tool responses replay exact frames and call IDs without another generation (16.4289ms)
+✔ same idempotency key with changed content is a conflict before another webpage submission (2.3068ms)
+✔ running keyed requests conflict and evicted tool results never trigger regeneration (1.2471ms)
+✔ replaying an older tool result preserves a later completed task and its latest response (23.3309ms)
+✔ cancel API reports cancellation and text retry uses the cached original input in the same task (12.9441ms)
+✔ tool task retries require the original client; login blockers are visible without repeated generation (8.8248ms)
+✔ large retry inputs are evicted whole, bounded task records do not truncate a prompt (66.7917ms)
+✔ task metadata exports no full inputs or frames, redacts common keys and phone numbers from titles (0.4422ms)
+✔ JSON object key order does not turn an otherwise identical keyed request into a conflict (1.6913ms)
+✔ native Anthropic streaming replay preserves block lifecycle and tool_use IDs without double conversion (17.1561ms)
+✔ service cancellation stops active and queued work without starting a second webpage generation (10.9892ms)
+✔ packaged app initializes and handles buttons when local storage is disabled (6757.009ms)
+✔ packaged app initializes and handles buttons when local storage is blocked (11383.7155ms)
+✔ packaged app initializes and handles buttons when local storage is read-only (11787.7797ms)
+✔ a fatal UI startup error is reported to the native fallback without claiming readiness (8149.6076ms)
+✔ packaged UI routes, real state labels, private-key handling and touch sizes work on narrow phones (8128.0978ms)
+✔ UI treats unknown state and test failures as such and renders report text without HTML execution (9341.8979ms)
+✔ web search detection: Chinese smart search (711.6726ms)
+✔ web search detection: English search switch (301.0799ms)
+✔ web search detection: class-only mobile search (288.6487ms)
+✔ web search detection: disabled marker is not an off state (269.8251ms)
+✔ web search toggles both ways without toggling the separate thinking control (310.7521ms)
+✔ search controls without trustworthy state fail before sending (248.0162ms)
+✔ a search mode that changes requested thinking state is not silently accepted (295.1247ms)
+✔ web search request policy: app default enabled (7.354ms)
+✔ web search request policy: app default disabled (0.9062ms)
+✔ web search request policy: explicit false overrides enabled default (0.8492ms)
+✔ web search request policy: explicit true overrides disabled default (0.7803ms)
+✔ invalid web_search input is rejected without invoking the webpage backend (0.8437ms)
+✔ search source cards are excluded and copy/regenerate finish the current answer without read-aloud (410.7986ms)
+✔ full web search delivers current answer and live snapshots through the engine (2018.2322ms)
+✔ task workbench filters actual states, opens live timelines, cancels and recovers sessions (7099.0265ms)
+✔ tool task retry returns to its client, response display treats tool payloads as inert text (10491.3669ms)
+✔ workbench navigation, mode buttons and touch targets fit 320px phones and wide screens (15946.0482ms)
+✔ goal and plan settings are reachable, persist per session and gate actual writes until explicit approval (4375.4101ms)
+✔ cluster dispatch calls both saved endpoints and live reports return to the leader without changing selected model (3624.2891ms)
+✔ global stop from the team board cancels every live worker and leaves cancelled records (3353.4966ms)
+✔ slash workflow commands and narrow screens retain usable controls, focus and draft (3167.0913ms)
+✔ workflow migration tolerates absent, malformed and bounded legacy values (2.081ms)
+✔ structured plan updates validate atomically and completed steps require evidence (0.9661ms)
+✔ goal reports preserve human criteria and never manufacture acceptance (0.4361ms)
+✔ plan and collaboration modes expose only the appropriate tools (0.4562ms)
+✔ plan mode blocks an unadvertised write, skips extension startup, then approved execution really writes (16.6703ms)
+✔ goal evidence and human acceptance persist separately (3.0789ms)
+✔ interrupted worker records restore without starting any task (0.3286ms)
+✔ coordination metadata contains member models and worker status accepts only the active parent tool (2.5679ms)
+✔ every workspace page can open the grouped drawer and return focus to its own menu (8868.4451ms)
+✖ model editor becomes two panes on a wide screen and retains unsaved fields across rotation (8739.1166ms)
+✖ small display ratios keep the restore controls readable and chat actions inside their surfaces (36272.5539ms)
+✔ existing connections discover model tiers and one-million capacity automatically (3214.8044ms)
+✔ commands execute locally and the compact composer keeps its draft and referenced file (3012.2164ms)
+✔ file reference content reaches model input and the reasoning selector sends the exact catalog tier (4262.5861ms)
+✔ model discovery shows real metadata and saving retains per-model manual declarations (3128.399ms)
+✔ browser script editor sends actual source, suspends the native surface, and closes without losing the page (2955.2385ms)
+✔ account DNS failures remain inline while identity authorization and retry controls survive (4074.519ms)
+✔ commands show live stdout and stderr without claiming completion and keep confirmed exit results visible (3442.1755ms)
+ℹ tests 395
+ℹ suites 0
+ℹ pass 388
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 347863.2494
+
+✖ failing tests:
+
+test at test\research-desk.test.mjs:3:1
+✖ phone navigation stays below the conversation and desktop gains the persistent rail; starters preserve the draft (9682.8449ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(await page.locator('#workspace-rail').isVisible())
+  
+      at TestContext.<anonymous> (file:///C:/Users/admin/Documents/Codex/2026-10-15/new-chat/work/inkvoy-history-import/recovered-inkvoy/test/research-desk.test.mjs:3:857)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at test\research-desk.test.mjs:4:1
+✖ command palette keyboard routing opens the live API editor and mobile form spans the viewport (33300.3972ms)
+  page.waitForFunction: Timeout 30000ms exceeded.
+      at TestContext.<anonymous> (C:\Users\admin\Documents\Codex\2026-10-15\new-chat\work\inkvoy-history-import\recovered-inkvoy\test\research-desk.test.mjs:4:342) {
+    name: 'TimeoutError',
+    log: []
+  }
+
+test at test\settings-hub.test.mjs:3:1
+✖ display ratios stay within both orientations and native browser bounds track the scaled DOM (36373.9377ms)
+  locator.click: Timeout 30000ms exceeded.
+  Call log:
+  [2m  - waiting for locator('[data-ui-scale="40"]')[22m
+  [2m    - locator resolved to <button data-ui-scale="40" aria-pressed="false">40%</button>[22m
+  [2m  - attempting click action[22m
+  [2m    2 × waiting for element to be visible, enabled and stable[22m
+  [2m      - element is not stable[22m
+  [2m    - retrying click action[22m
+  [2m    - waiting 20ms[22m
+  [2m    2 × waiting for element to be visible, enabled and stable[22m
+  [2m      - element is not stable[22m
+  [2m    - retrying click action[22m
+  [2m      - waiting 100ms[22m
+  [2m    - waiting for element to be visible, enabled and stable[22m
+  [2m    - element is not stable[22m
+  [2m  55 × retrying click action[22m
+  [2m       - waiting 500ms[22m
+  [2m       - waiting for element to be visible, enabled and stable[22m
+  [2m       - element is visible, enabled and stable[22m
+  [2m       - scrolling into view if needed[22m
+  [2m       - done scrolling[22m
+  [2m       - <button data-ui-scale="50" aria-pressed="false">50%</button> intercepts pointer events[22m
+  [2m  - retrying click action[22m
+  [2m    - waiting 500ms[22m
+  
+      at TestContext.<anonymous> (C:\Users\admin\Documents\Codex\2026-10-15\new-chat\work\inkvoy-history-import\recovered-inkvoy\test\settings-hub.test.mjs:3:467) {
+    name: 'TimeoutError',
+    log: [ `  - waiting for locator('[data-ui-scale="40"]')`, '    - locator resolved to <button data-ui-scale="40" aria-pressed="false">40%</button>', '  - attempting click action', '    2 × waiting for element to be visible, enabled and stable', '      - element is not stable', '    - retrying click action', '    - waiting 20ms', '    2 × waiting for element to be visible, enabled and stable', '      - element is not stable', '    - retrying click action', '      - waiting 100ms', '    - waiting for element to be visible, enabled and stable', '    - element is not stable', '  55 × retrying click action', '       - waiting 500ms', '       - waiting for element to be visible, enabled and stable', '       - element is visible, enabled and stable', '       - scrolling into view if needed', '       - done scrolling', '       - <button data-ui-scale="50" aria-pressed="false">50%</button> intercepts pointer events', '  - retrying click action', '    - waiting 500ms' ]
+  }
+
+test at test\setup-journey-ui.test.mjs:17:1
+✖ phone guide fills the viewport at every supported density without a scaled letterbox (8428.0181ms)
+  AssertionError [ERR_ASSERTION]: 1 top
+      at TestContext.<anonymous> (file:///C:/Users/admin/Documents/Codex/2026-10-15/new-chat/work/inkvoy-history-import/recovered-inkvoy/test/setup-journey-ui.test.mjs:17:358)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at test\studio-ui.test.mjs:46:1
+✖ compact thread has usable touch targets, animated sidebar and no promotional cards (8358.2103ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + [
+  +   'composer-slash',
+  +   'composer-mention'
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (file:///C:/Users/admin/Documents/Codex/2026-10-15/new-chat/work/inkvoy-history-import/recovered-inkvoy/test/studio-ui.test.mjs:50:218)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'composer-slash', 'composer-mention' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test\workspace-chrome.test.mjs:4:1
+✖ model editor becomes two panes on a wide screen and retains unsaved fields across rotation (8739.1166ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(bounds.x>=0&&bounds.x+bounds.width<=391)
+  
+      at TestContext.<anonymous> (file:///C:/Users/admin/Documents/Codex/2026-10-15/new-chat/work/inkvoy-history-import/recovered-inkvoy/test/workspace-chrome.test.mjs:4:964)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at test\workspace-chrome.test.mjs:5:1
+✖ small display ratios keep the restore controls readable and chat actions inside their surfaces (36272.5539ms)
+  locator.click: Timeout 30000ms exceeded.
+  Call log:
+  [2m  - waiting for locator('[data-ui-scale="50"]')[22m
+  [2m    - locator resolved to <button data-ui-scale="50" aria-pressed="false">50%</button>[22m
+  [2m  - attempting click action[22m
+  [2m    2 × waiting for element to be visible, enabled and stable[22m
+  [2m      - element is not stable[22m
+  [2m    - retrying click action[22m
+  [2m    - waiting 20ms[22m
+  [2m    2 × waiting for element to be visible, enabled and stable[22m
+  [2m      - element is not stable[22m
+  [2m    - retrying click action[22m
+  [2m      - waiting 100ms[22m
+  [2m    - waiting for element to be visible, enabled and stable[22m
+  [2m    - element is not stable[22m
+  [2m  55 × retrying click action[22m
+  [2m       - waiting 500ms[22m
+  [2m       - waiting for element to be visible, enabled and stable[22m
+  [2m       - element is visible, enabled and stable[22m
+  [2m       - scrolling into view if needed[22m
+  [2m       - done scrolling[22m
+  [2m       - <button data-ui-scale="60" aria-pressed="false">60%</button> intercepts pointer events[22m
+  [2m  - retrying click action[22m
+  [2m    - waiting 500ms[22m
+  
+      at TestContext.<anonymous> (C:\Users\admin\Documents\Codex\2026-10-15\new-chat\work\inkvoy-history-import\recovered-inkvoy\test\workspace-chrome.test.mjs:5:368) {
+    name: 'TimeoutError',
+    log: [ `  - waiting for locator('[data-ui-scale="50"]')`, '    - locator resolved to <button data-ui-scale="50" aria-pressed="false">50%</button>', '  - attempting click action', '    2 × waiting for element to be visible, enabled and stable', '      - element is not stable', '    - retrying click action', '    - waiting 20ms', '    2 × waiting for element to be visible, enabled and stable', '      - element is not stable', '    - retrying click action', '      - waiting 100ms', '    - waiting for element to be visible, enabled and stable', '    - element is not stable', '  55 × retrying click action', '       - waiting 500ms', '       - waiting for element to be visible, enabled and stable', '       - element is visible, enabled and stable', '       - scrolling into view if needed', '       - done scrolling', '       - <button data-ui-scale="60" aria-pressed="false">60%</button> intercepts pointer events', '  - retrying click action', '    - waiting 500ms' ]
+  }

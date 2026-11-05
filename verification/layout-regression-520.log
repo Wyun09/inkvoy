@@ -1,0 +1,12 @@
+✔ a portrait keyboard keeps phone navigation, draft and send control in the visual viewport (3226.4503ms)
+✔ all supported content scales preserve a usable dock and a bounded API dialog (4289.8756ms)
+✔ native browser slot follows split-pane geometry when the keyboard changes aspect ratio (2723.9138ms)
+✔ rotation and narrow screens keep the same composer without a horizontal page spill (2822.3763ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 22171.3802

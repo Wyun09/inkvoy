@@ -1,0 +1,38 @@
+✔ computer-use UI opens independently, sends manual navigation, stops the agent and keeps its native slot visible (8703.3397ms)
+✔ computer-use toolbar fits narrow screens and optional visual input is explicit in model settings (8859.7439ms)
+✖ split workspace keeps the same chat and browser on rotation, supports resizing, zoom and native overlay suspension (33842.8259ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 2
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 51838.8586
+
+✖ failing tests:
+
+test at test\computer-ui.test.mjs:12:1
+✖ split workspace keeps the same chat and browser on rotation, supports resizing, zoom and native overlay suspension (33842.8259ms)
+  locator.click: Timeout 30000ms exceeded.
+  Call log:
+  [2m  - waiting for locator('#session-menu')[22m
+  [2m    - locator resolved to <button id="session-menu" aria-expanded="false" aria-label="打开会话与设置侧栏" aria-controls="studio-drawer">…</button>[22m
+  [2m  - attempting click action[22m
+  [2m    2 × waiting for element to be visible, enabled and stable[22m
+  [2m      - element is not visible[22m
+  [2m    - retrying click action[22m
+  [2m    - waiting 20ms[22m
+  [2m    2 × waiting for element to be visible, enabled and stable[22m
+  [2m      - element is not visible[22m
+  [2m    - retrying click action[22m
+  [2m      - waiting 100ms[22m
+  [2m    56 × waiting for element to be visible, enabled and stable[22m
+  [2m       - element is not visible[22m
+  [2m     - retrying click action[22m
+  [2m       - waiting 500ms[22m
+  
+      at TestContext.<anonymous> (C:\Users\admin\Documents\Codex\2026-10-15\new-chat\work\inkvoy-history-import\recovered-inkvoy\test\computer-ui.test.mjs:28:38) {
+    name: 'TimeoutError',
+    log: [ "  - waiting for locator('#session-menu')", '    - locator resolved to <button id="session-menu" aria-expanded="false" aria-label="打开会话与设置侧栏" aria-controls="studio-drawer">…</button>', '  - attempting click action', '    2 × waiting for element to be visible, enabled and stable', '      - element is not visible', '    - retrying click action', '    - waiting 20ms', '    2 × waiting for element to be visible, enabled and stable', '      - element is not visible', '    - retrying click action', '      - waiting 100ms', '    56 × waiting for element to be visible, enabled and stable', '       - element is not visible', '     - retrying click action', '       - waiting 500ms' ]
+  }

@@ -1,0 +1,29 @@
+✔ phone conversation has a unified composer, two header actions and working access to every workspace (3719.4851ms)
+✔ more actions retain real theme and command handlers and trap focus while open (3592.3382ms)
+✔ menu motion can reverse during dismissal without losing focus or leaving a native overlay blocker (3248.0881ms)
+✔ native browser is suspended by the action sheet and returns to the same slot after dismissal (2863.2696ms)
+✔ repeated stream renders do not rewrite unchanged header and shell state (2536.0568ms)
+✔ Studio buttons change modes, create sessions, edit and save files, and drive PTY input (12671.7337ms)
+✔ Studio layout fits 320px, exposes controls, and renders model HTML inert (9585.3526ms)
+✔ compact chat sidebar owns sessions and permissions, closes with Escape/back and restores focus (9339.9639ms)
+✔ compact thread has usable touch targets, animated sidebar and no promotional cards (8457.9862ms)
+✔ pet uses actual pending terminal tool, pauses away from chat, and respects reduced motion (9042.6117ms)
+✔ goal and plan settings are reachable, persist per session and gate actual writes until explicit approval (4353.3971ms)
+✔ cluster dispatch calls both saved endpoints and live reports return to the leader without changing selected model (3409.2778ms)
+✔ global stop from the team board cancels every live worker and leaves cancelled records (3076.7062ms)
+✔ slash workflow commands and narrow screens retain usable controls, focus and draft (2810.2977ms)
+✔ existing connections discover model tiers and one-million capacity automatically (3002.2806ms)
+✔ commands execute locally and the compact composer keeps its draft and referenced file (2803.1478ms)
+✔ file reference content reaches model input and the reasoning selector sends the exact catalog tier (4020.1018ms)
+✔ model discovery shows real metadata and saving retains per-model manual declarations (2960.2982ms)
+✔ browser script editor sends actual source, suspends the native surface, and closes without losing the page (3322.9725ms)
+✔ account DNS failures remain inline while identity authorization and retry controls survive (3803.4071ms)
+✔ commands show live stdout and stderr without claiming completion and keep confirmed exit results visible (3217.134ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 82330.9471

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
-import { uiHarness, readyState, navigateLegacy } from './ui-harness.mjs';
+import { uiHarness, readyState, navigateLegacy, toolbarAction } from './ui-harness.mjs';
 
 for (const storage of ['disabled', 'blocked', 'read-only']) {
   test(`packaged app initializes and handles buttons when local storage is ${storage}`, async t => {
@@ -12,10 +12,10 @@ for (const storage of ['disabled', 'blocked', 'read-only']) {
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
     await page.evaluate(state => BridgeDashboard.render(state), readyState);
-    await page.locator('#theme').click();
+    await toolbarAction(page,'theme');
     assert.equal(await page.locator('body').getAttribute('class'), 'dark');
-    await page.locator('#command-open').click();await page.locator('#command-input').fill('使用帮助');await page.keyboard.press('Enter');
-    assert.equal(await page.locator('#sheet-scrim').isVisible(), true);
+    await toolbarAction(page,'command-open');await page.locator('#command-input').fill('使用帮助');await page.keyboard.press('Enter');
+    await page.locator('#sheet-scrim').waitFor({state:'visible'});assert.equal(await page.locator('#sheet-scrim').isVisible(), true);
     await page.locator('#close-sheet').click();
     await navigateLegacy(page,'web');
     assert.equal(await page.locator('#page-web').isVisible(), true);

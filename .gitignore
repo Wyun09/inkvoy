@@ -18,3 +18,7 @@ dist/
 **/user-data/
 app/src/main/assets/runtime/*.tar.gz
 third_party/debian-sources/*.tar.*
+test/android-runtime/lib/*.jar
+/preview/5.2.0/
+/preview/5.3.0/
+/preview/5.4.0/

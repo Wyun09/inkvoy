@@ -20,7 +20,8 @@ export function smoothThoughtDisclosure(details,body){
  summary.addEventListener('click',event=>{
   event.preventDefault();details.dataset.manual='true';const close=details.open&&!closing;
   if(reduced()||!body.animate){motion?.cancel();motion=null;closing=false;details.open=!close;body.style.removeProperty('overflow');return;}
-  const current=details.open?body.getBoundingClientRect().height:0;motion?.cancel();details.open=true;closing=close;body.style.overflow='hidden';
+  const owner=document.getElementById('app'),scale=owner?Number(getComputedStyle(owner).zoom)||1:1;
+  const current=details.open?body.getBoundingClientRect().height/scale:0;motion?.cancel();details.open=true;closing=close;body.style.overflow='hidden';
   const target=close?0:Math.min(body.scrollHeight,280);
   motion=body.animate([{height:current+'px',opacity:close?1:.25},{height:target+'px',opacity:close?0:1}],{duration:280,easing:'cubic-bezier(.22,.8,.25,1)'});
   const active=motion;void active.finished.then(()=>{if(motion!==active)return;motion=null;if(close)details.open=false;closing=false;body.style.removeProperty('overflow');}).catch(()=>{});

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\Users\admin\Documents\Codex\2026-10-15\new-chat\work\inkvoy-history-import\recovered-inkvoy\scripts\verify-package.py", line 25, in <module>
+    if digest(stream)!=digest(original):raise ValueError('APK payload differs: '+entry)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: APK payload differs: assets/app.css

@@ -52,7 +52,7 @@ public final class StudioRuntime {
             try{reply.done(true,handle(operation,args));}catch(Exception e){reply.done(false,error(e.getMessage()));}return;
         }
         if(operation.equals("extension.session")||operation.equals("extension.disconnect")||operation.equals("extension.cancel")){extensionControl.submit(()->{try{reply.done(true,extensions().handle(operation,args));}catch(Exception e){reply.done(false,error(e.getMessage()));}});return;}
-        boolean tracked=operation.equals("runtime.ensure")||operation.equals("runtime.test")||operation.equals("tool.execute")||operation.equals("terminal.open");
+        boolean tracked=operation.equals("runtime.ensure")||operation.equals("runtime.import")||operation.equals("runtime.test")||operation.equals("tool.execute")||operation.equals("terminal.open");
         workers.submit(()->{if(tracked){work.incrementAndGet();emit("work",work.get()+managed.activeCount());}try{if(closed)throw new IOException("运行时已停止，排队操作未执行");reply.done(true,handle(operation,args));}catch(Throwable e){reply.done(false,error(e.getMessage()==null?e.getClass().getSimpleName():e.getMessage()));}finally{if(tracked){work.decrementAndGet();emit("work",work.get()+managed.activeCount());}}});
     }
     private static JSONObject error(String message){JSONObject j=new JSONObject();try{j.put("message",message);}catch(JSONException ignored){}return j;}
@@ -73,6 +73,7 @@ public final class StudioRuntime {
         switch(operation){
             case "project.ensure":files.project(project);return true;
             case "runtime.status":return installer.status();
+            case "runtime.import":{Uri uri=Uri.parse(a.getString("uri"));if(!"content".equals(uri.getScheme()))throw new IOException("请使用系统文件选择器导入工具包");try(InputStream input=context.getContentResolver().openInputStream(uri)){if(input==null)throw new IOException("无法读取所选工具包");return installer.importImage(input);}}
             case "runtime.ensure":ensure(project);return installer.status();
             case "runtime.test":ensure(project);return selfTest(project);
             case "file.list":return files.list(project,a.optString("path"));

@@ -1,16 +1,16 @@
 {
-  "version": "5.1.1",
-  "versionCode": 25,
-  "buildDate": "2026-10-25",
+  "version": "5.4.0",
+  "versionCode": 29,
+  "buildDate": "2026-10-31",
   "package": "io.github.deepseekbridge",
-  "apk": "deepseek-android-bridge-v5.1.1.apk",
-  "bytes": 616126870,
-  "sha256": "b7c5314db1df61bf8760c3db497bf80b7a9d18baa97be4ff6e27830ca02ed7f5",
+  "apk": "inkvoy-5.4.0-offline.apk",
+  "bytes": 616077718,
+  "sha256": "dcfdf0a29a14af9e4bec9f7b43a8f49229e61d9c92cee5995480c3b64de4a39f",
   "signerSha256": "cc8f15b569d5e813c68d49f4fa17d19afbe6f7526ef5dbdade88e317116c2b59",
   "minSdk": 26,
   "targetSdk": 35,
   "abi": "arm64-v8a",
-  "distribution": "offline test build",
+  "distribution": "local lite and offline builds",
   "license": "GPL-3.0-only for project-owned code",
   "runtime": {
     "id": "debian13-arm64-studio2-20261018",
@@ -89,14 +89,31 @@
       "androidDeviceVerified": false
     }
   },
-  "androidFrameworkTests": 230,
-  "javascriptChecksValidated": 390,
-  "focusedSetupAndStartupChecks": 12,
+  "androidFrameworkTests": 244,
+  "javascriptChecksValidated": 403,
   "physicalAndroidDeviceVerified": false,
-  "verification": "verification/regression-511.json",
+  "verification": "verification/regression-531.json",
   "changes": [
-    "Use the public accessibility settings list instead of the restricted service detail activity.",
-    "Guard both primary settings navigation and fallback against SecurityException and ActivityNotFoundException.",
-    "Show a manual settings path if no page can be opened."
-  ]
+    "ChatGPT mobile inspired neutral light and dark surfaces.",
+    "Circular navigation and white rounded composer.",
+    "Text first quick actions instead of a four pill home grid.",
+    "Existing model, browser, terminal and workflow handlers retained.",
+    "OpenAI Responses streaming fixes retained from 5.3.1."
+  ],
+  "variants": {
+    "lite": {
+      "file": "inkvoy-5.4.0-lite.apk",
+      "bytes": 2156870,
+      "sha256": "769f2f51845536b429de174167cd4d7636905ba18920a672704e7b1d1cc75906",
+      "runtimeImageBundled": false
+    },
+    "offline": {
+      "file": "inkvoy-5.4.0-offline.apk",
+      "bytes": 616077718,
+      "sha256": "dcfdf0a29a14af9e4bec9f7b43a8f49229e61d9c92cee5995480c3b64de4a39f",
+      "runtimeImageBundled": true
+    }
+  },
+  "finalSignedResourceChecks": 22,
+  "releaseAttachmentsUploaded": false
 }

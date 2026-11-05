@@ -1,0 +1,11 @@
+button,input,select,textarea,summary { transition:background-color .16s ease,border-color .18s ease,color .18s ease,box-shadow .18s ease; }
+.composer-surface { transition:border-color .2s ease,box-shadow .24s ease,background-color .2s ease; }
+.reply-thinking>summary::after { transition:transform .26s var(--ease); }
+.reply-status,.client-progress,.hub-badge { transition:color .2s ease,background-color .2s ease; }
+.rail-active-surface,.dock-active-surface { will-change:transform; }
+.ripple-host { position:relative; overflow:hidden; }.ink-ripple { position:absolute; display:block; pointer-events:none; z-index:4; background:currentColor; border-radius:50%; transform:translate(-50%,-50%); contain:strict; }
+.welcome-companion,.task-companion,.motion-preview-pet { touch-action:none; will-change:transform; }.is-held { cursor:grabbing; }
+.reply-body.is-streaming::after { display:none; content:none; animation:none; }
+body[data-ui-paused] *,body[data-ui-paused] *::before,body[data-ui-paused] *::after { animation-play-state:paused!important; }
+body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; }
+@media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; } }

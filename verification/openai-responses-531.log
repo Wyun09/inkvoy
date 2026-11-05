@@ -1,0 +1,24 @@
+✔ catalog metadata survives profile persistence without guessing capabilities from model names (1.799ms)
+✔ effort is scoped to connection and model and invalid values resolve to provider default (0.3539ms)
+✔ manual declarations apply only to the explicitly configured model (0.169ms)
+✔ custom requests and Responses both pass only supported explicit tiers; default omits the parameter (1.5781ms)
+✔ catalog discovery retains account tiers and custom metadata, without treating visibility as support (3.5974ms)
+✔ the agent request uses the selected model tier and retains the web toggle separately (3.3412ms)
+✔ automatic discovery persists actual capacities without changing the selected connection (1.6668ms)
+✔ a discovery response for old credentials cannot overwrite an edited profile (0.6793ms)
+✔ account catalogs accept the standard data envelope and retain remote effort metadata (0.4533ms)
+✔ Responses receives real text before completion and never accepts an incomplete tool call (1.6653ms)
+✔ Responses preserves reasoning items and pairs renamed tool IDs across stateless turns (0.4005ms)
+✔ Responses reports late plan limits and incomplete status instead of claiming a finished reply (0.3646ms)
+✔ BOM, split CRLF and typed event lines produce text before completion (0.3413ms)
+✔ Responses aggregates lifecycle, function arguments, refusal and reasoning events before completion (0.9178ms)
+✔ account JSON fallback goes through Responses validation rather than Chat Completions parsing (4.6498ms)
+✔ account provider sends only an opaque account ID, reads its catalog, and validates dynamic MCP calls (29.7349ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 215.8264

@@ -1,0 +1,24 @@
+✔ the actual service action remains legible and operational in light and dark overview themes (9473.2766ms)
+✔ computer-use UI opens independently, sends manual navigation, stops the agent and keeps its native slot visible (8901.9459ms)
+✔ computer-use toolbar fits narrow screens and optional visual input is explicit in model settings (8976.942ms)
+✔ split workspace keeps the same chat and browser on rotation, supports resizing, zoom and native overlay suspension (8986.5958ms)
+✔ a portrait keyboard keeps phone navigation, draft and send control in the visual viewport (3271.8225ms)
+✔ all supported content scales preserve a usable dock and a bounded API dialog (4238.7443ms)
+✔ native browser slot follows split-pane geometry when the keyboard changes aspect ratio (2668.4436ms)
+✔ rotation and narrow screens keep the same composer without a horizontal page spill (2714.0179ms)
+✔ phone conversation has a unified composer, two header actions and working access to every workspace (3977.4075ms)
+✔ more actions retain real theme and command handlers and trap focus while open (4118.6453ms)
+✔ menu motion can reverse during dismissal without losing focus or leaving a native overlay blocker (3247.4049ms)
+✔ native browser is suspended by the action sheet and returns to the same slot after dismissal (2902.3016ms)
+✔ repeated stream renders do not rewrite unchanged header and shell state (2584.4561ms)
+✔ phone conversation reserves its footer for input, work pages keep navigation and desktop gains the persistent rail (4921.3923ms)
+✔ command palette opens a bounded rounded API editor with editable fields on phones (8488.0215ms)
+✔ appearance sections preserve scale controls and reduced motion stops the explicit animation preview (5763.3373ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 52155.1373

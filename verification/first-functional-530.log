@@ -1,0 +1,41 @@
+✔ computer-use UI opens independently, sends manual navigation, stops the agent and keeps its native slot visible (8978.3361ms)
+✔ computer-use toolbar fits narrow screens and optional visual input is explicit in model settings (8903.3889ms)
+✖ split workspace keeps the same chat and browser on rotation, supports resizing, zoom and native overlay suspension (8952.7856ms)
+✔ model settings save encrypted credentials separately, fetch IDs and drive real client SSE routing (11097.982ms)
+✔ model dialog closes through app back and cancellation addresses custom HTTP transport (8877.1268ms)
+✔ sidebar, workbench and external-client settings open the API inputs directly without a hidden dropdown step (5926.3182ms)
+✔ failure before any answer keeps an incomplete response and retry notice (8433.2567ms)
+✔ one response groups tool results, renders rich code/table, and copies exact code (9205.3102ms)
+✔ keyed replies keep expanded tools and code DOM while state changes, and preserve reading position (8650.8615ms)
+✔ file diff opens real snapshot contract, reverts via native operation, and closes with back/focus (8904.5244ms)
+✔ failed commands keep stderr visible in their own result and changed files cannot be reverted (8745.4858ms)
+✔ unchanged refreshes do not flood native layout, including web page geometry (9545.8235ms)
+✔ empty conversation controls react while encrypted persistence is still pending (8729.8154ms)
+✔ long history mounts a page of turns and defers hidden logs until expanded (8691.1917ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 13
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 70674.7054
+
+✖ failing tests:
+
+test at test\computer-ui.test.mjs:12:1
+✖ split workspace keeps the same chat and browser on rotation, supports resizing, zoom and native overlay suspension (8952.7856ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(web.height>100)
+  
+      at TestContext.<anonymous> (file:///C:/Users/admin/Documents/Codex/2026-10-15/new-chat/work/inkvoy-history-import/recovered-inkvoy/test/computer-ui.test.mjs:23:259)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

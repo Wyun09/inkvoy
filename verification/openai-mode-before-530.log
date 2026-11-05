@@ -1,0 +1,31 @@
+✔ production client streams a revisable current answer before completion then commits validated SSE (21543.7043ms)
+✔ catalog metadata survives profile persistence without guessing capabilities from model names (3.7541ms)
+✔ effort is scoped to connection and model and invalid values resolve to provider default (0.3821ms)
+✔ manual declarations apply only to the explicitly configured model (0.1792ms)
+✔ custom requests and Responses both pass only supported explicit tiers; default omits the parameter (1.662ms)
+✔ catalog discovery retains account tiers and custom metadata, without treating visibility as support (3.6053ms)
+✔ the agent request uses the selected model tier and retains the web toggle separately (3.5344ms)
+✔ automatic discovery persists actual capacities without changing the selected connection (1.8295ms)
+✔ a discovery response for old credentials cannot overwrite an edited profile (0.9006ms)
+✔ account catalogs accept the standard data envelope and retain remote effort metadata (0.6733ms)
+✔ Responses receives real text before completion and never accepts an incomplete tool call (2.4352ms)
+✔ Responses preserves reasoning items and pairs renamed tool IDs across stateless turns (0.5203ms)
+✔ Responses reports late plan limits and incomplete status instead of claiming a finished reply (0.4085ms)
+✔ BOM, split CRLF and typed event lines produce text before completion (0.3843ms)
+✔ account JSON fallback goes through Responses validation rather than Chat Completions parsing (6.0395ms)
+✔ account provider sends only an opaque account ID, reads its catalog, and validates dynamic MCP calls (29.2494ms)
+✔ existing connections discover model tiers and one-million capacity automatically (3812.5932ms)
+✔ commands execute locally and the compact composer keeps its draft and referenced file (2850.8889ms)
+✔ file reference content reaches model input and the reasoning selector sends the exact catalog tier (4070.6034ms)
+✔ model discovery shows real metadata and saving retains per-model manual declarations (3005.2187ms)
+✔ browser script editor sends actual source, suspends the native surface, and closes without losing the page (3474.0516ms)
+✔ account DNS failures remain inline while identity authorization and retry controls survive (3861.7154ms)
+✔ commands show live stdout and stderr without claiming completion and keep confirmed exit results visible (3274.379ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 34987.5966
