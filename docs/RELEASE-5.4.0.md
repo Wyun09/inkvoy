@@ -17,4 +17,4 @@
 
 实际结果在根目录 `VERIFICATION.md` 和 `verification/regression-540.json` 中记录。界面预览使用真实生产资产和确定性任务数据，不代表真实模型回复。桌面浏览器、Android 框架测试和包内资源校验不等同于实体 Android 13 的 GPU、输入法或网络验证。
 
-此版本的两个安装包已作为 [GitHub Release v5.4.0](https://github.com/Wyun09/inkvoy/releases/tag/v5.4.0) 的附件发布：轻量版 `inkvoy-5.4.0-lite.apk`（2,156,870 字节）与离线完整版 `inkvoy-5.4.0-offline.apk`（616,077,718 字节）。
+此版本的两个安装包已作为 [GitHub Release v5.4.0](https://github.com/Wyun09/inkvoy/releases/tag/v5.4.0) 的附件发布：轻量版 `inkvoy-5.4.0-lite.apk`（2,156,870 字节）与离线完整版 `inkvoy-5.4.0-offline.apk`（616,077,718 字节）。2026-11-06 复核了这两个附件的 SHA-256 digest，均与 `release.json` 记录一致。
