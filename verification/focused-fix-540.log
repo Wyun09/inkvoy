@@ -1,0 +1,15 @@
+✔ phone conversation reserves its footer for input, work pages keep navigation and desktop gains the persistent rail (10376.616ms)
+✔ command palette opens a bounded rounded API editor with editable fields on phones (8343.8338ms)
+✔ appearance sections preserve scale controls and reduced motion stops the explicit animation preview (5709.7052ms)
+✔ the intact logo transitions from its current pose and keeps one continuous breathing phase (12345.5654ms)
+✔ stream chunks appear immediately without a cursor or replaying settled text, then retain exact final copy (9644.4614ms)
+✔ reasoning disclosure can reverse during motion and reduced motion shows new chunks without animation (9288.8342ms)
+✔ the phone-sized logo visibly moves while its state stays constant, pauses in background and resumes (11032.8557ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 42724.6634

@@ -264,6 +264,81 @@ body.dark {
 
 .composer-toolbar #context-meter { opacity: .68; }
 
+/* Secondary actions are a real popover, rather than a second toolbar glued
+ * underneath the composer. Opening the sliders button reveals the complete
+ * command surface without changing the primary input row. */
+.composer-modes.composer-tools-panel {
+  left: 0;
+  bottom: calc(100% + 11px);
+  width: min(342px, calc(100vw - 28px));
+  max-height: min(54vh, 390px);
+  overflow: auto;
+  padding: 12px;
+  gap: 9px;
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  box-shadow: 0 24px 72px #0000001c, inset 0 1px 0 var(--glass-highlight);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+}
+
+.composer-tools-panel > .composer-toolbar {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  order: 2;
+  min-height: 42px;
+  padding: 8px 0 0;
+  border-top: 1px solid color-mix(in srgb, var(--line) 64%, transparent);
+}
+
+.composer-tools-panel > .composer-toolbar > button {
+  width: 100%;
+  min-width: 0;
+  min-height: 36px;
+  border-radius: 12px;
+}
+
+.composer-tools-panel > .composer-toolbar > #context-meter {
+  max-width: none;
+  justify-content: center;
+  margin-left: 0;
+}
+
+.composer-tools-panel > #client-browser {
+  order: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 38px;
+  padding: 8px 10px;
+  border: 1px solid color-mix(in srgb, var(--line) 62%, transparent);
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--surface) 44%, transparent);
+  color: var(--ink);
+  font-size: 12px;
+}
+
+.composer-tools-panel > #client-browser::after {
+  content: '浏览器';
+  margin-left: 8px;
+}
+
+.composer-tools-panel > #client-browser:hover {
+  background: color-mix(in srgb, var(--brand-soft) 70%, transparent);
+}
+
+.composer-tools-panel > .composer-modes button {
+  min-height: 36px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--surface) 36%, transparent);
+}
+
+.composer-tools-panel > .composer-modes button[aria-pressed=true] {
+  background: color-mix(in srgb, var(--brand-soft) 82%, transparent);
+}
+
 /* The reference keeps the composer visually quiet. The controls remain
  * keyboard accessible through their aria-labels; only the duplicate captions
  * are removed from the narrow strip beneath the text field. */
@@ -324,6 +399,132 @@ body.dark {
   box-shadow: 0 28px 90px #00000020, inset 0 1px 0 #ffffffa6;
 }
 
+/* Work pages use the same material family. Their content remains opaque
+ * enough for long-form reading, while the border and light edge connect them
+ * to the floating composer. */
+.hub-setting,
+.hub-card,
+.hub-form,
+.runtime-card,
+.tool-target,
+.account-intro,
+.extension-quick,
+.setup-card,
+.computer-slot,
+.computer-address-form,
+.file-list,
+.editor-pane,
+.reply-process,
+.reply-code,
+.client-progress,
+.client-notice {
+  position: relative;
+  overflow: hidden;
+  border-color: var(--glass-border);
+  background:
+    radial-gradient(ellipse 66% 88% at 8% -42%, #ffffff4d, transparent 60%),
+    color-mix(in srgb, var(--surface) 62%, transparent);
+  box-shadow: 0 10px 34px #00000009, inset 0 1px 0 var(--glass-highlight);
+  backdrop-filter: blur(22px) saturate(1.26);
+  -webkit-backdrop-filter: blur(22px) saturate(1.26);
+}
+
+.hub-setting::after,
+.hub-card::after,
+.runtime-card::after,
+.computer-slot::after,
+.file-list::after,
+.reply-process::after,
+.reply-code::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(116deg, #ffffff24, transparent 32%, transparent 74%, color-mix(in srgb, var(--brand) 4%, transparent));
+  opacity: .8;
+}
+
+.hub-setting > *,
+.hub-card > *,
+.runtime-card > *,
+.tool-target > *,
+.account-intro > *,
+.extension-quick > *,
+.setup-card > *,
+.computer-slot > *,
+.file-list > *,
+.editor-pane > *,
+.reply-process > *,
+.reply-code > *,
+.client-progress > *,
+.client-notice > * { position: relative; z-index: 1; }
+
+.bottom-nav {
+  background: color-mix(in srgb, var(--surface) 68%, transparent);
+  backdrop-filter: blur(22px) saturate(1.35);
+  -webkit-backdrop-filter: blur(22px) saturate(1.35);
+  box-shadow: 0 -1px 0 #ffffff80, 0 -9px 28px #00000008;
+}
+
+.bottom-nav .dock-marker {
+  background: color-mix(in srgb, var(--brand-soft) 82%, transparent);
+  box-shadow: inset 0 1px 0 #ffffff9c, 0 2px 10px color-mix(in srgb, var(--brand) 9%, transparent);
+}
+
+.computer-address-form,
+.file-search,
+.drawer-search,
+.hub-tabs,
+.settings-sections,
+.board-switch,
+.task-filters {
+  background: color-mix(in srgb, var(--surface) 54%, transparent);
+  border-color: color-mix(in srgb, var(--line) 58%, transparent);
+  box-shadow: inset 0 1px 0 #ffffff80;
+  backdrop-filter: blur(18px) saturate(1.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+}
+
+.computer-heading,
+.computer-navigation,
+.computer-view-controls,
+.terminal-heading,
+.terminal-tabs,
+.terminal-footer {
+  background: color-mix(in srgb, var(--surface) 62%, transparent);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+}
+
+.workspace-rail,
+.studio-drawer {
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  backdrop-filter: blur(24px) saturate(1.24);
+  -webkit-backdrop-filter: blur(24px) saturate(1.24);
+}
+
+body.dark .hub-setting,
+body.dark .hub-card,
+body.dark .hub-form,
+body.dark .runtime-card,
+body.dark .tool-target,
+body.dark .account-intro,
+body.dark .extension-quick,
+body.dark .setup-card,
+body.dark .computer-slot,
+body.dark .file-list,
+body.dark .editor-pane,
+body.dark .reply-process,
+body.dark .reply-code,
+body.dark .client-progress,
+body.dark .client-notice {
+  background:
+    radial-gradient(ellipse 66% 88% at 8% -42%, #ffffff12, transparent 60%),
+    color-mix(in srgb, var(--surface) 78%, transparent);
+  box-shadow: 0 16px 44px #00000030, inset 0 1px 0 #ffffff1f;
+}
+
 @supports not (backdrop-filter: blur(1px)) {
   .composer-surface,
   .topbar,
@@ -373,6 +574,18 @@ body.dark {
   .composer-bottom > button { width: 36px; min-width: 36px; height: 36px; min-height: 36px; }
   .composer-bottom > #chat-send { width: 39px; min-width: 39px; height: 39px; min-height: 39px; }
   .composer-bottom > .composer-model { max-width: 130px; }
+}
+
+@media (max-width: 360px) {
+  .topbar { padding-inline: 10px; gap: 5px; }
+  .brand-mark { display: none; }
+  .mode-switch { left: 50%; padding: 2px; }
+  .mode-switch-option { min-width: 54px; height: 31px; padding-inline: 8px; font-size: 12px; }
+  .top-actions #chat-new { display: none; }
+  .top-actions { margin-left: auto; }
+  .composer-bottom > .composer-model { flex: 0 1 56px; max-width: 56px; padding-inline: 5px; font-size: 0; }
+  .composer-bottom > .composer-model::before { margin-right: 0; }
+  .composer-bottom > #chat-send { margin-left: 1px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

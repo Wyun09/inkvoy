@@ -27,7 +27,8 @@
     "js/ui/atelier5/logo.css",
     "js/ui/atelier5/workflows.css",
     "js/ui/atelier5/stream.css",
-    "js/ui/atelier5/journey.css"
+    "js/ui/atelier5/journey.css",
+    "js/ui/atelier5/geometry.css"
   ],
   "legacyStylesBundled": false,
   "reactRuntimeBundled": false,
@@ -151,6 +152,7 @@
     "js/tasks.js",
     "js/engine.js",
     "js/ui/dashboard.js",
+    "js/ui/viewport.js",
     "js/workflow.js",
     "js/reasoning.js",
     "js/security-identity.js",
@@ -2753,10 +2755,13 @@
           "bytesInOutput": 11860
         },
         "js/entry.js": {
-          "bytesInOutput": 10566
+          "bytesInOutput": 10589
         },
         "js/ui/dashboard.js": {
-          "bytesInOutput": 42636
+          "bytesInOutput": 42692
+        },
+        "js/ui/viewport.js": {
+          "bytesInOutput": 2809
         },
         "js/workflow.js": {
           "bytesInOutput": 8595
@@ -3062,7 +3067,7 @@
           "bytesInOutput": 19347
         },
         "js/ui/computer.js": {
-          "bytesInOutput": 13222
+          "bytesInOutput": 13421
         },
         "js/ui/questions.js": {
           "bytesInOutput": 4269
@@ -3086,13 +3091,13 @@
           "bytesInOutput": 15977
         },
         "js/ui/setup-journey.js": {
-          "bytesInOutput": 32750
+          "bytesInOutput": 32856
         },
         "js/ui/browser-scripts.js": {
           "bytesInOutput": 5410
         },
         "js/ui/studio.js": {
-          "bytesInOutput": 41566
+          "bytesInOutput": 43083
         },
         "js/client-stream.js": {
           "bytesInOutput": 2581
@@ -3107,7 +3112,7 @@
           "bytesInOutput": 11570
         }
       },
-      "bytes": 1642664
+      "bytes": 1647398
     }
   }
 }

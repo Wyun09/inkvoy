@@ -106,7 +106,7 @@
       "removedSelectors": 3
     }
   ],
-  "cssBytes": 200753,
+  "cssBytes": 205761,
   "coreStyleOwner": "js/ui/app-shell",
   "legacyCoreStylesBundled": false,
   "reactRuntimeBundled": false,
@@ -3179,10 +3179,10 @@
           "bytesInOutput": 4171
         },
         "js/ui/app-shell.js": {
-          "bytesInOutput": 7213
+          "bytesInOutput": 7416
         },
         "js/ui/studio.js": {
-          "bytesInOutput": 28810
+          "bytesInOutput": 28904
         },
         "js/client-stream.js": {
           "bytesInOutput": 1474
@@ -3197,7 +3197,7 @@
           "bytesInOutput": 7164
         }
       },
-      "bytes": 1069110
+      "bytes": 1069407
     }
   }
 }

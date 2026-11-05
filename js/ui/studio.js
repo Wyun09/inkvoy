@@ -37,6 +37,7 @@ export function initStudio({client,native,providers,agentTools,extensions}) {
   const search=document.createElement('div');search.className='drawer-search';search.innerHTML=icons.search+'<input id="session-search" type="search" placeholder="搜索会话…" aria-label="搜索本机会话">';$('drawer-new').after(search);$('drawer-new').innerHTML='<span>＋</span> 新建会话';
   $('session-search').addEventListener('input',()=>render(client.snapshot()));
   $('client-agent').innerHTML=icons.code+'Agent';$('client-thinking').innerHTML=icons.spark+'思考';$('client-search').innerHTML=icons.search+'搜索';$('chat-send').innerHTML=icons.send;
+  $('composer-options').setAttribute('aria-label','打开工具与模式');
   const attach=document.createElement('button');attach.type='button';attach.id='composer-import';attach.textContent='＋';attach.setAttribute('aria-label','导入文件到当前项目');$('composer-options').before(attach);click('composer-import',()=>NativeBridge.uiAction('import-file',JSON.stringify({project:project()})));
   const sessionManage=document.createElement('details');sessionManage.id='session-manage';
   sessionManage.innerHTML='<summary>管理当前对话</summary>';

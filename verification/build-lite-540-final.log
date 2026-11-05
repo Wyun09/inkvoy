@@ -1,0 +1,17 @@
+
+> deepseek-android-bridge@5.4.0 build:assets
+> node scripts/build-assets.mjs
+
+Included dependency licenses in source and APK assets.
+Built isolated Android engine assets.
+Normalized 1 raw ZIP entry paths: resources.apk
+ע: ĳЩ�����ļ�ʹ�û򸲸����ѹ�ʱ�� API��
+ע: �й���ϸ��Ϣ, ��ʹ�� -Xlint:deprecation ���±��롣
+Preserve the existing release APK; use a new version or artifact directory.
+At C:\Users\admin\Documents\Codex\2026-10-15\new-chat\work\inkvoy-history-import\recovered-inkvoy\scripts\build-apk.ps1
+:79 char:42
++ ...  $artifact){throw 'Preserve the existing release APK; use a new versi ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (Preserve the ex...fact directory.:String) [], RuntimeException
+    + FullyQualifiedErrorId : Preserve the existing release APK; use a new version or artifact directory.
+ 

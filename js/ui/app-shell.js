@@ -27,7 +27,18 @@ export function createAppShell({client,providers,closeOverlays}){
  for(const [page,id]of [['files','file-refresh'],['accounts','accounts-refresh'],['extensions','extensions-refresh'],['tools','runtime-refresh']]){const button=$(id);button.classList.add('icon-button');button.hidden=true;routeButtons.set(page,button);routeTools.append(button);}
  actions.replaceChildren($('chat-new'),routeTools,more);
  $('chat-new').addEventListener('click',()=>{if(!client.snapshot().active)window.BridgeDashboard?.navigate('chat');});
- const form=$('chat-form'),toolbar=document.querySelector('.composer-toolbar'),surface=node('div','composer-surface');toolbar.before(surface);surface.append($('composer-expand'),form,toolbar);
+ const form=$('chat-form'),toolbar=document.querySelector('.composer-toolbar'),surface=node('div','composer-surface');toolbar.before(surface);
+ const modes=$('composer-modes'),browserShortcut=$('client-browser');
+ // The composer has one compact primary row. Secondary controls live in the
+ // existing options popover so they cannot collide with the input or send
+ // action at narrow widths.
+ if(modes){
+  modes.classList.add('composer-tools-panel');
+  modes.setAttribute('aria-label','工具与模式');
+  if(toolbar) modes.append(toolbar);
+  if(browserShortcut) modes.append(browserShortcut);
+ }
+ surface.append($('composer-expand'),form);
  let phase='closed',animation,epoch=0,previousFocus,route=document.body.dataset.page||'chat',lastTitle='',renderKey='';
  const reduced=()=>document.hidden||document.body.classList.contains('reduce-motion')||matchMedia('(prefers-reduced-motion: reduce)').matches;
  const inert=value=>document.querySelectorAll('.page,.topbar,.bottom-nav').forEach(n=>n.inert=value);
