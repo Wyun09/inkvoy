@@ -1,4 +1,16 @@
-# Inkvoy 5.3.1 验证
+# Inkvoy 5.4.0 验证
+
+2026-10-31，versionCode 29。参考 ChatGPT 手机端截图重做对话、输入区、导航和设置界面；原生代码与原生库未改动。
+
+- 最终 JavaScript / 界面全量 **403 项通过，失败、取消、跳过为 0**（`verification/regression-js-final-540-v2.log`、`verification/regression-540.json`）。
+- 界面审查覆盖 **7 种视口 / 密度、36 个页面记录，页面水平溢出为 0**（`verification/layout-after-540.log`、`verification/ui-engine-bundle-540.json`）。
+- Android API 26/33 框架 **244 项通过，失败、错误、跳过为 0**；最终签名 APK 资源与脚本检查 **22 项通过**。
+- 两个最终包的版本号为 5.4.0 / 29，原包名与签名保持不变；实体 Android 13 上的真实账号、键盘与网络仍需安装后确认。
+- 轻量版：2,156,870 字节，SHA-256 `769f2f51845536b429de174167cd4d7636905ba18920a672704e7b1d1cc75906`。
+- 离线完整版：616,077,718 字节，SHA-256 `dcfdf0a29a14af9e4bec9f7b43a8f49229e61d9c92cee5995480c3b64de4a39f`。
+- 轻量版与离线完整版已作为 GitHub Release `v5.4.0` 的附件发布。
+
+## Inkvoy 5.3.1 历史验证
 
 2026-10-30，versionCode 28。针对 OpenAI Responses 对话链路的热修复，原生代码和原生库未改动。
 

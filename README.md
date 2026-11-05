@@ -4,20 +4,24 @@
 
 编程、安全研究、逆向分析——终端、文件、可操控的浏览器和 App 操控，全在同一台手机上。
 
-![version](https://img.shields.io/badge/version-5.1.1-blue) ![Android](https://img.shields.io/badge/Android-8.0%2B%20(API%2026)-3DDC84?logo=android&logoColor=white) ![ABI](https://img.shields.io/badge/ABI-arm64--v8a-lightgrey) ![license](https://img.shields.io/badge/license-GPL--3.0--only-blue)
+![version](https://img.shields.io/badge/version-5.4.0-blue) ![Android](https://img.shields.io/badge/Android-8.0%2B%20(API%2026)-3DDC84?logo=android&logoColor=white) ![ABI](https://img.shields.io/badge/ABI-arm64--v8a-lightgrey) ![license](https://img.shields.io/badge/license-GPL--3.0--only-blue)
 
 ![Inkvoy 工作台](docs/assets/inkvoy-cover.jpg)
 
-界面截图使用示例任务数据。当前版本 **5.1.1**（versionCode 25）。
+界面截图使用示例任务数据。当前版本 **5.4.0**（versionCode 29）。
 
 ## 现在的状态
 
 | 项目 | 状态 |
 | --- | --- |
-| 源码 | 完整开放，可自行构建（GPL-3.0-only） |
-| 安装包 | **尚未发布**。≈588 MiB 的 APK 内含离线 Debian 运行时镜像，登记在 [EXTERNAL_ARTIFACTS.json](EXTERNAL_ARTIFACTS.json)，未作为 Release 附件上传 |
-| 实体手机验收 | **未完成**。框架回归 230 项通过不等于真机验收，见 [VERIFICATION.md](VERIFICATION.md) |
+| 源码 | 完整开放，可自行构建（GPL-3.0-only）。5.4.0 代码在 `main` 与 `release/5.4.0` 分支 |
+| 安装包 | **已发布 [v5.4.0](https://github.com/Wyun09/inkvoy/releases/tag/v5.4.0)**：轻量版约 2.1 MiB；离线完整版约 588 MiB，内含离线 Debian 运行时镜像 |
+| 实体手机验收 | **未完成**。框架回归 244 项通过不等于真机验收，见 [VERIFICATION.md](VERIFICATION.md) |
 | 构建成本 | JS 部分三条命令；APK 另需 Android SDK、JDK 17、Maven 3.9、离线镜像和自己的签名 |
+
+## 最新版本：5.4.0
+
+参考 ChatGPT 手机端截图重做应用的对话、输入区、导航和设置视觉：中性白灰浅色界面与炭黑深色界面、顶部圆形按钮组、白色圆角输入区、贴底玻璃材质输入面板与更清晰的回复层级。输入框下方的次级控件收进「工具与模式」弹层，避免在窄屏上与输入和发送互相覆盖。保留原有模型、工具与工作流，并包含 5.3.1 的 OpenAI Responses 修复。提供轻量版与离线完整版，详见 [5.4.0 说明](docs/RELEASE-5.4.0.md)。
 
 ## 它在解决什么问题
 
@@ -87,22 +91,23 @@ APK 另需 Android SDK、JDK 17、Maven 3.9、离线运行时镜像和**你自�
 
 | 检查 | 结果 | 说明 |
 | --- | --- | --- |
-| Android 框架回归 | 230 项通过，失败/错误/跳过 0 | API 26/33，含 12 项设置跳转回归 |
-| JavaScript 检查 | 390 项覆盖 | 首轮 389/390，修正等待谓词的空值解引用后重跑 5 项通过 |
-| 引导 / 启动 / 生产包界面 | 12 项通过 | — |
-| 实体手机验收 | **未完成** | 厂商设置页跳转待覆盖安装确认 |
+| Android 框架回归 | 244 项通过，失败/错误/跳过 0 | API 26/33 |
+| JavaScript 检查 | 403 项通过，失败/取消/跳过 0 | 含 OpenAI Responses 流事件回归 |
+| 界面审查 | 7 种视口 / 密度、36 个页面记录，页面水平溢出 0 | 确定性测试夹具 |
+| 最终签名 APK 资源与脚本检查 | 22 项通过 | 轻量版与离线完整版 |
+| 实体手机验收 | **未完成** | 实体 Android 13 的覆盖安装、厂商键盘、刘海安全区与实际 GPU 流畅度待验证 |
 
-CI（[.github/workflows/checks.yml](.github/workflows/checks.yml)）只覆盖 JavaScript 检查；Android 框架回归需要真实构建的 APK，目前只能在本地复现。完整记录见 [verification/regression-511.json](verification/regression-511.json)。
+CI（[.github/workflows/checks.yml](.github/workflows/checks.yml)）只覆盖 JavaScript 检查；Android 框架回归需要真实构建的 APK，目前只能在本地复现。完整记录见 [verification/regression-540.json](verification/regression-540.json)。
 
-APK SHA-256 `b7c5314db1df61bf8760c3db497bf80b7a9d18baa97be4ff6e27830ca02ed7f5`，签名证书 SHA-256 `cc8f15b569d5e813c68d49f4fa17d19afbe6f7526ef5dbdade88e317116c2b59`。
+APK SHA-256：轻量版 `769f2f51845536b429de174167cd4d7636905ba18920a672704e7b1d1cc75906`（2,156,870 字节）；离线完整版 `dcfdf0a29a14af9e4bec9f7b43a8f49229e61d9c92cee5995480c3b64de4a39f`（616,077,718 字节）。签名证书 SHA-256 `cc8f15b569d5e813c68d49f4fa17d19afbe6f7526ef5dbdade88e317116c2b59`。
 
 ## 版本与源码来源
 
-从实际保存的发布快照恢复了 **18 个版本**（0.1.0 至 5.1.1），每个版本一个恢复提交加 `release/<版本>` 分支。提交时间使用真实导入日期，不伪装成当时的开发提交；缺少源码的版本在 [docs/HISTORY.md](docs/HISTORY.md) 中明确记录。
+从实际保存的发布快照恢复了 **18 个版本**（0.1.0 至 5.1.1），每个版本一个恢复提交加 `release/<版本>` 分支。提交时间使用真实导入日期，不伪装成当时的开发提交；缺少源码的版本在 [docs/HISTORY.md](docs/HISTORY.md) 中明确记录。在此之上，**5.2.0、5.3.0、5.3.1、5.4.0** 为恢复后的开发版本，对应代码在 `main`，并保留 `release/5.2.0`、`release/5.3.0`、`release/5.3.1`、`release/5.4.0` 分支。
 
 **命名说明**：仓库与产品名是 Inkvoy；包名 `io.github.deepseekbridge` 与部分文件名沿用早期 DeepSeek Android Bridge 时期，为保证覆盖安装保持不变。
 
-大文件（≈588 MiB APK、≈586 MiB 运行时镜像、完整发布源码归档）登记在 [EXTERNAL_ARTIFACTS.json](EXTERNAL_ARTIFACTS.json)，未进入普通 Git。
+大文件方面：5.4.0 的两个 APK 已作为 [v5.4.0 Release](https://github.com/Wyun09/inkvoy/releases/tag/v5.4.0) 附件发布；约 586 MiB 的运行时镜像与完整发布源码归档仍登记在 [EXTERNAL_ARTIFACTS.json](EXTERNAL_ARTIFACTS.json)，不进入普通 Git。
 
 ## 参与
 

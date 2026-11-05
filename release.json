@@ -10,7 +10,8 @@
   "minSdk": 26,
   "targetSdk": 35,
   "abi": "arm64-v8a",
-  "distribution": "local lite and offline builds",
+  "distribution": "GitHub Release v5.4.0 (lite and offline APK assets)",
+  "releaseUrl": "https://github.com/Wyun09/inkvoy/releases/tag/v5.4.0",
   "license": "GPL-3.0-only for project-owned code",
   "runtime": {
     "id": "debian13-arm64-studio2-20261018",
@@ -92,7 +93,7 @@
   "androidFrameworkTests": 244,
   "javascriptChecksValidated": 403,
   "physicalAndroidDeviceVerified": false,
-  "verification": "verification/regression-531.json",
+  "verification": "verification/regression-540.json",
   "changes": [
     "ChatGPT mobile inspired neutral light and dark surfaces.",
     "Circular navigation and white rounded composer.",
@@ -115,5 +116,5 @@
     }
   },
   "finalSignedResourceChecks": 22,
-  "releaseAttachmentsUploaded": false
+  "releaseAttachmentsUploaded": true
 }

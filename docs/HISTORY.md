@@ -30,7 +30,7 @@
 - 5.3.1：本地热修复。补全 OpenAI Responses 流事件聚合，详见 [版本说明](RELEASE-5.3.1.md)。
 - 5.4.0：参考用户提供的 ChatGPT 手机端截图调整对话、输入区与全局界面，详见 [版本说明](RELEASE-5.4.0.md)。
 
-这些开发版本与安装包的本地生成不代表远端已发布；本轮尚未上传 GitHub Release。
+5.2.0–5.3.1 的开发版本与安装包未上传 GitHub Release；5.4.0 的轻量版与离线完整版已作为 [v5.4.0 Release](https://github.com/Wyun09/inkvoy/releases/tag/v5.4.0) 的附件发布。
 
 ## 缺少完整源码的版本
 
@@ -40,7 +40,7 @@
 
 - 应用源码、锁文件、构建脚本、可保留的原生库、测试与许可证进入 Git。
 - 私钥、登录资料、浏览器 profile、设备数据和构建缓存不进入 Git。
-- 大型运行镜像、对应源码压缩档、APK 和演示视频由每版 EXTERNAL_ARTIFACTS.json 单独记录；GitHub Release 附件尚未上传。
+- 大型运行镜像、对应源码压缩档、APK 和演示视频由每版 EXTERNAL_ARTIFACTS.json 单独记录；5.4.0 的两个 APK 已作为 GitHub Release 附件发布，其余版本尚未上传。
 - 每个恢复分支的 SOURCE_MANIFEST.json 校验该版选入的原始源码文件；history/original-source-manifest.json 保留原发布包的清单（如原包提供）。
 - main 另有仓库文档和源码检查配置；需要确切发布快照时，使用相应 release/ 分支。
 

@@ -4,20 +4,24 @@
 
 Coding, security research and reverse engineering — a terminal, project files, a controllable browser and App control, all on the phone in your hand.
 
-![version](https://img.shields.io/badge/version-5.1.1-blue) ![Android](https://img.shields.io/badge/Android-8.0%2B%20(API%2026)-3DDC84?logo=android&logoColor=white) ![ABI](https://img.shields.io/badge/ABI-arm64--v8a-lightgrey) ![license](https://img.shields.io/badge/license-GPL--3.0--only-blue)
+![version](https://img.shields.io/badge/version-5.4.0-blue) ![Android](https://img.shields.io/badge/Android-8.0%2B%20(API%2026)-3DDC84?logo=android&logoColor=white) ![ABI](https://img.shields.io/badge/ABI-arm64--v8a-lightgrey) ![license](https://img.shields.io/badge/license-GPL--3.0--only-blue)
 
 ![Inkvoy workspace](docs/assets/inkvoy-cover.jpg)
 
-The screenshot uses demonstration task data. Current release: **5.1.1** (versionCode 25).
+The screenshot uses demonstration task data. Current release: **5.4.0** (versionCode 29).
 
 ## Status
 
 | Item | State |
 | --- | --- |
-| Source | Complete and buildable (GPL-3.0-only) |
-| Installable APK | **Not published.** The ≈588 MiB APK bundles an offline Debian runtime; it is listed in [EXTERNAL_ARTIFACTS.json](EXTERNAL_ARTIFACTS.json) and has not been uploaded as a Release asset |
-| Physical-device acceptance | **Not done.** 230 passing framework checks are not device acceptance — see [VERIFICATION.md](VERIFICATION.md) |
+| Source | Complete and buildable (GPL-3.0-only). 5.4.0 lives on `main` and `release/5.4.0` |
+| Installable APK | **Published as [v5.4.0](https://github.com/Wyun09/inkvoy/releases/tag/v5.4.0)**: ≈2.1 MiB lite build; ≈588 MiB offline build that bundles the offline Debian runtime |
+| Physical-device acceptance | **Not done.** 244 passing framework checks are not device acceptance — see [VERIFICATION.md](VERIFICATION.md) |
 | Build cost | Three commands for the JS layer; the APK additionally needs the Android SDK, JDK 17, Maven 3.9, the runtime image and your own signing key |
+
+## Latest release: 5.4.0
+
+Rebuilds the conversation, composer, navigation and settings visuals after the ChatGPT mobile screenshots: neutral light surfaces and charcoal dark surfaces, a circular top action row, a white rounded composer, a glass material layer for the bottom composer and a clearer reply hierarchy. Secondary composer controls now live in the "tools and modes" popover so they cannot collide with the input or the send action at narrow widths. The existing models, tools and workflows are kept, including the 5.3.1 OpenAI Responses fix. Lite and offline builds are provided; see [docs/RELEASE-5.4.0.md](docs/RELEASE-5.4.0.md).
 
 ## The gap it closes
 
@@ -55,7 +59,7 @@ The cost is paid in permissions, CPU time and attack surface on that same phone,
 | Native layer | `app/src/main/cpp/` | `termux.c` (PTY / processes), `studio.c` (JNI bridge) |
 | UI and engine | `js/`, `js/core/` | `engine.js`, `client.js`, `core/browser.js`, `core/protocol.js`, `mcp-worker.js`, `mobile-browser.js`, bundled into assets by esbuild |
 | Runtime | `app/src/main/assets/runtime/` | Debian ARM64 image plus manifest; size and SHA-256 are verified before start |
-| Tests and evidence | `test/`, `verification/` | ≈75 Node tests, 6 Java self-test groups, per-release logs |
+| Tests and evidence | `test/`, `verification/` | ≈75 Node test files, 6 Java self-test groups, per-release logs |
 
 ## Permissions and security boundaries
 
@@ -87,22 +91,23 @@ An APK additionally needs the Android SDK, JDK 17, Maven 3.9, the offline runtim
 
 | Check | Result | Notes |
 | --- | --- | --- |
-| Android framework regression | 230 passed, 0 failed/errored/skipped | API 26/33, including 12 settings-navigation regressions |
-| JavaScript checks | 390 checks covered | First full run 389/390; a null dereference in a wait predicate was fixed and the 5 affected checks re-ran green |
-| Onboarding / startup / production-package UI | 12 passed | — |
-| Physical-device acceptance | **Not done** | Vendor settings navigation still needs an over-install confirmation |
+| Android framework regression | 244 passed, 0 failed/errored/skipped | API 26/33 |
+| JavaScript checks | 403 passed, 0 failed/cancelled/skipped | Includes the OpenAI Responses stream regressions |
+| Layout audit | 7 viewports / densities, 36 route snapshots, 0 horizontal page overflow | Deterministic test fixture |
+| Final signed APK asset and script checks | 22 passed | Lite and offline builds |
+| Physical-device acceptance | **Not done** | Over-install, vendor keyboard, display cutout and real GPU smoothness on Android 13 still need confirmation |
 
-CI ([.github/workflows/checks.yml](.github/workflows/checks.yml)) covers the JavaScript checks only; the Android framework regression needs a real built APK and currently reproduces locally. Full records: [verification/regression-511.json](verification/regression-511.json).
+CI ([.github/workflows/checks.yml](.github/workflows/checks.yml)) covers the JavaScript checks only; the Android framework regression needs a real built APK and currently reproduces locally. Full records: [verification/regression-540.json](verification/regression-540.json).
 
-APK SHA-256 `b7c5314db1df61bf8760c3db497bf80b7a9d18baa97be4ff6e27830ca02ed7f5`; signing certificate SHA-256 `cc8f15b569d5e813c68d49f4fa17d19afbe6f7526ef5dbdade88e317116c2b59`.
+APK SHA-256: lite `769f2f51845536b429de174167cd4d7636905ba18920a672704e7b1d1cc75906` (2,156,870 bytes); offline `dcfdf0a29a14af9e4bec9f7b43a8f49229e61d9c92cee5995480c3b64de4a39f` (616,077,718 bytes). Signing certificate SHA-256 `cc8f15b569d5e813c68d49f4fa17d19afbe6f7526ef5dbdade88e317116c2b59`.
 
 ## Versions and provenance
 
-**Eighteen versions** (0.1.0 through 5.1.1) were recovered from release snapshots that were actually saved, each as its own restoration commit plus a `release/<version>` branch. Import dates are the real restoration dates rather than backdated development commits, and versions whose sources are missing are recorded in [docs/HISTORY.md](docs/HISTORY.md).
+**Eighteen versions** (0.1.0 through 5.1.1) were recovered from release snapshots that were actually saved, each as its own restoration commit plus a `release/<version>` branch. Import dates are the real restoration dates rather than backdated development commits, and versions whose sources are missing are recorded in [docs/HISTORY.md](docs/HISTORY.md). On top of that, **5.2.0, 5.3.0, 5.3.1 and 5.4.0** are post-recovery development releases: their code lives on `main`, with the matching `release/5.2.0`, `release/5.3.0`, `release/5.3.1` and `release/5.4.0` branches.
 
 **Naming note**: the repository and product are Inkvoy. The package id `io.github.deepseekbridge` and some file names date from the earlier DeepSeek Android Bridge period and are kept so existing installs can be updated in place.
 
-Large artifacts (the ≈588 MiB APK, the ≈586 MiB runtime image and full release source archives) are listed in [EXTERNAL_ARTIFACTS.json](EXTERNAL_ARTIFACTS.json) and are not in regular Git.
+Large artifacts: the two 5.4.0 APKs are published as assets of the [v5.4.0 release](https://github.com/Wyun09/inkvoy/releases/tag/v5.4.0); the ≈586 MiB runtime image and the full release source archives remain listed in [EXTERNAL_ARTIFACTS.json](EXTERNAL_ARTIFACTS.json) and are not in regular Git.
 
 ## Contributing
 
