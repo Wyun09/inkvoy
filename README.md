@@ -14,7 +14,7 @@
 
 | 项目 | 状态 |
 | --- | --- |
-| 源码 | 完整开放，可自行构建（GPL-3.0-only）。5.4.0 代码在 `main` 与 `release/5.4.0` 分支 |
+| 源码 | 完整开放，可自行构建（GPL-3.0-only）。5.4.0 发布代码在 `release/5.4.0` 分支；`main` 另含 2026-11-06 的发布后修复（见 [VERIFICATION.md](VERIFICATION.md)） |
 | 安装包 | **已发布 [v5.4.0](https://github.com/Wyun09/inkvoy/releases/tag/v5.4.0)**：轻量版约 2.1 MiB；离线完整版约 588 MiB，内含离线 Debian 运行时镜像 |
 | 实体手机验收 | **未完成**。框架回归 244 项通过不等于真机验收，见 [VERIFICATION.md](VERIFICATION.md) |
 | 构建成本 | JS 部分三条命令；APK 另需 Android SDK、JDK 17、Maven 3.9、离线镜像和自己的签名 |
@@ -98,6 +98,8 @@ APK 另需 Android SDK、JDK 17、Maven 3.9、离线运行时镜像和**你自�
 | 实体手机验收 | **未完成** | 实体 Android 13 的覆盖安装、厂商键盘、刘海安全区与实际 GPU 流畅度待验证 |
 
 CI（[.github/workflows/checks.yml](.github/workflows/checks.yml)）只覆盖 JavaScript 检查；Android 框架回归需要真实构建的 APK，目前只能在本地复现。完整记录见 [verification/regression-540.json](verification/regression-540.json)。
+
+`main` 上的发布后修复（2026-11-06）让「工具与模式」弹层恢复可点击并补充标签与命中测试，JavaScript / 界面全量为 **405 项通过**（[regression-main-2026-11-06.log](verification/regression-js-main-2026-11-06.log)、[regression-main-2026-11-06.json](verification/regression-main-2026-11-06.json)）。该修复尚未进入 5.4.0 安装包，下一次 APK 构建会包含。
 
 APK SHA-256：轻量版 `769f2f51845536b429de174167cd4d7636905ba18920a672704e7b1d1cc75906`（2,156,870 字节）；离线完整版 `dcfdf0a29a14af9e4bec9f7b43a8f49229e61d9c92cee5995480c3b64de4a39f`（616,077,718 字节）。签名证书 SHA-256 `cc8f15b569d5e813c68d49f4fa17d19afbe6f7526ef5dbdade88e317116c2b59`。
 

@@ -122,6 +122,19 @@ body.dark {
   transition: border-color .28s ease, box-shadow .28s ease, transform .28s var(--ease);
 }
 
+/* The tools popover is positioned above the composer, outside the rounded
+ * surface box. The glass surface must clip its decorative sheen while the
+ * popover is closed, but clipping also hid the popover and let the message
+ * list intercept its clicks. Release the clip only while the popover is open
+ * and hide the sheen that would otherwise spill over the conversation. */
+.composer-surface:has(#composer-modes:not([hidden])) {
+  overflow: visible;
+}
+
+.composer-surface:has(#composer-modes:not([hidden]))::after {
+  display: none;
+}
+
 /* The inner rim and reflected highlight are separate layers. One flat
  * gradient cannot create a glass edge, especially on a plain white page. */
 .composer-surface::before {
@@ -277,7 +290,7 @@ body.dark {
   gap: 9px;
   border: 1px solid var(--glass-border);
   border-radius: 24px;
-  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
   box-shadow: 0 24px 72px #0000001c, inset 0 1px 0 var(--glass-highlight);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
@@ -285,7 +298,8 @@ body.dark {
 
 .composer-tools-panel > .composer-toolbar {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
   order: 2;
   min-height: 42px;
   padding: 8px 0 0;
@@ -297,12 +311,49 @@ body.dark {
   min-width: 0;
   min-height: 36px;
   border-radius: 12px;
+  gap: 3px;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+/* The compact composer hides captions to stay quiet; this panel is the only
+ * surface that exposes those tools, so every button keeps a readable label. */
+.composer-tools-panel > .composer-toolbar > #composer-slash,
+.composer-tools-panel > .composer-toolbar > #composer-mention,
+.composer-tools-panel > .composer-toolbar > #work-open {
+  font-size: 11px;
+  overflow: hidden;
+}
+
+.composer-tools-panel > .composer-toolbar > #composer-slash::before,
+.composer-tools-panel > .composer-toolbar > #composer-mention::before,
+.composer-tools-panel > .composer-toolbar > #work-open::before {
+  display: none;
+}
+
+.composer-tools-panel > .composer-toolbar > button span {
+  display: inline;
+}
+
+.composer-tools-panel > .composer-toolbar > #composer-collapse::after {
+  content: '收起输入框';
+  margin-left: 3px;
+  font-size: 11px;
 }
 
 .composer-tools-panel > .composer-toolbar > #context-meter {
   max-width: none;
   justify-content: center;
   margin-left: 0;
+  font-size: 10px;
+}
+
+.composer-tools-panel > .composer-toolbar > #context-meter > span {
+  display: inline;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10px;
 }
 
 .composer-tools-panel > #client-browser {

@@ -106,7 +106,7 @@
       "removedSelectors": 3
     }
   ],
-  "cssBytes": 205761,
+  "cssBytes": 206718,
   "coreStyleOwner": "js/ui/app-shell",
   "legacyCoreStylesBundled": false,
   "reactRuntimeBundled": false,
@@ -3167,7 +3167,7 @@
           "bytesInOutput": 13672
         },
         "js/ui/composer.js": {
-          "bytesInOutput": 17154
+          "bytesInOutput": 17316
         },
         "js/ui/workflows.js": {
           "bytesInOutput": 12588
@@ -3197,7 +3197,7 @@
           "bytesInOutput": 7164
         }
       },
-      "bytes": 1069407
+      "bytes": 1069569
     }
   }
 }

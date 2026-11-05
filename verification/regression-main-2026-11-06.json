@@ -1,0 +1,22 @@
+{
+  "branch": "main",
+  "date": "2026-11-06",
+  "baseVersion": "5.4.0",
+  "releaseBinariesChanged": false,
+  "javascript": {
+    "tests": 405,
+    "passed": 405,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "log": "regression-js-main-2026-11-06.log"
+  },
+  "fix": "The composer tools popover was clipped by the glass composer surface, so the message list intercepted clicks on every secondary control. While #composer-modes is open the surface now releases clipping and hides the sheen layer instead; the popover keeps readable labels, a three-column control grid, and collapses with the composer.",
+  "testsAdded": "test/composer-tools-ui.test.mjs hit-tests all nine secondary controls at 390px and 320px and then opens the browser workspace.",
+  "testsUpdated": [
+    "test/client-live-ui.test.mjs: widen deterministic web-stream fixture windows so both revisions stay observable",
+    "test/workflow-ui.test.mjs: open the tools popover before 目标与计划 controls and use the shared task board entry while a run is active",
+    "test/workspace5-ui.test.mjs: open the tools popover before the context meter and collapse controls"
+  ],
+  "note": "The 5.4.0 APK binaries were not rebuilt; this fix is source-only on main and will ship in the next build."
+}
