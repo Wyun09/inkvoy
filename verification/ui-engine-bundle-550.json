@@ -108,7 +108,7 @@
       "removedSelectors": 3
     }
   ],
-  "cssBytes": 272265,
+  "cssBytes": 277943,
   "coreStyleOwner": "js/ui/app-shell",
   "legacyCoreStylesBundled": false,
   "reactRuntimeBundled": false,
@@ -2472,6 +2472,8 @@
     "js/ui/browser-scripts.js",
     "js/ui/app-shell.js",
     "js/ui/v5/chat.js",
+    "js/ui/v5/settings.js",
+    "js/ui/v5/terminal.js",
     "js/ui/studio.js",
     "js/client-stream.js",
     "js/responses.js",
@@ -3187,8 +3189,14 @@
         "js/ui/v5/chat.js": {
           "bytesInOutput": 12824
         },
+        "js/ui/v5/settings.js": {
+          "bytesInOutput": 7582
+        },
+        "js/ui/v5/terminal.js": {
+          "bytesInOutput": 2436
+        },
         "js/ui/studio.js": {
-          "bytesInOutput": 29050
+          "bytesInOutput": 29084
         },
         "js/client-stream.js": {
           "bytesInOutput": 1474
@@ -3203,7 +3211,7 @@
           "bytesInOutput": 7184
         }
       },
-      "bytes": 1086775
+      "bytes": 1096827
     }
   }
 }

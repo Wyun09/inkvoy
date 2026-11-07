@@ -17,7 +17,9 @@ import {createSetupJourney} from './setup-journey.js';
 import {installBrowserScripts} from './browser-scripts.js';
 import {createAppShell} from './app-shell.js';
 import {mountV5Chat} from './v5/chat.js';
-let v5Chat=null;
+import {mountV5Settings} from './v5/settings.js';
+import {mountV5Terminal} from './v5/terminal.js';
+let v5Chat=null,v5Settings=null,v5Terminal=null;
 
 const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const shellQuote=s=>"'"+String(s).replaceAll("'","'\\''")+"'";
@@ -201,6 +203,8 @@ export function initStudio({client,native,providers,agentTools,extensions}) {
   journeyView=createSetupJourney({native,client,providers,openModel:()=>modelView.open(),closeDrawer,notify:toast});
   appShell=createAppShell({client,providers,closeOverlays:closeDrawer});
   v5Chat=mountV5Chat({client});
+ v5Settings=mountV5Settings({});
+ v5Terminal=mountV5Terminal();
  window.StudioUI={render,openSetup:section=>journeyView.open(section),openWork:section=>workView?.open(section),extensionState:value=>settingsHub?.extensionState(value),questionState:value=>questionView?.render(value),platformState,closeDrawer,providerState:()=>{modelView?.render();composerView?.render(client.snapshot());},nativeEvent(event){journeyView?.event(event);settingsHub?.event(event);if(event.type==='process'){processView.changed();}else if(event.type==='computer'){computerView.render(event.value);}else if(event.type==='runtime'){runtimeRevision++;runtimeState(event.value);}else if(event.type==='clipboard'){terminals.get(currentTerm)?.term.paste(event.text||'');}else if(event.type==='terminal'){const t=terminals.get(event.id);if(t){if(event.data)t.term.write(Uint8Array.from(atob(event.data),c=>c.charCodeAt(0)));if(event.exitCode!==undefined){t.exitCode=event.exitCode;t.term.writeln('\r\n[进程退出：'+event.exitCode+']');renderTermTabs();}}}else if(event.type==='import'){toast(event.error||'已导入 '+event.path);if(!event.error){void mediaView.imported(event);void loadFiles().catch(()=>{});}}}};
   client.publish();void refreshRuntime().catch(()=>{});
 }
