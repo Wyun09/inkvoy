@@ -93,6 +93,14 @@ export async function toolbarAction(page,id){
 }
 export async function navigateStudio(page,tab) {
   if(await page.locator('#page-'+tab).isVisible())return;
+  const sidebarItem=page.locator('[data-v5-nav="'+tab+'"]');
+  if(await sidebarItem.count()){
+    if(!(await page.locator('#v5-sidebar[data-open="true"]').count())){
+      const toggle=page.locator('#app-nav');
+      if(await toggle.count()&&await toggle.isVisible()){await toggle.click();await page.waitForTimeout(180);}
+    }
+    if(await page.locator('#v5-sidebar[data-open="true"]').count()){await sidebarItem.click();await page.waitForTimeout(140);return;}
+  }
   if(tab==='settings'&&await page.locator('#rail-settings').isVisible()){await page.locator('#rail-settings').click();return;}
   const rail=page.locator('[data-rail-page="'+tab+'"]');if(await rail.count()&&await rail.isVisible()){await rail.click();return;}
   const direct=page.locator('.bottom-nav [data-navigate="'+tab+'"]');if(await direct.count()&&await direct.isVisible()){await direct.click();return;}

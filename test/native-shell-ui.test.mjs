@@ -9,7 +9,7 @@ test('phone conversation has a unified composer, two header actions and working 
  const page=await fixture(t);assert.equal(await page.locator('.bottom-nav').isVisible(),false);assert.equal(await page.locator('.top-actions>button:visible').count(),2);
  assert.equal(await page.locator('.composer-surface #chat-form').count(),1);assert.equal(await page.locator('.composer-surface .composer-toolbar').count(),1);
  await page.locator('#chat-input').fill('跨页面保留这份草稿');await page.locator('#app-more').click();await page.locator('#app-menu-files').click();await page.locator('#app-menu').waitFor({state:'hidden'});
- assert.equal(await page.locator('#page-files').isVisible(),true);assert.equal(await page.locator('.bottom-nav').isVisible(),true);
+ assert.equal(await page.locator('#page-files').isVisible(),true);assert.equal(await page.locator('.bottom-nav').isVisible(),false);
  await navigateStudio(page,'chat');assert.equal(await page.locator('#chat-input').inputValue(),'跨页面保留这份草稿');assert.equal(await page.locator('.bottom-nav').isVisible(),false);
  await page.locator('#app-more').click();await page.locator('#app-menu-model').click();assert.equal(await page.locator('#provider-endpoint').isVisible(),true);await page.keyboard.press('Escape');assert.equal(await page.locator('#app-more').evaluate(n=>n===document.activeElement),true);
 });
