@@ -16,6 +16,10 @@ import {createWorkView} from './workflows.js';
 import {createSetupJourney} from './setup-journey.js';
 import {installBrowserScripts} from './browser-scripts.js';
 import {createAppShell} from './app-shell.js';
+import {mountV5Chat} from './v5/chat.js';
+import {mountV5Settings} from './v5/settings.js';
+import {mountV5Terminal} from './v5/terminal.js';
+let v5Chat=null,v5Settings=null,v5Terminal=null;
 
 const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const shellQuote=s=>"'"+String(s).replaceAll("'","'\\''")+"'";
@@ -94,7 +98,7 @@ export function initStudio({client,native,providers,agentTools,extensions}) {
     $('chat-send').disabled=!!state.active&&!/^\//.test($('chat-input').value.trim());$('chat-input').disabled=false;$('chat-new').disabled=!!state.active;
     $('client-stop').disabled=s?.status==='cancelling';
     for(const [id,key]of [['client-agent','agent'],['client-thinking','thinking'],['client-search','search']]){const enabled=s?.settings?.[key]??key!=='thinking';$(id).classList.toggle('selected',enabled);$(id).setAttribute('aria-pressed',String(enabled));$(id).disabled=!!state.active;}
-    modelView?.render();workspaceView?.render(state,s,companion);composerView?.render(state);workView?.render(state);appShell?.render(state,s);
+    modelView?.render();workspaceView?.render(state,s,companion);composerView?.render(state);workView?.render(state);appShell?.render(state,s);v5Chat?.render();
   }
   click('chat-new',()=>{if(dirty)throw new Error('先保存或关闭文件改动，再新建项目');client.create();dir='';$('file-editor').hidden=true;});
   click('session-menu',openDrawer);
@@ -140,7 +144,7 @@ export function initStudio({client,native,providers,agentTools,extensions}) {
     const terminalProject=project(),terminalTitle=client.current()?.title||'工作区';
     $('terminal-state').textContent='准备环境…';if(!existingId)try{await native('runtime.ensure',{project:terminalProject});}catch(e){$('terminal-state').textContent='环境启动失败 · 到工具中心查看原因';void refreshRuntime().catch(()=>{});throw e;}
     const host=document.createElement('div');host.className='xterm-session';$('terminal-host').append(host);
-    const term=new Terminal({fontFamily:'ui-monospace, "Noto Sans Mono", monospace',fontSize:13,scrollback:10000,cursorBlink:true,convertEol:false,allowProposedApi:false,theme:{background:'#11141b',foreground:'#d6deeb',cursor:'#91b6ff',selectionBackground:'#304666',black:'#11141b',red:'#f18c96',green:'#8fcea8',yellow:'#e6c487',blue:'#92b6ff',magenta:'#bca4df',cyan:'#8fcac9',white:'#d6deeb'}});const fit=new FitAddon();term.loadAddon(fit);term.open(host);try{fit.fit();}catch{}
+    const term=new Terminal({fontFamily:'ui-monospace, "Noto Sans Mono", monospace',fontSize:13,scrollback:10000,cursorBlink:true,convertEol:false,allowProposedApi:false,theme:{background:'#FFFFFF',foreground:'#1B1D1F',cursor:'#0FAE6E',cursorAccent:'#FFFFFF',selectionBackground:'#C8EEDC',black:'#151617',red:'#E23A2C',green:'#0A7A4E',yellow:'#A26A16',blue:'#2F6DB5',magenta:'#8A5CB8',cyan:'#0C8A70',white:'#E9E7E1',brightBlack:'#7A7B78',brightRed:'#D8352A',brightGreen:'#0FAE6E',brightYellow:'#C98A26',brightBlue:'#3E7DC4',brightMagenta:'#9C6FC9',brightCyan:'#12A089',brightWhite:'#151617'}});const fit=new FitAddon();term.loadAddon(fit);term.open(host);try{fit.fit();}catch{}
     let r;try{r=existingId?{id:existingId}:await native('terminal.open',{project:terminalProject,rows:term.rows,cols:term.cols});}catch(e){term.dispose();host.remove();throw e;}
     const id=r.id;terminals.set(id,{term,fit,host,project:terminalProject,title:'bash '+(++terminalSerial)+' · '+terminalTitle.slice(0,12)});$('terminal-empty').hidden=true;
     term.onData(data=>{void native('terminal.input',{id,data}).catch(e=>toast(e.message));});term.onResize(({rows,cols})=>{void native('terminal.resize',{id,rows,cols}).catch(()=>{});});selectTerminal(id);$('terminal-state').textContent='已连接 · 真实 PTY';
@@ -198,6 +202,9 @@ export function initStudio({client,native,providers,agentTools,extensions}) {
   workView=createWorkView({client,providers,notify:toast,closeDrawer});
   journeyView=createSetupJourney({native,client,providers,openModel:()=>modelView.open(),closeDrawer,notify:toast});
   appShell=createAppShell({client,providers,closeOverlays:closeDrawer});
-  window.StudioUI={render,openSetup:section=>journeyView.open(section),openWork:section=>workView?.open(section),extensionState:value=>settingsHub?.extensionState(value),questionState:value=>questionView?.render(value),platformState,closeDrawer,providerState:()=>{modelView?.render();composerView?.render(client.snapshot());},nativeEvent(event){journeyView?.event(event);settingsHub?.event(event);if(event.type==='process'){processView.changed();}else if(event.type==='computer'){computerView.render(event.value);}else if(event.type==='runtime'){runtimeRevision++;runtimeState(event.value);}else if(event.type==='clipboard'){terminals.get(currentTerm)?.term.paste(event.text||'');}else if(event.type==='terminal'){const t=terminals.get(event.id);if(t){if(event.data)t.term.write(Uint8Array.from(atob(event.data),c=>c.charCodeAt(0)));if(event.exitCode!==undefined){t.exitCode=event.exitCode;t.term.writeln('\r\n[进程退出：'+event.exitCode+']');renderTermTabs();}}}else if(event.type==='import'){toast(event.error||'已导入 '+event.path);if(!event.error){void mediaView.imported(event);void loadFiles().catch(()=>{});}}}};
+  v5Chat=mountV5Chat({client});
+ v5Settings=mountV5Settings({});
+ v5Terminal=mountV5Terminal();
+ window.StudioUI={render,openSetup:section=>journeyView.open(section),openWork:section=>workView?.open(section),extensionState:value=>settingsHub?.extensionState(value),questionState:value=>questionView?.render(value),platformState,closeDrawer,providerState:()=>{modelView?.render();composerView?.render(client.snapshot());},nativeEvent(event){journeyView?.event(event);settingsHub?.event(event);if(event.type==='process'){processView.changed();}else if(event.type==='computer'){computerView.render(event.value);}else if(event.type==='runtime'){runtimeRevision++;runtimeState(event.value);}else if(event.type==='clipboard'){terminals.get(currentTerm)?.term.paste(event.text||'');}else if(event.type==='terminal'){const t=terminals.get(event.id);if(t){if(event.data)t.term.write(Uint8Array.from(atob(event.data),c=>c.charCodeAt(0)));if(event.exitCode!==undefined){t.exitCode=event.exitCode;t.term.writeln('\r\n[进程退出：'+event.exitCode+']');renderTermTabs();}}}else if(event.type==='import'){toast(event.error||'已导入 '+event.path);if(!event.error){void mediaView.imported(event);void loadFiles().catch(()=>{});}}}};
   client.publish();void refreshRuntime().catch(()=>{});
 }

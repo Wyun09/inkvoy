@@ -12,6 +12,57 @@ export function createAppShell({client,providers,closeOverlays}){
  const modeChat=node('button','mode-switch-option','聊天'),modeWork=node('button','mode-switch-option','工作');
  modeChat.type='button';modeWork.type='button';modeChat.dataset.mode='chat';modeWork.dataset.mode='work';modeSwitch.append(modeChat,modeWork);topbar.insertBefore(modeSwitch,actions);
  modeChat.onclick=()=>window.BridgeDashboard?.navigate('chat');modeWork.onclick=()=>window.BridgeDashboard?.navigate('home');
+ // 5.5 shell: a real sidebar owns workspace navigation. The legacy mode switch
+ // moves into the sidebar footer so the status line stays quiet.
+ const navToggle=node('button','icon-button');navToggle.id='app-nav';navToggle.type='button';navToggle.append(uiIcon('menu'));navToggle.setAttribute('aria-label','打开导航');navToggle.setAttribute('aria-expanded','false');
+ topbar.prepend(navToggle);
+ const navScrim=node('div','v5-scrim');navScrim.id='v5-scrim';navScrim.hidden=true;
+ const sidebar=node('aside','v5-sidebar');sidebar.id='v5-sidebar';sidebar.setAttribute('aria-label','侧边导航');sidebar.setAttribute('aria-hidden','true');
+ const sbHead=node('header','v5-sb-head'),sbBrand=node('div','v5-sb-brand','inkvoy');
+ const sbClose=node('button','icon-button');sbClose.id='v5-nav-close';sbClose.type='button';sbClose.append(uiIcon('close'));sbClose.setAttribute('aria-label','关闭导航');
+ sbHead.append(sbBrand,sbClose);
+ const sbProject=node('div','v5-sb-project'),sbProjectLabel=node('span','v5-sb-label','项目');
+ const sbProjectName=node('strong','v5-sb-project-name','inkvoy'),sbProjectMeta=node('span','v5-sb-meta','main · 工作区');
+ sbProject.append(sbProjectLabel,sbProjectName,sbProjectMeta);
+ const sbNav=node('nav','v5-sb-nav');
+ const sbNew=node('button','v5-sb-new');sbNew.type='button';sbNew.setAttribute('aria-label','新建会话');sbNew.append(uiIcon('plus'));sbNew.onclick=()=>{closeNav();document.getElementById('chat-new')?.click();},navItems=new Map();
+ for(const [page,icon,label] of [['chat','chat','对话'],['home','home','工作'],['files','files','文件'],['terminal','terminal','终端'],['computer','browser','浏览器']]){
+  const item=node('button','v5-nav-item');item.type='button';item.dataset.v5Nav=page;item.append(uiIcon(icon),node('span','',label));
+  item.onclick=()=>{closeNav();window.BridgeDashboard?.navigate(page);};sbNav.append(item);navItems.set(page,item);
+ }
+ const sbFoot=node('footer','v5-sb-foot');
+ const settingsItem=node('button','v5-nav-item');settingsItem.type='button';settingsItem.dataset.v5Nav='settings';settingsItem.append(uiIcon('settings'),node('span','','设置'));
+ settingsItem.onclick=()=>{closeNav();window.BridgeDashboard?.navigate('settings');};navItems.set('settings',settingsItem);
+ modeSwitch.classList.add('v5-mode-switch');
+ const sbSessions=node('section','v5-sb-sessions'),sbSessionsLabel=node('span','v5-sb-label','最近会话'),sbSessionList=node('div','v5-sb-session-list');sbSessions.append(sbSessionsLabel,sbSessionList);
+ let sessionKey='';
+ function renderSidebarSessions(state){
+  const sessions=(state.sessions||[]).filter(s=>!s.archived).sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0)||(b.updatedAt||0)-(a.updatedAt||0)).slice(0,6);
+  const key=sessions.map(s=>s.id+'|'+s.title+'|'+s.status).join('~')+'|'+state.selected;
+  if(key===sessionKey)return;sessionKey=key;sbSessionList.replaceChildren();
+  if(!sessions.length){sbSessionList.append(node('p','v5-sb-session-empty','暂无会话'));return;}
+  for(const session of sessions){
+   const item=node('button','v5-sb-session');item.type='button';item.dataset.sessionId=session.id;
+   const dot=node('span','v5-sb-session-dot');dot.dataset.state=session.status||'idle';
+   const label=node('span','v5-sb-session-title',session.title||'未命名会话');
+   item.append(dot,label);
+   if(session.id===state.selected)item.classList.add('active');
+   item.onclick=()=>{closeNav();const index=sessions.findIndex(s=>s.id===session.id);const target=document.querySelectorAll('#client-sessions > button')[index];if(target)target.click();};
+   sbSessionList.append(item);
+  }
+ }
+ sbFoot.append(settingsItem,modeSwitch);
+ sbProject.append(sbNew);
+ sidebar.append(sbHead,sbProject,sbNav,sbSessions,sbFoot);
+ app.append(navScrim,sidebar);
+ let navOpen=false;
+ function openNav(){if(navOpen)return;navOpen=true;navScrim.hidden=false;sidebar.dataset.open='true';sidebar.setAttribute('aria-hidden','false');navToggle.setAttribute('aria-expanded','true');closeOverlays();}
+ function closeNav(){if(!navOpen)return;navOpen=false;navScrim.hidden=true;sidebar.dataset.open='false';sidebar.setAttribute('aria-hidden','true');navToggle.setAttribute('aria-expanded','false');}
+ navToggle.onclick=()=>{if(navOpen)closeNav();else openNav();};
+ sbClose.onclick=closeNav;navScrim.onclick=closeNav;
+ sidebar.addEventListener('click',event=>{if(event.target.closest('[data-v5-nav]'))closeNav();});
+ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&navOpen){event.preventDefault();closeNav();}},true);
+ window.addEventListener('bridge:navigate',closeNav);
  const scrim=node('div','app-menu-scrim workspace-overlay');scrim.id='app-menu';scrim.hidden=true;
  const panel=node('section','app-menu-panel');panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');panel.setAttribute('aria-labelledby','app-menu-title');
  const heading=node('header'),title=node('h2','','工作区操作'),dismiss=node('button','icon-button');title.id='app-menu-title';dismiss.id='app-menu-close';dismiss.setAttribute('aria-label','关闭更多操作');dismiss.append(uiIcon('close'));heading.append(title,dismiss);panel.append(heading);
@@ -73,9 +124,13 @@ export function createAppShell({client,providers,closeOverlays}){
   const profile=providers?.current(),key=[route,text,hasMessages,session?.status,profile?.id,profile?.name].join('|');if(key===renderKey)return;renderKey=key;
   document.body.dataset.taskState=session?.status||'idle';document.body.dataset.hasMessages=String(hasMessages);brand.dataset.hasTitle=String(hasMessages||route!=='chat');
   $('chat-new').hidden=route!=='chat';routeTools.hidden=!routeButtons.has(route);for(const [page,button]of routeButtons)button.hidden=page!==route;
-  if(text!==lastTitle){lastTitle=text;const label=brand.querySelector('strong');label.textContent=text;label.title=text;if(!reduced())label.animate([{opacity:.3,transform:'translateY(3px)'},{opacity:1,transform:'translateY(0)'}],{duration:200,easing:'ease-out'});}
+  if(text!==lastTitle){lastTitle=text;const label=brand.querySelector('strong');label.textContent='inkvoy';label.title='inkvoy';const pageName=document.getElementById('workspace-page-name');if(pageName)pageName.textContent=route==='chat'?(hasMessages?'会话 · '+session.title:'新会话'):(routes[route]||'工作区');if(!reduced())label.animate([{opacity:.3,transform:'translateY(3px)'},{opacity:1,transform:'translateY(0)'}],{duration:200,easing:'ease-out'});}
   const work=route!=='chat';modeChat.setAttribute('aria-pressed',String(!work));modeWork.setAttribute('aria-pressed',String(work));
   more.title=(profile?.name||'DeepSeek 网页')+' · 工作区操作';
+  for(const [page,item] of navItems)item.classList.toggle('active',page===route);
+  renderSidebarSessions(state);
+  const projectName=session?.project||'inkvoy';sbProjectName.textContent=projectName;sbProjectName.title=projectName;
+  sbProjectMeta.textContent=routes[route]||'工作区';
  }
  window.addEventListener('bridge:navigate',event=>{close();route=event.detail;render();});render();
  return {render,close,open,get phase(){return phase;}};

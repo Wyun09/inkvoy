@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises';
-export async function uiHarness(browser, viewport = { width: 390, height: 844 }, { storage = 'enabled', failStartup = false, initialPage = 'home', studio = false, holdTools=false, clientState = {}, providerState={}, providerCatalog, mediaFiles={}, fileChanges={}, saveDelay=0, assetsDirectory, recordVideo, firstRun=false, deviceFixture={}, networkFixture={}, runtimeFixture={}, runtimeTools = [{name:'JADX',version:'1.5.6',kind:'APK / DEX'},{name:'radare2',version:'6.2.4',kind:'ELF / SO'}] } = {}) {
+export async function uiHarness(browser, viewport = { width: 390, height: 844 }, { storage = 'enabled', failStartup = false, initialPage = 'home', studio = false, holdTools=false, clientState = {}, providerState={}, providerCatalog, mediaFiles={}, fileChanges={}, saveDelay=0, v5Chat=false, assetsDirectory, recordVideo, firstRun=false, deviceFixture={}, networkFixture={}, runtimeFixture={}, runtimeTools = [{name:'JADX',version:'1.5.6',kind:'APK / DEX'},{name:'radare2',version:'6.2.4',kind:'ELF / SO'}] } = {}) {
   const context = await browser.newContext({ viewport, deviceScaleFactor: 1,...(recordVideo?{recordVideo}:{}) });
   const page = await context.newPage();
   const assets = assetsDirectory || new URL('../app/src/main/assets/', import.meta.url);
@@ -8,7 +8,9 @@ export async function uiHarness(browser, viewport = { width: 390, height: 844 },
     if (!['engine.html', 'engine.bundle.js', 'compute.worker.js', 'mcp.worker.js', 'app.css', 'logo.png', 'companion.png','Geist.ttf'].includes(name)) return route.abort();
     return route.fulfill({ contentType: name.endsWith('.ttf')?'font/ttf':name.endsWith('.png') ? 'image/png' : name.endsWith('.js') ? 'application/javascript' : name.endsWith('.css') ? 'text/css' : 'text/html; charset=utf-8', body: await readFile(new URL(name, assets)) });
   });
-  await page.addInitScript(({ storage, failStartup, studio, holdTools, clientState, providerState, providerCatalog, mediaFiles, fileChanges, runtimeTools, saveDelay, firstRun, deviceFixture, networkFixture, runtimeFixture }) => {
+  await page.addInitScript(({ storage, failStartup, studio, holdTools, clientState, providerState, providerCatalog, mediaFiles, fileChanges, v5Chat, runtimeTools, saveDelay, firstRun, deviceFixture, networkFixture, runtimeFixture }) => {
+    window.__studioV5LegacyChat = !v5Chat;
+    try { if(!v5Chat) localStorage.setItem('studio-v5-legacy-chat','1'); } catch {}
     if (failStartup) window.ResizeObserver = class { constructor() { throw new Error('ResizeObserver unavailable'); } };
     if (storage === 'disabled') Object.defineProperty(window, 'localStorage', { get: () => null });
     if (storage === 'blocked') Object.defineProperty(window, 'localStorage', { get: () => { throw new DOMException('Storage access denied', 'SecurityError'); } });
@@ -69,7 +71,7 @@ export async function uiHarness(browser, viewport = { width: 390, height: 844 },
       },
       request() {}, response() {}, reportUi() {},
     };
-  }, { storage, failStartup, studio, holdTools, clientState, providerState, providerCatalog, mediaFiles, fileChanges, runtimeTools, saveDelay, firstRun, deviceFixture, networkFixture, runtimeFixture });
+  }, { storage, failStartup, studio, holdTools, clientState, providerState, providerCatalog, mediaFiles, fileChanges, v5Chat, runtimeTools, saveDelay, firstRun, deviceFixture, networkFixture, runtimeFixture });
   await page.goto('https://bridge.local/engine.html');
   await page.waitForFunction(failStartup => failStartup ? window.nativeStartupErrors?.length > 0 : window.nativeReady && window.BridgeDashboard, failStartup, { timeout: 5000 });
   if(!failStartup)await page.evaluate(tab=>BridgeDashboard.navigate(tab),initialPage);
@@ -93,6 +95,14 @@ export async function toolbarAction(page,id){
 }
 export async function navigateStudio(page,tab) {
   if(await page.locator('#page-'+tab).isVisible())return;
+  const sidebarItem=page.locator('[data-v5-nav="'+tab+'"]');
+  if(await sidebarItem.count()){
+    if(!(await page.locator('#v5-sidebar[data-open="true"]').count())){
+      const toggle=page.locator('#app-nav');
+      if(await toggle.count()&&await toggle.isVisible()){await toggle.click();await page.waitForTimeout(180);}
+    }
+    if(await page.locator('#v5-sidebar[data-open="true"]').count()){await sidebarItem.click();await page.waitForTimeout(140);return;}
+  }
   if(tab==='settings'&&await page.locator('#rail-settings').isVisible()){await page.locator('#rail-settings').click();return;}
   const rail=page.locator('[data-rail-page="'+tab+'"]');if(await rail.count()&&await rail.isVisible()){await rail.click();return;}
   const direct=page.locator('.bottom-nav [data-navigate="'+tab+'"]');if(await direct.count()&&await direct.isVisible()){await direct.click();return;}
