@@ -108,7 +108,7 @@
       "removedSelectors": 3
     }
   ],
-  "cssBytes": 250093,
+  "cssBytes": 255877,
   "coreStyleOwner": "js/ui/app-shell",
   "legacyCoreStylesBundled": false,
   "reactRuntimeBundled": false,
@@ -2794,10 +2794,10 @@
           "bytesInOutput": 3644
         },
         "js/core/browser.js": {
-          "bytesInOutput": 25861
+          "bytesInOutput": 25857
         },
         "js/core/dom-text.js": {
-          "bytesInOutput": 9351
+          "bytesInOutput": 9358
         },
         "js/core/reasoning-control.js": {
           "bytesInOutput": 5288
@@ -2824,7 +2824,7 @@
           "bytesInOutput": 390
         },
         "js/engine.js": {
-          "bytesInOutput": 13827
+          "bytesInOutput": 13836
         },
         "js/anthropic.js": {
           "bytesInOutput": 8311
@@ -2839,7 +2839,7 @@
           "bytesInOutput": 6318
         },
         "js/ui/dashboard.js": {
-          "bytesInOutput": 31324
+          "bytesInOutput": 31325
         },
         "js/ui/viewport.js": {
           "bytesInOutput": 1841
@@ -2854,7 +2854,7 @@
           "bytesInOutput": 3957
         },
         "js/client.js": {
-          "bytesInOutput": 27578
+          "bytesInOutput": 27576
         },
         "js/agent-tools.js": {
           "bytesInOutput": 6155
@@ -2866,7 +2866,7 @@
           "bytesInOutput": 3399
         },
         "js/extensions.js": {
-          "bytesInOutput": 6162
+          "bytesInOutput": 6153
         },
         "js/ui/v4/pages.js": {
           "bytesInOutput": 11831
@@ -3109,13 +3109,13 @@
           "bytesInOutput": 6666
         },
         "js/ui/v4/workspace.js": {
-          "bytesInOutput": 17888
+          "bytesInOutput": 17886
         },
         "js/ui/processes.js": {
           "bytesInOutput": 4775
         },
         "node_modules/@xterm/xterm/lib/xterm.mjs": {
-          "bytesInOutput": 344379
+          "bytesInOutput": 344366
         },
         "node_modules/@xterm/addon-fit/lib/addon-fit.mjs": {
           "bytesInOutput": 1196
@@ -3130,7 +3130,7 @@
           "bytesInOutput": 46698
         },
         "node_modules/dompurify/dist/purify.es.mjs": {
-          "bytesInOutput": 31369
+          "bytesInOutput": 31367
         },
         "js/ui/reply-model.js": {
           "bytesInOutput": 4324
@@ -3142,13 +3142,13 @@
           "bytesInOutput": 1446
         },
         "js/ui/replies.js": {
-          "bytesInOutput": 23068
+          "bytesInOutput": 23497
         },
         "js/ui/changes.js": {
           "bytesInOutput": 5698
         },
         "js/ui/model-settings.js": {
-          "bytesInOutput": 14112
+          "bytesInOutput": 14096
         },
         "js/ui/computer.js": {
           "bytesInOutput": 10182
@@ -3169,22 +3169,22 @@
           "bytesInOutput": 13672
         },
         "js/ui/composer.js": {
-          "bytesInOutput": 17319
+          "bytesInOutput": 17324
         },
         "js/ui/workflows.js": {
           "bytesInOutput": 12588
         },
         "js/ui/setup-journey.js": {
-          "bytesInOutput": 23541
+          "bytesInOutput": 23522
         },
         "js/ui/browser-scripts.js": {
           "bytesInOutput": 4171
         },
         "js/ui/app-shell.js": {
-          "bytesInOutput": 9948
+          "bytesInOutput": 9945
         },
         "js/ui/studio.js": {
-          "bytesInOutput": 28999
+          "bytesInOutput": 29011
         },
         "js/client-stream.js": {
           "bytesInOutput": 1474
@@ -3196,10 +3196,10 @@
           "bytesInOutput": 5016
         },
         "js/coordination.js": {
-          "bytesInOutput": 7169
+          "bytesInOutput": 7184
         }
       },
-      "bytes": 1072300
+      "bytes": 1072708
     }
   }
 }
