@@ -1,17 +1,17 @@
 {
-  "version": "5.4.0",
-  "versionCode": 29,
-  "buildDate": "2026-10-31",
+  "version": "5.5.0",
+  "versionCode": 30,
+  "buildDate": "2026-11-08",
   "package": "io.github.deepseekbridge",
-  "apk": "inkvoy-5.4.0-offline.apk",
-  "bytes": 616077718,
-  "sha256": "dcfdf0a29a14af9e4bec9f7b43a8f49229e61d9c92cee5995480c3b64de4a39f",
+  "apk": "inkvoy-5.5.0-lite.apk",
+  "bytes": 2177350,
+  "sha256": "B4CCD758739C2F631C59A3B44AFF311FBA5B900A15E2232C5D28D8C9899E4BB5",
   "signerSha256": "cc8f15b569d5e813c68d49f4fa17d19afbe6f7526ef5dbdade88e317116c2b59",
   "minSdk": 26,
   "targetSdk": 35,
   "abi": "arm64-v8a",
-  "distribution": "GitHub Release v5.4.0 (lite and offline APK assets)",
-  "releaseUrl": "https://github.com/Wyun09/inkvoy/releases/tag/v5.4.0",
+  "distribution": "开发构建（main 合并 5.5 界面重构；离线完整版待重新构建后发布）",
+  "releaseUrl": "",
   "license": "GPL-3.0-only for project-owned code",
   "runtime": {
     "id": "debian13-arm64-studio2-20261018",
@@ -95,27 +95,21 @@
   "physicalAndroidDeviceVerified": false,
   "verification": "verification/regression-540.json",
   "changes": [
-    "ChatGPT mobile inspired neutral light and dark surfaces.",
-    "Circular navigation and white rounded composer.",
-    "Text first quick actions instead of a four pill home grid.",
-    "Existing model, browser, terminal and workflow handlers retained.",
-    "OpenAI Responses streaming fixes retained from 5.3.1."
+    "Ink Instrument 界面重构：侧边栏导航取代底部 dock 与品牌图标。",
+    "聊天页按 5.5 原型结构重做：状态行、右对齐气泡、文档式回复、可折叠工具活动列表与单卡输入区。",
+    "设置页与终端页按 5.5 原型结构重做，真实控件与 PTY 保留。",
+    "工具、浏览器、账号等二级页统一为 Ink Instrument 页面壳。",
+    "JavaScript / 界面测试 401 项通过、0 失败、4 项旧吉祥物/旋转标记动效测试跳过。"
   ],
   "variants": {
     "lite": {
-      "file": "inkvoy-5.4.0-lite.apk",
-      "bytes": 2156870,
-      "sha256": "769f2f51845536b429de174167cd4d7636905ba18920a672704e7b1d1cc75906",
+      "file": "inkvoy-5.5.0-lite.apk",
+      "bytes": 2177350,
+      "sha256": "B4CCD758739C2F631C59A3B44AFF311FBA5B900A15E2232C5D28D8C9899E4BB5",
       "runtimeImageBundled": false
-    },
-    "offline": {
-      "file": "inkvoy-5.4.0-offline.apk",
-      "bytes": 616077718,
-      "sha256": "dcfdf0a29a14af9e4bec9f7b43a8f49229e61d9c92cee5995480c3b64de4a39f",
-      "runtimeImageBundled": true
     }
   },
   "finalSignedResourceChecks": 22,
-  "releaseAttachmentsUploaded": true,
-  "releaseAssetsVerifiedAt": "2026-11-06"
+  "releaseAttachmentsUploaded": false,
+  "releaseAssetsVerifiedAt": ""
 }

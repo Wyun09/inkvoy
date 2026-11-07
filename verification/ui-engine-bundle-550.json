@@ -108,7 +108,7 @@
       "removedSelectors": 3
     }
   ],
-  "cssBytes": 277943,
+  "cssBytes": 279616,
   "coreStyleOwner": "js/ui/app-shell",
   "legacyCoreStylesBundled": false,
   "reactRuntimeBundled": false,
@@ -2474,6 +2474,7 @@
     "js/ui/v5/chat.js",
     "js/ui/v5/settings.js",
     "js/ui/v5/terminal.js",
+    "js/ui/v5/pages.js",
     "js/ui/studio.js",
     "js/client-stream.js",
     "js/responses.js",
@@ -2827,7 +2828,7 @@
           "bytesInOutput": 390
         },
         "js/engine.js": {
-          "bytesInOutput": 13836
+          "bytesInOutput": 13841
         },
         "js/anthropic.js": {
           "bytesInOutput": 8311
@@ -2857,7 +2858,7 @@
           "bytesInOutput": 3957
         },
         "js/client.js": {
-          "bytesInOutput": 27576
+          "bytesInOutput": 27584
         },
         "js/agent-tools.js": {
           "bytesInOutput": 6155
@@ -3133,7 +3134,7 @@
           "bytesInOutput": 46698
         },
         "node_modules/dompurify/dist/purify.es.mjs": {
-          "bytesInOutput": 31367
+          "bytesInOutput": 31368
         },
         "js/ui/reply-model.js": {
           "bytesInOutput": 4324
@@ -3184,7 +3185,7 @@
           "bytesInOutput": 4171
         },
         "js/ui/app-shell.js": {
-          "bytesInOutput": 11149
+          "bytesInOutput": 11156
         },
         "js/ui/v5/chat.js": {
           "bytesInOutput": 12824
@@ -3195,8 +3196,11 @@
         "js/ui/v5/terminal.js": {
           "bytesInOutput": 2436
         },
+        "js/ui/v5/pages.js": {
+          "bytesInOutput": 2463
+        },
         "js/ui/studio.js": {
-          "bytesInOutput": 29084
+          "bytesInOutput": 29096
         },
         "js/client-stream.js": {
           "bytesInOutput": 1474
@@ -3211,7 +3215,7 @@
           "bytesInOutput": 7184
         }
       },
-      "bytes": 1096827
+      "bytes": 1099323
     }
   }
 }

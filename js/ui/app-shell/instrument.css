@@ -1029,3 +1029,26 @@ body.v5-terminal-mode #page-terminal { padding:0 !important; }
 .v5-term-screen #terminal-host { flex:1; display:flex; flex-direction:column; }
 .v5-term-screen #terminal-host > .xterm, .v5-term-screen #terminal-host .terminal-host { flex:1; }
 #v5-term-tabs #terminal-tabs button { min-height:28px !important; font-size:10px !important; }
+
+/* ── 5.5 secondary pages shell ─────────────────────────── */
+.v5-pages :is(#page-files,#page-tools,#page-accounts,#page-extensions,#page-tasks,#page-connect,#page-web) { padding:0 !important; background:var(--bg) !important; }
+.v5-page { display:flex; flex-direction:column; gap:10px; min-height:100%; padding:10px 14px 30px; background:var(--bg); }
+.v5-page-head { display:flex; align-items:flex-start; gap:10px; padding:2px; }
+.v5-page-title { flex:1; min-width:0; }
+.v5-page-title h1 { margin:0; font-size:22px; font-weight:640; letter-spacing:-.03em; color:var(--ink); }
+.v5-page-title p { margin:2px 0 0; font-size:11.5px; color:var(--muted); }
+.v5-page-actions { display:flex; gap:4px; flex:none; }
+.v5-page-actions button { width:34px !important; min-width:34px !important; height:34px !important; min-height:34px !important; padding:0 !important; border:1px solid var(--line) !important; border-radius:9px !important; background:var(--surface) !important; color:var(--muted) !important; }
+.v5-page-body { display:flex; flex-direction:column; gap:10px; min-width:0; }
+.v5-block { margin:0 !important; }
+.v5-page-body > .v5-block { border-radius:14px; }
+.v5-page-body > :is(.explorer-workspace,.tools-layout) { display:flex; flex-direction:column; gap:10px; }
+
+.v5-pages #page-computer { padding:0 !important; background:var(--bg) !important; }
+#page-computer .v5-page { height:100%; padding:8px 12px 0; gap:8px; }
+#page-computer .v5-page-body { flex:1; min-height:0; display:flex; flex-direction:column; gap:8px; }
+#page-computer .computer-address-form { margin:0 !important; }
+#page-computer .v5-block[class*="computer-"] { margin:0 !important; }
+#page-computer .computer-slot { flex:1; min-height:0; }
+#page-computer .computer-footer { margin-top:auto; }
+.v5-pages #page-computer .v5-page-actions button { width:auto !important; min-width:34px !important; padding:0 9px !important; font-size:10.5px !important; }

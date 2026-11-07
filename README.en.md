@@ -4,11 +4,11 @@
 
 Coding, security research and reverse engineering — a terminal, project files, a controllable browser and App control, all on the phone in your hand.
 
-![version](https://img.shields.io/badge/version-5.4.0-blue) ![Android](https://img.shields.io/badge/Android-8.0%2B%20(API%2026)-3DDC84?logo=android&logoColor=white) ![ABI](https://img.shields.io/badge/ABI-arm64--v8a-lightgrey) ![license](https://img.shields.io/badge/license-GPL--3.0--only-blue)
+![version](https://img.shields.io/badge/version-5.5.0-blue) ![Android](https://img.shields.io/badge/Android-8.0%2B%20(API%2026)-3DDC84?logo=android&logoColor=white) ![ABI](https://img.shields.io/badge/ABI-arm64--v8a-lightgrey) ![license](https://img.shields.io/badge/license-GPL--3.0--only-blue)
 
 ![Inkvoy workspace](docs/assets/inkvoy-cover.jpg)
 
-The screenshot uses demonstration task data. Current release: **5.4.0** (versionCode 29).
+The screenshot uses demonstration task data. Current source version: **5.5.0** (versionCode 30, Ink Instrument UI in progress).
 
 ## Status
 

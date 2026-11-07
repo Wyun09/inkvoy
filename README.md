@@ -4,11 +4,11 @@
 
 编程、安全研究、逆向分析——终端、文件、可操控的浏览器和 App 操控，全在同一台手机上。
 
-![version](https://img.shields.io/badge/version-5.4.0-blue) ![Android](https://img.shields.io/badge/Android-8.0%2B%20(API%2026)-3DDC84?logo=android&logoColor=white) ![ABI](https://img.shields.io/badge/ABI-arm64--v8a-lightgrey) ![license](https://img.shields.io/badge/license-GPL--3.0--only-blue)
+![version](https://img.shields.io/badge/version-5.5.0-blue) ![Android](https://img.shields.io/badge/Android-8.0%2B%20(API%2026)-3DDC84?logo=android&logoColor=white) ![ABI](https://img.shields.io/badge/ABI-arm64--v8a-lightgrey) ![license](https://img.shields.io/badge/license-GPL--3.0--only-blue)
 
 ![Inkvoy 工作台](docs/assets/inkvoy-cover.jpg)
 
-界面截图使用示例任务数据。当前版本 **5.4.0**（versionCode 29）。
+界面截图使用示例任务数据。当前源码版本 **5.5.0**（versionCode 30，5.5 界面重构开发中）。
 
 ## 现在的状态
 
@@ -19,7 +19,15 @@
 | 实体手机验收 | **未完成**。框架回归 244 项通过不等于真机验收，见 [VERIFICATION.md](VERIFICATION.md) |
 | 构建成本 | JS 部分三条命令；APK 另需 Android SDK、JDK 17、Maven 3.9、离线镜像和自己的签名 |
 
-## 最新版本：5.4.0
+## 5.5 界面重构（开发中）
+
+5.5 把界面换成 Ink Instrument 结构：暖中性纸面、左侧边栏导航、单一亮绿信号色、扁平控件与白色终端。聊天、设置、终端按 5.5 原型 HTML 重建；工具、浏览器、账号等二级页统一为 5.5 页面壳。完整模型、工具、PTY 与浏览器功能保留。
+
+- 验证：JavaScript / 界面全量 **401 项通过，0 失败，4 项跳过**（旧吉祥物与旋转品牌标记动效测试，设计上已移除）。
+- 构建：轻量版 `inkvoy-5.5.0-lite.apk`，2,177,350 字节，SHA-256 `B4CCD758…`；离线完整版待重新构建后发布。
+
+## 5.4.0 发布
+
 
 参考 ChatGPT 手机端截图重做应用的对话、输入区、导航和设置视觉：中性白灰浅色界面与炭黑深色界面、顶部圆形按钮组、白色圆角输入区、贴底玻璃材质输入面板与更清晰的回复层级。输入框下方的次级控件收进「工具与模式」弹层，避免在窄屏上与输入和发送互相覆盖。保留原有模型、工具与工作流，并包含 5.3.1 的 OpenAI Responses 修复。提供轻量版与离线完整版，详见 [5.4.0 说明](docs/RELEASE-5.4.0.md)。
 
