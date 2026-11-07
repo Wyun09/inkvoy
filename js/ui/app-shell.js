@@ -24,7 +24,8 @@ export function createAppShell({client,providers,closeOverlays}){
  const sbProject=node('div','v5-sb-project'),sbProjectLabel=node('span','v5-sb-label','项目');
  const sbProjectName=node('strong','v5-sb-project-name','inkvoy'),sbProjectMeta=node('span','v5-sb-meta','main · 工作区');
  sbProject.append(sbProjectLabel,sbProjectName,sbProjectMeta);
- const sbNav=node('nav','v5-sb-nav'),navItems=new Map();
+ const sbNav=node('nav','v5-sb-nav');
+ const sbNew=node('button','v5-sb-new');sbNew.type='button';sbNew.setAttribute('aria-label','新建会话');sbNew.append(uiIcon('plus'));sbNew.onclick=()=>{closeNav();document.getElementById('chat-new')?.click();},navItems=new Map();
  for(const [page,icon,label] of [['chat','chat','对话'],['home','home','工作'],['files','files','文件'],['terminal','terminal','终端'],['computer','browser','浏览器']]){
   const item=node('button','v5-nav-item');item.type='button';item.dataset.v5Nav=page;item.append(uiIcon(icon),node('span','',label));
   item.onclick=()=>{closeNav();window.BridgeDashboard?.navigate(page);};sbNav.append(item);navItems.set(page,item);
@@ -51,6 +52,7 @@ export function createAppShell({client,providers,closeOverlays}){
   }
  }
  sbFoot.append(settingsItem,modeSwitch);
+ sbProject.append(sbNew);
  sidebar.append(sbHead,sbProject,sbNav,sbSessions,sbFoot);
  app.append(navScrim,sidebar);
  let navOpen=false;
@@ -122,7 +124,7 @@ export function createAppShell({client,providers,closeOverlays}){
   const profile=providers?.current(),key=[route,text,hasMessages,session?.status,profile?.id,profile?.name].join('|');if(key===renderKey)return;renderKey=key;
   document.body.dataset.taskState=session?.status||'idle';document.body.dataset.hasMessages=String(hasMessages);brand.dataset.hasTitle=String(hasMessages||route!=='chat');
   $('chat-new').hidden=route!=='chat';routeTools.hidden=!routeButtons.has(route);for(const [page,button]of routeButtons)button.hidden=page!==route;
-  if(text!==lastTitle){lastTitle=text;const label=brand.querySelector('strong');label.textContent='inkvoy';label.title='inkvoy';const pageName=document.getElementById('workspace-page-name');if(pageName)pageName.textContent=route==='chat'?(hasMessages?session.title:'对话'):(routes[route]||'工作区');if(!reduced())label.animate([{opacity:.3,transform:'translateY(3px)'},{opacity:1,transform:'translateY(0)'}],{duration:200,easing:'ease-out'});}
+  if(text!==lastTitle){lastTitle=text;const label=brand.querySelector('strong');label.textContent='inkvoy';label.title='inkvoy';const pageName=document.getElementById('workspace-page-name');if(pageName)pageName.textContent=route==='chat'?(hasMessages?'会话 · '+session.title:'新会话'):(routes[route]||'工作区');if(!reduced())label.animate([{opacity:.3,transform:'translateY(3px)'},{opacity:1,transform:'translateY(0)'}],{duration:200,easing:'ease-out'});}
   const work=route!=='chat';modeChat.setAttribute('aria-pressed',String(!work));modeWork.setAttribute('aria-pressed',String(work));
   more.title=(profile?.name||'DeepSeek 网页')+' · 工作区操作';
   for(const [page,item] of navItems)item.classList.toggle('active',page===route);
