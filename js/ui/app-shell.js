@@ -33,8 +33,25 @@ export function createAppShell({client,providers,closeOverlays}){
  const settingsItem=node('button','v5-nav-item');settingsItem.type='button';settingsItem.dataset.v5Nav='settings';settingsItem.append(uiIcon('settings'),node('span','','设置'));
  settingsItem.onclick=()=>{closeNav();window.BridgeDashboard?.navigate('settings');};navItems.set('settings',settingsItem);
  modeSwitch.classList.add('v5-mode-switch');
+ const sbSessions=node('section','v5-sb-sessions'),sbSessionsLabel=node('span','v5-sb-label','最近会话'),sbSessionList=node('div','v5-sb-session-list');sbSessions.append(sbSessionsLabel,sbSessionList);
+ let sessionKey='';
+ function renderSidebarSessions(state){
+  const sessions=(state.sessions||[]).filter(s=>!s.archived).sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0)||(b.updatedAt||0)-(a.updatedAt||0)).slice(0,6);
+  const key=sessions.map(s=>s.id+'|'+s.title+'|'+s.status).join('~')+'|'+state.selected;
+  if(key===sessionKey)return;sessionKey=key;sbSessionList.replaceChildren();
+  if(!sessions.length){sbSessionList.append(node('p','v5-sb-session-empty','暂无会话'));return;}
+  for(const session of sessions){
+   const item=node('button','v5-sb-session');item.type='button';item.dataset.sessionId=session.id;
+   const dot=node('span','v5-sb-session-dot');dot.dataset.state=session.status||'idle';
+   const label=node('span','v5-sb-session-title',session.title||'未命名会话');
+   item.append(dot,label);
+   if(session.id===state.selected)item.classList.add('active');
+   item.onclick=()=>{closeNav();const index=sessions.findIndex(s=>s.id===session.id);const target=document.querySelectorAll('#client-sessions > button')[index];if(target)target.click();};
+   sbSessionList.append(item);
+  }
+ }
  sbFoot.append(settingsItem,modeSwitch);
- sidebar.append(sbHead,sbProject,sbNav,sbFoot);
+ sidebar.append(sbHead,sbProject,sbNav,sbSessions,sbFoot);
  app.append(navScrim,sidebar);
  let navOpen=false;
  function openNav(){if(navOpen)return;navOpen=true;navScrim.hidden=false;sidebar.dataset.open='true';sidebar.setAttribute('aria-hidden','false');navToggle.setAttribute('aria-expanded','true');closeOverlays();}
@@ -109,6 +126,7 @@ export function createAppShell({client,providers,closeOverlays}){
   const work=route!=='chat';modeChat.setAttribute('aria-pressed',String(!work));modeWork.setAttribute('aria-pressed',String(work));
   more.title=(profile?.name||'DeepSeek 网页')+' · 工作区操作';
   for(const [page,item] of navItems)item.classList.toggle('active',page===route);
+  renderSidebarSessions(state);
   const projectName=session?.project||'inkvoy';sbProjectName.textContent=projectName;sbProjectName.title=projectName;
   sbProjectMeta.textContent=routes[route]||'工作区';
  }

@@ -108,7 +108,7 @@
       "removedSelectors": 3
     }
   ],
-  "cssBytes": 255877,
+  "cssBytes": 260314,
   "coreStyleOwner": "js/ui/app-shell",
   "legacyCoreStylesBundled": false,
   "reactRuntimeBundled": false,
@@ -3181,7 +3181,7 @@
           "bytesInOutput": 4171
         },
         "js/ui/app-shell.js": {
-          "bytesInOutput": 9945
+          "bytesInOutput": 10897
         },
         "js/ui/studio.js": {
           "bytesInOutput": 29011
@@ -3199,7 +3199,7 @@
           "bytesInOutput": 7184
         }
       },
-      "bytes": 1072708
+      "bytes": 1073660
     }
   }
 }
