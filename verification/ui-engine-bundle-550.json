@@ -3113,7 +3113,7 @@
           "bytesInOutput": 6666
         },
         "js/ui/v4/workspace.js": {
-          "bytesInOutput": 17886
+          "bytesInOutput": 18019
         },
         "js/ui/processes.js": {
           "bytesInOutput": 4775
@@ -3185,7 +3185,7 @@
           "bytesInOutput": 4171
         },
         "js/ui/app-shell.js": {
-          "bytesInOutput": 11198
+          "bytesInOutput": 11409
         },
         "js/ui/v5/chat.js": {
           "bytesInOutput": 14012
@@ -3215,7 +3215,7 @@
           "bytesInOutput": 7184
         }
       },
-      "bytes": 1102044
+      "bytes": 1102388
     }
   }
 }

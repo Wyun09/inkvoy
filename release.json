@@ -5,7 +5,7 @@
   "package": "io.github.deepseekbridge",
   "apk": "inkvoy-5.5.0-lite.apk",
   "bytes": 2181446,
-  "sha256": "B972740DAC281AE552CA4854710FBE9984CB13CFFB6EFF2BED7B53DCE5CF2EE7",
+  "sha256": "8F768DEB1E9F05222B3928274843E94A0778A2651A05E082403C0E138AED83E0",
   "signerSha256": "cc8f15b569d5e813c68d49f4fa17d19afbe6f7526ef5dbdade88e317116c2b59",
   "minSdk": 26,
   "targetSdk": 35,
@@ -107,7 +107,7 @@
     "lite": {
       "file": "inkvoy-5.5.0-lite.apk",
       "bytes": 2181446,
-      "sha256": "B972740DAC281AE552CA4854710FBE9984CB13CFFB6EFF2BED7B53DCE5CF2EE7",
+      "sha256": "8F768DEB1E9F05222B3928274843E94A0778A2651A05E082403C0E138AED83E0",
       "runtimeImageBundled": false
     }
   },

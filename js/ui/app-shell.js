@@ -125,6 +125,7 @@ export function createAppShell({client,providers,closeOverlays}){
   document.body.dataset.taskState=session?.status||'idle';document.body.dataset.hasMessages=String(hasMessages);brand.dataset.hasTitle=String(hasMessages||route!=='chat');
   $('chat-new').hidden=route!=='chat';routeTools.hidden=!routeButtons.has(route);for(const [page,button]of routeButtons)button.hidden=page!==route;
   if(text!==lastTitle){lastTitle=text;const label=brand.querySelector('strong');label.textContent='inkvoy';label.title='inkvoy';const pageName=document.getElementById('workspace-page-name');if(pageName)pageName.textContent=route==='chat'?(hasMessages?'会话 · '+session.title:'新会话'):(routes[route]||'工作区');if(!reduced())label.animate([{opacity:.3,transform:'translateY(3px)'},{opacity:1,transform:'translateY(0)'}],{duration:200,easing:'ease-out'});}
+  const crumbText=route==='chat'?(hasMessages?'会话 · '+session.title:'新会话'):(routes[route]||'工作区');const syncCrumb=()=>document.querySelectorAll('.workspace-page-name').forEach(n=>n.textContent=crumbText);syncCrumb();setTimeout(syncCrumb,0);
   const work=route!=='chat';modeChat.setAttribute('aria-pressed',String(!work));modeWork.setAttribute('aria-pressed',String(work));
   more.title=(profile?.name||'DeepSeek 网页')+' · 工作区操作';
   for(const [page,item] of navItems)item.classList.toggle('active',page===route);

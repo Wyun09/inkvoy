@@ -15,6 +15,6 @@ export function enhanceWorkspace({openDrawer}){
  const form=$('model-form'),connections=document.createElement('aside'),editor=document.createElement('section');connections.className='model-connections-pane';editor.className='model-editor-pane';const connectionTitle=document.createElement('h3');connectionTitle.textContent='连接';connections.append(connectionTitle);
  for(const selector of ['.provider-connection','#provider-profiles','.provider-account-note']){const element=form?.querySelector(selector)||document.querySelector('.model-dialog '+selector);if(element)connections.append(element);}
  for(const element of [...form.children])editor.append(element);form.append(connections,editor);form.classList.add('model-layout');
- const update=page=>{breadcrumb.textContent=ROUTES[page]?.[0]||'工作区';document.querySelectorAll('[data-drawer-page]').forEach(b=>b.toggleAttribute('data-current',b.dataset.drawerPage===page));};update(document.body.dataset.page||'chat');window.addEventListener('bridge:navigate',event=>update(event.detail));
+ const update=page=>{const current=document.getElementById('session-current')?.textContent?.trim();breadcrumb.textContent=page==='chat'?(current?'会话 · '+current:'新对话'):(ROUTES[page]?.[0]||'工作区');document.querySelectorAll('[data-drawer-page]').forEach(b=>b.toggleAttribute('data-current',b.dataset.drawerPage===page));};update(document.body.dataset.page||'chat');window.addEventListener('bridge:navigate',event=>update(event.detail));
  return {update};
 }
