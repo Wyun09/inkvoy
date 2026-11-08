@@ -119,8 +119,17 @@ export function mountV5Chat({client}){
     </div></div>`;
   page.append(host);
   const thread=host.querySelector('#v5-thread'),scroll=host.querySelector('#v5-scroll'),input=host.querySelector('#v5-input'),send=host.querySelector('#v5-send'),titleEl=host.querySelector('#v5-title'),subEl=host.querySelector('#v5-sub');
+  // Move the engine's option panel and suggestion popup out of the hidden
+  // legacy composer so the 5.5 composer can keep every tool reachable.
+  const modes=document.getElementById('composer-modes');
+  if(modes){modes.classList.add('v5-sheet','v5-modes-sheet');document.body.append(modes);}
+  const suggestions=document.getElementById('composer-suggestions');
+  if(suggestions){suggestions.classList.add('v5-sheet','v5-suggest-sheet');document.body.append(suggestions);}
+  const refs=document.querySelector('.composer-references');
+  if(refs){refs.classList.add('v5-refs');host.querySelector('.v5-composer-box').prepend(refs);}
+  let syncing=false;
   const legacyInput=document.getElementById('chat-input'),legacySend=document.getElementById('chat-send');
-  input.addEventListener('input',()=>{input.style.height='auto';input.style.height=Math.min(input.scrollHeight,140)+'px';if(legacyInput){legacyInput.value=input.value;legacyInput.dispatchEvent(new Event('input',{bubbles:true}));}});
+  input.addEventListener('input',()=>{input.style.height='auto';input.style.height=Math.min(input.scrollHeight,140)+'px';if(legacyInput){syncing=true;legacyInput.value=input.value;legacyInput.dispatchEvent(new Event('input',{bubbles:true}));syncing=false;}});
   input.addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.shiftKey&&!event.isComposing){event.preventDefault();void submit();}});
   async function submit(){if(send.disabled)return;if(legacyInput)legacyInput.value=input.value;legacySend?.click();input.value='';input.style.height='auto';}
   send.addEventListener('click',()=>void submit());
@@ -128,6 +137,11 @@ export function mountV5Chat({client}){
   host.querySelector('#v5-options').addEventListener('click',()=>document.getElementById('composer-options')?.click());
   host.querySelector('#v5-reference').addEventListener('click',()=>document.getElementById('composer-mention')?.click());
   host.querySelector('#v5-more').addEventListener('click',()=>document.getElementById('app-more')?.click());
+  if(legacyInput)legacyInput.addEventListener('input',()=>{if(syncing)return;if(legacyInput.value!==input.value){syncing=true;input.value=legacyInput.value;input.dispatchEvent(new Event('input',{bubbles:true}));syncing=false;}});
+  document.addEventListener('pointerdown',()=>{const panel=document.getElementById('composer-modes');if(panel&&!panel.hidden&&!document.querySelector('.v5-composer-box')?.contains(document.activeElement)){/* handled below */}},{passive:true});
+  document.addEventListener('pointerdown',event=>{const panel=document.getElementById('composer-modes');if(panel&&!panel.hidden&&!panel.contains(event.target)&&!event.target.closest('#v5-options,#composer-options')){document.getElementById('composer-options')?.click();}},{passive:true});
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'){const panel=document.getElementById('composer-modes');if(panel&&!panel.hidden)document.getElementById('composer-options')?.click();}});
+
   thread.addEventListener('click',event=>{
     const copy=event.target.closest('[data-copy]');if(copy){const text=decodeURIComponent(copy.dataset.copy||'');try{navigator.clipboard?.writeText(text);}catch{}copy.classList.add('done');setTimeout(()=>copy.classList.remove('done'),900);return;}
     const sum=event.target.closest('.v5-activity-sum');if(sum){const list=sum.parentElement.querySelector('.v5-activity-list');const open=sum.getAttribute('aria-expanded')==='true';sum.setAttribute('aria-expanded',String(!open));list.hidden=open;return;}

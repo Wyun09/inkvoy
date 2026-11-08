@@ -1052,3 +1052,17 @@ body.v5-terminal-mode #page-terminal { padding:0 !important; }
 #page-computer .computer-slot { flex:1; min-height:0; }
 #page-computer .computer-footer { margin-top:auto; }
 .v5-pages #page-computer .v5-page-actions button { width:auto !important; min-width:34px !important; padding:0 9px !important; font-size:10.5px !important; }
+
+/* 5.5 composer option sheet + suggestions + reference chips */
+.v5-sheet { position:fixed !important; left:10px; right:10px; bottom:calc(86px + env(safe-area-inset-bottom,0px)) !important; z-index:72 !important; border:1px solid var(--line) !important; border-radius:16px !important; background:var(--surface) !important; box-shadow:var(--shadow-lg) !important; padding:10px !important; max-height:62vh; overflow:auto; }
+.v5-modes-sheet .composer-toolbar { display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)); gap:4px !important; }
+.v5-modes-sheet .composer-toolbar > button { display:flex !important; align-items:center !important; justify-content:flex-start !important; gap:6px !important; min-height:36px !important; padding:0 9px !important; border:1px solid var(--line) !important; border-radius:9px !important; background:var(--bg) !important; color:var(--ink-2) !important; font-size:11px !important; }
+.v5-modes-sheet .composer-toolbar > button.selected { background:var(--brand-soft) !important; color:var(--brand-ink) !important; border-color:transparent !important; }
+.v5-modes-sheet .composer-toolbar > button svg { width:14px !important; height:14px !important; }
+.v5-modes-sheet #client-browser { width:100% !important; min-height:36px !important; border:1px solid var(--line) !important; border-radius:9px !important; background:var(--bg) !important; margin-top:6px !important; }
+.v5-suggest-sheet { padding:6px !important; bottom:calc(86px + env(safe-area-inset-bottom,0px)) !important; }
+.v5-suggest-sheet .suggestions-caption { display:block; padding:4px 8px 6px; font-size:9.5px; color:var(--muted-2); }
+.v5-suggest-sheet .suggestion-row { display:flex !important; align-items:center !important; gap:8px !important; width:100% !important; min-height:36px !important; padding:0 9px !important; border:0 !important; border-radius:8px !important; background:transparent !important; color:var(--ink) !important; text-align:left !important; }
+.v5-suggest-sheet .suggestion-row:hover, .v5-suggest-sheet .suggestion-row[aria-selected=true] { background:var(--surface-2) !important; }
+.v5-refs { display:flex !important; flex-wrap:wrap; gap:4px; padding:2px 2px 4px !important; }
+.v5-refs .reference-chip { min-height:24px !important; padding:0 8px !important; border:1px solid var(--line) !important; border-radius:7px !important; background:var(--bg) !important; font-size:10px !important; color:var(--ink-2) !important; }

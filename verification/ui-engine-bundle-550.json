@@ -108,7 +108,7 @@
       "removedSelectors": 3
     }
   ],
-  "cssBytes": 279616,
+  "cssBytes": 281832,
   "coreStyleOwner": "js/ui/app-shell",
   "legacyCoreStylesBundled": false,
   "reactRuntimeBundled": false,
@@ -3188,7 +3188,7 @@
           "bytesInOutput": 11156
         },
         "js/ui/v5/chat.js": {
-          "bytesInOutput": 12824
+          "bytesInOutput": 13986
         },
         "js/ui/v5/settings.js": {
           "bytesInOutput": 7582
@@ -3215,7 +3215,7 @@
           "bytesInOutput": 7184
         }
       },
-      "bytes": 1099323
+      "bytes": 1100485
     }
   }
 }
