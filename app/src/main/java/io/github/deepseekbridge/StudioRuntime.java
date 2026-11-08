@@ -74,6 +74,7 @@ public final class StudioRuntime {
             case "project.ensure":files.project(project);return true;
             case "runtime.status":return installer.status();
             case "runtime.import":{Uri uri=Uri.parse(a.getString("uri"));if(!"content".equals(uri.getScheme()))throw new IOException("请使用系统文件选择器导入工具包");try(InputStream input=context.getContentResolver().openInputStream(uri)){if(input==null)throw new IOException("无法读取所选工具包");return installer.importImage(input);}}
+            case "runtime.importPath":{File image=new File(a.getString("path"));if(!image.isFile())throw new IOException("运行环境文件不存在");try(InputStream input=new FileInputStream(image)){return installer.importImage(input);}}
             case "runtime.ensure":ensure(project);return installer.status();
             case "runtime.test":ensure(project);return selfTest(project);
             case "file.list":return files.list(project,a.optString("path"));

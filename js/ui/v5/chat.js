@@ -108,7 +108,7 @@ export function mountV5Chat({client}){
     </div>
     <div class="v5-scroll" id="v5-scroll"><div class="v5-thread" id="v5-thread"></div></div>
     <div class="v5-composer-wrap"><div class="v5-composer-box">
-      <textarea class="v5-input" id="v5-input" rows="1" placeholder="输入任务、粘贴代码或添加样本…"></textarea>
+      <textarea class="v5-input" id="v5-input" rows="1" placeholder=""></textarea>
       <div class="v5-composer-bar">
         <button class="v5-ibtn" id="v5-plus" aria-label="添加附件">${icon('i-plus')}</button>
         <button class="v5-ibtn" id="v5-options" aria-label="执行模式">${icon('i-sliders')}</button>
@@ -146,7 +146,7 @@ export function mountV5Chat({client}){
     const copy=event.target.closest('[data-copy]');if(copy){const text=decodeURIComponent(copy.dataset.copy||'');try{navigator.clipboard?.writeText(text);}catch{}copy.classList.add('done');setTimeout(()=>copy.classList.remove('done'),900);return;}
     const sum=event.target.closest('.v5-activity-sum');if(sum){const list=sum.parentElement.querySelector('.v5-activity-list');const open=sum.getAttribute('aria-expanded')==='true';sum.setAttribute('aria-expanded',String(!open));list.hidden=open;return;}
   });
-  let fingerprint='',lastTitle='';
+  let fingerprint='',lastTitle='',previousTurnCount=0;
   function render(){
     const state=client.snapshot(),session=client.current();
     const items=replyTurns(session,!!state.active,0,state.draft,state.toolOutput);
@@ -160,7 +160,7 @@ export function mountV5Chat({client}){
     const toolCount=items.at(-1)?.tools?.length||0;
     subEl.textContent=(labels[status]||'准备就绪')+(toolCount?' · '+toolCount+' 个工具':'');
     host.querySelector('#v5-led').dataset.state=active?'run':status;
-    if(fp!==fingerprint){fingerprint=fp;const nearBottom=scroll.scrollHeight-scroll.scrollTop-scroll.clientHeight<120;thread.innerHTML=renderThread(items,empty);if(nearBottom||items.at(-1)?.live)scroll.scrollTop=scroll.scrollHeight;}
+    if(fp!==fingerprint){fingerprint=fp;const nearBottom=scroll.scrollHeight-scroll.scrollTop-scroll.clientHeight<120;thread.innerHTML=renderThread(items,empty);const turnNodes=thread.querySelectorAll(':scope>.v5-turn');if(items.length>previousTurnCount&&turnNodes.length)turnNodes[turnNodes.length-1].classList.add('new');previousTurnCount=items.length;if(nearBottom||items.at(-1)?.live)scroll.scrollTop=scroll.scrollHeight;}
   }
   render();
   const timer=setInterval(render,220);

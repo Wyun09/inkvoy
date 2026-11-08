@@ -1066,3 +1066,28 @@ body.v5-terminal-mode #page-terminal { padding:0 !important; }
 .v5-suggest-sheet .suggestion-row:hover, .v5-suggest-sheet .suggestion-row[aria-selected=true] { background:var(--surface-2) !important; }
 .v5-refs { display:flex !important; flex-wrap:wrap; gap:4px; padding:2px 2px 4px !important; }
 .v5-refs .reference-chip { min-height:24px !important; padding:0 8px !important; border:1px solid var(--line) !important; border-radius:7px !important; background:var(--bg) !important; font-size:10px !important; color:var(--ink-2) !important; }
+
+/* 5.5 follow-up: quiet status bar, borderless composer, motion */
+body.v5-chat .v5-chat-head { display:none !important; }
+body.v5-chat .topbar #app-more { display:inline-flex !important; }
+.v5-composer-wrap { border-top:0 !important; background:var(--bg) !important; padding-top:4px !important; }
+.v5-composer-box { border:0 !important; background:var(--surface) !important; box-shadow:0 6px 22px rgba(20,21,23,.06) !important; }
+.v5-composer-box:focus-within { border:0 !important; box-shadow:0 6px 22px rgba(20,21,23,.08), 0 0 0 2px color-mix(in srgb,var(--brand) 18%,transparent) !important; }
+.v5-input { caret-color:var(--brand); }
+.v5-input::placeholder { color:transparent !important; }
+.v5-turn.new { animation:v5-rise .26s cubic-bezier(.22,1,.36,1) both; }
+.v5-activity-sum, .v5-arow > summary, .v5-ibtn, .v5-send, .v5-refs .reference-chip { transition:background-color .16s ease,color .16s ease,border-color .16s ease,transform .12s ease; }
+.v5-send:active { transform:scale(.94); }
+.v5-ibtn:active { transform:scale(.94); }
+.v5-sheet { animation:v5-sheet-in .22s cubic-bezier(.22,1,.36,1) both; }
+.v5-suggest-sheet { animation:v5-sheet-in .18s cubic-bezier(.22,1,.36,1) both; }
+.v5-arow[open] > .v5-arow-body { animation:v5-fade .18s ease both; }
+.v5-reason[open] > .v5-reason-body { animation:v5-fade .18s ease both; }
+@keyframes v5-rise { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+@keyframes v5-sheet-in { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
+@keyframes v5-fade { from { opacity:0; } to { opacity:1; } }
+@media (prefers-reduced-motion: reduce) {
+  .v5-turn.new, .v5-sheet, .v5-suggest-sheet, .v5-arow[open] > .v5-arow-body, .v5-reason[open] > .v5-reason-body { animation:none !important; }
+  .v5-activity-sum, .v5-arow > summary, .v5-ibtn, .v5-send { transition:none !important; }
+}
+body.reduce-motion .v5-turn.new, body.reduce-motion .v5-sheet, body.reduce-motion .v5-suggest-sheet { animation:none !important; }

@@ -5,13 +5,13 @@
   "package": "io.github.deepseekbridge",
   "apk": "inkvoy-5.5.0-lite.apk",
   "bytes": 2181446,
-  "sha256": "928454B9FD1F630F537190F4A6A22E404A3E4D43269D85BC66E060851354E493",
+  "sha256": "B972740DAC281AE552CA4854710FBE9984CB13CFFB6EFF2BED7B53DCE5CF2EE7",
   "signerSha256": "cc8f15b569d5e813c68d49f4fa17d19afbe6f7526ef5dbdade88e317116c2b59",
   "minSdk": 26,
   "targetSdk": 35,
   "abi": "arm64-v8a",
-  "distribution": "开发构建（main 合并 5.5 界面重构；离线完整版待重新构建后发布）",
-  "releaseUrl": "",
+  "distribution": "GitHub Release v5.5.0（lite APK + 运行环境镜像；应用内可直接下载运行环境）",
+  "releaseUrl": "https://github.com/Wyun09/inkvoy/releases/tag/v5.5.0",
   "license": "GPL-3.0-only for project-owned code",
   "runtime": {
     "id": "debian13-arm64-studio2-20261018",
@@ -100,17 +100,27 @@
     "设置页与终端页按 5.5 原型结构重做，真实控件与 PTY 保留。",
     "工具、浏览器、账号等二级页统一为 Ink Instrument 页面壳。",
     "JavaScript / 界面测试 401 项通过、0 失败、4 项旧吉祥物/旋转标记动效测试跳过。",
-    "5.5 输入区的工具/模式弹层、@ 引用建议与引用 chip 在 v5 结构下可用（真实引擎控件重挂载为底部面板）。"
+    "5.5 输入区的工具/模式弹层、@ 引用建议与引用 chip 在 v5 结构下可用（真实引擎控件重挂载为底部面板）。",
+    "工具页新增「下载运行环境」：从 GitHub Release v5.5.0 拉取 debian-arm64.tar.gz，入库校验 SHA-256 后自动导入。"
   ],
   "variants": {
     "lite": {
       "file": "inkvoy-5.5.0-lite.apk",
       "bytes": 2181446,
-      "sha256": "928454B9FD1F630F537190F4A6A22E404A3E4D43269D85BC66E060851354E493",
+      "sha256": "B972740DAC281AE552CA4854710FBE9984CB13CFFB6EFF2BED7B53DCE5CF2EE7",
       "runtimeImageBundled": false
     }
   },
   "finalSignedResourceChecks": 22,
-  "releaseAttachmentsUploaded": false,
-  "releaseAssetsVerifiedAt": ""
+  "releaseAttachmentsUploaded": true,
+  "releaseAssetsVerifiedAt": "2026-11-09",
+  "assets": {
+    "liteApk": "https://github.com/Wyun09/inkvoy/releases/download/v5.5.0/inkvoy-5.5.0-lite.apk",
+    "runtimeImage": "https://github.com/Wyun09/inkvoy/releases/download/v5.5.0/debian-arm64.tar.gz"
+  },
+  "runtimeDownload": {
+    "url": "https://github.com/Wyun09/inkvoy/releases/download/v5.5.0/debian-arm64.tar.gz",
+    "bytes": 613920380,
+    "sha256": "5076aaae48f952433e556f15939a24465cab6633a6a568d1c216a0b37c6efa24"
+  }
 }

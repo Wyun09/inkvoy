@@ -8,7 +8,7 @@ Coding, security research and reverse engineering — a terminal, project files,
 
 ![Inkvoy workspace](docs/assets/inkvoy-cover.jpg)
 
-The screenshot uses demonstration task data. Current source version: **5.5.0** (versionCode 30, Ink Instrument UI in progress).
+The screenshot uses demonstration task data. Current release: **5.5.0** (versionCode 30).
 
 ## Status
 

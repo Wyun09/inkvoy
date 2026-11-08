@@ -8,23 +8,25 @@
 
 ![Inkvoy 工作台](docs/assets/inkvoy-cover.jpg)
 
-界面截图使用示例任务数据。当前源码版本 **5.5.0**（versionCode 30，5.5 界面重构开发中）。
+界面截图使用示例任务数据。当前版本 **5.5.0**（versionCode 30）。
 
 ## 现在的状态
 
 | 项目 | 状态 |
 | --- | --- |
-| 源码 | 完整开放，可自行构建（GPL-3.0-only）。5.4.0 发布代码在 `release/5.4.0` 分支；`main` 另含 2026-11-06 的发布后修复（见 [VERIFICATION.md](VERIFICATION.md)） |
-| 安装包 | **已发布 [v5.4.0](https://github.com/Wyun09/inkvoy/releases/tag/v5.4.0)**：轻量版约 2.1 MiB；离线完整版约 588 MiB，内含离线 Debian 运行时镜像 |
+| 源码 | 完整开放，可自行构建（GPL-3.0-only）。5.5.0 代码在 `main`；5.4.0 等历史版本保留在 `release/<版本>` 分支（见 [VERIFICATION.md](VERIFICATION.md)） |
+| 安装包 | **已发布 [v5.5.0](https://github.com/Wyun09/inkvoy/releases/tag/v5.5.0)**：lite APK 约 2.1 MiB；运行环境镜像 `debian-arm64.tar.gz`（约 586 MiB）作为 Release 附件，应用内「下载运行环境」可直接拉取并校验导入 |
 | 实体手机验收 | **未完成**。框架回归 244 项通过不等于真机验收，见 [VERIFICATION.md](VERIFICATION.md) |
 | 构建成本 | JS 部分三条命令；APK 另需 Android SDK、JDK 17、Maven 3.9、离线镜像和自己的签名 |
 
-## 5.5 界面重构（开发中）
+## 最新版本：5.5.0（Ink Instrument）
 
 5.5 把界面换成 Ink Instrument 结构：暖中性纸面、左侧边栏导航、单一亮绿信号色、扁平控件与白色终端。聊天、设置、终端按 5.5 原型 HTML 重建；工具、浏览器、账号等二级页统一为 5.5 页面壳。完整模型、工具、PTY 与浏览器功能保留。
 
+工具页内置**运行环境下载**：lite 版没有镜像时，点「下载运行环境」即可从 GitHub Release 拉取 `debian-arm64.tar.gz`，下载完成后按固定 SHA-256 校验并导入，随后即可初始化终端与内置工具。
+
 - 验证：JavaScript / 界面全量 **401 项通过，0 失败，4 项跳过**（旧吉祥物与旋转品牌标记动效测试，设计上已移除）。
-- 构建：轻量版 `inkvoy-5.5.0-lite.apk`，2,181,446 字节，SHA-256 `928454B9…`；离线完整版待重新构建后发布。
+- 构建：轻量版 `inkvoy-5.5.0-lite.apk`，2,181,446 字节，SHA-256 `B972740D…`；运行环境镜像 `debian-arm64.tar.gz`，613,920,380 字节，SHA-256 `5076aaae…`，两者均作为 v5.5.0 Release 附件发布。
 
 ## 5.4.0 发布
 

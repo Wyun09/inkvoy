@@ -23,6 +23,7 @@ public final class MainActivity extends Activity {
     private FrameLayout root;
     private Boolean appliedDark;
     private String importProject, exportProject, exportPath, exportSessionId;
+    private volatile boolean runtimeDownloading = false;
     private final ServiceConnection connection = new ServiceConnection() {
         @Override public void onServiceConnected(ComponentName name, IBinder binder) {
             service = ((BridgeService.LocalBinder) binder).service();
@@ -145,6 +146,95 @@ public final class MainActivity extends Activity {
         if (previous.width != params.width || previous.height != params.height || previous.leftMargin != params.leftMargin || previous.topMargin != params.topMargin) target.setLayoutParams(params);
         if (root.getChildAt(root.getChildCount() - 1) != target) target.bringToFront();
     }
+    private void downloadRuntime(String requestedUrl) {
+        if (service == null || service.runtime == null) return;
+        if (runtimeDownloading) { service.runtime.toast("运行环境正在下载或校验"); return; }
+        final BridgeRuntime rt = service.runtime;
+        final String url = (requestedUrl == null || requestedUrl.isEmpty())
+                ? "https://github.com/Wyun09/inkvoy/releases/download/v5.5.0/debian-arm64.tar.gz"
+                : requestedUrl;
+        runtimeDownloading = true;
+        new Thread(() -> {
+            File dir = new File(getFilesDir(), "runtime-images");
+            if (!dir.isDirectory() && !dir.mkdirs()) {
+                runtimeDownloading = false;
+                emitRuntimeDownload(rt, "error", 0, 0, "无法创建下载目录");
+                return;
+            }
+            File part = new File(dir, "debian-arm64.tar.gz.part");
+            File target = new File(dir, "debian-arm64.tar.gz");
+            emitRuntimeDownload(rt, "downloading", part.isFile() ? part.length() : 0, 0, null);
+            HttpURLConnection connection = null;
+            try {
+                if (target.isFile() && target.length() > 600000000L) { importDownloadedRuntime(rt, target); return; }
+                long existing = part.isFile() ? part.length() : 0L;
+                connection = (HttpURLConnection) new URL(url).openConnection();
+                connection.setConnectTimeout(20000);
+                connection.setReadTimeout(60000);
+                connection.setInstanceFollowRedirects(true);
+                connection.setRequestProperty("User-Agent", "Inkvoy-Android/5.5.0");
+                if (existing > 0) connection.setRequestProperty("Range", "bytes=" + existing + "-");
+                int code = connection.getResponseCode();
+                long total = connection.getContentLengthLong();
+                if (code == 200) { existing = 0; if (part.exists() && !part.delete()) throw new IOException("无法清理旧下载"); }
+                else if (code != 206) throw new IOException("下载失败 · HTTP " + code);
+                if (code == 206 && total > 0) total += existing;
+                long done = existing, last = 0;
+                try (InputStream in = connection.getInputStream(); FileOutputStream out = new FileOutputStream(part, existing > 0)) {
+                    byte[] buffer = new byte[131072];
+                    int read;
+                    while ((read = in.read(buffer)) != -1) {
+                        out.write(buffer, 0, read);
+                        done += read;
+                        long now = System.currentTimeMillis();
+                        if (now - last > 700) { last = now; emitRuntimeDownload(rt, "downloading", done, total, null); }
+                    }
+                }
+                emitRuntimeDownload(rt, "downloading", done, total > 0 ? total : done, null);
+                if (part.length() < 1024) throw new IOException("下载内容不完整");
+                if (target.exists() && !target.delete()) throw new IOException("无法替换旧运行环境文件");
+                if (!part.renameTo(target)) {
+                    try (InputStream in = new FileInputStream(part); OutputStream out = new FileOutputStream(target)) { byte[] copy = new byte[131072]; int n; while ((n = in.read(copy)) != -1) out.write(copy, 0, n); }
+                    if (!part.delete()) part.deleteOnExit();
+                }
+                importDownloadedRuntime(rt, target);
+            } catch (Exception error) {
+                runtimeDownloading = false;
+                String message = error.getMessage() == null ? error.getClass().getSimpleName() : error.getMessage();
+                emitRuntimeDownload(rt, "error", 0, 0, message);
+                final String detail = message;
+                runOnUiThread(() -> rt.toast("运行环境下载失败：" + detail));
+            } finally {
+                if (connection != null) connection.disconnect();
+            }
+        }, "runtime-download").start();
+    }
+    private void importDownloadedRuntime(BridgeRuntime rt, File file) {
+        emitRuntimeDownload(rt, "verifying", file.length(), file.length(), null);
+        try {
+            rt.studio.request("runtime.importPath", new JSONObject().put("path", file.getAbsolutePath()), (ok, value) -> runOnUiThread(() -> {
+                runtimeDownloading = false;
+                if (ok) { emitRuntimeDownload(rt, "done", file.length(), file.length(), null); rt.toast("运行环境已就绪"); }
+                else {
+                    String message = value instanceof JSONObject ? ((JSONObject) value).optString("message") : String.valueOf(value);
+                    emitRuntimeDownload(rt, "error", 0, 0, message);
+                    rt.toast("运行环境导入失败：" + message);
+                }
+            }));
+        } catch (JSONException error) {
+            runtimeDownloading = false;
+            emitRuntimeDownload(rt, "error", 0, 0, "无法提交导入任务");
+        }
+    }
+    private void emitRuntimeDownload(BridgeRuntime rt, String phase, long downloaded, long total, String error) {
+        try {
+            JSONObject value = new JSONObject().put("phase", phase).put("downloaded", downloaded).put("total", total);
+            if (error != null) value.put("error", error);
+            JSONObject event = new JSONObject().put("type", "runtime-download").put("value", value);
+            runOnUiThread(() -> { if (available()) rt.engine.evaluateJavascript("AndroidEngine.nativeEvent(" + event + ")", null); });
+        } catch (JSONException ignored) {}
+    }
+
     private void handleAction(String action, JSONObject argument) {
         if (!available()) return;
         if(action.equals("fullscreen")){DisplayMode.fullscreen(this,argument.optBoolean("enabled",true));service.runtime.publishUi();return;}
@@ -156,6 +246,7 @@ public final class MainActivity extends Activity {
         if(action.equals("account-usage")){try{startActivity(new Intent(Intent.ACTION_VIEW,android.net.Uri.parse("https://chatgpt.com/settings/usage")));}catch(ActivityNotFoundException e){service.runtime.toast("系统浏览器不可用");}return;}
         if(action.equals("import-plugin")){try{startActivityForResult(new Intent(Intent.ACTION_OPEN_DOCUMENT).setType("*/*").addCategory(Intent.CATEGORY_OPENABLE),43);}catch(ActivityNotFoundException e){service.runtime.toast("系统文件选择器不可用");}return;}
         if(action.equals("runtime-import")){try{startActivityForResult(new Intent(Intent.ACTION_OPEN_DOCUMENT).setType("*/*").addCategory(Intent.CATEGORY_OPENABLE),44);}catch(ActivityNotFoundException e){service.runtime.toast("系统文件选择器不可用");}return;}
+        if(action.equals("runtime-download")){downloadRuntime(argument.optString("url"));return;}
         if(action.equals("runtime-packages")){try{startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse("https://github.com/Wyun09/inkvoy/releases")));}catch(ActivityNotFoundException e){service.runtime.toast("请使用浏览器访问 github.com/Wyun09/inkvoy/releases");}return;}
         if(action.equals("account-auth")){String url=service.runtime.studio.accountAuthUrl();if(url!=null)try{startActivity(new Intent(Intent.ACTION_VIEW,android.net.Uri.parse(url)));}catch(ActivityNotFoundException e){service.runtime.toast("请安装可用的系统浏览器");}return;}
         if(action.equals("permission-files")||action.equals("permission-battery")||action.equals("permission-notifications")||action.equals("permission-app-settings")){AccessSettings.request(this,action);return;}

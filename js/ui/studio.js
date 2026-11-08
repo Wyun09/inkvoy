@@ -159,11 +159,13 @@ export function initStudio({client,native,providers,agentTools,extensions}) {
   click('terminal-clear',()=>terminals.get(currentTerm)?.term.clear());click('terminal-copy',()=>{const text=terminals.get(currentTerm)?.term.getSelection();if(!text)throw new Error('长按并选中要复制的终端文本');NativeBridge.uiAction('copy-text',JSON.stringify({text}));});
   new ResizeObserver(()=>{if(activePage==='terminal')for(const t of terminals.values())if(!t.host.hidden)try{t.fit.fit();}catch{}}).observe($('terminal-host'));
   const runtimeImport=document.createElement('button');runtimeImport.id='runtime-import';runtimeImport.textContent='导入工具包';runtimeImport.onclick=()=>NativeBridge.uiAction('runtime-import','{}');
-  const runtimePackages=document.createElement('button');runtimePackages.id='runtime-packages';runtimePackages.textContent='工具包发布页';runtimePackages.onclick=()=>NativeBridge.uiAction('runtime-packages','{}');$('runtime-install').after(runtimeImport,runtimePackages);
+  const runtimeDownload=document.createElement('button');runtimeDownload.id='runtime-download';runtimeDownload.textContent='下载运行环境';runtimeDownload.onclick=()=>NativeBridge.uiAction('runtime-download','{}');
+  const runtimePackages=document.createElement('button');runtimePackages.id='runtime-packages';runtimePackages.textContent='工具包发布页';runtimePackages.onclick=()=>NativeBridge.uiAction('runtime-packages','{}');$('runtime-install').after(runtimeDownload,runtimeImport,runtimePackages);
   function runtimeState(r) {
     runtimeCurrent=r;
     $('runtime-state').textContent=r.error?'初始化需要处理':r.installing?'正在初始化':r.ready?'离线环境已就绪':'首次使用需要解压环境';$('runtime-detail').textContent=r.error||r.message||'必需工具已包含在安装包中';$('runtime-progress').hidden=!r.installing;$('runtime-progress').value=r.progress||0;$('runtime-install').disabled=!!r.installing;$('runtime-test').disabled=!r.ready||!!r.testing;$('runtime-install').textContent=r.error?'重试初始化':r.ready?'校验环境':'初始化环境';
     runtimeImport.hidden=r.imageAvailable!==false;runtimePackages.hidden=r.imageAvailable!==false;runtimeImport.disabled=!!r.installing;
+    runtimeDownload.hidden=!!r.ready||!!r.installing||r.imageAvailable===true;runtimeDownload.disabled=!!r.installing;
     if(r.phase==='importing')$('runtime-state').textContent='正在校验工具包';
     if(r.imageAvailable===false&&!r.ready&&!r.installing){$('runtime-state').textContent='轻量版 · 工具包待准备';$('runtime-detail').textContent=r.error||'聊天和浏览器可直接使用。终端与本机 MCP 需要导入对应工具包，或覆盖安装离线完整版。';$('runtime-install').disabled=true;$('runtime-install').textContent='先导入工具包';}
     $('runtime-tools').replaceChildren(...(r.tools||[]).map(t=>{const n=document.createElement('div');n.className='tool-tile';n.innerHTML=`<span>${escapeHTML(t.kind||'CLI')}</span><strong>${escapeHTML(t.name)}</strong><p>${escapeHTML(t.version||'镜像内置')}</p><small>${r.verified?'✓ 自检通过':r.ready?'已解压 · 待自检':'离线收录'}</small>`;return n;}));
@@ -207,6 +209,23 @@ export function initStudio({client,native,providers,agentTools,extensions}) {
  v5Settings=mountV5Settings({});
  v5Terminal=mountV5Terminal();
  const v5Pages=mountV5Pages();
- window.StudioUI={render,openSetup:section=>journeyView.open(section),openWork:section=>workView?.open(section),extensionState:value=>settingsHub?.extensionState(value),questionState:value=>questionView?.render(value),platformState,closeDrawer,providerState:()=>{modelView?.render();composerView?.render(client.snapshot());},nativeEvent(event){journeyView?.event(event);settingsHub?.event(event);if(event.type==='process'){processView.changed();}else if(event.type==='computer'){computerView.render(event.value);}else if(event.type==='runtime'){runtimeRevision++;runtimeState(event.value);}else if(event.type==='clipboard'){terminals.get(currentTerm)?.term.paste(event.text||'');}else if(event.type==='terminal'){const t=terminals.get(event.id);if(t){if(event.data)t.term.write(Uint8Array.from(atob(event.data),c=>c.charCodeAt(0)));if(event.exitCode!==undefined){t.exitCode=event.exitCode;t.term.writeln('\r\n[进程退出：'+event.exitCode+']');renderTermTabs();}}}else if(event.type==='import'){toast(event.error||'已导入 '+event.path);if(!event.error){void mediaView.imported(event);void loadFiles().catch(()=>{});}}}};
+ function runtimeDownloadState(value){
+    const button=$('runtime-download'),progress=$('runtime-progress'),state=$('runtime-state'),detail=$('runtime-detail');
+    if(!button)return;
+    if(value.phase==='downloading'){
+      button.disabled=true;
+      button.textContent=value.total>0?'下载中 '+Math.min(100,Math.floor(value.downloaded/value.total*100))+'%':'连接下载…';
+      progress.hidden=false;progress.value=value.total>0?Math.min(100,value.downloaded/value.total*100):0;
+      state.textContent='正在下载运行环境';
+      detail.textContent=Math.round(value.downloaded/1048576)+' MiB'+(value.total>0?' / '+Math.round(value.total/1048576)+' MiB':'');
+    }else if(value.phase==='verifying'){
+      button.disabled=true;button.textContent='校验中…';state.textContent='正在校验运行环境';progress.hidden=false;progress.value=100;detail.textContent='校验镜像尺寸与 SHA-256，随后自动初始化。';
+    }else if(value.phase==='done'){
+      button.disabled=false;button.hidden=true;button.textContent='下载运行环境';progress.hidden=true;
+    }else if(value.phase==='error'){
+      button.disabled=false;button.textContent='重新下载运行环境';state.textContent='运行环境下载失败';progress.hidden=true;detail.textContent=value.error||'请检查网络后重试。';
+    }
+  }
+  window.StudioUI={render,openSetup:section=>journeyView.open(section),openWork:section=>workView?.open(section),extensionState:value=>settingsHub?.extensionState(value),questionState:value=>questionView?.render(value),platformState,closeDrawer,providerState:()=>{modelView?.render();composerView?.render(client.snapshot());},nativeEvent(event){if(event.type==='runtime-download'){runtimeDownloadState(event.value);}journeyView?.event(event);settingsHub?.event(event);if(event.type==='process'){processView.changed();}else if(event.type==='computer'){computerView.render(event.value);}else if(event.type==='runtime'){runtimeRevision++;runtimeState(event.value);}else if(event.type==='clipboard'){terminals.get(currentTerm)?.term.paste(event.text||'');}else if(event.type==='terminal'){const t=terminals.get(event.id);if(t){if(event.data)t.term.write(Uint8Array.from(atob(event.data),c=>c.charCodeAt(0)));if(event.exitCode!==undefined){t.exitCode=event.exitCode;t.term.writeln('\r\n[进程退出：'+event.exitCode+']');renderTermTabs();}}}else if(event.type==='import'){toast(event.error||'已导入 '+event.path);if(!event.error){void mediaView.imported(event);void loadFiles().catch(()=>{});}}}};
   client.publish();void refreshRuntime().catch(()=>{});
 }
