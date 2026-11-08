@@ -49,12 +49,15 @@ public final class MainActivity extends Activity {
             if (Build.VERSION.SDK_INT >= 30) {
                 android.graphics.Insets bars = insets.getInsets(WindowInsets.Type.systemBars());
                 android.graphics.Insets keyboard = insets.getInsets(WindowInsets.Type.ime());
-                android.graphics.Insets cutout=insets.getInsets(WindowInsets.Type.displayCutout());
-                boolean full=DisplayMode.fullscreen(this);
-                view.setPadding(Math.max(bars.left,cutout.left),full?0:bars.top,Math.max(bars.right,cutout.right),Math.max(full?0:bars.bottom,keyboard.bottom));
+                android.graphics.Insets cutout = insets.getInsets(WindowInsets.Type.displayCutout());
+                boolean full = DisplayMode.fullscreen(this);
+                int top = Math.max(full ? 0 : bars.top, cutout.top);
+                int bottom = Math.max(cutout.bottom, Math.max(full ? 0 : bars.bottom, keyboard.bottom));
+                view.setPadding(Math.max(bars.left, cutout.left), top, Math.max(bars.right, cutout.right), bottom);
             } else {
-                boolean full=DisplayMode.fullscreen(this);int bottom=insets.getSystemWindowInsetBottom();
-                view.setPadding(full?0:insets.getSystemWindowInsetLeft(),full?0:insets.getSystemWindowInsetTop(),full?0:insets.getSystemWindowInsetRight(),bottom>getResources().getDisplayMetrics().density*100?bottom:full?0:bottom);
+                boolean full = DisplayMode.fullscreen(this);
+                int bottom = insets.getSystemWindowInsetBottom();
+                view.setPadding(insets.getSystemWindowInsetLeft(), full ? 0 : insets.getSystemWindowInsetTop(), insets.getSystemWindowInsetRight(), bottom > getResources().getDisplayMetrics().density * 100 ? bottom : (full ? 0 : bottom));
             }
             return insets;
         });

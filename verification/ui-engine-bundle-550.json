@@ -108,7 +108,7 @@
       "removedSelectors": 3
     }
   ],
-  "cssBytes": 283549,
+  "cssBytes": 284406,
   "coreStyleOwner": "js/ui/app-shell",
   "legacyCoreStylesBundled": false,
   "reactRuntimeBundled": false,

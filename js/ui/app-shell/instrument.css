@@ -1091,3 +1091,21 @@ body.v5-chat .topbar #app-more { display:inline-flex !important; }
   .v5-activity-sum, .v5-arow > summary, .v5-ibtn, .v5-send { transition:none !important; }
 }
 body.reduce-motion .v5-turn.new, body.reduce-motion .v5-sheet, body.reduce-motion .v5-suggest-sheet { animation:none !important; }
+
+/* chat titles must never float in the middle of the screen */
+.v5-empty { max-width:none !important; margin:0 !important; padding:14px 2px 0 !important; text-align:left !important; align-items:flex-start !important; }
+.v5-empty-title { text-align:left !important; }
+.v5-empty-sub { text-align:left !important; margin:4px 0 18px !important; }
+.v5-starters { width:100% !important; }
+#page-chat .v5-chat, #page-chat .v5-scroll, #page-chat .v5-thread { text-align:left; }
+.v5-chat-head { display:none !important; }
+
+/* never let the chat area scroll or clip sideways */
+.v5-chat-head { display:none !important; }
+body.v5-chat #page-chat { overflow:hidden !important; }
+.v5-scroll { overflow-x:hidden !important; }
+.v5-thread { max-width:100% !important; overflow-x:hidden !important; min-width:0; }
+.v5-turn, .v5-prose, .v5-turn-meta, .v5-reason-body { min-width:0; overflow-wrap:anywhere; }
+.v5-prose pre, .v5-prose table, .v5-code pre, .v5-arow-body, .v5-activity-list { max-width:100%; min-width:0; }
+.v5-code pre { white-space:pre-wrap; overflow-wrap:anywhere; overflow-x:auto; }
+.v5-prose pre { overflow-x:auto; }

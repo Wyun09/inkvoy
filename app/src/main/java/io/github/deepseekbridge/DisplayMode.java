@@ -12,7 +12,7 @@ public final class DisplayMode {
     public static String get(Context context){String mode=context.getSharedPreferences("studio-display",Context.MODE_PRIVATE).getString("orientation","auto");return valid(mode)?mode:"auto";}
     static boolean valid(String mode){return "auto".equals(mode)||"portrait".equals(mode)||"landscape".equals(mode);}
     static int requested(String mode){if(!valid(mode))throw new IllegalArgumentException("Unknown orientation");return "portrait".equals(mode)?ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT:"landscape".equals(mode)?ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE:ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR;}
-    public static boolean fullscreen(Context context){return context.getSharedPreferences("studio-display",Context.MODE_PRIVATE).getBoolean("fullscreen",true);}
+    public static boolean fullscreen(Context context){return context.getSharedPreferences("studio-display",Context.MODE_PRIVATE).getBoolean("fullscreen",false);}
     public static void fullscreen(Activity activity,boolean enabled){activity.getSharedPreferences("studio-display",Context.MODE_PRIVATE).edit().putBoolean("fullscreen",enabled).apply();applyFullscreen(activity);}
     public static void applyFullscreen(Activity activity){
         Window window=activity.getWindow();View decor=window.getDecorView();boolean full=fullscreen(activity);
